@@ -7,7 +7,11 @@ on:
     paths:
       - 'docs/static-preview/forge-aura/index.html'
       - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'docs/static-preview/forge-aura/activity/activity-points-projection.js'
+      - 'docs/daily-points-engine.js'
+      - 'docs/platform/productivity/activity-points-authority-adapter.js'
       - 'tests/forge-aura-direct-route.test.mjs'
+      - 'tests/forge-aura-pages-import-graph.test.mjs'
       - '.github/workflows/forge-aura-direct-route.yml'
   push:
     branches:
@@ -15,7 +19,11 @@ on:
     paths:
       - 'docs/static-preview/forge-aura/index.html'
       - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'docs/static-preview/forge-aura/activity/activity-points-projection.js'
+      - 'docs/daily-points-engine.js'
+      - 'docs/platform/productivity/activity-points-authority-adapter.js'
       - 'tests/forge-aura-direct-route.test.mjs'
+      - 'tests/forge-aura-pages-import-graph.test.mjs'
       - '.github/workflows/forge-aura-direct-route.yml'
   workflow_dispatch:
 
@@ -33,5 +41,6 @@ jobs:
       - name: Syntax and direct-route contract
         run: |
           node --check docs/static-preview/forge-aura/aura-router-v4.js
-          node --test tests/forge-aura-direct-route.test.mjs
+          node --input-type=module --check < docs/static-preview/forge-aura/activity/activity-points-projection.js
+          node --test tests/forge-aura-direct-route.test.mjs tests/forge-aura-pages-import-graph.test.mjs
           git diff --check HEAD^ HEAD || true
