@@ -6,12 +6,13 @@ import {
 import { createGmailMailEvidenceAdapter } from "../../../platform/mail-evidence/providers/gmail-adapter.mjs";
 import { createMicrosoftGraphMailEvidenceAdapter } from "../../../platform/mail-evidence/providers/microsoft-graph-adapter.mjs";
 
-const FUNCTION_VERSION = "MAIL-EVIDENCE-CONNECT-001";
+const FUNCTION_VERSION = "MAIL-EVIDENCE-CONNECT-002";
 const PROVIDERS = new Set(["GMAIL", "MICROSOFT_GRAPH"]);
 const GOOGLE_AUTHORIZE = "https://accounts.google.com/o/oauth2/v2/auth";
 const GOOGLE_TOKEN = "https://oauth2.googleapis.com/token";
 const MICROSOFT_AUTHORIZE = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
 const MICROSOFT_TOKEN = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
+const OAUTH_CALLBACK_PATH_SUFFIX = "/mail-evidence-connect/oauth/callback";
 
 function json(status: number, body: Record<string, unknown>, request?: Request) {
   const configuredOrigin = Deno.env.get("FORGE_APP_ORIGIN")?.trim() || "";
@@ -176,8 +177,21 @@ async function authenticated(request: Request) {
 
 function callbackUrl() {
   const value = Deno.env.get("FORGE_MAIL_OAUTH_CALLBACK_URL")?.trim() || "";
-  if (!/^https:\/\//.test(value)) throw new Error("MAIL_OAUTH_CALLBACK_NOT_CONFIGURED");
-  return value;
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    throw new Error("MAIL_OAUTH_CALLBACK_NOT_CONFIGURED");
+  }
+  if (
+    parsed.protocol !== "https:" ||
+    parsed.search ||
+    parsed.hash ||
+    !parsed.pathname.endsWith(OAUTH_CALLBACK_PATH_SUFFIX)
+  ) {
+    throw new Error("MAIL_OAUTH_CALLBACK_NOT_CONFIGURED");
+  }
+  return parsed.toString();
 }
 
 function returnUrl() {
@@ -409,7 +423,7 @@ async function disconnect(request: Request, providerInput: unknown) {
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return json(204, {}, request);
   const url = new URL(request.url);
-  if (request.method === "GET" && url.searchParams.get("oauth") === "callback") {
+  if (request.method === "GET" && url.pathname.endsWith(OAUTH_CALLBACK_PATH_SUFFIX)) {
     return oauthCallback(request);
   }
   if (request.method !== "POST") return json(405, { ok: false, code: "METHOD_NOT_ALLOWED" }, request);
