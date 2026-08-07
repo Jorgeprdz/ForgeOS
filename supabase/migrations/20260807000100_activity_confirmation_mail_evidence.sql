@@ -45,7 +45,7 @@ create table if not exists public.activity_metric_confirmations (
 );
 
 create index if not exists activity_metric_confirmations_day_idx
-  on public.activity_metric_confirmations(advisor_id, activity_date, metric_key, confirmed_at desc);
+  on public.activity_metric_confirmations(advisor_id, activity_date, metric_key, confirmed_at desc, created_at desc);
 
 create trigger activity_metric_confirmations_append_only
 before update or delete on public.activity_metric_confirmations
@@ -95,7 +95,9 @@ on public.activity_mail_evidence_suggestions
 for select to authenticated
 using (advisor_id = auth.uid());
 
-create or replace function public.forge_activity_confirm_daily_metric(p_payload jsonb)
+-- One user action confirms all eight metrics atomically. If any metric is invalid,
+-- the PostgreSQL transaction rolls back the whole daily reconciliation.
+create or replace function public.forge_activity_confirm_daily_metrics(p_payload jsonb)
 returns jsonb
 language plpgsql
 security definer
@@ -104,79 +106,159 @@ as $$
 declare
   advisor uuid := auth.uid();
   activity_date_value date;
+  metrics_value jsonb;
+  batch_idempotency_key text;
+  item jsonb;
   metric_key_value text;
   suggested_value_value integer;
   confirmed_value_value integer;
   suggestion_sources_value jsonb;
   correction_of_value uuid;
   correction_reason_value text;
-  idempotency_key_value text;
+  row_idempotency_key text;
   confirmation_kind_value text;
-  prior record;
+  expected_metric_keys text[] := array[
+    'referidos','llamadas','citas_agendadas','citas_iniciales','citas_cierre',
+    'solicitudes_firmadas','polizas_pagadas','referido_asesor'
+  ];
+  seen_metric_keys text[] := array[]::text[];
+  latest record;
+  existing record;
   inserted public.activity_metric_confirmations;
+  result_rows jsonb := '[]'::jsonb;
+  inserted_count integer := 0;
 begin
   if advisor is null then raise exception 'ACTIVITY_CONFIRMATION_AUTH_REQUIRED'; end if;
   if p_payload is null or jsonb_typeof(p_payload) <> 'object' then raise exception 'ACTIVITY_CONFIRMATION_PAYLOAD_INVALID'; end if;
   if exists (
     select 1 from jsonb_object_keys(p_payload) key
-    where key not in ('activityDate','metricKey','suggestedValue','confirmedValue','suggestionSources','correctionOf','correctionReason','idempotencyKey')
+    where key not in ('activityDate','metrics','idempotencyKey')
   ) then raise exception 'ACTIVITY_CONFIRMATION_FIELD_DENIED'; end if;
 
   activity_date_value := nullif(p_payload->>'activityDate','')::date;
-  metric_key_value := nullif(p_payload->>'metricKey','');
-  suggested_value_value := nullif(p_payload->>'suggestedValue','')::integer;
-  confirmed_value_value := nullif(p_payload->>'confirmedValue','')::integer;
-  suggestion_sources_value := coalesce(p_payload->'suggestionSources','[]'::jsonb);
-  correction_of_value := nullif(p_payload->>'correctionOf','')::uuid;
-  correction_reason_value := nullif(btrim(p_payload->>'correctionReason'),'');
-  idempotency_key_value := nullif(btrim(p_payload->>'idempotencyKey'),'');
+  metrics_value := p_payload->'metrics';
+  batch_idempotency_key := nullif(btrim(p_payload->>'idempotencyKey'),'');
 
-  if activity_date_value is null or metric_key_value is null or confirmed_value_value is null or idempotency_key_value is null then
+  if activity_date_value is null or metrics_value is null or jsonb_typeof(metrics_value) <> 'array'
+    or jsonb_array_length(metrics_value) <> 8 or batch_idempotency_key is null then
     raise exception 'ACTIVITY_CONFIRMATION_REQUIRED_INPUT_MISSING';
   end if;
-  if metric_key_value not in ('referidos','llamadas','citas_agendadas','citas_iniciales','citas_cierre','solicitudes_firmadas','polizas_pagadas','referido_asesor') then
-    raise exception 'ACTIVITY_CONFIRMATION_METRIC_INVALID';
+  if batch_idempotency_key !~ '^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,119}$' then
+    raise exception 'ACTIVITY_CONFIRMATION_IDEMPOTENCY_INVALID';
   end if;
-  if confirmed_value_value < 0 or confirmed_value_value > 999 or (suggested_value_value is not null and (suggested_value_value < 0 or suggested_value_value > 999)) then
-    raise exception 'ACTIVITY_CONFIRMATION_VALUE_INVALID';
-  end if;
-  if jsonb_typeof(suggestion_sources_value) <> 'array' then raise exception 'ACTIVITY_CONFIRMATION_SOURCES_INVALID'; end if;
-  if idempotency_key_value !~ '^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,159}$' then raise exception 'ACTIVITY_CONFIRMATION_IDEMPOTENCY_INVALID'; end if;
 
-  if correction_of_value is not null then
-    select * into prior from public.activity_metric_confirmations
-    where advisor_id = advisor and id = correction_of_value;
-    if prior.id is null then raise exception 'ACTIVITY_CONFIRMATION_CORRECTION_TARGET_NOT_FOUND'; end if;
-    if prior.activity_date <> activity_date_value or prior.metric_key <> metric_key_value then
-      raise exception 'ACTIVITY_CONFIRMATION_CORRECTION_TARGET_MISMATCH';
+  -- Serialize confirmations for the same advisor/day so two tabs cannot fork a correction chain.
+  perform pg_advisory_xact_lock(hashtextextended(advisor::text || ':' || activity_date_value::text, 0));
+
+  for item in select value from jsonb_array_elements(metrics_value)
+  loop
+    if item is null or jsonb_typeof(item) <> 'object' then
+      raise exception 'ACTIVITY_CONFIRMATION_METRIC_PAYLOAD_INVALID';
     end if;
-    if correction_reason_value is null then raise exception 'ACTIVITY_CONFIRMATION_CORRECTION_REASON_REQUIRED'; end if;
-    confirmation_kind_value := 'CORRECTED';
-  else
-    if correction_reason_value is not null then raise exception 'ACTIVITY_CONFIRMATION_REASON_WITHOUT_CORRECTION'; end if;
-    confirmation_kind_value := 'CONFIRMED';
+    if exists (
+      select 1 from jsonb_object_keys(item) key
+      where key not in ('metricKey','suggestedValue','confirmedValue','suggestionSources','correctionOf','correctionReason')
+    ) then raise exception 'ACTIVITY_CONFIRMATION_METRIC_FIELD_DENIED'; end if;
+
+    metric_key_value := nullif(item->>'metricKey','');
+    suggested_value_value := nullif(item->>'suggestedValue','')::integer;
+    confirmed_value_value := nullif(item->>'confirmedValue','')::integer;
+    suggestion_sources_value := coalesce(item->'suggestionSources','[]'::jsonb);
+    correction_of_value := nullif(item->>'correctionOf','')::uuid;
+    correction_reason_value := nullif(btrim(item->>'correctionReason'),'');
+
+    if metric_key_value is null or not (metric_key_value = any(expected_metric_keys)) then
+      raise exception 'ACTIVITY_CONFIRMATION_METRIC_INVALID';
+    end if;
+    if metric_key_value = any(seen_metric_keys) then
+      raise exception 'ACTIVITY_CONFIRMATION_METRIC_DUPLICATE';
+    end if;
+    seen_metric_keys := array_append(seen_metric_keys, metric_key_value);
+
+    if confirmed_value_value is null or confirmed_value_value < 0 or confirmed_value_value > 999
+      or (suggested_value_value is not null and (suggested_value_value < 0 or suggested_value_value > 999)) then
+      raise exception 'ACTIVITY_CONFIRMATION_VALUE_INVALID';
+    end if;
+    if jsonb_typeof(suggestion_sources_value) <> 'array' then
+      raise exception 'ACTIVITY_CONFIRMATION_SOURCES_INVALID';
+    end if;
+
+    row_idempotency_key := batch_idempotency_key || ':' || metric_key_value;
+    select * into existing
+    from public.activity_metric_confirmations
+    where advisor_id = advisor and idempotency_key = row_idempotency_key;
+
+    if existing.id is not null then
+      if existing.activity_date <> activity_date_value
+        or existing.metric_key <> metric_key_value
+        or existing.confirmed_value <> confirmed_value_value then
+        raise exception 'ACTIVITY_CONFIRMATION_IDEMPOTENT_REPLAY_MISMATCH';
+      end if;
+      result_rows := result_rows || jsonb_build_array(jsonb_build_object(
+        'id', existing.id,
+        'metricKey', existing.metric_key,
+        'confirmedValue', existing.confirmed_value,
+        'state', 'IDEMPOTENT_REPLAY'
+      ));
+      continue;
+    end if;
+
+    select * into latest
+    from public.activity_metric_confirmations
+    where advisor_id = advisor
+      and activity_date = activity_date_value
+      and metric_key = metric_key_value
+    order by confirmed_at desc, created_at desc, id desc
+    limit 1;
+
+    if latest.id is null then
+      if correction_of_value is not null or correction_reason_value is not null then
+        raise exception 'ACTIVITY_CONFIRMATION_UNEXPECTED_CORRECTION';
+      end if;
+      confirmation_kind_value := 'CONFIRMED';
+    else
+      if correction_of_value is null or correction_of_value <> latest.id then
+        raise exception 'ACTIVITY_CONFIRMATION_LATEST_CORRECTION_REQUIRED';
+      end if;
+      if correction_reason_value is null then
+        raise exception 'ACTIVITY_CONFIRMATION_CORRECTION_REASON_REQUIRED';
+      end if;
+      confirmation_kind_value := 'CORRECTED';
+    end if;
+
+    insert into public.activity_metric_confirmations(
+      advisor_id, activity_date, metric_key, suggested_value, confirmed_value,
+      suggestion_sources, confirmation_kind, correction_of, correction_reason, idempotency_key
+    ) values (
+      advisor, activity_date_value, metric_key_value, suggested_value_value, confirmed_value_value,
+      suggestion_sources_value, confirmation_kind_value, correction_of_value, correction_reason_value, row_idempotency_key
+    ) returning * into inserted;
+
+    inserted_count := inserted_count + 1;
+    result_rows := result_rows || jsonb_build_array(jsonb_build_object(
+      'id', inserted.id,
+      'metricKey', inserted.metric_key,
+      'confirmedValue', inserted.confirmed_value,
+      'confirmationKind', inserted.confirmation_kind,
+      'state', 'RECORDED'
+    ));
+  end loop;
+
+  if array_length(seen_metric_keys, 1) <> 8 then
+    raise exception 'ACTIVITY_CONFIRMATION_ALL_METRICS_REQUIRED';
   end if;
 
-  select * into inserted from public.activity_metric_confirmations
-  where advisor_id = advisor and idempotency_key = idempotency_key_value;
-  if inserted.id is not null then
-    return jsonb_build_object('state','IDEMPOTENT_REPLAY','id',inserted.id,'metricKey',inserted.metric_key,'confirmedValue',inserted.confirmed_value);
-  end if;
-
-  insert into public.activity_metric_confirmations(
-    advisor_id, activity_date, metric_key, suggested_value, confirmed_value,
-    suggestion_sources, confirmation_kind, correction_of, correction_reason, idempotency_key
-  ) values (
-    advisor, activity_date_value, metric_key_value, suggested_value_value, confirmed_value_value,
-    suggestion_sources_value, confirmation_kind_value, correction_of_value, correction_reason_value, idempotency_key_value
-  ) returning * into inserted;
-
-  return jsonb_build_object('state','RECORDED','id',inserted.id,'metricKey',inserted.metric_key,'confirmedValue',inserted.confirmed_value,'confirmationKind',inserted.confirmation_kind);
+  return jsonb_build_object(
+    'state', case when inserted_count = 0 then 'IDEMPOTENT_REPLAY' else 'RECORDED' end,
+    'activityDate', activity_date_value,
+    'metricCount', 8,
+    'rows', result_rows
+  );
 end;
 $$;
 
-revoke all on function public.forge_activity_confirm_daily_metric(jsonb) from public, anon;
-grant execute on function public.forge_activity_confirm_daily_metric(jsonb) to authenticated;
+revoke all on function public.forge_activity_confirm_daily_metrics(jsonb) from public, anon;
+grant execute on function public.forge_activity_confirm_daily_metrics(jsonb) to authenticated;
 
 create or replace function public.forge_activity_record_mail_suggestion(p_payload jsonb)
 returns jsonb
