@@ -309,10 +309,15 @@ test("ZOOM_200 and reduced motion remain usable", async ({ page }, testInfo) => 
   const overflow = await horizontalOverflow(page);
   expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth + 1);
 
-  const duration = await page.locator(".aura-attention-card summary svg")
+  const durationSeconds = await page.locator(".aura-attention-card summary svg")
     .first()
-    .evaluate(node => getComputedStyle(node).transitionDuration);
-  expect(["0s", "0.00001s", "0.01ms"]).toContain(duration);
+    .evaluate(node => {
+      const value = getComputedStyle(node).transitionDuration;
+      return value.endsWith("ms")
+        ? Number.parseFloat(value) / 1000
+        : Number.parseFloat(value);
+    });
+  expect(durationSeconds).toBeLessThanOrEqual(0.00001);
 
   await page.screenshot({
     path: testInfo.outputPath("PIPELINE-ZOOM-200-REDUCED-MOTION.png"),
