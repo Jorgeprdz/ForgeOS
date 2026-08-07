@@ -34,7 +34,8 @@ jobs:
             echo 'Forbidden Pipeline/Login mutation detected' >&2
             exit 1
           fi
-          if grep -Ev '^(docs/static-preview/forge-aura/activity/|docs/static-preview/forge-aura/app-v4\.js$|docs/static-preview/forge-aura/aura-router-v4\.js$|docs/static-preview/forge-aura/aura-shell\.js$|tests/activity-aura-scope-contract\.test\.mjs$|docs/architecture/source-truth/FORGE_AURA_ACTIVITY_REPORTS_UX_RECONCILIATION_REPORT_001\.md$|docs/evidence/FORGE_AURA_ACTIVITY_REPORTS_ACCEPTANCE_001\.md$|\.github/workflows/activity-reports-aura\.yml$)' /tmp/changed.txt | tee /tmp/outside.txt
+          grep -Ev '^(docs/static-preview/forge-aura/activity/|docs/static-preview/forge-aura/app-v4\.js$|docs/static-preview/forge-aura/aura-router-v4\.js$|docs/static-preview/forge-aura/aura-shell\.js$|tests/activity-aura-scope-contract\.test\.mjs$|docs/architecture/source-truth/FORGE_AURA_ACTIVITY_REPORTS_UX_RECONCILIATION_REPORT_001\.md$|docs/evidence/FORGE_AURA_ACTIVITY_REPORTS_ACCEPTANCE_001\.md$|\.github/workflows/activity-reports-aura\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
+          cat /tmp/outside.txt
           test ! -s /tmp/outside.txt
       - name: Contract tests
         run: node --test tests/activity-aura-scope-contract.test.mjs
