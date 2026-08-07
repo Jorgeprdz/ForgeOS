@@ -60,6 +60,19 @@ function rowToTimelineEvent(row = {}) {
   });
 }
 
+function normalizePhone(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+  const digits = raw.replace(/\D/g, "");
+  if (raw.startsWith("+") && digits.length >= 8 && digits.length <= 15) {
+    return `+${digits}`;
+  }
+  if (digits.length === 10) return `+52${digits}`;
+  const invalid = new Error("El número telefónico no es válido.");
+  invalid.code = "VALIDATION_ERROR";
+  throw invalid;
+}
+
 async function requireUser(client) {
   const { data, error } = await client.auth.getUser();
   if (error) throw contextualError("AUTH_GET_USER_FAILED", error);
@@ -118,11 +131,13 @@ export async function requestConfirmedStage({ client, prospectId, status }) {
     invalid.code = "PIPELINE_STAGE_NOT_ALLOWED";
     throw invalid;
   }
-  const { data, error } = await client.rpc("forge_pipeline_update_prospect_stage", {
-    p_prospect_id: prospectId,
-    p_status: status,
-  });
+
+  const { data, error } = await client.rpc(
+    "forge_pipeline_update_prospect_stage",
+    { p_prospect_id: prospectId, p_status: status },
+  );
   if (error) throw contextualError("PIPELINE_STAGE_RPC_FAILED", error);
+
   const prospect = confirmedRpcRow(data);
   if (prospect?.id !== prospectId || prospect?.status !== status) {
     const mismatch = new Error("PIPELINE_STAGE_RPC_CONFIRMATION_MISMATCH");
@@ -137,6 +152,8 @@ export async function createPipelineAdapter({ client } = {}) {
   await requireUser(client);
 
   const capabilities = Object.freeze({
+    createProspect: true,
+    importProspects: false,
     nashAvailable: false,
     nbaAvailable: false,
     contactAvailable: false,
@@ -156,19 +173,66 @@ export async function createPipelineAdapter({ client } = {}) {
       } catch {
         timelineState = "UNAVAILABLE";
       }
-      return Object.freeze({ ...deriveCard(prospect, timeline), timelineState });
+      return Object.freeze({
+        ...deriveCard(prospect, timeline),
+        timelineState,
+      });
     }));
     return cards;
   }
 
+  async function create(input = {}) {
+    const user = await requireUser(client);
+    const fullName = String(input.fullName || "").trim();
+    const source = String(input.source || "").trim();
+    const initialContext = String(input.initialContext || "").trim();
+    if (!fullName || !source || !initialContext || (!input.phone && !input.whatsapp)) {
+      const invalid = new Error("Nombre, teléfono o WhatsApp, fuente y contexto inicial son obligatorios.");
+      invalid.code = "VALIDATION_ERROR";
+      throw invalid;
+    }
+
+    const row = {
+      advisor_id: user.id,
+      full_name: fullName,
+      phone_normalized: normalizePhone(input.phone),
+      whatsapp_normalized: normalizePhone(input.whatsapp),
+      source,
+      initial_context: initialContext,
+      status: "referred_new",
+    };
+
+    const { data, error } = await client
+      .from("prospects")
+      .insert(row)
+      .select("*")
+      .single();
+    if (error) throw contextualError("PROSPECT_CREATE_FAILED", error);
+
+    const created = rowToProspect(data);
+    const confirmed = await getProspect(client, created.id);
+    if (confirmed?.id !== created.id) {
+      const mismatch = new Error("CREATE_READ_AFTER_WRITE_MISMATCH");
+      mismatch.code = "CREATE_READ_AFTER_WRITE_MISMATCH";
+      throw mismatch;
+    }
+    await reload();
+    return confirmed;
+  }
+
   async function changeStage(id, status) {
-    const confirmed = await requestConfirmedStage({ client, prospectId: id, status });
+    const confirmed = await requestConfirmedStage({
+      client,
+      prospectId: id,
+      status,
+    });
     const found = await getProspect(client, id);
     if (found?.status !== confirmed.status) {
       const mismatch = new Error("STAGE_READ_AFTER_WRITE_MISMATCH");
       mismatch.code = "STAGE_READ_AFTER_WRITE_MISMATCH";
       throw mismatch;
     }
+
     const index = records.findIndex(record => record.id === id);
     if (index >= 0) records[index] = found;
     cards = cards.map(card => card.id === id
@@ -187,8 +251,13 @@ export async function createPipelineAdapter({ client } = {}) {
     const patch = { updated_by: user.id };
     for (const [key, value] of Object.entries(changes)) {
       const column = FIELD_MAP[key];
-      if (column) patch[column] = value;
+      if (column) {
+        patch[column] = key === "phone" || key === "whatsapp"
+          ? normalizePhone(value)
+          : value;
+      }
     }
+
     const { data, error } = await client
       .from("prospects")
       .update(patch)
@@ -225,7 +294,9 @@ export async function createPipelineAdapter({ client } = {}) {
   }
 
   function whatsappUrl(record, text = "") {
-    const phone = String(record.phone || record.prospect?.whatsapp || "").replace(/[^\d]/g, "");
+    const phone = String(
+      record.phone || record.prospect?.whatsapp || "",
+    ).replace(/[^\d]/g, "");
     if (!phone) return null;
     return `https://wa.me/${phone}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
   }
@@ -233,6 +304,7 @@ export async function createPipelineAdapter({ client } = {}) {
   return Object.freeze({
     capabilities,
     reload,
+    create,
     changeStage,
     update,
     archive,
