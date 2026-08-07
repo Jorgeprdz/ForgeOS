@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(p,'utf8');
+const moduleSource=read('docs/static-preview/forge-aura/activity/activity-module.js');
+const appSource=read('docs/static-preview/forge-aura/app-v4.js');
+const routerSource=read('docs/static-preview/forge-aura/aura-router-v4.js');
+const shellSource=read('docs/static-preview/forge-aura/aura-shell.js');
+const css=read('docs/static-preview/forge-aura/activity/activity.css');
+test('Activity reuses productive read and write authorities',()=>{assert.match(moduleSource,/createActivityReportsProductivityRuntime/);assert.match(moduleSource,/createManualActivityEntry/);assert.doesNotMatch(moduleSource,/platform\/productivity\/activity-(operational-calendar|reporting-adapters|writer)/);assert.doesNotMatch(moduleSource,/supabase\/migrations/);});
+test('Aura Activity exposes human tabs and accessible reporting',()=>{assert.match(moduleSource,/role=\"tablist\"/);assert.match(moduleSource,/role=\"tabpanel\"/);assert.match(moduleSource,/ArrowLeft/);assert.match(moduleSource,/ArrowRight/);assert.match(moduleSource,/Ver tabla accesible/);assert.match(moduleSource,/No mostraremos ceros/);assert.match(moduleSource,/No se inventa una meta ausente/);});
+test('Router and shell add Activity without removing Pipeline',()=>{assert.match(routerSource,/pipeline/);assert.match(routerSource,/actividad/);assert.match(shellSource,/data-aura-route-link=\"pipeline\"/);assert.match(shellSource,/data-aura-route-link=\"actividad\"/);assert.match(appSource,/createPipelineModule/);assert.match(appSource,/createActivityModule/);});
+test('Aura Activity owns its visual layer',()=>{assert.doesNotMatch(appSource,/forge-alive-material3\/activity-module\.css/);assert.match(css,/prefers-reduced-motion/);assert.match(css,/focus-visible/);assert.match(css,/@media\(max-width:720px\)/);});
