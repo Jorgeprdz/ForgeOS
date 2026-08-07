@@ -65,8 +65,8 @@ async function inventory() {
       coalesce((select relrowsecurity from pg_class where oid=to_regclass('public.activity_mail_evidence_suggestions')), false) as suggestions_rls,
       coalesce((select relrowsecurity from pg_class where oid=to_regclass('public.activity_mail_provider_connections')), false) as connections_rls,
       coalesce((select relrowsecurity from pg_class where oid=to_regclass('public.activity_mail_oauth_states')), false) as oauth_states_rls,
-      not coalesce(has_table_privilege('authenticated','public.activity_mail_provider_connections','SELECT,INSERT,UPDATE,DELETE'), false) as connection_direct_access_blocked,
-      not coalesce(has_table_privilege('authenticated','public.activity_mail_oauth_states','SELECT,INSERT,UPDATE,DELETE'), false) as oauth_state_direct_access_blocked
+      not coalesce(has_table_privilege('authenticated', to_regclass('public.activity_mail_provider_connections'), 'SELECT,INSERT,UPDATE,DELETE'), false) as connection_direct_access_blocked,
+      not coalesce(has_table_privilege('authenticated', to_regclass('public.activity_mail_oauth_states'), 'SELECT,INSERT,UPDATE,DELETE'), false) as oauth_state_direct_access_blocked
   `);
   return rows[0] || {};
 }
