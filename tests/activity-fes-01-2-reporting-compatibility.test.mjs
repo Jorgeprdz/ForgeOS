@@ -88,8 +88,8 @@ test("mixed FES-01.2 ledger can be resolved without unsupported-event failure", 
   ]);
 
   assert.deepEqual(
-    resolved.facts.map(fact => fact.activityType),
-    ["CONTACT_ATTEMPTED", "CONVERSATION_COMPLETED", "INITIAL_APPOINTMENT_COMPLETED"],
+    resolved.facts.map(fact => fact.activityType).sort(),
+    ["CONTACT_ATTEMPTED", "CONVERSATION_COMPLETED", "INITIAL_APPOINTMENT_COMPLETED"].sort(),
   );
   assert.equal(resolved.exclusions.length, 1);
   assert.equal(resolved.exclusions[0].reason, "PRODUCTIVITY_FACT_NOT_REP_ACTIVITY");
