@@ -25,12 +25,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BASE=480a74958671d9e9c13570ab3a4d8912949ba2c2
-          git diff --name-only "$BASE" HEAD > /tmp/changed.txt
-          cat /tmp/changed.txt
-          grep -Ev '^(docs/static-preview/forge-alive-material3/activity-manual-entry\.js$|docs/static-preview/forge-alive-material3/activity-manual-fact-adapter\.js$|tests/activity-manual-countable-capture\.test\.mjs$|\.github/workflows/activity-manual-countable-capture\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
-          cat /tmp/outside.txt
-          test ! -s /tmp/outside.txt
+          if [ "${GITHUB_BASE_REF:-}" = "main" ]; then
+            echo 'Final promotion detected; validating exact approved manual-capture blobs.'
+            test "$(git hash-object docs/static-preview/forge-alive-material3/activity-manual-entry.js)" = "3a1a1e012db43342a47096cbc41de27a5dab8d4c"
+            test "$(git hash-object docs/static-preview/forge-alive-material3/activity-manual-fact-adapter.js)" = "9a809d12d11780108d6a4fe42a9e61a9683a02e0"
+            test "$(git hash-object tests/activity-manual-countable-capture.test.mjs)" = "b52b84c6c82dc23fd1e4186767371bc2ef678115"
+          else
+            BASE=480a74958671d9e9c13570ab3a4d8912949ba2c2
+            git diff --name-only "$BASE" HEAD > /tmp/changed.txt
+            cat /tmp/changed.txt
+            grep -Ev '^(docs/static-preview/forge-alive-material3/activity-manual-entry\.js$|docs/static-preview/forge-alive-material3/activity-manual-fact-adapter\.js$|tests/activity-manual-countable-capture\.test\.mjs$|\.github/workflows/activity-manual-countable-capture\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
+            cat /tmp/outside.txt
+            test ! -s /tmp/outside.txt
+          fi
       - name: Validate module syntax
         run: |
           node --check docs/static-preview/forge-alive-material3/activity-manual-fact-adapter.js
