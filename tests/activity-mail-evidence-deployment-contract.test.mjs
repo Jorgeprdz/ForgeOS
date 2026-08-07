@@ -34,8 +34,13 @@ test('migration deployer is exact, non-destructive and records migration history
   assert.match(deployer, /DESTRUCTIVE_SQL_REJECTED/);
 });
 
-test('public callback is state guarded while product actions authenticate internally', () => {
-  assert.match(edge, /url\.searchParams\.get\("oauth"\) === "callback"/);
+test('public OAuth callback uses a clean path and remains state guarded', () => {
+  assert.match(workflow, /mail-evidence-connect\/oauth\/callback/);
+  assert.doesNotMatch(workflow, /mail-evidence-connect\?oauth=callback/);
+  assert.match(edge, /OAUTH_CALLBACK_PATH_SUFFIX/);
+  assert.match(edge, /url\.pathname\.endsWith\(OAUTH_CALLBACK_PATH_SUFFIX\)/);
+  assert.match(edge, /parsed\.search/);
+  assert.match(edge, /parsed\.hash/);
   assert.match(edge, /stateDigest/);
   assert.match(edge, /pkceChallenge/);
   assert.match(edge, /MAIL_AUTH_REQUIRED/);
