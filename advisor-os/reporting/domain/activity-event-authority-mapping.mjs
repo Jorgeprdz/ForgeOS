@@ -1,11 +1,11 @@
 export const ACTIVITY_EVENT_AUTHORITY_MAPPING_SCHEMA_VERSION =
-  "activity-event-authority-mapping.v3";
+  "activity-event-authority-mapping.v2";
 
 export const FES_ACTIVITY_EVENT_SCHEMA_VERSION =
   "forge.activity_event.v1";
 
 export const FES_ACTIVITY_EVENT_EXTENSION_VERSION =
-  "FES-05B.2";
+  "FES-05B.1";
 
 export const REPORTABLE_ACTIVITY_TYPES = Object.freeze([
   "CONTACT_ATTEMPTED",
