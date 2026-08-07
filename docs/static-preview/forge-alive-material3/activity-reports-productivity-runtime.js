@@ -6,6 +6,11 @@ import {
 
 export const ACTIVITY_REPORTS_PRODUCTIVITY_RUNTIME_VERSION = "ACTIVITY-REPORTS-RUNTIME-001";
 const TIME_ZONE = "America/Mexico_City";
+const POINT_FACT_EVENT_TYPES = new Set([
+  "REFERRAL_RECEIVED",
+  "CALL_COMPLETED",
+  "ADVISOR_REFERRAL_RECEIVED",
+]);
 
 function runtimeLayout() {
   const sourceTree = import.meta.url.includes("/docs/static-preview/");
@@ -153,6 +158,40 @@ function comparison(currentResult, previousResult) {
     previousMix: activityMix(previousResult),
     zeroComparisonBlocked: previous === 0,
   });
+}
+
+export function projectActivityPointFacts(snapshot, {
+  from,
+  to,
+  timeZone = TIME_ZONE,
+} = {}) {
+  if (!snapshot || !Array.isArray(snapshot.events) || !from || !to) {
+    return freeze({ state: "UNAVAILABLE", facts: [] });
+  }
+
+  const superseded = new Set(
+    snapshot.events
+      .filter((event) => event?.confirmation_state === "CONFIRMED" && event?.correction_of)
+      .map((event) => event.correction_of),
+  );
+
+  const facts = snapshot.events.flatMap((event) => {
+    if (!event || !POINT_FACT_EVENT_TYPES.has(event.event_type)) return [];
+    if (event.confirmation_state !== "CONFIRMED") return [];
+    if (!event.event_id || superseded.has(event.event_id)) return [];
+    if (!event.occurred_at || Number.isNaN(Date.parse(event.occurred_at))) return [];
+    const activityDate = dateOnly(event.occurred_at, timeZone);
+    if (activityDate < from || activityDate > to) return [];
+    return [{
+      eventType: event.event_type,
+      eventReference: event.event_id,
+      occurredAt: new Date(event.occurred_at).toISOString(),
+      sourceReference: event.source?.reference || null,
+    }];
+  });
+
+  facts.sort((a, b) => a.occurredAt.localeCompare(b.occurredAt) || a.eventReference.localeCompare(b.eventReference));
+  return freeze({ state: "READY", facts });
 }
 
 async function authenticatedSession(bootstrap) {
@@ -334,6 +373,14 @@ export function createActivityReportsProductivityRuntime({
 
     const activitySource = await safeSource("FES_REP_ACTIVITY", async () => {
       const runtime = await ensureActivityRuntime(selectedAdvisorId);
+      const canonicalSnapshot = typeof runtime.readCanonicalEvents === "function"
+        ? await runtime.readCanonicalEvents()
+        : null;
+      guard(selectedGeneration, selectedAdvisorId, signal);
+      const pointFacts = projectActivityPointFacts(canonicalSnapshot, {
+        ...windows.current,
+        timeZone,
+      });
       const current = await runtime.runChartReady({
         period: { kind: "CUSTOM_RANGE", parameters: windows.current },
         timeZone,
@@ -346,7 +393,7 @@ export function createActivityReportsProductivityRuntime({
         asOf,
       });
       guard(selectedGeneration, selectedAdvisorId, signal);
-      return freeze({ current, previous, comparison: comparison(current, previous) });
+      return freeze({ current, previous, comparison: comparison(current, previous), pointFacts });
     });
 
     const productionSource = await safeSource("MONTHLY_GOAL_AND_CONFIRMED_POLICIES", async () => {
@@ -395,6 +442,7 @@ export function createActivityReportsProductivityRuntime({
         policyTruthAuthority: false,
         forecastTruthAuthority: false,
         reportingProjectionAuthority: true,
+        canonicalPointFactProjection: true,
         automaticDecision: false,
         automaticTaskCreation: false,
         automaticCalendarCreation: false,

@@ -1,0 +1,46 @@
+name: Activity FES-01.2 Taxonomy Reconciliation
+
+on:
+  pull_request:
+    paths:
+      - 'platform/event-evidence/canonical-activity-event-contract.js'
+      - 'tests/activity-foundational-fes-taxonomy-test.mjs'
+      - '.github/workflows/activity-fes-01-2-taxonomy.yml'
+  push:
+    branches:
+      - 'codex/activity-fes-01-2-taxonomy-reconciliation'
+
+permissions:
+  contents: read
+
+jobs:
+  taxonomy-and-scope:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scope guard against Pipeline PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${GITHUB_BASE_REF:-}" = "main" ]; then
+            echo 'Final promotion detected; narrow stacked diff guard replaced by exact provenance guard.'
+          else
+            BASE=d986de0f660cab8ed4da6b6e32873a17af378fa8
+            git diff --name-only "$BASE" HEAD > /tmp/changed.txt
+            cat /tmp/changed.txt
+            grep -Ev '^(platform/event-evidence/canonical-activity-event-contract\.js$|tests/activity-foundational-fes-taxonomy-test\.mjs$|\.github/workflows/activity-fes-01-2-taxonomy\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
+            cat /tmp/outside.txt
+            test ! -s /tmp/outside.txt
+          fi
+      - name: Provenance guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          APPROVED_CONTRACT=dc031b1dbe8c1da1a1de72733b01d88a173f1a1b
+          APPROVED_TEST=540809b002e072e9d774a1576923d342915910de
+          test "$(git hash-object platform/event-evidence/canonical-activity-event-contract.js)" = "$APPROVED_CONTRACT"
+          test "$(git hash-object tests/activity-foundational-fes-taxonomy-test.mjs)" = "$APPROVED_TEST"
+      - name: FES taxonomy contract test
+        run: node --test tests/activity-foundational-fes-taxonomy-test.mjs

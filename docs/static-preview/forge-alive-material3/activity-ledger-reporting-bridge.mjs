@@ -123,52 +123,53 @@ export async function createProductiveActivityReportingBridge({
   let lastRead = null;
   let closed = false;
 
+  async function readCanonicalSnapshot() {
+    if (closed) {
+      fail("ACTIVITY_REPORTING_BRIDGE_CLOSED", "the productive bridge is closed");
+    }
+
+    let syncResult;
+    try {
+      syncResult = await ledger.syncOnce();
+    } catch (error) {
+      fail(
+        "FES_LEDGER_SYNC_UNAVAILABLE",
+        "the canonical FES authority could not be synchronized",
+        error,
+      );
+    }
+
+    const entries = await ledger.listEntries();
+    const events = normalizeLedgerEntries(entries, tenantId);
+    const cursor = await ledger.getCursor?.();
+
+    lastRead = freeze({
+      synchronizedAt: clock().toISOString(),
+      eventCount: events.length,
+      cursor: cursor ?? null,
+      syncResult: syncResult ?? null,
+    });
+
+    return freeze({
+      schemaVersion: FES_ACTIVITY_EVENT_AUTHORITY_SNAPSHOT_SCHEMA_VERSION,
+      authority: {
+        organizationId: tenantId,
+        advisorId,
+      },
+      source: {
+        sourceId: "fes-activity-ledger-browser-runtime",
+        sourceVersion: ledger.runtime_version ?? "FES-02C.1",
+        authority: "FES_CANONICAL_ACTIVITY_EVENT",
+      },
+      events,
+    });
+  }
+
   const sourceAdapter = createFesActivityReportSourceAdapter({
     organizationId: tenantId,
     advisorId,
     timeZone: zone,
-
-    async readEvents() {
-      if (closed) {
-        fail("ACTIVITY_REPORTING_BRIDGE_CLOSED", "the productive bridge is closed");
-      }
-
-      let syncResult;
-      try {
-        syncResult = await ledger.syncOnce();
-      } catch (error) {
-        fail(
-          "FES_LEDGER_SYNC_UNAVAILABLE",
-          "the canonical FES authority could not be synchronized",
-          error,
-        );
-      }
-
-      const entries = await ledger.listEntries();
-      const events = normalizeLedgerEntries(entries, tenantId);
-      const cursor = await ledger.getCursor?.();
-
-      lastRead = freeze({
-        synchronizedAt: clock().toISOString(),
-        eventCount: events.length,
-        cursor: cursor ?? null,
-        syncResult: syncResult ?? null,
-      });
-
-      return freeze({
-        schemaVersion: FES_ACTIVITY_EVENT_AUTHORITY_SNAPSHOT_SCHEMA_VERSION,
-        authority: {
-          organizationId: tenantId,
-          advisorId,
-        },
-        source: {
-          sourceId: "fes-activity-ledger-browser-runtime",
-          sourceVersion: ledger.runtime_version ?? "FES-02C.1",
-          authority: "FES_CANONICAL_ACTIVITY_EVENT",
-        },
-        events,
-      });
-    },
+    readEvents: readCanonicalSnapshot,
   });
 
   const reportingRuntime = createActivityReportingRuntime({
@@ -203,6 +204,13 @@ export async function createProductiveActivityReportingBridge({
       return reportingRuntime.runChartReady(input);
     },
 
+    // Read-only projection gateway for consumers that need canonical facts whose
+    // semantics REP intentionally does not relabel (referrals/calls/advisor referrals).
+    // It reuses the same authenticated FES runtime and never exposes a direct table read.
+    readCanonicalEvents() {
+      return readCanonicalSnapshot();
+    },
+
     diagnostics() {
       return freeze({
         schemaVersion: "productive-activity-reporting-diagnostics.v1",
@@ -213,6 +221,7 @@ export async function createProductiveActivityReportingBridge({
         boundary: {
           eventTruthAuthority: false,
           activityReadAuthority: true,
+          canonicalEventProjectionRead: true,
           activityWriteAuthority: false,
           ledgerMutationAuthority: false,
           reportingAggregationAuthority: false,
@@ -235,6 +244,7 @@ export async function createProductiveActivityReportingBridge({
       cachedDataPromotedAsCompleteTruth: false,
       eventTruthAuthority: false,
       activityReadAuthority: true,
+      canonicalEventProjectionRead: true,
       activityWriteAuthority: false,
       ledgerMutationAuthority: false,
       reportingAggregationAuthority: false,

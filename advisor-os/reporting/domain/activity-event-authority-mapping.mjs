@@ -28,6 +28,9 @@ export const FES_ACTIVITY_EVENT_TYPES = Object.freeze([
   "APPOINTMENT_RESCHEDULED",
   "APPOINTMENT_NO_SHOW",
   "ACTIVITY_CONTEXT_ADDED",
+  "REFERRAL_RECEIVED",
+  "CALL_COMPLETED",
+  "ADVISOR_REFERRAL_RECEIVED",
   "DUE_ACTION_CREATED",
   "DUE_ACTION_RESCHEDULED",
   "DUE_ACTION_COMPLETED",
@@ -59,6 +62,11 @@ const APPOINTMENT_EVENTS = new Set([
   "APPOINTMENT_HELD",
 ]);
 
+const PRODUCTIVITY_ONLY_EVENTS = new Set([
+  "REFERRAL_RECEIVED",
+  "ADVISOR_REFERRAL_RECEIVED",
+]);
+
 const DIRECT_ACTIVITY_MAP = Object.freeze({
   DUE_ACTION_COMPLETED: Object.freeze([
     "FOLLOW_UP_COMPLETED",
@@ -73,12 +81,17 @@ const DIRECT_ACTIVITY_MAP = Object.freeze({
     "CONTACT_ATTEMPTED",
     "CONVERSATION_COMPLETED",
   ]),
+  CALL_COMPLETED: Object.freeze([
+    "CONTACT_ATTEMPTED",
+    "CONVERSATION_COMPLETED",
+  ]),
 });
 
 const NON_COUNTABLE_EVENTS = new Set(
   FES_ACTIVITY_EVENT_TYPES.filter(
     (eventType) =>
       !APPOINTMENT_EVENTS.has(eventType) &&
+      !PRODUCTIVITY_ONLY_EVENTS.has(eventType) &&
       !Object.prototype.hasOwnProperty.call(
         DIRECT_ACTIVITY_MAP,
         eventType,
@@ -197,18 +210,37 @@ export function assertCanonicalFesActivityEvent(value) {
   return value;
 }
 
+function appointmentStageFromEnvelope(event) {
+  const purpose = event?.payload?.appointment_purpose;
+  if (purpose === "INITIAL" || purpose === "CLOSING") return purpose;
+  if (purpose === "OTHER") return "OTHER";
+  return null;
+}
+
 function appointmentActivityTypes(event, classifyAppointment) {
-  if (typeof classifyAppointment !== "function") {
+  let stage = appointmentStageFromEnvelope(event);
+
+  if (stage === "OTHER") {
+    return decision({
+      eventId: event.event_id,
+      status: "NOT_A_REPORTABLE_ACTIVITY",
+      reason: "APPOINTMENT_PURPOSE_NOT_IN_ACTIVITY_FUNNEL",
+    });
+  }
+
+  if (!stage && typeof classifyAppointment === "function") {
+    stage = classifyAppointment(event);
+    if (stage !== "INITIAL" && stage !== "CLOSING") {
+      fail("classifyAppointment must return INITIAL or CLOSING");
+    }
+  }
+
+  if (!stage) {
     return decision({
       eventId: event.event_id,
       status: "REQUIRES_DOMAIN_CONTEXT",
       reason: "APPOINTMENT_STAGE_NOT_IN_CANONICAL_ENVELOPE",
     });
-  }
-
-  const stage = classifyAppointment(event);
-  if (stage !== "INITIAL" && stage !== "CLOSING") {
-    fail("classifyAppointment must return INITIAL or CLOSING");
   }
 
   const completed = event.event_type === "APPOINTMENT_HELD";
@@ -239,6 +271,14 @@ export function mapCanonicalEventToActivity(
       eventId: event.event_id,
       status: "EXCLUDED",
       reason: "DISPUTED_EVENT",
+    });
+  }
+
+  if (PRODUCTIVITY_ONLY_EVENTS.has(event.event_type)) {
+    return decision({
+      eventId: event.event_id,
+      status: "NOT_A_REPORTABLE_ACTIVITY",
+      reason: "PRODUCTIVITY_FACT_NOT_REP_ACTIVITY",
     });
   }
 
