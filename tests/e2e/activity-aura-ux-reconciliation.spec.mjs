@@ -1,5 +1,13 @@
 import { expect, test } from "@playwright/test";
 
+const metric = (value, sourceRef) => ({
+  value,
+  completeness: "COMPLETE",
+  evidenceState: "CONFIRMED",
+  metricOwner: "PRODUCTIVITY",
+  sourceRefs: [sourceRef],
+});
+
 const READY = Object.freeze({
   state: "READY",
   activity: {
@@ -29,6 +37,20 @@ const READY = Object.freeze({
       },
     },
     comparison: { delta: 5, deltaPercent: 38.5, zeroComparisonBlocked: false },
+  },
+  activityPointsInput: {
+    counts: {
+      referidos: metric(0, "evidence:referidos"),
+      llamadas: metric(5, "evidence:llamadas"),
+      citas_agendadas: metric(0, "evidence:citas-agendadas"),
+      citas_iniciales: metric(0, "evidence:citas-iniciales"),
+      citas_cierre: metric(0, "evidence:citas-cierre"),
+      solicitudes_firmadas: metric(2, "evidence:solicitudes"),
+      polizas_pagadas: metric(1, "evidence:polizas"),
+      referido_asesor: metric(0, "evidence:referido-asesor"),
+    },
+    period: { from: "2026-08-07", to: "2026-08-07" },
+    timezone: "America/Mexico_City",
   },
   production: { sold: 3, target: 5 },
   forecast: null,
@@ -80,15 +102,20 @@ test("desktop Activity hierarchy and capture surface", async ({ page }, testInfo
   await expect(page.getByRole("button", { name: "Registrar actividad" }).first()).toBeVisible();
   await expect(page.getByRole("tab", { name: "Actividad" })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByText("Actividad del periodo")).toBeVisible();
+  await expect(page.getByText("Meta diaria completada con evidencia confirmada")).toBeVisible();
   await assertNoOverflow(page);
   await page.screenshot({ path: testInfo.outputPath("ACTIVITY-DESKTOP-1440x900.png"), fullPage: true });
 });
 
-test("desktop Reports exposes comparison, goal and accessible table", async ({ page }, testInfo) => {
+test("desktop Reports exposes comparison, official points, goal and accessible table", async ({ page }, testInfo) => {
   await mount(page, { width: 1440, height: 900 });
   await page.getByRole("tab", { name: "Reportes" }).click();
   await expect(page.getByText("Vs. periodo anterior")).toBeVisible();
   await expect(page.getByText("Meta mensual")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sistema oficial de productividad" })).toBeVisible();
+  await expect(page.locator("[data-points-total]")).toHaveText("25 / 25");
+  await page.getByText("Ver baremo oficial").click();
+  await expect(page.locator("[data-points-rules] b")).toHaveCount(8);
   await expect(page.getByRole("heading", { name: "Actividad confirmada" })).toBeVisible();
   await page.getByText("Ver tabla accesible").click();
   await expect(page.getByRole("table")).toBeVisible();
@@ -104,6 +131,7 @@ for (const viewport of [
     await mount(page, viewport);
     await page.getByRole("tab", { name: "Reportes" }).click();
     await expect(page.getByText("Pólizas confirmadas del mes")).toBeVisible();
+    await expect(page.locator("[data-points-total]")).toHaveText("25 / 25");
     await expect(page.locator("[data-chart-card]")).toBeVisible();
     await assertNoOverflow(page);
     await page.screenshot({
@@ -123,6 +151,7 @@ test("keyboard tabs, zoom 200 and reduced motion stay usable", async ({ page }, 
   await expect(page.getByRole("tab", { name: "Reportes" })).toHaveAttribute("aria-selected", "true");
   await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
   await expect(page.getByText("Meta mensual")).toBeVisible();
+  await expect(page.locator("[data-points-total]")).toHaveText("25 / 25");
   await assertNoOverflow(page);
   await page.screenshot({ path: testInfo.outputPath("REPORTS-ZOOM-200-REDUCED-MOTION.png"), fullPage: true });
 });
