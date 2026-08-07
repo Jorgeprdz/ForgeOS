@@ -44,20 +44,26 @@ export function deriveActivityMetricSuggestions(result = {}) {
   const activityDate = dateOnly(result.generatedAt || new Date(), result.timeZone || "America/Mexico_City");
   const rows = rowsFromChart(result);
   const withValue = (value, sourceRefs) => freeze({ value, sourceRefs, state: "SUGGESTED" });
+  const pointFacts = result?.activity?.pointFacts;
+  const factSuggestion = eventType => {
+    if (pointFacts?.state !== "READY" || !Array.isArray(pointFacts.facts)) return null;
+    const matched = pointFacts.facts.filter(fact => fact?.eventType === eventType);
+    return withValue(
+      matched.length,
+      matched.map(fact => `fes:${fact.eventReference}`),
+    );
+  };
   return freeze({
     activityDate,
     counts: {
-      referidos: null,
-      // REP CONVERSATION_COMPLETED is not equivalent to a phone call. Until the
-      // productive runtime exposes canonical FES CALL_COMPLETED facts, calls stay
-      // unknown and require explicit advisor confirmation rather than a false suggestion.
-      llamadas: null,
+      referidos: factSuggestion("REFERRAL_RECEIVED"),
+      llamadas: factSuggestion("CALL_COMPLETED"),
       citas_agendadas: withValue(sum(rows, activityDate, ["INITIAL_APPOINTMENT_SCHEDULED", "CLOSING_APPOINTMENT_SCHEDULED"]), [`rep:${activityDate}:APPOINTMENT_SCHEDULED`]),
       citas_iniciales: withValue(sum(rows, activityDate, ["INITIAL_APPOINTMENT_COMPLETED"]), [`rep:${activityDate}:INITIAL_APPOINTMENT_COMPLETED`]),
       citas_cierre: withValue(sum(rows, activityDate, ["CLOSING_APPOINTMENT_COMPLETED"]), [`rep:${activityDate}:CLOSING_APPOINTMENT_COMPLETED`]),
       solicitudes_firmadas: null,
       polizas_pagadas: null,
-      referido_asesor: null,
+      referido_asesor: factSuggestion("ADVISOR_REFERRAL_RECEIVED"),
     },
   });
 }
@@ -136,8 +142,6 @@ export function createActivityDailyConfirmation({ root, bootstrap = globalThis.F
       .gte("received_at", from)
       .lte("received_at", to);
     const mailRows = mail.error ? [] : (mail.data || []);
-    // An empty suggestion table does not prove zero paid policies: the advisor may
-    // have no mail provider connected or may not have scanned yet. Keep it unknown.
     if (mailRows.length > 0) {
       const uniquePayments = new Map();
       for (const row of mailRows) {
