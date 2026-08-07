@@ -24,12 +24,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BASE=d986de0f660cab8ed4da6b6e32873a17af378fa8
-          git diff --name-only "$BASE" HEAD > /tmp/changed.txt
-          cat /tmp/changed.txt
-          grep -Ev '^(platform/event-evidence/canonical-activity-event-contract\.js$|tests/activity-foundational-fes-taxonomy-test\.mjs$|\.github/workflows/activity-fes-01-2-taxonomy\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
-          cat /tmp/outside.txt
-          test ! -s /tmp/outside.txt
+          if [ "${GITHUB_BASE_REF:-}" = "main" ]; then
+            echo 'Final promotion detected; narrow stacked diff guard replaced by exact provenance guard.'
+          else
+            BASE=d986de0f660cab8ed4da6b6e32873a17af378fa8
+            git diff --name-only "$BASE" HEAD > /tmp/changed.txt
+            cat /tmp/changed.txt
+            grep -Ev '^(platform/event-evidence/canonical-activity-event-contract\.js$|tests/activity-foundational-fes-taxonomy-test\.mjs$|\.github/workflows/activity-fes-01-2-taxonomy\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
+            cat /tmp/outside.txt
+            test ! -s /tmp/outside.txt
+          fi
       - name: Provenance guard
         shell: bash
         run: |
