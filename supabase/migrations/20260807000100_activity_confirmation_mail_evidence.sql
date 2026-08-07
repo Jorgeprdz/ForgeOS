@@ -216,6 +216,17 @@ begin
         raise exception 'ACTIVITY_CONFIRMATION_UNEXPECTED_CORRECTION';
       end if;
       confirmation_kind_value := 'CONFIRMED';
+    elsif latest.confirmed_value = confirmed_value_value then
+      if correction_of_value is not null and correction_of_value <> latest.id then
+        raise exception 'ACTIVITY_CONFIRMATION_LATEST_CORRECTION_REQUIRED';
+      end if;
+      result_rows := result_rows || jsonb_build_array(jsonb_build_object(
+        'id', latest.id,
+        'metricKey', latest.metric_key,
+        'confirmedValue', latest.confirmed_value,
+        'state', 'UNCHANGED'
+      ));
+      continue;
     else
       if correction_of_value is null or correction_of_value <> latest.id then
         raise exception 'ACTIVITY_CONFIRMATION_LATEST_CORRECTION_REQUIRED';
@@ -249,7 +260,7 @@ begin
   end if;
 
   return jsonb_build_object(
-    'state', case when inserted_count = 0 then 'IDEMPOTENT_REPLAY' else 'RECORDED' end,
+    'state', case when inserted_count = 0 then 'NO_CHANGE' else 'RECORDED' end,
     'activityDate', activity_date_value,
     'metricCount', 8,
     'rows', result_rows
