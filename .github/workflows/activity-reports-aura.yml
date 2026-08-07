@@ -54,6 +54,40 @@ jobs:
           tests/activity-daily-confirmation-contract.test.mjs
           tests/activity-confirmation-migration-contract.test.mjs
 
+  oauth-readiness:
+    name: OAuth secret readiness (presence only)
+    runs-on: ubuntu-latest
+    needs: scope-and-contract
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      FORGE_GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.FORGE_GOOGLE_OAUTH_CLIENT_ID }}
+      FORGE_GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.FORGE_GOOGLE_OAUTH_CLIENT_SECRET }}
+      FORGE_MICROSOFT_OAUTH_CLIENT_ID: ${{ secrets.FORGE_MICROSOFT_OAUTH_CLIENT_ID }}
+      FORGE_MICROSOFT_OAUTH_CLIENT_SECRET: ${{ secrets.FORGE_MICROSOFT_OAUTH_CLIENT_SECRET }}
+      FORGE_MAIL_TOKEN_ENCRYPTION_SECRET: ${{ secrets.FORGE_MAIL_TOKEN_ENCRYPTION_SECRET }}
+    steps:
+      - name: Report configured secret names only
+        shell: bash
+        run: |
+          set -euo pipefail
+          check() {
+            local name="$1"
+            if [ -n "${!name:-}" ]; then
+              printf '%s=CONFIGURED\n' "$name"
+            else
+              printf '%s=MISSING\n' "$name"
+            fi
+          }
+          check SUPABASE_ACCESS_TOKEN
+          check SUPABASE_ANON_KEY
+          check FORGE_GOOGLE_OAUTH_CLIENT_ID
+          check FORGE_GOOGLE_OAUTH_CLIENT_SECRET
+          check FORGE_MICROSOFT_OAUTH_CLIENT_ID
+          check FORGE_MICROSOFT_OAUTH_CLIENT_SECRET
+          check FORGE_MAIL_TOKEN_ENCRYPTION_SECRET
+          echo 'READINESS_CHECK=COMPLETE_VALUES_NEVER_PRINTED'
+
   browser-acceptance:
     name: Activity confirmation responsive acceptance
     runs-on: ubuntu-latest
