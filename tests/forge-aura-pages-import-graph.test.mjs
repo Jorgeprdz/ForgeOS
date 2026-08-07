@@ -4,6 +4,7 @@ import { lstatSync, readFileSync, readlinkSync } from "node:fs";
 
 const INDEX = "docs/static-preview/forge-aura/index.html";
 const PROJECTION = "docs/static-preview/forge-aura/activity/activity-points-projection.js";
+const REPORTING_CRYPTO_SHIM = "docs/static-preview/forge-alive-material3/node-crypto-shim.mjs";
 const PUBLIC_ENGINE_LINK = "docs/daily-points-engine.js";
 const PUBLIC_ADAPTER_LINK = "docs/platform/productivity/activity-points-authority-adapter.js";
 
@@ -20,6 +21,14 @@ test("Aura Pages maps Activity to the canonical published runtime", () => {
   assert.equal(requested.href, `${sourcePrefix.href}activity-manual-entry.js`);
   assert.equal(`${publicPrefix.href}${requested.href.slice(sourcePrefix.href.length)}`,
     "https://example.test/ForgeOS/static-preview/forge-alive/activity-manual-entry.js");
+});
+
+test("Aura reuses the approved REP browser crypto shim", () => {
+  const html = readFileSync(INDEX, "utf8");
+  assert.match(html, /"node:crypto"\s*:\s*"\.\.\/forge-alive\/node-crypto-shim\.mjs\?v=rep-16e-001"/);
+  const shim = readFileSync(REPORTING_CRYPTO_SHIM, "utf8");
+  assert.match(shim, /export function createHash|export \{[^}]*createHash/s);
+  assert.match(shim, /SHA256_CONSTANTS/);
 });
 
 test("Pages publishes official points authority by symlink instead of copying rules", () => {
