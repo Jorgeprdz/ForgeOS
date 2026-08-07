@@ -126,16 +126,28 @@ export function createActivityDailyConfirmation({ root, bootstrap = globalThis.F
       state: "SUGGESTED",
       sourceRefs: (applications.data || []).map(row => `application:${row.event_reference}`),
     });
+
     const mail = await db.from("activity_mail_evidence_suggestions")
-      .select("id,provider_message_ref,received_at")
+      .select("id,provider,provider_message_ref,received_at,sender_domain,policy_reference_hint")
       .eq("suggested_metric", "polizas_pagadas")
       .gte("received_at", from)
       .lte("received_at", to);
-    if (!mail.error) selected.polizas_pagadas = freeze({
-      value: new Set((mail.data || []).map(row => row.provider_message_ref)).size,
-      state: "SUGGESTED",
-      sourceRefs: (mail.data || []).map(row => `mail-suggestion:${row.id}`),
-    });
+    if (!mail.error) {
+      const uniquePayments = new Map();
+      for (const row of mail.data || []) {
+        const policyHint = String(row.policy_reference_hint || "").trim().toUpperCase();
+        const sourceScope = String(row.sender_domain || row.provider || "mail").toLowerCase();
+        const dedupeKey = policyHint
+          ? `policy:${sourceScope}:${policyHint}`
+          : `message:${row.provider}:${row.provider_message_ref}`;
+        if (!uniquePayments.has(dedupeKey)) uniquePayments.set(dedupeKey, row);
+      }
+      selected.polizas_pagadas = freeze({
+        value: uniquePayments.size,
+        state: "SUGGESTED",
+        sourceRefs: [...uniquePayments.values()].map(row => `mail-suggestion:${row.id}`),
+      });
+    }
     return selected;
   }
 
@@ -197,32 +209,38 @@ export function createActivityDailyConfirmation({ root, bootstrap = globalThis.F
     return pointInput();
   }
 
+  function metricPayload(key) {
+    const node = grid.querySelector(`[data-metric="${key}"]`);
+    const value = Number(node.querySelector("input").value);
+    if (!Number.isInteger(value) || value < 0 || value > 999) throw new Error("Usa números enteros entre 0 y 999.");
+    const previous = latest.get(key);
+    const suggestion = suggestions[key] || null;
+    return {
+      metricKey: key,
+      suggestedValue: suggestion?.value ?? null,
+      confirmedValue: value,
+      suggestionSources: suggestion?.sourceRefs || [],
+      correctionOf: previous?.id || null,
+      correctionReason: previous && Number(previous.confirmed_value) !== value
+        ? "USER_DAILY_RECONCILIATION_CORRECTION"
+        : null,
+    };
+  }
+
   async function save() {
     action.disabled = true;
     status.textContent = "Guardando confirmación…";
     try {
       const db = await getClient();
       if (!db) throw new Error("La confirmación requiere una sesión productiva conectada.");
-      for (const [key] of METRICS) {
-        const node = grid.querySelector(`[data-metric="${key}"]`);
-        const value = Number(node.querySelector("input").value);
-        if (!Number.isInteger(value) || value < 0 || value > 999) throw new Error("Usa números enteros entre 0 y 999.");
-        const previous = latest.get(key);
-        if (previous && Number(previous.confirmed_value) === value) continue;
-        const suggestion = suggestions[key] || null;
-        const payload = {
-          activityDate,
-          metricKey: key,
-          suggestedValue: suggestion?.value ?? null,
-          confirmedValue: value,
-          suggestionSources: suggestion?.sourceRefs || [],
-          correctionOf: previous?.id || null,
-          correctionReason: previous ? "USER_DAILY_RECONCILIATION_CORRECTION" : null,
-          idempotencyKey: `activity-confirm:${activityDate}:${key}:${crypto.randomUUID?.() || Date.now()}`,
-        };
-        const saved = await db.rpc("forge_activity_confirm_daily_metric", { p_payload: payload });
-        if (saved.error) throw saved.error;
-      }
+      const metrics = METRICS.map(([key]) => metricPayload(key));
+      const payload = {
+        activityDate,
+        metrics,
+        idempotencyKey: `activity-confirm-batch:${activityDate}:${crypto.randomUUID?.() || Date.now()}`,
+      };
+      const saved = await db.rpc("forge_activity_confirm_daily_metrics", { p_payload: payload });
+      if (saved.error) throw saved.error;
       await readConfirmations();
       renderRows();
       status.textContent = "Actividad confirmada. Los puntos usan estos valores, no la sugerencia.";
