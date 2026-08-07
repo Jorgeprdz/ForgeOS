@@ -1,0 +1,80 @@
+name: Activity Reports Aura Reconciliation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/static-preview/forge-aura/activity/**'
+      - 'docs/static-preview/forge-aura/app-v4.js'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'docs/static-preview/forge-aura/aura-shell.js'
+      - 'platform/productivity/activity-points-authority-adapter.mjs'
+      - 'tests/activity-aura-scope-contract.test.mjs'
+      - 'tests/activity-aura-points-authority.test.mjs'
+      - 'tests/activity-playwright.config.mjs'
+      - 'tests/e2e/activity-aura-ux-reconciliation.spec.mjs'
+      - 'docs/architecture/source-truth/FORGE_AURA_ACTIVITY_REPORTS_UX_RECONCILIATION_REPORT_001.md'
+      - 'docs/evidence/FORGE_AURA_ACTIVITY_REPORTS_ACCEPTANCE_001.md'
+      - '.github/workflows/activity-reports-aura.yml'
+  push:
+    branches:
+      - 'codex/forge-aura-activity-reports-final-integration-001'
+
+permissions:
+  contents: read
+
+jobs:
+  scope-and-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scope guard against countable Activity authority stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=3bf027bc1100d2da366844d00e64e0d206c3c76c
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE" HEAD > /tmp/changed.txt
+          cat /tmp/changed.txt
+          if grep -E '^docs/static-preview/forge-aura/pipeline/|^docs/static-preview/forge-aura/aura-auth|^docs/static-preview/forge-aura/.*login' /tmp/changed.txt; then
+            echo 'Forbidden Pipeline/Login mutation detected' >&2
+            exit 1
+          fi
+          grep -Ev '^(docs/static-preview/forge-aura/activity/|docs/static-preview/forge-aura/app-v4\.js$|docs/static-preview/forge-aura/aura-router-v4\.js$|docs/static-preview/forge-aura/aura-shell\.js$|platform/productivity/activity-points-authority-adapter\.mjs$|tests/activity-aura-scope-contract\.test\.mjs$|tests/activity-aura-points-authority\.test\.mjs$|tests/activity-playwright\.config\.mjs$|tests/e2e/activity-aura-ux-reconciliation\.spec\.mjs$|docs/architecture/source-truth/FORGE_AURA_ACTIVITY_REPORTS_UX_RECONCILIATION_REPORT_001\.md$|docs/evidence/FORGE_AURA_ACTIVITY_REPORTS_ACCEPTANCE_001\.md$|\.github/workflows/activity-reports-aura\.yml$)' /tmp/changed.txt > /tmp/outside.txt || true
+          cat /tmp/outside.txt
+          test ! -s /tmp/outside.txt
+          APPROVED_POINTS_SHA="$(git show 2721aef4e7899fda15f6c53a0913ed13ab161c59:platform/productivity/activity-points-authority-adapter.mjs | git hash-object --stdin)"
+          CURRENT_POINTS_SHA="$(git hash-object platform/productivity/activity-points-authority-adapter.mjs)"
+          echo "approved_points_blob=$APPROVED_POINTS_SHA"
+          echo "current_points_blob=$CURRENT_POINTS_SHA"
+          test "$APPROVED_POINTS_SHA" = "$CURRENT_POINTS_SHA"
+      - name: Contract tests
+        run: node --test tests/activity-aura-scope-contract.test.mjs tests/activity-aura-points-authority.test.mjs
+
+  browser-acceptance:
+    name: Activity responsive and accessibility acceptance
+    runs-on: ubuntu-latest
+    needs: scope-and-contract
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run Activity and Reports browser acceptance
+        run: npx playwright test --config tests/activity-playwright.config.mjs
+      - name: Upload Activity screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: activity-reports-aura-screenshots-${{ github.sha }}
+          path: test-results/activity-aura-ux-reconciliation
+          if-no-files-found: warn
+          retention-days: 30
