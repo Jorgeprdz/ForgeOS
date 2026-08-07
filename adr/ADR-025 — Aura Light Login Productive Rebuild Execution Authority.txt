@@ -1,0 +1,163 @@
+ADR-025 — Aura Light Login Productive Rebuild Execution Authority
+
+Status
+
+RATIFIED / EXECUTION_AUTHORIZED / MATERIAL_3_PROHIBITED
+
+Authorization
+
+AUTHORIZATION_DATE=2026-08-04
+AUTHORIZATION_ID=AURA_LIGHT_LOGIN_PRODUCTIVE_REBUILD_001
+AUTHORIZATION_SOURCE=EXPLICIT_HUMAN_OWNER_COMMAND
+AUTHORIZATION_COMMAND=NEXT=AURA_LIGHT_LOGIN_PRODUCTIVE_REBUILD
+HUMAN_OWNER=JORGE_IGNACIO_PALACIOS_RODRIGUEZ
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+IMPLEMENTATION_READINESS=READY
+
+Owner Clarification
+
+OWNER_CLARIFICATION_DATE=2026-08-04
+OWNER_CLARIFICATION=PROHIBIDO_UTILIZAR_DISENO_MATERIAL_3
+MATERIAL_3_DESIGN_ALLOWED=NO
+MATERIAL_3_TOKENS_ALLOWED=NO
+MATERIAL_3_COMPONENTS_ALLOWED=NO
+MATERIAL_3_LAYOUT_PATTERNS_ALLOWED=NO
+MATERIAL_3_VISUAL_FALLBACK_ALLOWED=NO
+MATERIAL_3_BRANDING_ALLOWED=NO
+AURA_LIGHT_ONLY=YES
+
+Applicable Authority
+
+- Article 0 and the Forge Constitution.
+- ROBOCOP LOCK 001.
+- ADR-003 Human Decision Authority.
+- ADR-016 Advisor Experience Anti-Dependence Boundary.
+- ADR-020 Canonical Forge Shell authority, preserved outside the login surface.
+- ADR-023 productive authentication, session, tenant and RLS boundaries.
+- ADR-024 Forge Aura Light 2026 Canonical Redesign Design Authority.
+
+Aura Light Gate
+
+AURA_LIGHT_AUTHORITY=docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_DESIGN_SYSTEM.md
+AURA_LIGHT_SOURCE_PDF_SHA256=0dbda2ae17d80602c7943bf139015177dbeb340a5edd5d9a5983bd24d5b6672e
+AURA_LIGHT_VERSION=1.0
+AURA_LIGHT_COMPLIANCE=REQUIRED
+AURA_LIGHT_IS_SOLE_VISUAL_AUTHORITY=YES
+LEGACY_VISUAL_IMPORTS=FORBIDDEN
+LOCAL_UNGOVERNED_TOKENS=FORBIDDEN
+VISUAL_ACCEPTANCE_AGAINST_CANONICAL_AUTHORITY=REQUIRED
+
+Decision
+
+Authorize the productive rebuild of the canonical Forge login surface exclusively in Aura Light 2026 while preserving the current Supabase authentication authority, authenticated route guard, session restoration, canonical OAuth return path, tenant boundaries and logout scrub behavior.
+
+This is a vertical productive rebuild of the real login. It is not a scaffold, placeholder, alternate application, demo shell, Material 3 implementation or visual overlay.
+
+Directory Name Disclaimer
+
+The current canonical runtime still lives under a repository path containing the historical name `forge-alive-material3`. That path name is not a design authority and does not authorize Material 3 styling, tokens, components, layout rules or interaction patterns. During this scope it is treated only as the current runtime location. The rebuilt login must be visually and behaviorally governed only by Aura Light 2026.
+
+Authorized Scope
+
+- Rebuild the canonical anonymous login experience as a complete Aura Light surface.
+- Preserve Google authentication through the current productive Supabase client.
+- Expose Supabase email/password sign-in through the existing productive authentication bootstrap.
+- Preserve test-advisor access only behind the existing governed public configuration and adapter.
+- Preserve session restoration and authentication-state subscriptions.
+- Preserve canonical redirect and requested-route restoration.
+- Preserve authenticated profile and logout behavior.
+- Add explicit loading, invalid-credentials, configuration-blocked, network/disconnected and generic error states.
+- Add keyboard, focus, reduced-motion, zoom/reflow and responsive acceptance.
+- Add or update scoped tests, evidence and build preparation required by this login surface.
+
+Authorized Files
+
+- `advisor-os/sales-pipeline/productive-prospect-bootstrap.js`
+- `docs/static-preview/forge-alive-material3/forge-alive-auth-entry-067g17b1.js`
+- `docs/static-preview/forge-alive-material3/forge-alive-auth-entry-067g17b1.css`
+- `scripts/prepare-material3-auth-entry.mjs` only as a historical build-path file when required to publish the canonical login authority; it may not introduce or preserve Material 3 design.
+- login/auth-specific tests, evidence and workflow files.
+- this ADR and scoped governance evidence.
+
+Prohibited Design Sources
+
+- Material Design 3 specifications.
+- Material 3 color roles or token names as the source of visual decisions.
+- Material 3 typography scales.
+- Material 3 shape, elevation, navigation, dialog, field or button patterns.
+- Material Symbols as an imposed visual system.
+- Material 3 dark theme or dynamic color.
+- Existing `tokens.css` Material 3 values as authority for the rebuilt login.
+- Existing dark organic login CSS.
+- Gold primary actions.
+- recovery CSS.
+- screenshots or legacy mocks that conflict with Aura Light.
+- developer preference when it conflicts with the canonical Aura Light document.
+
+Prohibited Surfaces
+
+- `app.js` mutation.
+- Home redesign.
+- navigation redesign.
+- module redesign.
+- route-registry redesign.
+- alternate frontend or scaffold creation.
+- legacy CSS import or overlay.
+- Supabase schema mutation.
+- RLS mutation or weakening.
+- auth provider configuration mutation.
+- secret handling or credential disclosure.
+- automatic account creation.
+- fake production users or metrics.
+- direct `main` mutation.
+- force push or automatic merge.
+- production deployment without separate authorization.
+
+Productive Authentication Boundary
+
+- Email/password and Google must use the current public Supabase client and productive auth authority.
+- The login UI may request credentials but must not persist, log, expose or place passwords in URLs.
+- Authentication errors must be translated into human language without exposing provider internals.
+- Anonymous users remain fail-closed from private surfaces.
+- Existing sessions must restore without requiring a new login.
+- Logout must continue to scrub private runtime state.
+- OAuth must return through `/ForgeOS/static-preview/forge-alive/` and preserve the requested route contract.
+
+Visual Boundary
+
+- The anonymous login surface is light, luminous, spatial and premium.
+- Violet `#6C3CE8` is the Forge identity color; blue, green, orange and red remain semantic.
+- Canvas `#F7F8FC`, surface `#FFFFFF`, primary text `#11152B` and Aura Light semantic tokens govern the surface.
+- Content remains organized; only actions and contextual controls may float.
+- Productive text is at least 14 px and touch targets at least 44 × 44 px.
+- The authorized brand gradient is the Aura Light violet gradient defined by ADR-024.
+- No dark organic styling, gold primary actions, Material 3 visual defaults, Material 3 tokens, recovery CSS or module-local palette may remain visible in the rebuilt login.
+- The profile view may remain a bounded dialog after authentication; the forced anonymous gate must behave as a complete login screen.
+
+Validation
+
+Required automated and browser evidence:
+
+- email/password successful sign-in;
+- invalid credentials;
+- Google sign-in initiation;
+- session restoration;
+- authentication-state listener;
+- canonical route return;
+- logout scrub;
+- configuration-blocked state;
+- network/disconnected state;
+- keyboard and visible focus;
+- reduced motion;
+- mobile, tablet and desktop responsive layouts;
+- zoom/reflow acceptance;
+- no secrets or credential persistence;
+- no legacy visual imports;
+- no Material 3 tokens, components, palettes or visual fallback in the rebuilt login;
+- no mutation outside the authorized surface.
+
+Closure Rule
+
+The phase stops at a pushed working branch and review-ready pull request. Human merge remains required.

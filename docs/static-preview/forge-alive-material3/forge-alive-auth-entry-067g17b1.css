@@ -1,181 +1,828 @@
-.forge-auth-avatar-067g17b1 {
-  appearance: none;
-  border: 1px solid rgba(245, 199, 92, 0.38);
-  cursor: pointer;
-  display: inline-grid;
-  min-height: 42px;
-  min-width: 42px;
-  padding: 0;
-  place-items: center;
-}
-
-.forge-auth-avatar-067g17b1:focus-visible,
-.forge-auth-panel-067g17b1 button:focus-visible {
-  outline: 3px solid rgba(61, 216, 255, 0.9);
-  outline-offset: 3px;
-}
-
-.forge-auth-avatar-067g17b1 img {
-  border-radius: inherit;
-  display: block;
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
-
-.forge-auth-floating-avatar-067g17b1 {
-  border-radius: 999px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(112, 221, 255, 0.16);
-  inline-size: 46px;
-  inset-block-start: max(14px, env(safe-area-inset-top));
-  inset-inline-end: max(14px, env(safe-area-inset-right));
-  position: fixed;
-  z-index: 2147483001;
-}
-
-.forge-auth-floating-avatar-067g17b1[hidden] {
-  display: none !important;
-}
+/*
+ * Forge Aura Light 2026 — productive authentication surface
+ * Sole visual authority: ADR-024. Material 3 design is explicitly prohibited.
+ */
 
 .forge-auth-backdrop-067g17b1 {
-  align-items: flex-start;
-  background: rgba(2, 8, 20, 0.58);
+  --aura-canvas: #f7f8fc;
+  --aura-surface: #ffffff;
+  --aura-surface-subtle: #fcfcfe;
+  --aura-brand: #6c3ce8;
+  --aura-brand-hover: #5728ce;
+  --aura-brand-soft: #f4f0ff;
+  --aura-brand-mid: #8057f1;
+  --aura-text-primary: #11152b;
+  --aura-text-secondary: #5f677c;
+  --aura-text-tertiary: #8d94a6;
+  --aura-border-subtle: #ebedf3;
+  --aura-border-default: #e1e4ec;
+  --aura-danger: #ef4056;
+  --aura-danger-soft: #fff0f2;
+  --aura-info: #1765e5;
+  --aura-gradient-brand: linear-gradient(135deg, #9f7aea 0%, #7548ee 48%, #5728ce 100%);
+  --aura-gradient-soft: linear-gradient(145deg, #f9f7ff 0%, #eee9ff 100%);
+  --aura-shadow-card: 0 4px 14px rgba(25, 31, 60, 0.06), 0 1px 3px rgba(25, 31, 60, 0.04);
+  --aura-shadow-elevated: 0 10px 30px rgba(38, 31, 78, 0.1), 0 2px 8px rgba(38, 31, 78, 0.05);
+  --aura-shadow-floating: 0 18px 50px rgba(63, 42, 132, 0.16), 0 4px 14px rgba(17, 21, 43, 0.08);
+  --aura-focus-ring: 0 0 0 3px rgba(108, 60, 232, 0.24);
+  --aura-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  align-items: center;
+  background:
+    radial-gradient(circle at 10% 12%, rgba(180, 154, 247, 0.2), transparent 30rem),
+    radial-gradient(circle at 88% 86%, rgba(59, 130, 246, 0.1), transparent 28rem),
+    var(--aura-canvas);
   box-sizing: border-box;
-  display: flex;
-  inset: 0;
-  justify-content: flex-end;
-  overflow: auto;
-  padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(96px, env(safe-area-inset-bottom));
-  position: fixed;
-  z-index: 2147483002;
-}
-
-.forge-auth-backdrop-067g17b1[hidden] {
-  display: none !important;
-}
-
-.forge-auth-panel-067g17b1 {
-  background: linear-gradient(145deg, rgba(7, 20, 44, 0.96), rgba(12, 33, 66, 0.94));
-  border: 1px solid rgba(112, 221, 255, 0.26);
-  border-radius: 24px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(245, 199, 92, 0.14);
-  color: #f8fbff;
-  inline-size: min(420px, calc(100vw - 36px));
-  max-block-size: calc(100vh - 36px);
-  overflow: auto;
-  padding: 22px;
-}
-
-.forge-auth-panel-067g17b1 header {
-  align-items: start;
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
-}
-
-.forge-auth-panel-067g17b1 h2 {
-  font-size: 1.2rem;
-  margin: 0 0 8px;
-}
-
-.forge-auth-panel-067g17b1 p {
-  color: rgba(226, 236, 255, 0.78);
-  line-height: 1.45;
-  margin: 0;
-}
-
-.forge-auth-panel-067g17b1 footer,
-.forge-auth-actions-067g17b1,
-.forge-auth-test-actions-067g17b1 {
+  color: var(--aura-text-primary);
   display: grid;
+  font-family: "Inter Variable", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  inset: 0;
+  justify-items: center;
+  overflow: auto;
+  padding: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+  position: fixed;
+  z-index: 10000;
+}
+
+.forge-auth-backdrop-067g17b1[hidden],
+.forge-auth-login-067g17b1[hidden],
+.forge-auth-loading-067g17b1[hidden],
+.forge-auth-profile-067g17b1[hidden],
+.forge-auth-test-section-067g17b1[hidden],
+.forge-auth-close-067g17b1[hidden] {
+  display: none;
+}
+
+body.forge-auth-open-067g17b1 {
+  overflow: hidden;
+}
+
+.forge-auth-stage-067g17b1,
+.forge-auth-stage-067g17b1 * {
+  box-sizing: border-box;
+}
+
+.forge-auth-stage-067g17b1 {
+  background: var(--aura-surface);
+  border: 1px solid rgba(108, 60, 232, 0.1);
+  border-radius: 32px;
+  box-shadow: var(--aura-shadow-floating);
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(390px, 0.88fr);
+  inline-size: min(1120px, 100%);
+  min-block-size: min(680px, calc(100dvh - 48px));
+  overflow: hidden;
+  position: relative;
+}
+
+.forge-auth-stage-067g17b1:focus {
+  outline: none;
+}
+
+.forge-auth-story-067g17b1 {
+  background: var(--aura-gradient-soft);
+  border-inline-end: 1px solid rgba(108, 60, 232, 0.08);
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  overflow: hidden;
+  padding: 40px 44px;
+  position: relative;
+}
+
+.forge-auth-story-067g17b1::before,
+.forge-auth-story-067g17b1::after {
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+  position: absolute;
+}
+
+.forge-auth-story-067g17b1::before {
+  background: rgba(180, 154, 247, 0.2);
+  block-size: 360px;
+  filter: blur(1px);
+  inline-size: 360px;
+  inset-block-start: -180px;
+  inset-inline-end: -110px;
+}
+
+.forge-auth-story-067g17b1::after {
+  background: rgba(59, 130, 246, 0.09);
+  block-size: 280px;
+  inline-size: 280px;
+  inset-block-end: -150px;
+  inset-inline-start: -120px;
+}
+
+.forge-auth-brand-067g17b1,
+.forge-auth-mobile-brand-067g17b1 {
+  align-items: center;
+  color: var(--aura-text-primary);
+  display: inline-flex;
+  font-size: 18px;
+  font-weight: 700;
   gap: 10px;
-  margin-top: 18px;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
 }
 
-.forge-auth-panel-067g17b1 button {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 14px;
+.forge-auth-brand-mark-067g17b1 {
+  align-items: center;
+  background: var(--aura-gradient-brand);
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(108, 60, 232, 0.22);
+  color: #ffffff;
+  display: inline-flex;
+  font-size: 17px;
+  font-weight: 800;
+  block-size: 38px;
+  inline-size: 38px;
+  justify-content: center;
+}
+
+.forge-auth-mobile-brand-067g17b1 {
+  display: none;
+}
+
+.forge-auth-story-copy-067g17b1 {
+  margin-block-start: clamp(68px, 11vh, 112px);
+  max-inline-size: 540px;
+  position: relative;
+  z-index: 1;
+}
+
+.forge-auth-eyebrow-067g17b1 {
+  color: var(--aura-brand);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 14px;
+  margin: 0 0 14px;
+}
+
+.forge-auth-story-copy-067g17b1 h1 {
+  color: var(--aura-text-primary);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+  margin: 0;
+  max-inline-size: 12ch;
+}
+
+.forge-auth-story-copy-067g17b1 > p:not(.forge-auth-eyebrow-067g17b1) {
+  color: var(--aura-text-secondary);
+  font-size: 16px;
+  letter-spacing: -0.005em;
+  line-height: 24px;
+  margin: 22px 0 0;
+  max-inline-size: 48ch;
+}
+
+.forge-auth-story-copy-067g17b1 ul {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+}
+
+.forge-auth-story-copy-067g17b1 li {
+  align-items: center;
+  color: var(--aura-text-secondary);
+  display: flex;
+  font-size: 14px;
+  gap: 10px;
+  line-height: 20px;
+}
+
+.forge-auth-story-copy-067g17b1 li span {
+  align-items: center;
+  background: rgba(108, 60, 232, 0.1);
+  border-radius: 999px;
+  color: var(--aura-brand);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 800;
+  block-size: 24px;
+  inline-size: 24px;
+  justify-content: center;
+}
+
+.forge-auth-aura-067g17b1 {
+  block-size: 220px;
+  inline-size: min(440px, 80%);
+  margin-block-start: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.forge-auth-aura-core-067g17b1 {
+  align-items: center;
+  background: var(--aura-gradient-brand);
+  border: 8px solid rgba(255, 255, 255, 0.82);
+  border-radius: 34px;
+  box-shadow: 0 24px 70px rgba(108, 60, 232, 0.26);
+  color: #ffffff;
+  display: flex;
+  font-size: 48px;
+  font-weight: 800;
+  block-size: 112px;
+  inline-size: 112px;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  justify-content: center;
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(-6deg);
+}
+
+.forge-auth-aura-ring-067g17b1 {
+  border: 1px solid rgba(108, 60, 232, 0.18);
+  border-radius: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.forge-auth-aura-ring-a-067g17b1 {
+  block-size: 170px;
+  inline-size: 280px;
+}
+
+.forge-auth-aura-ring-b-067g17b1 {
+  block-size: 212px;
+  inline-size: 390px;
+}
+
+.forge-auth-aura-chip-067g17b1 {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(108, 60, 232, 0.1);
+  border-radius: 999px;
+  box-shadow: var(--aura-shadow-card);
+  color: var(--aura-text-secondary);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 16px;
+  padding: 9px 13px;
+  position: absolute;
+}
+
+.forge-auth-aura-chip-a-067g17b1 {
+  inset-block-start: 22px;
+  inset-inline-start: 6%;
+}
+
+.forge-auth-aura-chip-b-067g17b1 {
+  inset-block-end: 20px;
+  inset-inline-end: 2%;
+}
+
+.forge-auth-card-067g17b1 {
+  align-self: center;
+  background: var(--aura-surface);
+  inline-size: 100%;
+  padding: 44px 48px;
+}
+
+.forge-auth-card-header-067g17b1 {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  min-block-size: 44px;
+}
+
+.forge-auth-close-067g17b1,
+.forge-auth-password-toggle-067g17b1,
+.forge-auth-primary-067g17b1,
+.forge-auth-google-067g17b1,
+.forge-auth-secondary-067g17b1,
+.forge-auth-test-actions-067g17b1 button {
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  border: 0;
   cursor: pointer;
-  font: 700 0.95rem/1 Inter, system-ui, sans-serif;
-  min-height: 44px;
-  padding: 12px 14px;
-}
-
-.forge-auth-primary-067g17b1 {
-  background: linear-gradient(135deg, #f5c75c, #ffe08a);
-  color: #081225;
-}
-
-.forge-auth-secondary-067g17b1 {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f8fbff;
+  font: inherit;
 }
 
 .forge-auth-close-067g17b1 {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f8fbff;
+  align-items: center;
+  background: var(--aura-surface-subtle);
+  border: 1px solid var(--aura-border-subtle);
+  border-radius: 12px;
+  color: var(--aura-text-secondary);
+  display: inline-flex;
+  font-size: 24px;
+  block-size: 44px;
   inline-size: 44px;
-  padding: 0 !important;
+  justify-content: center;
+  margin-inline-start: auto;
+}
+
+.forge-auth-login-067g17b1,
+.forge-auth-profile-067g17b1,
+.forge-auth-loading-067g17b1 {
+  margin-block-start: 34px;
+}
+
+.forge-auth-login-067g17b1 h2,
+.forge-auth-profile-067g17b1 h2,
+.forge-auth-loading-067g17b1 h2 {
+  color: var(--aura-text-primary);
+  font-size: 32px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 38px;
+  margin: 0;
+}
+
+.forge-auth-description-067g17b1,
+.forge-auth-loading-067g17b1 p {
+  color: var(--aura-text-secondary);
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  line-height: 20px;
+  margin: 10px 0 0;
+}
+
+.forge-auth-form-067g17b1 {
+  display: grid;
+  gap: 18px;
+  margin-block-start: 28px;
+}
+
+.forge-auth-field-067g17b1 {
+  color: var(--aura-text-primary);
+  display: grid;
+  font-size: 13px;
+  font-weight: 650;
+  gap: 8px;
+  line-height: 16px;
+}
+
+.forge-auth-field-067g17b1 input {
+  appearance: none;
+  background: var(--aura-surface-subtle);
+  border: 1px solid var(--aura-border-default);
+  border-radius: 12px;
+  color: var(--aura-text-primary);
+  font: 500 16px/24px "Inter Variable", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-block-size: 52px;
+  outline: none;
+  padding: 13px 14px;
+  transition: border-color 120ms var(--aura-ease-standard), box-shadow 120ms var(--aura-ease-standard), background 120ms var(--aura-ease-standard);
+  inline-size: 100%;
+}
+
+.forge-auth-field-067g17b1 input:hover {
+  border-color: #cdd1dc;
+}
+
+.forge-auth-field-067g17b1 input:focus-visible {
+  background: #ffffff;
+  border-color: var(--aura-brand);
+  box-shadow: var(--aura-focus-ring);
+}
+
+.forge-auth-field-067g17b1 input:disabled {
+  color: var(--aura-text-tertiary);
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.forge-auth-password-wrap-067g17b1 {
+  display: block;
+  position: relative;
+}
+
+.forge-auth-password-wrap-067g17b1 input {
+  padding-inline-end: 82px;
+}
+
+.forge-auth-password-toggle-067g17b1 {
+  background: transparent;
+  border-radius: 8px;
+  color: var(--aura-brand);
+  font-size: 13px;
+  font-weight: 700;
+  inset-block: 6px;
+  inset-inline-end: 6px;
+  min-inline-size: 64px;
+  position: absolute;
+}
+
+.forge-auth-primary-067g17b1,
+.forge-auth-google-067g17b1,
+.forge-auth-secondary-067g17b1 {
+  align-items: center;
+  border-radius: 14px;
+  display: flex;
+  font-size: 14px;
+  font-weight: 700;
+  gap: 10px;
+  justify-content: center;
+  line-height: 20px;
+  min-block-size: 52px;
+  padding: 14px 18px;
+  transition: transform 120ms var(--aura-ease-standard), box-shadow 120ms var(--aura-ease-standard), background 120ms var(--aura-ease-standard), border-color 120ms var(--aura-ease-standard);
+  inline-size: 100%;
+}
+
+.forge-auth-primary-067g17b1 {
+  background: var(--aura-gradient-brand);
+  box-shadow: 0 12px 28px rgba(108, 60, 232, 0.28);
+  color: #ffffff;
+  justify-content: space-between;
+}
+
+.forge-auth-primary-067g17b1:hover {
+  box-shadow: 0 14px 32px rgba(108, 60, 232, 0.34);
+  transform: translateY(-1px);
+}
+
+.forge-auth-primary-067g17b1:active,
+.forge-auth-google-067g17b1:active,
+.forge-auth-secondary-067g17b1:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.forge-auth-google-067g17b1,
+.forge-auth-secondary-067g17b1 {
+  background: #ffffff;
+  border: 1px solid var(--aura-border-default);
+  color: var(--aura-text-primary);
+}
+
+.forge-auth-google-067g17b1:hover,
+.forge-auth-secondary-067g17b1:hover {
+  background: var(--aura-brand-soft);
+  border-color: rgba(108, 60, 232, 0.24);
+}
+
+.forge-auth-google-mark-067g17b1 {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--aura-border-subtle);
+  border-radius: 50%;
+  color: #1765e5;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 800;
+  block-size: 28px;
+  inline-size: 28px;
+  justify-content: center;
+}
+
+.forge-auth-primary-067g17b1:disabled,
+.forge-auth-google-067g17b1:disabled,
+.forge-auth-secondary-067g17b1:disabled,
+.forge-auth-password-toggle-067g17b1:disabled {
+  cursor: wait;
+  opacity: 0.64;
+  transform: none;
+}
+
+.forge-auth-close-067g17b1:focus-visible,
+.forge-auth-password-toggle-067g17b1:focus-visible,
+.forge-auth-primary-067g17b1:focus-visible,
+.forge-auth-google-067g17b1:focus-visible,
+.forge-auth-secondary-067g17b1:focus-visible,
+.forge-auth-test-actions-067g17b1 button:focus-visible,
+.forge-auth-avatar-067g17b1:focus-visible {
+  box-shadow: var(--aura-focus-ring);
+  outline: 2px solid var(--aura-brand);
+  outline-offset: 2px;
+}
+
+.forge-auth-divider-067g17b1 {
+  align-items: center;
+  color: var(--aura-text-tertiary);
+  display: grid;
+  font-size: 12px;
+  gap: 12px;
+  grid-template-columns: 1fr auto 1fr;
+  margin: 20px 0;
+}
+
+.forge-auth-divider-067g17b1::before,
+.forge-auth-divider-067g17b1::after {
+  background: var(--aura-border-subtle);
+  block-size: 1px;
+  content: "";
+}
+
+.forge-auth-error-067g17b1 {
+  background: var(--aura-danger-soft);
+  border: 1px solid rgba(239, 64, 86, 0.16);
+  border-radius: 12px;
+  color: #b82239;
+  font-size: 14px;
+  font-weight: 550;
+  line-height: 20px;
+  margin: 16px 0 0;
+  padding: 12px 14px;
+}
+
+.forge-auth-security-note-067g17b1 {
+  align-items: center;
+  color: var(--aura-text-tertiary);
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  justify-content: center;
+  line-height: 16px;
+  margin: 20px 0 0;
+  text-align: center;
+}
+
+.forge-auth-security-note-067g17b1 span {
+  color: var(--aura-brand);
+}
+
+.forge-auth-test-section-067g17b1 {
+  background: var(--aura-surface-subtle);
+  border: 1px solid var(--aura-border-subtle);
+  border-radius: 16px;
+  margin-block-start: 18px;
+  padding: 14px;
 }
 
 .forge-auth-test-label-067g17b1 {
-  color: rgba(112, 221, 255, 0.9);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  margin-top: 18px;
-  text-transform: uppercase;
+  color: var(--aura-text-tertiary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 14px;
+  margin: 0 0 10px;
 }
 
-.forge-auth-profile-067g17b1[hidden],
-.forge-auth-login-067g17b1[hidden] {
-  display: none !important;
+.forge-auth-test-actions-067g17b1 {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.forge-auth-test-actions-067g17b1 button {
+  background: var(--aura-brand-soft);
+  border: 1px solid rgba(108, 60, 232, 0.12);
+  border-radius: 12px;
+  color: var(--aura-brand);
+  font-size: 13px;
+  font-weight: 700;
+  min-block-size: 44px;
+}
+
+.forge-auth-loading-067g17b1 {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-block-size: 360px;
+  text-align: center;
+}
+
+.forge-auth-loader-067g17b1 {
+  animation: forge-auth-aura-spin-067g17b1 900ms linear infinite;
+  background: conic-gradient(from 0deg, rgba(108, 60, 232, 0.12), #6c3ce8, rgba(108, 60, 232, 0.12));
+  border-radius: 50%;
+  display: block;
+  block-size: 54px;
+  inline-size: 54px;
+  margin-block-end: 24px;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
+}
+
+@keyframes forge-auth-aura-spin-067g17b1 {
+  to { transform: rotate(360deg); }
 }
 
 .forge-auth-profile-card-067g17b1 {
   align-items: center;
+  background: var(--aura-surface-subtle);
+  border: 1px solid var(--aura-border-subtle);
+  border-radius: 16px;
   display: grid;
-  gap: 12px;
+  gap: 14px;
   grid-template-columns: 64px minmax(0, 1fr);
-  margin-top: 18px;
+  margin: 26px 0 18px;
+  padding: 16px;
 }
 
 .forge-auth-profile-mark-067g17b1 {
   align-items: center;
   aspect-ratio: 1;
-  background: radial-gradient(circle at 30% 20%, rgba(245, 199, 92, 0.34), rgba(61, 216, 255, 0.18));
-  border: 1px solid rgba(245, 199, 92, 0.34);
-  border-radius: 50%;
+  background: var(--aura-gradient-brand);
+  border: 4px solid rgba(255, 255, 255, 0.84);
+  border-radius: 20px;
+  box-shadow: 0 10px 24px rgba(108, 60, 232, 0.2);
+  color: #ffffff;
   display: flex;
-  font-size: 1.25rem;
-  font-weight: 900;
+  font-size: 20px;
+  font-weight: 800;
   justify-content: center;
   overflow: hidden;
 }
 
-.forge-auth-profile-mark-067g17b1 img {
-  height: 100%;
+.forge-auth-profile-mark-067g17b1 img,
+.forge-auth-avatar-067g17b1 img {
+  display: block;
+  block-size: 100%;
+  inline-size: 100%;
   object-fit: cover;
-  width: 100%;
 }
 
 .forge-auth-profile-card-067g17b1 strong,
 .forge-auth-profile-card-067g17b1 span {
   display: block;
-  min-width: 0;
+  min-inline-size: 0;
   overflow-wrap: anywhere;
+}
+
+.forge-auth-profile-card-067g17b1 strong {
+  color: var(--aura-text-primary);
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.forge-auth-profile-card-067g17b1 span {
+  color: var(--aura-text-secondary);
+  font-size: 13px;
+  line-height: 18px;
+  margin-block-start: 2px;
+}
+
+.forge-auth-backdrop-067g17b1[data-forge-auth-mode="profile"] .forge-auth-stage-067g17b1 {
+  grid-template-columns: minmax(0, 480px);
+  min-block-size: auto;
+  inline-size: min(480px, 100%);
+}
+
+.forge-auth-backdrop-067g17b1[data-forge-auth-mode="profile"] .forge-auth-story-067g17b1 {
+  display: none;
+}
+
+.forge-auth-backdrop-067g17b1[data-forge-auth-mode="profile"] .forge-auth-mobile-brand-067g17b1 {
+  display: inline-flex;
+}
+
+.forge-auth-avatar-067g17b1 {
+  align-items: center;
+  appearance: none;
+  background: var(--aura-gradient-brand, linear-gradient(135deg, #9f7aea, #5728ce));
+  border: 2px solid rgba(255, 255, 255, 0.86);
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(108, 60, 232, 0.22);
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font: 800 14px/1 "Inter Variable", Inter, sans-serif;
+  min-block-size: 44px;
+  min-inline-size: 44px;
+  overflow: hidden;
+  padding: 0;
+  justify-content: center;
+}
+
+.forge-auth-floating-avatar-067g17b1 {
+  inset-block-start: max(14px, env(safe-area-inset-top));
+  inset-inline-end: max(14px, env(safe-area-inset-right));
+  position: fixed;
+  z-index: 9000;
+}
+
+@media (max-width: 900px) {
+  .forge-auth-stage-067g17b1 {
+    grid-template-columns: minmax(0, 1fr);
+    inline-size: min(600px, 100%);
+    min-block-size: auto;
+  }
+
+  .forge-auth-story-067g17b1 {
+    display: none;
+  }
+
+  .forge-auth-mobile-brand-067g17b1 {
+    display: inline-flex;
+  }
+
+  .forge-auth-card-067g17b1 {
+    padding: 40px 44px 44px;
+  }
 }
 
 @media (max-width: 640px) {
   .forge-auth-backdrop-067g17b1 {
-    align-items: flex-end;
-    justify-content: center;
-    padding: 12px 12px max(84px, env(safe-area-inset-bottom));
+    align-items: stretch;
+    padding: 0;
   }
 
-  .forge-auth-panel-067g17b1 {
-    border-radius: 22px 22px 18px 18px;
-    inline-size: min(100%, 420px);
-    max-block-size: min(78vh, 720px);
+  .forge-auth-stage-067g17b1,
+  .forge-auth-backdrop-067g17b1[data-forge-auth-mode="profile"] .forge-auth-stage-067g17b1 {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    inline-size: 100%;
+    min-block-size: 100dvh;
+  }
+
+  .forge-auth-card-067g17b1 {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom));
+  }
+
+  .forge-auth-card-header-067g17b1 {
+    inset-block-start: max(20px, env(safe-area-inset-top));
+    inset-inline: 20px;
+    position: absolute;
+  }
+
+  .forge-auth-login-067g17b1,
+  .forge-auth-profile-067g17b1,
+  .forge-auth-loading-067g17b1 {
+    margin-block-start: 72px;
+  }
+
+  .forge-auth-login-067g17b1 h2,
+  .forge-auth-profile-067g17b1 h2,
+  .forge-auth-loading-067g17b1 h2 {
+    font-size: 28px;
+    line-height: 34px;
+  }
+
+  .forge-auth-form-067g17b1 {
+    margin-block-start: 24px;
+  }
+}
+
+@media (max-width: 380px) {
+  .forge-auth-card-067g17b1 {
+    padding-inline: 16px;
+  }
+
+  .forge-auth-card-header-067g17b1 {
+    inset-inline: 16px;
+  }
+
+  .forge-auth-login-067g17b1 h2,
+  .forge-auth-profile-067g17b1 h2,
+  .forge-auth-loading-067g17b1 h2 {
+    font-size: 25px;
+    line-height: 31px;
+  }
+}
+
+@media (max-height: 720px) and (min-width: 641px) {
+  .forge-auth-backdrop-067g17b1 {
+    align-items: start;
+  }
+
+  .forge-auth-stage-067g17b1 {
+    min-block-size: 620px;
+  }
+
+  .forge-auth-story-copy-067g17b1 {
+    margin-block-start: 44px;
+  }
+
+  .forge-auth-aura-067g17b1 {
+    block-size: 170px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forge-auth-loader-067g17b1 {
+    animation-duration: 1800ms;
+  }
+
+  .forge-auth-primary-067g17b1,
+  .forge-auth-google-067g17b1,
+  .forge-auth-secondary-067g17b1,
+  .forge-auth-field-067g17b1 input {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+  }
+}
+
+@media (forced-colors: active) {
+  .forge-auth-stage-067g17b1,
+  .forge-auth-card-067g17b1,
+  .forge-auth-story-067g17b1,
+  .forge-auth-field-067g17b1 input,
+  .forge-auth-primary-067g17b1,
+  .forge-auth-google-067g17b1,
+  .forge-auth-secondary-067g17b1 {
+    border: 1px solid CanvasText;
+  }
+
+  .forge-auth-primary-067g17b1 {
+    background: Highlight;
+    color: HighlightText;
   }
 }
