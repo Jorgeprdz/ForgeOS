@@ -1,21 +1,28 @@
 <!doctype html>
-<html lang="es-MX" data-aura-runtime="FORGE_AURA_LIGHT_2026">
+<html lang="es-MX" data-aura-runtime="FORGE_AURA_LIGHT_2026_V4">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#f4f5fb">
-  <meta name="description" content="Forge Aura Light: Pipeline productivo para asesores.">
-  <title>Forge · Pipeline</title>
+  <meta name="description" content="Forge Aura Light 2026: sistema operativo comercial para asesores.">
+  <title>Forge · Aura</title>
   <link rel="stylesheet" href="./aura-tokens.css">
   <link rel="stylesheet" href="./aura-shell.css">
   <link rel="stylesheet" href="./aura-auth.css">
   <link rel="stylesheet" href="./pipeline/pipeline.css">
   <script src="./env.js?v=e0d98cba"></script>
-  <script type="module" src="./aura-bootstrap.js?v=oauth-implicit-v1"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "./pipeline/pipeline-adapter.js": "./pipeline/pipeline-adapter-pages-v1.js"
+      }
+    }
+  </script>
+  <script type="module" src="./aura-bootstrap-v4.js?v=activity-direct-entry-20260807"></script>
 </head>
 <body>
   <a class="aura-skip" href="#aura-main">Saltar al contenido</a>
   <div id="aura-app" data-aura-app aria-busy="true"></div>
-  <noscript>Forge necesita JavaScript para recuperar tu sesión y mostrar el Pipeline.</noscript>
+  <noscript>Forge necesita JavaScript.</noscript>
 </body>
 </html>
