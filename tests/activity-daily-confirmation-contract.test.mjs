@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { deriveActivityMetricSuggestions } from "../docs/static-preview/forge-aura/activity/activity-daily-confirmation.js";
 
-test("daily confirmation suggestions use only current-day report facts and leave unknowns unknown", () => {
+test("daily confirmation suggestions use only semantically safe current-day facts and leave unknowns unknown", () => {
   const result = deriveActivityMetricSuggestions({
     generatedAt: "2026-08-07T16:00:00Z",
     timeZone: "America/Mexico_City",
@@ -15,7 +15,7 @@ test("daily confirmation suggestions use only current-day report facts and leave
     ] } } },
   });
   assert.equal(result.activityDate, "2026-08-07");
-  assert.equal(result.counts.llamadas.value, 4);
+  assert.equal(result.counts.llamadas, null, "REP conversation facts must not be relabeled as calls");
   assert.equal(result.counts.citas_agendadas.value, 3);
   assert.equal(result.counts.citas_iniciales.value, 1);
   assert.equal(result.counts.citas_cierre.value, 2);
