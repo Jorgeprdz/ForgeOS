@@ -34,6 +34,13 @@ test('migration deployer is exact, non-destructive and records migration history
   assert.match(deployer, /DESTRUCTIVE_SQL_REJECTED/);
 });
 
+test('inventory tolerates provider tables that do not exist yet', () => {
+  assert.match(deployer, /has_table_privilege\('authenticated',\s*to_regclass\('public\.activity_mail_provider_connections'\)/);
+  assert.match(deployer, /has_table_privilege\('authenticated',\s*to_regclass\('public\.activity_mail_oauth_states'\)/);
+  assert.doesNotMatch(deployer, /has_table_privilege\('authenticated','public\.activity_mail_provider_connections'/);
+  assert.doesNotMatch(deployer, /has_table_privilege\('authenticated','public\.activity_mail_oauth_states'/);
+});
+
 test('public OAuth callback uses a clean path and remains state guarded', () => {
   assert.match(workflow, /mail-evidence-connect\/oauth\/callback/);
   assert.doesNotMatch(workflow, /mail-evidence-connect\?oauth=callback/);
