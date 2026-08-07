@@ -17,7 +17,7 @@ on:
       - '.github/workflows/activity-reports-aura.yml'
   push:
     branches:
-      - 'codex/forge-aura-activity-reports-ux-reconciliation-001-corrected'
+      - 'codex/forge-aura-activity-reports-final-integration-001'
 
 permissions:
   contents: read
@@ -29,11 +29,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Scope guard against Pipeline PASS
+      - name: Scope guard against countable Activity authority stack
         shell: bash
         run: |
           set -euo pipefail
-          BASE=d986de0f660cab8ed4da6b6e32873a17af378fa8
+          BASE=3bf027bc1100d2da366844d00e64e0d206c3c76c
           git cat-file -e "$BASE^{commit}"
           git diff --name-only "$BASE" HEAD > /tmp/changed.txt
           cat /tmp/changed.txt
