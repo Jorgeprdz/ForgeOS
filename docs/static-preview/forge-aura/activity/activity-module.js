@@ -1,4 +1,8 @@
 import { createManualActivityEntry } from "../../forge-alive-material3/activity-manual-entry.js";
+import {
+  pointRuleRows,
+  projectOfficialActivityPoints,
+} from "./activity-points-projection.js";
 
 const PERIODS = Object.freeze([
   ["TODAY", "Hoy"],
@@ -56,6 +60,17 @@ function chrome(root) {
         </div>
         <div class="activity-status" data-report-status role="status" aria-live="polite"></div>
         <div class="activity-summary-grid" data-report-summary hidden></div>
+        <section class="activity-chart-card activity-points-card" data-points-card hidden>
+          <div class="activity-card-heading">
+            <div><p class="aura-eyebrow">PUNTUACIÓN</p><h2>Sistema oficial de productividad</h2></div>
+            <strong data-points-total></strong>
+          </div>
+          <p class="activity-chart-text" data-points-state></p>
+          <details>
+            <summary>Ver baremo oficial</summary>
+            <div class="activity-points-rules" data-points-rules></div>
+          </details>
+        </section>
         <section class="activity-chart-card" data-chart-card hidden>
           <div class="activity-card-heading">
             <div><p class="aura-eyebrow">DISTRIBUCIÓN</p><h2>Actividad confirmada</h2></div>
@@ -92,12 +107,44 @@ function seriesRows(chartReady) {
   })));
 }
 
+function pointsSummary(points) {
+  if (points?.state === "READY") {
+    return {
+      value: `${points.total} / ${points.objective}`,
+      detail: points.remaining === 0
+        ? "Meta diaria completada con evidencia confirmada"
+        : `${points.remaining} puntos por completar`,
+    };
+  }
+  return {
+    value: "Pendiente",
+    detail: "Baremo oficial conectado; faltan evidencias completas para calcular sin inventar ceros",
+  };
+}
+
+function renderPoints(root, points) {
+  const card = root.querySelector('[data-points-card]');
+  if (!card) return;
+  const summary = pointsSummary(points);
+  const rules = pointRuleRows(points);
+  card.hidden = false;
+  root.querySelector('[data-points-total]').textContent = summary.value;
+  root.querySelector('[data-points-state]').textContent = points?.state === "READY"
+    ? summary.detail
+    : "Forge ya lee el baremo oficial. La puntuación se mantiene pendiente hasta que todas las métricas requeridas tengan evidencia completa.";
+  root.querySelector('[data-points-rules]').innerHTML = rules.length
+    ? rules.map(rule => `<div class="activity-points-rule"><span>${esc(rule.label)}</span><b>${esc(rule.points)} pts</b></div>`).join("")
+    : `<p>El baremo no está disponible de forma verificable.</p>`;
+}
+
 function renderReady(root, result) {
   const current = result.activity?.current;
   const report = current?.report;
   const chartReady = current?.chartReady;
   const comparison = result.activity?.comparison;
   const production = result.production;
+  const points = projectOfficialActivityPoints(result);
+  const pointSummary = pointsSummary(points);
   const status = root.querySelector('[data-status]');
   const reportStatus = root.querySelector('[data-report-status]');
 
@@ -113,7 +160,10 @@ function renderReady(root, result) {
   summary.hidden = false;
   summary.innerHTML = `
     <article><span>Actividad del periodo</span><strong>${Number.isFinite(total) ? esc(total) : "Sin dato"}</strong><small>${esc(periodText(report.period))}</small></article>
+    <article><span>Puntos oficiales</span><strong>${esc(pointSummary.value)}</strong><small>${esc(pointSummary.detail)}</small></article>
     <article><span>Evidencia</span><strong>FES</strong><small>Ledger canónico sincronizado</small></article>`;
+
+  renderPoints(root, points);
 
   if (report.state === "EMPTY" || chartReady?.missingDataState === "NO_MATCHING_FACTS") {
     root.querySelector('[data-report-summary]').hidden = true;
@@ -139,6 +189,7 @@ function renderReady(root, result) {
   const sold = production?.sold;
   reportSummary.innerHTML = `
     <article><span>Actividad confirmada</span><strong>${Number.isFinite(total) ? esc(total) : "Sin dato"}</strong><small>${esc(periodText(report.period))}</small></article>
+    <article><span>Puntos oficiales</span><strong>${esc(pointSummary.value)}</strong><small>${esc(pointSummary.detail)}</small></article>
     <article><span>Vs. periodo anterior</span><strong>${Number.isFinite(delta) ? `${delta > 0 ? "+" : ""}${esc(delta)}` : "Sin comparación"}</strong><small>${comparison?.zeroComparisonBlocked ? "Base anterior igual a cero; porcentaje bloqueado" : Number.isFinite(comparison?.deltaPercent) ? `${comparison.deltaPercent > 0 ? "+" : ""}${esc(comparison.deltaPercent)}%` : "Comparación no disponible"}</small></article>
     <article><span>Pólizas confirmadas del mes</span><strong>${Number.isFinite(sold) ? esc(sold) : "Sin dato"}</strong><small>Autoridad de pólizas confirmadas</small></article>
     <article><span>Meta mensual</span><strong>${Number.isFinite(target) ? esc(target) : "No configurada"}</strong><small>${Number.isFinite(target) && Number.isFinite(sold) ? `${Math.max(target - sold, 0)} por completar` : "No se inventa una meta ausente"}</small></article>`;
@@ -189,7 +240,7 @@ export function createActivityModule({
     const selected = ++revision;
     const periodKind = root.querySelector('[data-period]')?.value || "WEEK_TO_DATE";
     renderState(root.querySelector('[data-status]'), "Validando actividad", "Sincronizando la autoridad FES antes de mostrar cifras.");
-    renderState(root.querySelector('[data-report-status]'), "Preparando reporte", "Consultando actividad, metas y pólizas confirmadas.");
+    renderState(root.querySelector('[data-report-status]'), "Preparando reporte", "Consultando actividad, metas, puntuación y pólizas confirmadas.");
     try {
       const result = await (await runtime()).load({ periodKind });
       if (!mounted || selected !== revision) return;
