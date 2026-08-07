@@ -1,4 +1,3 @@
-import { createActivityReportsProductivityRuntime } from "../../forge-alive-material3/activity-reports-productivity-runtime.js";
 import { createManualActivityEntry } from "../../forge-alive-material3/activity-manual-entry.js";
 
 const PERIODS = Object.freeze([
@@ -22,6 +21,13 @@ const fmtDate = value => new Intl.DateTimeFormat("es-MX", {
 const periodText = period => period?.from && period?.to
   ? `${fmtDate(period.from)} – ${fmtDate(period.to)}`
   : "Periodo sin resolver";
+
+async function productiveReportingFactory(options) {
+  const { createActivityReportsProductivityRuntime } = await import(
+    "../../forge-alive-material3/activity-reports-productivity-runtime.js"
+  );
+  return createActivityReportsProductivityRuntime(options);
+}
 
 function chrome(root) {
   root.innerHTML = `
@@ -160,7 +166,7 @@ function renderReady(root, result) {
 export function createActivityModule({
   root,
   globalState,
-  reportingFactory = createActivityReportsProductivityRuntime,
+  reportingFactory = null,
 } = {}) {
   if (!root) throw new Error("AURA_ACTIVITY_ROOT_REQUIRED");
   if (root[STATE]) return root[STATE];
@@ -171,8 +177,11 @@ export function createActivityModule({
   let mounted = false;
   let revision = 0;
 
-  function runtime() {
-    if (!reporting) reporting = reportingFactory({ timeZone: "America/Mexico_City" });
+  async function runtime() {
+    if (!reporting) {
+      const factory = reportingFactory || productiveReportingFactory;
+      reporting = await factory({ timeZone: "America/Mexico_City" });
+    }
     return reporting;
   }
 
@@ -182,7 +191,7 @@ export function createActivityModule({
     renderState(root.querySelector('[data-status]'), "Validando actividad", "Sincronizando la autoridad FES antes de mostrar cifras.");
     renderState(root.querySelector('[data-report-status]'), "Preparando reporte", "Consultando actividad, metas y pólizas confirmadas.");
     try {
-      const result = await runtime().load({ periodKind });
+      const result = await (await runtime()).load({ periodKind });
       if (!mounted || selected !== revision) return;
       if (result.state === "SESSION_REQUIRED") {
         renderState(root.querySelector('[data-status]'), "Sesión requerida", "Vuelve a iniciar sesión para consultar tu actividad.");
