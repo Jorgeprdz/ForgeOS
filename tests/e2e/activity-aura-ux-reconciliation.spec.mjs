@@ -89,7 +89,7 @@ test("desktop Reports exposes comparison, goal and accessible table", async ({ p
   await page.getByRole("tab", { name: "Reportes" }).click();
   await expect(page.getByText("Vs. periodo anterior")).toBeVisible();
   await expect(page.getByText("Meta mensual")).toBeVisible();
-  await expect(page.getByText("Actividad confirmada")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Actividad confirmada" })).toBeVisible();
   await page.getByText("Ver tabla accesible").click();
   await expect(page.getByRole("table")).toBeVisible();
   await assertNoOverflow(page);
