@@ -95,7 +95,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          CALLBACK_URL="https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/mail-evidence-connect?oauth=callback"
+          CALLBACK_URL="https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/mail-evidence-connect/oauth/callback"
           APP_ORIGIN='https://jorgeprdz.github.io'
           RETURN_URL='https://jorgeprdz.github.io/ForgeOS/'
 
@@ -145,7 +145,7 @@ jobs:
           STATUS_CODE="$(curl --max-time 30 -sS -o status.json -w '%{http_code}' -X POST "$BASE" -H 'Content-Type: application/json' --data '{"action":"STATUS"}')"
           test "$STATUS_CODE" = '401'
           grep -q 'MAIL_AUTH_REQUIRED' status.json
-          CALLBACK_CODE="$(curl --max-time 30 -sS -o /dev/null -w '%{http_code}' "$BASE?oauth=callback")"
+          CALLBACK_CODE="$(curl --max-time 30 -sS -o /dev/null -w '%{http_code}' "$BASE/oauth/callback")"
           test "$CALLBACK_CODE" = '302'
           echo 'MAIL_EVIDENCE_EDGE_SMOKE=PASS'
 
