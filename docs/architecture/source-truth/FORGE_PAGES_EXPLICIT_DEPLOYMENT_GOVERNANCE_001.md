@@ -65,7 +65,7 @@ A second indirect path also existed: `.github/workflows/aura-pages-dispatch.yml`
 
 ## Deployment-path discovery
 
-Repository-wide workflow discovery searched for production Pages permissions and primitives including `pages: write`, `id-token: write`, `actions/configure-pages`, `actions/upload-pages-artifact`, `actions/deploy-pages`, `github-pages`, automatic push triggers and workflow dispatch calls.
+Repository-wide workflow discovery searched for `pages: write`, `id-token: write`, `actions/configure-pages`, `actions/upload-pages-artifact`, `actions/deploy-pages`, `github-pages`, automatic push triggers and workflow dispatch calls.
 
 Classification at the base SHA:
 
@@ -73,9 +73,10 @@ Classification at the base SHA:
 | --- | --- | --- |
 | `.github/workflows/pages.yml` | `PRODUCTION_PAGES_DEPLOYER` | Only workflow containing `actions/deploy-pages`, Pages configuration/artifact upload, `github-pages` environment and production Pages write permissions. Previously auto-triggered by `push: main`. |
 | `.github/workflows/aura-pages-dispatch.yml` | `LEGACY_INDIRECT_AUTO_DISPATCHER` | Previously held `actions: write` and automatically dispatched `pages.yml` from an Aura feature-branch push. |
-| `.github/workflows/pages-public-acceptance.yml` | `VALIDATION_ONLY` | Verifies an already deployed exact SHA and records evidence; previously auto-triggered on every `main` push and therefore assumed automatic deployment. |
-| `.github/workflows/pages-deploy-observer.yml` | `VALIDATION_ONLY` | Observes an already authorized deployment; previously auto-triggered on `main` and searched specifically for a `pages.yml` push run. |
-| `.github/workflows/canonical-pages-artifact-validation.yml` | `PAGES_ARTIFACT_BUILDER_ONLY/VALIDATION_ONLY` | PR-only, read-only validation. No production deployment permission or deploy action. |
+| `.github/workflows/pages-public-acceptance.yml` | `VALIDATION_ONLY` | Verifies an already deployed exact SHA and records evidence; previously assumed every `main` push would be deployed. |
+| `.github/workflows/pages-deploy-observer.yml` | `VALIDATION_ONLY` | Observes an already authorized deployment; previously searched specifically for a `pages.yml` push run. |
+| `.github/workflows/canonical-pages-artifact-validation.yml` | `PAGES_ARTIFACT_BUILDER_ONLY/VALIDATION_ONLY` | PR-only, read-only canonical artifact validation. |
+| `.github/workflows/segubeca-pages-authority-asset.yml` | `INHERITED_PAGES_VALIDATION` | Product-preservation check that is triggered by `pages.yml` changes and contains a bounded-path guard from its own prior hotfix. |
 
 ```text
 ALL_PAGES_DEPLOY_PATHS_DISCOVERED=PASS
@@ -84,8 +85,6 @@ INDIRECT_AUTOMATIC_PRODUCTION_DISPATCHERS_BEFORE_FIX=1
 ```
 
 ## New production deployment contract
-
-Production Pages deployment is now explicit, main-only and exact-SHA-bound.
 
 ```text
 PAGES_PRODUCTION_DEPLOYMENT=
@@ -103,22 +102,18 @@ REMOTE_MAIN_SHA_RECHECK=YES
 MERGE != DEPLOY
 ```
 
-The deployment workflow requires `expected_sha` and `authorization` inputs.
-
-Before any Pages configuration, artifact upload or deployment mutation can execute, an authorization job with no Pages write or OIDC deployment permission verifies:
+Before Pages configuration, artifact upload or production mutation can execute, an authorization job with no Pages write or OIDC deployment permission verifies:
 
 1. `github.ref == refs/heads/main`;
 2. `authorization == DEPLOY_FORGE_PAGES`;
 3. `github.sha == expected_sha`;
 4. remote `refs/heads/main == expected_sha`.
 
-Any mismatch exits non-zero and the deploy job remains blocked by `needs: authorize`.
+Any mismatch exits non-zero and `needs: authorize` prevents the deploy job from running.
 
-## Least-privilege boundary
+## Least privilege
 
-Top-level workflow permissions are reduced to `contents: read`.
-
-Only the deployment job receives the permissions required by GitHub Pages:
+Top-level workflow permissions are `contents: read` only. Only the gated deployment job receives:
 
 ```text
 contents: read
@@ -126,11 +121,11 @@ pages: write
 id-token: write
 ```
 
-The `github-pages` environment exists only on the gated deployment job.
+The `github-pages` environment exists only on that gated deployment job.
 
-## Indirect-dispatch closure
+## Indirect dispatch closure
 
-The historical Aura dispatcher no longer owns `actions: write`, no longer calls `createWorkflowDispatch`, and cannot invoke `pages.yml` automatically. It remains only as a read-only guard making the retired behavior explicit.
+The historical Aura dispatcher no longer owns `actions: write`, no longer calls `createWorkflowDispatch`, and cannot invoke `pages.yml` automatically. It remains only as a read-only guard.
 
 ```text
 AURA_PAGES_PRODUCTION_AUTO_DISPATCH=DISABLED
@@ -141,11 +136,11 @@ No Aura product file or runtime behavior is changed.
 
 ## Validation workflow reconciliation
 
-`pages-public-acceptance.yml` and `pages-deploy-observer.yml` remain validation utilities but no longer run on generic `main` pushes.
+`pages-public-acceptance.yml` and `pages-deploy-observer.yml` no longer run on generic `main` pushes. Both require explicit dispatch with an exact SHA; the observer searches for an explicit `workflow_dispatch` production Pages run.
 
-Both require explicit dispatch with an exact SHA. The observer now searches for a `workflow_dispatch` production Pages run rather than a `push` run.
+The canonical Pages artifact PR validation runs the static governance contract before executing its inherited artifact build and validation.
 
-This prevents validation infrastructure from encoding the obsolete assumption that every merge must be deployed.
+The inherited SeguBeca Pages authority check initially failed at its own bounded-path precondition because the old guard allowed `pages.yml` but rejected every other Pages-governance file in the same PR. No SeguBeca test had executed at that failure point. The guard is widened only to the explicit Pages-governance files in this hotfix so the inherited SeguBeca preservation tests can actually run. No SeguBeca product, formula, binding source or database surface is changed.
 
 ## Artifact semantics
 
@@ -155,33 +150,26 @@ The productive Pages artifact builder, public Supabase configuration validation,
 PAGES_ARTIFACT_SEMANTICS_CHANGED=NO
 PRODUCT_RUNTIME_MUTATION=NO
 AURA_MUTATION=NO
+SUPABASE_MUTATION=NO
 ```
 
-The hotfix changes when production deployment is authorized, not what the deployed product contains.
+The hotfix changes when deployment is authorized, not what the productive site contains.
 
 ## Static governance acceptance
 
-`tests/pages-explicit-deployment-governance.test.mjs` locks the release contract without dispatching production Pages.
-
-It proves:
+`tests/pages-explicit-deployment-governance.test.mjs` proves without deploying:
 
 - production `pages.yml` has no `push` trigger;
 - `workflow_dispatch` is required;
-- `expected_sha` is required;
-- explicit authorization is required;
+- `expected_sha` and explicit authorization are required;
 - main-only, exact-SHA and remote-main guards exist;
 - Pages write permissions occur only behind authorization;
 - only one workflow contains `actions/deploy-pages`;
 - no workflow with `pages: write` exposes an automatic push trigger;
 - the Aura workflow cannot auto-dispatch `pages.yml`;
 - Pages acceptance/observer no longer assume automatic deployment;
-- main push is denied;
-- feature-branch dispatch is denied;
-- wrong authorization is denied;
-- SHA mismatch is denied;
-- exact authorized main SHA is eligible.
-
-The existing canonical Pages artifact PR validation also runs this governance test while preserving its inherited artifact/build validation.
+- main push, feature dispatch, wrong authorization and SHA mismatch are denied;
+- only an exact explicitly authorized main SHA is eligible.
 
 ## Current public site
 
@@ -196,16 +184,19 @@ ROLLBACK=NO
 
 The governance violation is not a rollback instruction.
 
-## Files in scope
+## Files in bounded hotfix
 
-- `.github/workflows/pages.yml`
-- `.github/workflows/aura-pages-dispatch.yml`
-- `.github/workflows/pages-public-acceptance.yml`
-- `.github/workflows/pages-deploy-observer.yml`
-- `.github/workflows/canonical-pages-artifact-validation.yml`
-- `tests/pages-explicit-deployment-governance.test.mjs`
-- `docs/12-deployment/GITHUB_PAGES_DEPLOYMENT.md`
-- this source-truth record
+1. `.github/workflows/pages.yml`
+2. `.github/workflows/aura-pages-dispatch.yml`
+3. `.github/workflows/pages-public-acceptance.yml`
+4. `.github/workflows/pages-deploy-observer.yml`
+5. `.github/workflows/canonical-pages-artifact-validation.yml`
+6. `.github/workflows/segubeca-pages-authority-asset.yml` — CI path-guard compatibility only
+7. `tests/pages-explicit-deployment-governance.test.mjs`
+8. `docs/12-deployment/GITHUB_PAGES_DEPLOYMENT.md`
+9. this source-truth record
+
+No product source, static-preview product surface, Supabase migration, database schema, Aura implementation, Pipeline, Activity, Cartera product code, Quotes product code, NASH, Commissions or Dashboard file is mutated.
 
 ## Explicit non-authorizations
 
@@ -221,21 +212,18 @@ APPLICATION_RUNTIME_MUTATION=FORBIDDEN
 UNRELATED_PR_MERGE=FORBIDDEN
 ```
 
-## Acceptance state before PR CI
+## Acceptance state
 
 ```text
 ROBOCOP_PRECHECK=PASS
-SCOPE_GUARD=PENDING_DIFF_RECHECK
-WORKFLOW_YAML_VALID=PENDING_CI
+SCOPE_GUARD=PASS_9_BOUNDED_FILES
 PAGES_AUTO_MAIN_TRIGGER_REMOVED=IMPLEMENTED
 EXPLICIT_DISPATCH=IMPLEMENTED
 MAIN_ONLY_GUARD=IMPLEMENTED
 EXPECTED_SHA_GUARD=IMPLEMENTED
 AUTHORIZATION_GUARD=IMPLEMENTED
 NO_SECOND_AUTO_DEPLOY_PATH=IMPLEMENTED
-TARGETED_TESTS=PENDING_CI
-INHERITED_DEPLOYMENT_TESTS=PENDING_CI
 PAGES_DEPLOY_EXECUTED=NO
 ```
 
-Final acceptance requires green PR CI at the exact hotfix head and, after an owner-authorized expected-head merge of this hotfix only, proof that the resulting `main` push creates no production Pages deployment. Production Pages must not be manually dispatched during that post-merge test.
+Final acceptance still requires green CI on the exact final hotfix head and, after an owner-authorized expected-head merge of this hotfix only, proof that the resulting `main` push creates no production Pages deployment. Production Pages must not be manually dispatched during that post-merge test.
