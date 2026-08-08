@@ -1,10 +1,10 @@
-import { createCarteraAdapter as createDateSafeAdapter } from './cartera-adapter-pages-v6.js?base=aura-cartera-pdf-already-admitted-reopen-011';
+import { createCarteraAdapter as createDateSafeAdapter } from './cartera-adapter-pages-v6.js?base=cartera-pdf-already-admitted-reopen-011';
 import {
   enrichSemanticFields,
   fieldValue,
   normalizeCivilDate,
   semanticReviewCandidate,
-} from './cartera-semantic-v1.js?v=cartera-pdf-semantic-reconciliation-012';
+} from './cartera-semantic-v1.js?v=cartera-pdf-semantic-completion-014';
 
 const MAX_PDF_BYTES = 8 * 1024 * 1024;
 
@@ -38,6 +38,7 @@ function sanitizeStoredFields(fields = {}) {
     plannedPremium: fieldValue(fields, 'plannedPremium'),
     annualTotal: fieldValue(fields, 'annualTotal'),
     beneficiariesDetected: fieldValue(fields, 'beneficiariesDetected') === true,
+    coverageSectionDetected: fieldValue(fields, 'coverageSectionDetected'),
     coverageCandidates: fieldValue(fields, 'coverageCandidates'),
   });
   return freeze(normalized);
@@ -68,7 +69,9 @@ function reviewFromStoredPacket(packet, digest) {
     edgeCandidate,
     fields,
     coverageCandidates,
-    pdfCoverageExtraction: coverageCandidates.length ? 'CANDIDATES_REVIEW_REQUIRED' : 'NO_CANDIDATES',
+    coverageSectionDetected: edgeCandidate.coverageSectionDetected,
+    pdfCoverageExtraction: edgeCandidate.coverageExtractionState,
+    reviewCompleteness: edgeCandidate.reviewCompleteness,
     requiresHumanReview: true,
     createsPolicyTruth: false,
     resumedExistingReview: true,
