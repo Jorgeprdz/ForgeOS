@@ -76,7 +76,7 @@ Classification at the base SHA:
 | `.github/workflows/pages-public-acceptance.yml` | `VALIDATION_ONLY` | Verifies an already deployed exact SHA and records evidence; previously assumed every `main` push would be deployed. |
 | `.github/workflows/pages-deploy-observer.yml` | `VALIDATION_ONLY` | Observes an already authorized deployment; previously searched specifically for a `pages.yml` push run. |
 | `.github/workflows/canonical-pages-artifact-validation.yml` | `PAGES_ARTIFACT_BUILDER_ONLY/VALIDATION_ONLY` | PR-only, read-only canonical artifact validation. |
-| `.github/workflows/segubeca-pages-authority-asset.yml` | `INHERITED_PAGES_VALIDATION` | Product-preservation check that is triggered by `pages.yml` changes and contains a bounded-path guard from its own prior hotfix. |
+| `.github/workflows/segubeca-pages-authority-asset.yml` | `INHERITED_PAGES_VALIDATION` | Product-preservation check triggered by `pages.yml`; its own prior-hotfix path guard required compatibility with this governance PR. |
 
 ```text
 ALL_PAGES_DEPLOY_PATHS_DISCOVERED=PASS
@@ -140,7 +140,16 @@ No Aura product file or runtime behavior is changed.
 
 The canonical Pages artifact PR validation runs the static governance contract before executing its inherited artifact build and validation.
 
-The inherited SeguBeca Pages authority check initially failed at its own bounded-path precondition because the old guard allowed `pages.yml` but rejected every other Pages-governance file in the same PR. No SeguBeca test had executed at that failure point. The guard is widened only to the explicit Pages-governance files in this hotfix so the inherited SeguBeca preservation tests can actually run. No SeguBeca product, formula, binding source or database surface is changed.
+The inherited SeguBeca Pages authority check initially failed at its bounded-path precondition because the old guard allowed `pages.yml` but rejected every other Pages-governance file in the same PR. The path guard is widened only to the explicit Pages-governance files in this hotfix so the preservation tests can execute.
+
+After that guard was reconciled, one inherited SeguBeca static assertion remained stale: it required four textual occurrences and `PAGES_SEGUBECA_*` markers that are absent from the accepted base-main `pages.yml` itself. The assertion is reconciled without changing the artifact builder or product runtime. It now proves the actual canonical contract directly: the accepted authority asset is named, placed in the public allow-set, copied through the canonical tracked-file path, its browser import is rewritten to the project-safe path, and the rewrite fails closed if no replacement occurs. The independent alternate-builder and accepted-calculation-authority tests remain unchanged.
+
+```text
+SEGUBECA_PRODUCT_FORMULA_CHANGED=NO
+SEGUBECA_PRODUCTIVE_BINDING_SOURCE_CHANGED=NO
+PAGES_ARTIFACT_BUILDER_CHANGED_FOR_SEGUBECA=NO
+INHERITED_TEST_RECONCILIATION=STATIC_ASSERTION_ONLY
+```
 
 ## Artifact semantics
 
@@ -193,8 +202,9 @@ The governance violation is not a rollback instruction.
 5. `.github/workflows/canonical-pages-artifact-validation.yml`
 6. `.github/workflows/segubeca-pages-authority-asset.yml` — CI path-guard compatibility only
 7. `tests/pages-explicit-deployment-governance.test.mjs`
-8. `docs/12-deployment/GITHUB_PAGES_DEPLOYMENT.md`
-9. this source-truth record
+8. `tests/segubeca-pages-authority-asset-test.mjs` — stale static assertion reconciliation only
+9. `docs/12-deployment/GITHUB_PAGES_DEPLOYMENT.md`
+10. this source-truth record
 
 No product source, static-preview product surface, Supabase migration, database schema, Aura implementation, Pipeline, Activity, Cartera product code, Quotes product code, NASH, Commissions or Dashboard file is mutated.
 
@@ -216,7 +226,7 @@ UNRELATED_PR_MERGE=FORBIDDEN
 
 ```text
 ROBOCOP_PRECHECK=PASS
-SCOPE_GUARD=PASS_9_BOUNDED_FILES
+SCOPE_GUARD=PASS_10_BOUNDED_FILES
 PAGES_AUTO_MAIN_TRIGGER_REMOVED=IMPLEMENTED
 EXPLICIT_DISPATCH=IMPLEMENTED
 MAIN_ONLY_GUARD=IMPLEMENTED
