@@ -45,10 +45,20 @@ test("direct Activity route survives authenticated session restoration", () => {
   assert.equal(router.current(), "actividad");
 });
 
-test("default Aura entrypoint still restores Pipeline", () => {
+test("default Aura entrypoint restores canonical Inicio", () => {
   const windowRef = createWindow("https://example.test/ForgeOS/static-preview/forge-aura/");
   const router = createAuraRouter({ windowRef });
   router.navigate("login", { replace: true });
   router.restoreAfterAuth();
+  assert.equal(router.current(), "inicio");
+  assert.match(windowRef.location.href, /route=inicio/);
+});
+
+test("explicit Pipeline route remains restorable", () => {
+  const windowRef = createWindow("https://example.test/ForgeOS/static-preview/forge-aura/?route=pipeline");
+  const router = createAuraRouter({ windowRef });
+  router.navigate("login", { replace: true });
+  router.restoreAfterAuth();
   assert.equal(router.current(), "pipeline");
+  assert.match(windowRef.location.href, /route=pipeline/);
 });
