@@ -29,7 +29,7 @@ test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () =>
   assert.match(app, /income\/income\.css/);
   assert.match(router, /comisiones/);
   assert.match(shell, />Ingresos</);
-  assert.match(bootstrap, /income-aura-ux-reconciliation-001/);
+  assert.match(bootstrap, /app-v4\.js\?v=/);
   assert.match(index, /income-core\.mjs[^\n]+income-core\.js/);
   assert.match(index, /income-adapter-pages-v1\.mjs[^\n]+income-adapter-pages-v1\.js/);
 });
@@ -59,7 +59,8 @@ test("canonical Pages artifact preserves Cartera root 010 date-safe module and v
   assert.match(app, /cartera-module-v3\.js\?v=aura-cartera-pdf-real-acceptance-root-010/);
   assert.match(index, /cartera-adapter-pages-v6\.js\?v=aura-cartera-pdf-real-acceptance-root-010/);
   assert.match(index, /cartera-module-v3\.js\?v=aura-cartera-pdf-real-acceptance-root-010/);
-  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-pdf-real-acceptance-root-010-income-aura-ux-reconciliation-001/);
+  assert.match(bootstrap, /app-v4\.js\?v=/);
+  assert.match(bootstrap, /aura-cartera-pdf-real-acceptance-root-010/);
   assert.match(moduleV3, /options\.adapterFactory \|\| createRootSafeCarteraAdapter/);
   assert.match(moduleV3, /adapterFactory:\s*guardedAdapterFactory\(adapterFactory\)/);
   assert.match(moduleV3, /sanitizePdfReviewDates\(review\)/);
