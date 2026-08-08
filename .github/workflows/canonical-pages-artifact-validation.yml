@@ -10,6 +10,7 @@ on:
       - '.github/workflows/pages-public-acceptance.yml'
       - '.github/workflows/pages-deploy-observer.yml'
       - '.github/workflows/canonical-pages-artifact-validation.yml'
+      - '.github/workflows/segubeca-pages-authority-asset.yml'
       - 'tests/pages-explicit-deployment-governance.test.mjs'
       - 'index.html'
       - 'service-worker.js'
