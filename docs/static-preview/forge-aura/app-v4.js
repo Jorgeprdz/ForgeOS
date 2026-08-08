@@ -4,6 +4,7 @@ import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
 import { createPipelineModule } from "./pipeline/pipeline-module.js?v=pages-adapter-c5a90d95";
 import { createActivityModule } from "./activity/activity-module.js?v=activity-reports-ux-001-corrected";
 import { createCarteraModule } from "./cartera/cartera-module.js?v=aura-cartera-pdf-auth-002";
+import { createIncomeModule } from "./income/income-module.js?v=income-aura-ux-reconciliation-001";
 
 const root = document.querySelector("[data-aura-app]");
 const auth = createAuraAuth();
@@ -11,6 +12,7 @@ let shell = null;
 let router = null;
 let activeModule = null;
 let activeRoute = null;
+let activeAdvisorId = null;
 let bootRevision = 0;
 
 function ensureStylesheet(href, key = "module") {
@@ -39,9 +41,10 @@ async function destroyActiveModule() {
   await current.destroy?.();
 }
 
-async function scrub({ destroyShell = false } = {}) {
+async function scrub({ destroyShell = false, clearAdvisor = false } = {}) {
   bootRevision += 1;
   await destroyActiveModule();
+  if (clearAdvisor) activeAdvisorId = null;
   if (destroyShell) {
     shell = null;
     root.replaceChildren();
@@ -52,7 +55,7 @@ async function scrub({ destroyShell = false } = {}) {
 }
 
 function showLogin(message = "") {
-  void scrub({ destroyShell: true }).then(() => {
+  void scrub({ destroyShell: true, clearAdvisor: true }).then(() => {
     renderAuraLogin({ root, auth, onAuthenticated: () => router.restoreAfterAuth() });
     if (message) {
       const node = root.querySelector("[data-aura-auth-error]");
@@ -72,7 +75,7 @@ function ensureShell(snapshot) {
       onLogout: async () => {
         shell.setGlobalState("Cerrando sesión…");
         try {
-          await scrub();
+          await scrub({ clearAdvisor: true });
           await auth.signOut();
         } finally {
           router.navigate("login", { replace: true });
@@ -81,6 +84,7 @@ function ensureShell(snapshot) {
       },
     });
   }
+  activeAdvisorId = snapshot.user?.id || null;
   shell.setUser(snapshot.user);
   return shell;
 }
@@ -101,6 +105,14 @@ function createRouteModule(route, currentShell, client, snapshot) {
       globalState: currentShell.setGlobalState,
     });
   }
+  if (route === "comisiones") {
+    return createIncomeModule({
+      root: currentShell.main,
+      client,
+      user: snapshot.user,
+      globalState: currentShell.setGlobalState,
+    });
+  }
   return createPipelineModule({
     root: currentShell.main,
     client,
@@ -110,7 +122,7 @@ function createRouteModule(route, currentShell, client, snapshot) {
 
 async function mountRoute(route, snapshot) {
   const revision = ++bootRevision;
-  if (activeRoute === route && activeModule) return;
+  if (activeRoute === route && activeModule && activeAdvisorId === snapshot.user?.id) return;
   await destroyActiveModule();
   const currentShell = ensureShell(snapshot);
   currentShell.setActiveRoute(route);
@@ -118,6 +130,7 @@ async function mountRoute(route, snapshot) {
   const client = await auth.getClient();
   if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
   if (route === "cartera") ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
+  if (route === "comisiones") ensureStylesheet("./income/income.css?v=income-aura-ux-reconciliation-001", "comisiones");
   if (revision !== bootRevision) return;
   activeModule = createRouteModule(route, currentShell, client, snapshot);
   activeRoute = route;
@@ -143,14 +156,31 @@ async function renderRoute(route) {
   await mountRoute(route, snapshot);
 }
 
+async function handleAdvisorSwitch(snapshot) {
+  const nextAdvisorId = snapshot.user?.id || null;
+  if (!nextAdvisorId || !activeAdvisorId || nextAdvisorId === activeAdvisorId) return;
+  const previousAdvisorId = activeAdvisorId;
+  const route = router.current();
+  await scrub({ clearAdvisor: true });
+  globalThis.dispatchEvent(new CustomEvent("aura:advisor-switch-scrub", {
+    detail: { previousAdvisorId, nextAdvisorId, route },
+  }));
+  if (auth.snapshot().user?.id === nextAdvisorId) {
+    router.navigate(route, { replace: true });
+  }
+}
+
 async function boot() {
   renderBoot("Recuperando tu sesión");
   router = createAuraRouter({ onChange: route => void renderRoute(route) });
   auth.subscribe(snapshot => {
     if (snapshot.event === "SIGNED_OUT") {
+      activeAdvisorId = null;
       router.navigate("login", { replace: true });
       showLogin();
+      return;
     }
+    void handleAdvisorSwitch(snapshot);
   });
   try {
     const snapshot = await auth.restore();
