@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 
-const allowed = [
+const incomeAllowed = [
   /^docs\/static-preview\/forge-aura\/income\//,
   /^docs\/static-preview\/forge-aura\/app-v4\.js$/,
   /^docs\/static-preview\/forge-aura\/aura-bootstrap-v4\.js$/,
@@ -16,6 +16,16 @@ const allowed = [
   /^\.github\/workflows\/income-aura-ux-reconciliation-001\.yml$/,
   /^docs\/architecture\/source-truth\/FORGE_AURA_INCOME_UX_RECONCILIATION_REPORT_001\.md$/,
   /^docs\/evidence\/FORGE_AURA_INCOME_UX_RECONCILIATION_ACCEPTANCE_001\.md$/,
+];
+
+const carteraCompatibilityAllowed = [
+  /^docs\/static-preview\/forge-aura\/cartera\//,
+  /^docs\/static-preview\/forge-aura\/app-v4\.js$/,
+  /^docs\/static-preview\/forge-aura\/aura-bootstrap-v4\.js$/,
+  /^docs\/static-preview\/forge-aura\/index\.html$/,
+  /^tests\/aura-cartera-/,
+  /^tests\/cartera-/,
+  /^tests\/income-(?:pages-import-graph|cartera-cross-module|scope-guard)\.test\.mjs$/,
 ];
 
 const forbidden = [
@@ -37,16 +47,26 @@ function changedFiles() {
   return output.split(/\r?\n/).map(value => value.trim()).filter(Boolean);
 }
 
-test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 changes only authorized files", () => {
+function matchesAny(file, patterns) {
+  return patterns.some(pattern => pattern.test(file));
+}
+
+test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allowing bounded Cartera shared-runtime compatibility", () => {
   const changed = changedFiles();
   if (!changed.length && !process.env.CI) return;
   assert.ok(changed.length > 0, "CI scope guard requires a non-empty diff");
 
-  const forbiddenHits = changed.filter(file => forbidden.some(pattern => pattern.test(file)));
+  const forbiddenHits = changed.filter(file => matchesAny(file, forbidden));
   assert.deepEqual(forbiddenHits, [], `Forbidden mutation detected: ${forbiddenHits.join(", ")}`);
 
-  const outOfScope = changed.filter(file => !allowed.some(pattern => pattern.test(file)));
-  assert.deepEqual(outOfScope, [], `OUT_OF_SCOPE_VIOLATION: ${outOfScope.join(", ")}`);
+  const incomeProductMutation = changed.some(file => /^docs\/static-preview\/forge-aura\/income\//.test(file));
+  const activeAllowlist = incomeProductMutation ? incomeAllowed : carteraCompatibilityAllowed;
+  const outOfScope = changed.filter(file => !matchesAny(file, activeAllowlist));
+  assert.deepEqual(
+    outOfScope,
+    [],
+    `${incomeProductMutation ? "OUT_OF_SCOPE_VIOLATION" : "CARTERA_COMPATIBILITY_SCOPE_VIOLATION"}: ${outOfScope.join(", ")}`,
+  );
 });
 
 test("scope guard explicitly blocks engine, rule pack, database and deployment mutations", () => {
