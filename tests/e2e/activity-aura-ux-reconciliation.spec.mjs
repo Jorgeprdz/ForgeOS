@@ -83,8 +83,9 @@ test("desktop Activity opens as a daily productivity cockpit", async ({ page }, 
   await expect(page.locator("[data-today-points]")).toHaveText("20 / 25");
   await expect(page.getByText("Te faltan 5 puntos")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Lo que ya hiciste" })).toBeVisible();
-  await expect(page.getByText("Referido recibido")).toBeVisible();
-  await expect(page.getByText("Llamada completada")).toBeVisible();
+  const todayFeed = page.locator("[data-today-feed]");
+  await expect(todayFeed.getByText("Referido recibido")).toBeVisible();
+  await expect(todayFeed.getByText("Llamada completada")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Opciones para avanzar" })).toBeVisible();
   await assertNoOverflow(page);
   await page.screenshot({ path: testInfo.outputPath("ACTIVITY-25PT-DESKTOP-1440x900.png"), fullPage: true });
