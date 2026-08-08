@@ -1,0 +1,257 @@
+name: Aura Cartera Productive Reconciliation 001
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/cartera/**'
+      - 'docs/static-preview/forge-aura/app-v4.js'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'docs/static-preview/forge-aura/aura-shell.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/aura-cartera-productive-reconciliation.test.mjs'
+      - 'tests/aura-cartera-pages-import-graph.test.mjs'
+      - 'tests/cartera-playwright.config.mjs'
+      - 'tests/e2e/aura-cartera-productive-visual.spec.mjs'
+      - 'tests/fixtures/aura-cartera-productive.synthetic.json'
+      - 'tests/fixtures/aura-cartera-visual.html'
+      - 'docs/architecture/source-truth/FORGE_AURA_CARTERA_PRODUCTIVE_UX_RECONCILIATION_001.md'
+      - 'docs/evidence/FORGE_AURA_CARTERA_PRODUCTIVE_UX_RECONCILIATION_ACCEPTANCE_001.md'
+      - '.github/workflows/aura-cartera-productive-reconciliation-001.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-cartera-productive-reconciliation-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
+  FORGE_PAGES_RUNTIME_MODE: 'pages'
+  FORGE_CARTERA_PAGES_RUNTIME_MODE: 'pages'
+  GITHUB_PAGES: 'true'
+  DEMO_MODE: 'true'
+  ENABLE_TEST_ADVISOR_LOGIN: 'false'
+  SUPABASE_URL: ''
+  SUPABASE_ANON_KEY: ''
+
+jobs:
+  contract-and-regressions:
+    name: Cartera contracts and inherited regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Robocop diff lock
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          printf '%s\n' "${changed[@]}"
+          forbidden='^(supabase/migrations/|supabase/functions/|platform/policy-intelligence/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
+          for file in "${changed[@]}"; do
+            if [[ "$file" =~ $forbidden ]]; then
+              echo "ROBOCOP_SCOPE_VIOLATION=$file" >&2
+              exit 1
+            fi
+          done
+          echo 'SUPABASE_MIGRATIONS_CHANGED=0'
+          echo 'EDGE_FUNCTIONS_CHANGED=0'
+          echo 'POLICY_INTELLIGENCE_BACKEND_CHANGED=0'
+          echo 'PAGES_DEPLOY_WORKFLOW_MUTATED=0'
+          echo 'MATERIAL3_RUNTIME_REDESIGN=0'
+
+      - name: Syntax check Aura Cartera modules
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-core.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v1.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-coverage-adapter.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module.js
+          node --check docs/static-preview/forge-aura/app-v4.js
+
+      - name: Aura Cartera productive contract
+        run: node --test tests/aura-cartera-productive-reconciliation.test.mjs
+
+      - name: Policy Coverage authority and versioning
+        run: >-
+          node --test
+          tests/policy-coverage-model-authority.test.mjs
+          tests/policy-coverage-read-after-write-versioning-hotfix.test.mjs
+
+      - name: Inherited Cartera 010B 010C 010D 020B 020C regressions
+        run: >-
+          node --test
+          tests/cartera-010b-contract-foundation-test.mjs
+          tests/cartera-010b-general-role-read-authority-test.mjs
+          tests/cartera-010c-policy-detail-timeline-projection-test.mjs
+          tests/cartera-010c-policy-timeline-person-account-projection-scope-test.mjs
+          tests/cartera-010d-unified-directory-read-model-service-test.mjs
+          tests/cartera-010d-restricted-entity-privacy-test.mjs
+          tests/cartera-020b-persistence-foundation-test.mjs
+          tests/cartera-020b-governed-persistence-commands-test.mjs
+          tests/cartera-020c-persistent-confirmation-orchestration-contract-test.mjs
+
+      - name: Inherited Cartera 030 through 100 authority matrix
+        run: >-
+          node --test
+          tests/cartera-030d-policy-payment-calendar-service-test.mjs
+          tests/cartera-040a-relationship-memory-service-test.mjs
+          tests/cartera-040b-relationship-memory-projection-test.mjs
+          tests/cartera-050c-authority-adapters-test.mjs
+          tests/cartera-060b-growth-boundary-test.mjs
+          tests/cartera-060c-service-contract-test.mjs
+          tests/cartera-070c-action-review-boundary-test.mjs
+          tests/cartera-080-economic-connection-service-test.mjs
+          tests/cartera-090b-relationship-capital-boundary-test.mjs
+          tests/cartera-100a-productivity-proof-contract-test.mjs
+          tests/cartera-100b-outcome-learning-boundary-test.mjs
+          tests/cartera-100c-productivity-proof-service-test.mjs
+
+      - name: Preserve explicit Pages deployment governance
+        run: node --test tests/pages-explicit-deployment-governance.test.mjs
+
+  canonical-pages-artifact:
+    name: Canonical Pages artifact and import graph
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: contract-and-regressions
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Extract canonical Pages build and validation programs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import textwrap
+
+          workflow = Path('.github/workflows/pages.yml').read_text()
+          blocks = re.findall(r"node - <<'EOF'\n(.*?)\n\s+EOF", workflow, re.S)
+          if len(blocks) != 3:
+              raise SystemExit(f'EXPECTED_3_NODE_BLOCKS_OBSERVED_{len(blocks)}')
+
+          Path('/tmp/generate-env.cjs').write_text(textwrap.dedent(blocks[0]))
+          Path('/tmp/build-canonical.cjs').write_text(
+              textwrap.dedent(blocks[1]).replace('process.env.GITHUB_SHA', 'process.env.FORGE_BUILD_SHA')
+          )
+          Path('/tmp/validate-canonical.cjs').write_text(
+              textwrap.dedent(blocks[2]).replace('process.env.EXPECTED_COMMIT_SHA', 'process.env.FORGE_BUILD_SHA')
+          )
+          PY
+
+      - name: Build canonical _site with the production builder
+        run: |
+          node /tmp/generate-env.cjs
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          node /tmp/build-canonical.cjs
+
+      - name: Validate canonical artifact and Aura import graph
+        env:
+          EXPECTED_DEMO_MODE: 'true'
+        run: |
+          node /tmp/validate-canonical.cjs
+          node scripts/validate-pages-public-config.mjs _site/env.js
+          node --test tests/aura-cartera-pages-import-graph.test.mjs
+          echo 'PAGES_ARTIFACT_BUILD=PASS'
+          echo 'PAGES_IMPORT_GRAPH=PASS'
+
+      - name: Upload canonical artifact diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-cartera-canonical-site-${{ github.event.pull_request.head.sha }}
+          path: |
+            _site/build-info.json
+            _site/production-surface.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  browser-acceptance:
+    name: Cartera responsive accessibility and visual acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: contract-and-regressions
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run synthetic browser acceptance
+        run: npx playwright test --config tests/cartera-playwright.config.mjs
+
+      - name: Verify required screenshot evidence exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in \
+            01-cartera-home-desktop \
+            02-cartera-home-mobile \
+            03-cartera-home-tablet \
+            04-add-policy-pdf-primary \
+            05-pdf-processing \
+            06-pdf-preview-human-review \
+            07-policy-workspace-multi-coverage \
+            08-person-workspace \
+            09-empty-state \
+            10-attention-state \
+            11-zoom-200 \
+            12-reduced-motion; do
+            test -s "test-results/aura-cartera-visual/${name}.png"
+          done
+          echo 'PLAYWRIGHT_SCREENSHOT_SET=PASS'
+
+      - name: Upload Aura Cartera screenshots and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-cartera-visual-${{ github.event.pull_request.head.sha }}
+          path: |
+            test-results/aura-cartera-visual
+            test-results/aura-cartera-productive
+          if-no-files-found: warn
+          retention-days: 30

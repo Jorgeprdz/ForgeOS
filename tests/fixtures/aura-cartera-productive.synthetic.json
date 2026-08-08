@@ -1,0 +1,43 @@
+{
+  "advisor": {"id": "00000000-0000-4000-8000-000000000001", "displayName": "Asesor Sintético"},
+  "person": {"person_reference": "person:synthetic:ana-ejemplo", "display_name": "Ana Ejemplo", "preferred_name": "Ana", "lifecycle_state": "CONFIRMED", "privacy_classification": "PRIVATE"},
+  "policy": {
+    "policy_reference": "policy:synthetic:001",
+    "policy_number": "SYN-2026-0001",
+    "carrier_reference": "carrier:synthetic",
+    "product_reference": "product:proteccion-sintetica",
+    "effective_from": "2026-01-15T00:00:00.000Z",
+    "effective_to": "2027-01-15T00:00:00.000Z",
+    "status_value": "ACTIVE",
+    "status_as_of": "2026-08-08T00:00:00.000Z",
+    "currency": "MXN",
+    "premium_amount": 18240,
+    "payment_frequency": "ANNUAL",
+    "sum_insured": 950000,
+    "completeness_state": "PARTIAL",
+    "freshness_state": "CURRENT",
+    "conflict_state": "CLEAR",
+    "current_version": 2
+  },
+  "coverages": {
+    "status": "OK",
+    "policyReference": "policy:synthetic:001",
+    "policyVersionReference": "POLICY_VERSION:synthetic-v2",
+    "coverageDetailState": "COVERAGE_DETAIL_AVAILABLE",
+    "coverages": [
+      {"coverageReference": "coverage:synthetic:life", "label": "Fallecimiento", "kind": "BASE", "coverageState": "ACTIVE", "sumInsured": 950000, "currency": "MXN", "premiumAmount": 10400, "premiumCurrency": "MXN", "annexReference": "ANNEX:SYN:01", "effectiveFrom": "2026-01-15T00:00:00.000Z", "effectiveTo": "2027-01-15T00:00:00.000Z", "coveragePeriod": {"value": 1, "unit": "YEAR"}, "paymentPeriod": {"value": 1, "unit": "YEAR"}, "currentVersion": 2},
+      {"coverageReference": "coverage:synthetic:disability", "label": "Invalidez total y permanente", "kind": "RIDER", "coverageState": "ACTIVE", "sumInsured": 600000, "currency": "MXN", "premiumAmount": 5240, "premiumCurrency": "MXN", "annexReference": "ANNEX:SYN:02", "effectiveFrom": "2026-01-15T00:00:00.000Z", "effectiveTo": "2027-01-15T00:00:00.000Z", "coveragePeriod": {"value": 1, "unit": "YEAR"}, "paymentPeriod": {"value": 1, "unit": "YEAR"}, "currentVersion": 1},
+      {"coverageReference": "coverage:synthetic:accident", "label": "Muerte accidental", "kind": "RIDER", "coverageState": null, "sumInsured": null, "currency": null, "premiumAmount": null, "premiumCurrency": null, "annexReference": "ANNEX:SYN:03", "effectiveFrom": null, "effectiveTo": null, "coveragePeriod": null, "paymentPeriod": null, "currentVersion": 1}
+    ]
+  },
+  "roles": [
+    {"role_type": "POLICY_OWNER", "participant_person_reference": "person:synthetic:ana-ejemplo", "display_label": "Ana Ejemplo"},
+    {"role_type": "INSURED", "participant_person_reference": "person:synthetic:ana-ejemplo", "display_label": "Ana Ejemplo"},
+    {"role_type": "BENEFICIARY", "display_label": "RESTRICTED_SYNTHETIC_VALUE"}
+  ],
+  "calendar": {"summary": {"next30": 1, "confirmationRequired": 1}, "items": [{"policyReference": "policy:synthetic:001", "policyNumber": "SYN-2026-0001", "state": "CONFIRMATION_REQUIRED", "label": "Pago anual", "dueDate": "2026-08-20"}]},
+  "radar": {"items": [{"policyReference": "policy:synthetic:001", "title": "Revisión anual", "reason": "Hay una revisión confirmada próxima.", "meaning": "Conviene revisar la póliza con el cliente."}]},
+  "memory": {"items": [{"memoryKind": "CONTACT_PREFERENCE", "summary": "Prefiere revisar documentación por videollamada."}]},
+  "growth": {"items": [{"growthClass": "PROTECTION_REVIEW", "reason": "Candidato para revisión humana; no es una oportunidad automática."}]},
+  "pdfCandidate": {"person": "Ana Ejemplo", "policyNumber": "SYN-PDF-001", "product": "Protección Sintética", "status": null, "premium": null, "effectiveDate": "2026-08-01", "expirationDate": "2027-08-01", "confidence": 0.88}
+}
