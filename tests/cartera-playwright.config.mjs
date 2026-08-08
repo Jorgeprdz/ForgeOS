@@ -15,7 +15,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'npm run serve:e2e',
+    command: 'python3 -m http.server 4173 --bind 127.0.0.1',
     url: 'http://127.0.0.1:4173/tests/fixtures/aura-cartera-visual.html',
     reuseExistingServer: false,
     timeout: 30_000,
