@@ -34,8 +34,9 @@ test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () =>
   assert.match(index, /income-adapter-pages-v1\.mjs[^\n]+income-adapter-pages-v1\.js/);
 });
 
-test("canonical Pages artifact preserves current Cartera v5 to v4 to v3 to v2 transport chain", () => {
+test("canonical Pages artifact preserves current Cartera review-safe v2 module and v5 to v4 to v3 to v2 transport chain", () => {
   for (const relative of [
+    "static-preview/forge-aura/cartera/cartera-module-v2.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v2.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v3.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v4.js",
@@ -45,12 +46,16 @@ test("canonical Pages artifact preserves current Cartera v5 to v4 to v3 to v2 tr
   }
   const index = read("static-preview/forge-aura/index.html");
   const bootstrap = read("static-preview/forge-aura/aura-bootstrap-v4.js");
+  const moduleV2 = read("static-preview/forge-aura/cartera/cartera-module-v2.js");
   const v2 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v2.js");
   const v3 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v3.js");
   const v4 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v4.js");
   const v5 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v5.js");
   assert.match(index, /cartera-adapter-pages-v5\.js\?v=aura-cartera-invalid-date-review-007/);
-  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-invalid-date-review-007-income-aura-ux-reconciliation-001/);
+  assert.match(index, /cartera-module-v2\.js\?v=aura-cartera-review-date-ui-008/);
+  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-review-date-ui-008-income-aura-ux-reconciliation-001/);
+  assert.match(moduleV2, /adapterFactory:\s*createReviewSafeAdapter/);
+  assert.match(moduleV2, /cartera-adapter-pages-v5\.js\?base=aura-cartera-review-date-ui-008/);
   assert.match(v5, /cartera-adapter-pages-v4\.js\?base=aura-cartera-invalid-date-review-007/);
   assert.match(v4, /cartera-adapter-pages-v3\.js\?base=aura-cartera-result-state-machine-006/);
   assert.match(v3, /cartera-adapter-pages-v2\.js\?base=aura-cartera-pdf-idempotency-004/);
