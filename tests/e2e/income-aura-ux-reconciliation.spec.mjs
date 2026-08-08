@@ -149,3 +149,20 @@ test("late results are rejected after route unmount", async ({ page }) => {
   expect(diagnostics.privateDataPresent).toBe(false);
   expect(diagnostics.mounted).toBe(false);
 });
+
+test("reconciled browser runtime can import current Cartera and Income modules together", async ({ page }) => {
+  await page.goto("/docs/static-preview/forge-aura/index.html");
+  const modules = await page.evaluate(async () => {
+    const [cartera, income, transport] = await Promise.all([
+      import("/docs/static-preview/forge-aura/cartera/cartera-module.js?v=aura-cartera-pdf-auth-002"),
+      import("/docs/static-preview/forge-aura/income/income-module.js?v=income-aura-ux-reconciliation-001"),
+      import("/docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v3.js?v=aura-cartera-pdf-idempotency-004"),
+    ]);
+    return {
+      cartera: typeof cartera.createCarteraModule,
+      income: typeof income.createIncomeModule,
+      transport: typeof transport.createCarteraAdapter,
+    };
+  });
+  expect(modules).toEqual({ cartera: "function", income: "function", transport: "function" });
+});
