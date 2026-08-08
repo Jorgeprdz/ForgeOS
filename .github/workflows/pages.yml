@@ -1,29 +1,85 @@
 name: Deploy ForgeOS to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact main SHA authorized for production deployment
+        required: true
+        type: string
+      authorization:
+        description: Explicit production deployment authorization
+        required: true
+        type: string
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
+  authorize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate explicit production deployment authorization
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          AUTHORIZATION: ${{ inputs.authorization }}
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "PAGES_MAIN_REF_GUARD=FAIL ref=$GITHUB_REF"
+            exit 1
+          fi
+          if [ "$AUTHORIZATION" != "DEPLOY_FORGE_PAGES" ]; then
+            echo "PAGES_EXPLICIT_AUTHORIZATION=FAIL"
+            exit 1
+          fi
+          if [ "$GITHUB_SHA" != "$EXPECTED_SHA" ]; then
+            echo "PAGES_EXPECTED_SHA_MATCH=FAIL github_sha=$GITHUB_SHA expected_sha=$EXPECTED_SHA"
+            exit 1
+          fi
+          echo "PAGES_MAIN_REF_GUARD=PASS"
+          echo "PAGES_EXPLICIT_AUTHORIZATION=PASS"
+          echo "PAGES_EXPECTED_SHA_MATCH=PASS"
+
+      - name: Checkout exact authorized commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.expected_sha }}
+          fetch-depth: 0
+
+      - name: Verify remote main exact SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          set -euo pipefail
+          remote_main_sha="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          if [ -z "$remote_main_sha" ] || [ "$remote_main_sha" != "$EXPECTED_SHA" ]; then
+            echo "PAGES_REMOTE_MAIN_SHA_MATCH=FAIL remote=${remote_main_sha:-none} expected=$EXPECTED_SHA"
+            exit 1
+          fi
+          echo "PAGES_REMOTE_MAIN_SHA_MATCH=PASS"
+
   deploy:
+    needs: authorize
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout exact authorized commit
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.expected_sha }}
 
       - name: Validate GitHub Pages public configuration
         env:

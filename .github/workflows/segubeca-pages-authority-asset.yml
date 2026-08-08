@@ -44,7 +44,7 @@ jobs:
           head_sha='${{ github.event.pull_request.head.sha }}'
           merge_base="$(git merge-base "$base_sha" "$head_sha")"
           mapfile -t changed < <(git diff --name-only "$merge_base" "$head_sha")
-          allowed='^(\.github/workflows/pages\.yml|\.github/workflows/segubeca-pages-authority-asset\.yml|scripts/build-quotes-preview-pages\.mjs|tests/segubeca-pages-authority-asset-test\.mjs|docs/evidence/FORGE_SEGUBECA_PAGES_AUTHORITY_ASSET_HOTFIX_001\.md)$'
+          allowed='^(\.github/workflows/pages\.yml|\.github/workflows/aura-pages-dispatch\.yml|\.github/workflows/pages-public-acceptance\.yml|\.github/workflows/pages-deploy-observer\.yml|\.github/workflows/canonical-pages-artifact-validation\.yml|\.github/workflows/segubeca-pages-authority-asset\.yml|scripts/build-quotes-preview-pages\.mjs|tests/segubeca-pages-authority-asset-test\.mjs|tests/pages-explicit-deployment-governance\.test\.mjs|docs/12-deployment/GITHUB_PAGES_DEPLOYMENT\.md|docs/architecture/source-truth/FORGE_PAGES_EXPLICIT_DEPLOYMENT_GOVERNANCE_001\.md|docs/evidence/FORGE_SEGUBECA_PAGES_AUTHORITY_ASSET_HOTFIX_001\.md)$'
           printf '%s\n' "${changed[@]}"
           for path in "${changed[@]}"; do
             if [[ ! "$path" =~ $allowed ]]; then

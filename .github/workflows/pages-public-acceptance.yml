@@ -1,10 +1,12 @@
 name: Pages Public Acceptance
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact deployed main SHA to verify
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -19,11 +21,12 @@ jobs:
     timeout-minutes: 15
     env:
       PUBLIC_BASE_URL: https://jorgeprdz.github.io/ForgeOS
-      EXPECTED_SHA: ${{ github.sha }}
+      EXPECTED_SHA: ${{ inputs.expected_sha }}
     steps:
-      - name: Checkout accepted main
+      - name: Checkout accepted SHA
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.expected_sha }}
           fetch-depth: 0
 
       - name: Wait for exact Pages SHA

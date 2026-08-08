@@ -22,10 +22,6 @@ const binding = await readFile(
 );
 const authority = await readFile(authorityPath, "utf8");
 
-function occurrences(source, value) {
-  return source.split(value).length - 1;
-}
-
 test("the source-layout import requires a project-Pages artifact rewrite", () => {
   assert.ok(
     binding.includes(sourceAuthorityImport),
@@ -45,13 +41,32 @@ test("the source-layout import requires a project-Pages artifact rewrite", () =>
 
 test("canonical Pages publishes the asset and rewrites its browser import", () => {
   assert.ok(
-    occurrences(pagesWorkflow, authorityPath) >= 4,
-    "canonical Pages must allow, require, inspect, and resolve the authority asset",
+    pagesWorkflow.includes(`const segubecaAuthorityAsset =`)
+      && pagesWorkflow.includes(authorityPath),
+    "canonical Pages must declare the accepted SeguBeca authority asset",
+  );
+  assert.match(
+    pagesWorkflow,
+    /const publicConversationRuntimeFiles = new Set\([\s\S]*segubecaAuthorityAsset,/,
+    "the authority asset must be included in the canonical public file allow-set",
+  );
+  assert.match(
+    pagesWorkflow,
+    /for \(const file of trackedFiles\.filter\(isPublicFile\)\)[\s\S]*fs\.copyFileSync\(file, target\);/,
+    "canonical Pages must copy allowed tracked assets into the public artifact",
   );
   assert.ok(pagesWorkflow.includes(sourceAuthorityImport));
   assert.ok(pagesWorkflow.includes(publicAuthorityImport));
-  assert.match(pagesWorkflow, /PAGES_SEGUBECA_AUTHORITY_ASSET=PASS/);
-  assert.match(pagesWorkflow, /PAGES_SEGUBECA_AUTHORITY_IMPORT=PASS/);
+  assert.match(
+    pagesWorkflow,
+    /segubecaPublicBindingSource\.replace\([\s\S]*segubecaSourceAuthorityImport,[\s\S]*segubecaPublicAuthorityImport/,
+    "canonical Pages must rewrite the browser import to the project-safe path",
+  );
+  assert.match(
+    pagesWorkflow,
+    /if \(segubecaPublicBinding === segubecaPublicBindingSource\)[\s\S]*throw new Error\('SeguBeca public authority import was not rewritten'\)/,
+    "the import rewrite must fail closed when no rewrite occurs",
+  );
 });
 
 test("the alternate Quotes Pages builder applies the same asset and import contract", () => {

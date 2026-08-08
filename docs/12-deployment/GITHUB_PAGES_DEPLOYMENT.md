@@ -8,6 +8,35 @@ This document does not authorize product features, migrations, route changes or 
 
 ---
 
+## Production deployment authorization
+
+Production GitHub Pages deployment is explicit and SHA-bound.
+
+```text
+PAGES_DEPLOYMENT_TRIGGER=EXPLICIT_WORKFLOW_DISPATCH
+MAIN_PUSH_AUTO_DEPLOY=DISABLED
+EXACT_SHA_REQUIRED=YES
+EXPLICIT_AUTHORIZATION_REQUIRED=YES
+MERGE != DEPLOY
+```
+
+The production workflow is `.github/workflows/pages.yml`.
+
+A production deployment is eligible only when all of the following are true:
+
+- the workflow is explicitly dispatched against `main`;
+- `expected_sha` exactly equals the workflow's `github.sha`;
+- remote `main` still resolves to that exact SHA before deployment permissions are used;
+- `authorization` exactly equals `DEPLOY_FORGE_PAGES`.
+
+A push or merge to `main` is not deployment authorization. Feature branches cannot deploy the production Pages environment. Missing or incorrect authorization and stale SHA values fail closed.
+
+The historical Aura branch dispatcher no longer dispatches the production Pages workflow. Pages public acceptance and deployment observation are explicit verification workflows and do not run merely because `main` advanced.
+
+The current public site is not rolled back by this governance rule. Site content changes only when a separately authorized production Pages dispatch succeeds.
+
+---
+
 ## Environment
 
 GitHub Pages cannot read runtime environment variables from the server.
@@ -76,6 +105,7 @@ Reason:
 - The app currently lives at repository root.
 - The deployment must generate `env.js`.
 - A workflow avoids committing secrets.
+- Explicit dispatch separates repository integration from production publication.
 
 ---
 
@@ -88,5 +118,5 @@ The service worker and manifest must use project-site-safe relative paths, not r
 Final principle:
 
 ```text
-Deploy static assets safely under /ForgeOS/ without leaking credentials.
+Deploy static assets safely under /ForgeOS/ without leaking credentials, and only from an explicitly authorized exact main SHA.
 ```
