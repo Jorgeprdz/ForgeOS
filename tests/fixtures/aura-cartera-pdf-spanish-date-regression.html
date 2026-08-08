@@ -2,10 +2,11 @@
 <html lang="es-MX">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Aura Cartera PDF full-chain Spanish-date regression</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Aura Cartera PDF semantic regression 012</title>
   <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
   <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-semantic-012.css">
   <style>
     html,body{margin:0;min-height:100%;background:#f5f6fa}
     body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -15,18 +16,12 @@
 <body>
   <main id="fixture-main" tabindex="-1"></main>
   <script type="module">
-    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v3.js?v=aura-cartera-pdf-already-admitted-reopen-011';
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v4.js?v=cartera-pdf-semantic-reconciliation-012';
 
     window.__ENV__ = { SUPABASE_ANON_KEY: 'TEST_ONLY' };
     const trace = window.__PDF_FULL_CHAIN_TRACE__ = {
-      functionInvocations: [],
-      rpcNames: [],
-      resultStages: [],
-      resultEffectiveDates: [],
-      admitted: false,
-      claims: 0,
-      pendingReviewReads: 0,
-      storedPendingReview: false,
+      functionInvocations: [], rpcNames: [], resultStages: [], resultSemanticSnapshots: [],
+      admitted: false, claims: 0, pendingReviewReads: 0, storedPendingReview: false,
     };
 
     function emptyQuery(data = []) {
@@ -34,12 +29,8 @@
       let proxy;
       proxy = new Proxy({}, {
         get(_target, property) {
-          if (property === 'then') {
-            return (resolve, reject) => Promise.resolve(result).then(resolve, reject);
-          }
-          if (property === 'single' || property === 'maybeSingle') {
-            return async () => ({ data: null, error: null });
-          }
+          if (property === 'then') return (resolve, reject) => Promise.resolve(result).then(resolve, reject);
+          if (property === 'single' || property === 'maybeSingle') return async () => ({ data: null, error: null });
           return () => proxy;
         },
       });
@@ -59,10 +50,7 @@
             return (resolve, reject) => Promise.resolve({ data: rows, error: null }).then(resolve, reject);
           }
           if (property === 'maybeSingle' || property === 'single') {
-            return async () => {
-              trace.pendingReviewReads += 1;
-              return { data: storedPacket, error: null };
-            };
+            return async () => { trace.pendingReviewReads += 1; return { data: storedPacket, error: null }; };
           }
           return () => proxy;
         },
@@ -70,119 +58,79 @@
       return proxy;
     }
 
+    const coverageCandidates = Array.from({ length: 10 }, (_, index) => ({
+      candidateReference: `PDF_COVERAGE_CANDIDATE:${index + 1}`,
+      coverageLabel: ['Fallecimiento','Invalidez total','Muerte accidental','Enfermedades graves','Exención de primas','Protección adicional','Beneficio hospitalario','Apoyo funerario','Cobertura temporal','Beneficio complementario'][index],
+      coverageCode: `COV-${String(index + 1).padStart(2, '0')}`,
+      annexReference: `ANEXO-${String(index + 1).padStart(2, '0')}`,
+      sumInsured: 100000 + index * 10000,
+      currency: 'UDI',
+      effectiveFrom: '05/AGO/2026',
+      coveragePeriod: { value: 27, unit: 'YEAR' },
+      paymentPeriod: { value: index < 5 ? 15 : 10, unit: 'YEAR' },
+      premiumAmount: 100 + index * 10,
+      source: 'PDF_DOCUMENT', sourceSection: 'COBERTURAS', sourceLocation: `page:1:coverage:${index + 1}`,
+      confidence: .98 - index * .01,
+    }));
+
+    const semanticCandidate = {
+      person: 'Persona Sintetica Uno', insured: 'Persona Sintetica Uno', contractor: 'Persona Sintetica Uno',
+      policyNumber: 'SYN-IMAGINA-012', product: 'IMAGINA SER 65 - 15 PAGOS UDI', policyType: 'NORMAL', status: '',
+      issueDate: '05/AGO/2026', effectiveDate: '05/AGO/2026', expirationDate: '05/AGO/2053',
+      currency: 'UDI', paymentFrequency: 'MENSUAL', basicPremiumTotal: '3,976.96', plannedPremium: '2,840.00', annualTotal: '6,816.96',
+      beneficiariesDetected: true, coverageCandidates, confidence: .99,
+    };
+
     const fakeClient = {
       auth: {
-        async getUser() {
-          return { data: { user: { id: 'advisor:test:cartera-pdf-011' } }, error: null };
-        },
-        async getSession() {
-          return { data: { session: { access_token: 'TEST_ONLY' } }, error: null };
-        },
+        async getUser() { return { data: { user: { id: 'advisor:test:cartera-pdf-012' } }, error: null }; },
+        async getSession() { return { data: { session: { access_token: 'TEST_ONLY' } }, error: null }; },
       },
-      from(table) {
-        if (table === 'cartera020b_policy_evidence_packets') return packetQuery();
-        return emptyQuery([]);
-      },
+      from(table) { if (table === 'cartera020b_policy_evidence_packets') return packetQuery(); return emptyQuery([]); },
       functions: {
         async invoke(name, { body } = {}) {
-          trace.functionInvocations.push({
-            name,
-            fileName: body?.fileName || null,
-            mimeType: body?.mimeType || null,
-            hasBase64: typeof body?.base64 === 'string' && body.base64.length > 0,
-          });
-          if (name !== 'cartera-pdf-intake') {
-            return { data: null, error: new Error('UNEXPECTED_FUNCTION') };
-          }
-          return {
-            data: {
-              ok: true,
-              intakeId: 'INTAKE:AURA:FULL_CHAIN_011',
-              modelVersion: 'fixture-spanish-date-011',
-              candidates: [{
-                person: 'Persona Sintetica',
-                policyNumber: 'SYN-IMAGINA-011',
-                product: 'IMAGINA SER',
-                premium: '3976.96',
-                status: 'ACTIVA',
-                confidence: 0.99,
-                effectiveDate: '05/AGO/2026',
-                expirationDate: '05/AGO/2053',
-              }],
-            },
-            error: null,
-          };
+          trace.functionInvocations.push({ name, fileName: body?.fileName || null, mimeType: body?.mimeType || null, hasBase64: typeof body?.base64 === 'string' && body.base64.length > 0 });
+          if (name !== 'cartera-pdf-intake') return { data: null, error: new Error('UNEXPECTED_FUNCTION') };
+          return { data: { ok: true, intakeId: 'INTAKE:AURA:SEMANTIC_012', modelVersion: 'fixture-semantic-012', candidates: [structuredClone(semanticCandidate)] }, error: null };
         },
       },
       async rpc(name, args = {}) {
         trace.rpcNames.push(name);
-
         if (name === 'forge_cartera020b_admit_evidence') {
-          admitted = {
-            inboxReference: args?.p_command?.inboxReference,
-            sourceReference: args?.p_command?.sourceReference,
-          };
-          trace.admitted = true;
-          return { data: admitted, error: null };
+          admitted = { inboxReference: args?.p_command?.inboxReference, sourceReference: args?.p_command?.sourceReference };
+          trace.admitted = true; return { data: admitted, error: null };
         }
-
         if (name === 'forge_cartera020b_claim_evidence') {
           trace.claims += 1;
-          return {
-            data: {
-              status: 'CLAIMED',
-              inboxReference: admitted?.inboxReference,
-              leaseToken: `LEASE:${trace.claims}`,
-              stateVersion: stateVersion++,
-            },
-            error: null,
-          };
+          return { data: { status: 'CLAIMED', inboxReference: admitted?.inboxReference, leaseToken: `LEASE:${trace.claims}`, stateVersion: stateVersion++ }, error: null };
         }
-
         if (name === 'forge_cartera020b_record_processing_result') {
           const result = args?.p_command?.result || {};
           const stage = result.evidenceStatus || null;
           if (stage) trace.resultStages.push(stage);
-          const effectiveFrom = result?.candidate?.extractedFields?.effectiveFrom?.value
-            ?? result?.packet?.extractedFields?.effectiveFrom?.value
-            ?? null;
-          const effectiveTo = result?.candidate?.extractedFields?.effectiveTo?.value
-            ?? result?.packet?.extractedFields?.effectiveTo?.value
-            ?? null;
-          if (effectiveFrom || effectiveTo) {
-            trace.resultEffectiveDates.push({ stage, effectiveFrom, effectiveTo });
-          }
+          const fields = result?.candidate?.extractedFields ?? result?.packet?.extractedFields ?? {};
+          if (Object.keys(fields).length) trace.resultSemanticSnapshots.push({
+            stage, policyType: fields.policyType?.value ?? null, status: fields.status?.value ?? null,
+            currency: fields.currency?.value ?? null, paymentFrequency: fields.paymentFrequency?.value ?? null,
+            issueDate: fields.issueDate?.value ?? null, effectiveFrom: fields.effectiveFrom?.value ?? null, effectiveTo: fields.effectiveTo?.value ?? null,
+            basicPremiumTotal: fields.basicPremiumTotal?.value ?? null, plannedPremium: fields.plannedPremium?.value ?? null, annualTotal: fields.annualTotal?.value ?? null,
+            coverageCount: fields.coverageCandidates?.value?.length ?? 0,
+          });
           if (stage === 'confirmation_required' && result.packet) {
-            storedPacket = {
-              packet_reference: result.packet.packetReference,
-              extracted_fields: result.packet.extractedFields,
-              extraction_confidence: result.packet.extractionConfidence,
-              identity_candidates: result.packet.identityCandidates,
-              confirmation_state: result.packet.confirmationState,
-            };
+            storedPacket = { packet_reference: result.packet.packetReference, extracted_fields: result.packet.extractedFields, extraction_confidence: result.packet.extractionConfidence, identity_candidates: result.packet.identityCandidates, policy_role_candidates: result.packet.policyRoleCandidates, confirmation_state: result.packet.confirmationState };
             trace.storedPendingReview = true;
           }
           return { data: { status: stage || 'RECORDED' }, error: null };
         }
-
-        if (name === 'forge_cartera030d_list_policy_payment_calendar') {
-          return { data: { summary: {}, items: [] }, error: null };
-        }
-        if (name === 'forge_cartera050_list_future_radar') {
-          return { data: { items: [] }, error: null };
-        }
+        if (name === 'forge_cartera030d_list_policy_payment_calendar') return { data: { summary: {}, items: [] }, error: null };
+        if (name === 'forge_cartera050_list_future_radar') return { data: { items: [] }, error: null };
         return { data: [], error: null };
       },
     };
 
-    const module = createCarteraModule({
-      root: document.querySelector('#fixture-main'),
-      client: fakeClient,
-      windowRef: window,
-      globalState: () => {},
-    });
+    const module = createCarteraModule({ root: document.querySelector('#fixture-main'), client: fakeClient, windowRef: window, globalState: () => {} });
     await module.mount();
-    document.documentElement.dataset.regressionHarness = 'READY_FULL_CHAIN_REOPEN';
+    document.documentElement.dataset.regressionHarness = 'READY_SEMANTIC_012';
   </script>
 </body>
 </html>

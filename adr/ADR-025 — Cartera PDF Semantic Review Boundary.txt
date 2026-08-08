@@ -1,0 +1,85 @@
+ADR-025 — Cartera PDF Semantic Review Boundary
+
+Status: ACCEPTED FOR CARTERA_PDF_REVIEW_SEMANTIC_RECONCILIATION_012
+Program: FORGE_CARTERA_RELATIONSHIP_INTELLIGENCE
+Phase: CARTERA_PDF_REVIEW_SEMANTIC_RECONCILIATION_012
+Branch: feature/cartera-pdf-review-semantic-reconciliation-012
+PR: 311
+
+Context
+
+The accepted PDF ingestion path could admit, extract, persist evidence and reopen PENDING_CONFIRMATION safely, but it collapsed or omitted document semantics before human confirmation. The confirmed failures included policy type vs policy status, UDI, payment frequency, three distinct premium labels, detailed coverage candidates and same-document semantic rehydration.
+
+This ADR does not create a new truth owner. It preserves:
+- Policy Truth owner = Policy Intelligence.
+- Coverage Truth owner = Policy Intelligence.
+- 020B = evidence/candidate persistence.
+- 020C = human review and governed confirmation boundary.
+- automatic identity merge = forbidden.
+- beneficiary details in general review = forbidden.
+- OCR/extraction creates truth = false.
+
+Decision 1 — Date-only values are civil dates, not UTC timestamps.
+
+Issue date, effective date, expiration date, birth date and document date-only coverage facts are normalized without Date parsing. Presentation formatting must preserve the calendar day in America/Mexico_City, UTC and America/Los_Angeles. Where a downstream canonical coverage schema explicitly requires date-time, the writer boundary may project the reviewed civil date to a neutral midday UTC transport instant; the evidence field remains the civil date.
+
+Decision 2 — Policy type and Policy status are separate concepts.
+
+NORMAL is a document policyType. It never implies ACTIVE, ISSUED or any other Policy status. Missing status remains null/UNKNOWN until reviewed.
+
+Decision 3 — Document premium labels remain semantically distinct.
+
+basicPremiumTotal, plannedPremium and annualTotal are independent evidence-derived facts. None is silently promoted to Policy.premiumAmount. Presentation formatting with thousands separators never enters numeric HTML input values.
+
+Decision 4 — UDI is a first-class evidenced currency.
+
+When the document states UDI, the extraction candidate and review show UDI. MXN is never substituted by default. Any future conversion must preserve source UDI amount, rate, rate source, rate date and whether the conversion is informational or canonical.
+
+Decision 5 — Evidence-rich PDFs produce reviewable Coverage candidates.
+
+A detected coverage row remains createsTruth=false and requiresHumanReview=true. Candidate evidence can include label, code, annex, sum insured, currency, civil effective date, coverage period, payment period, premium, source location and confidence. Only the existing governed Policy Coverage writer may create canonical coverage after explicit human confirmation.
+
+Decision 6 — Existing-person selection uses canonical identity search.
+
+The advisor never types an opaque person reference. The review presents a human-readable CommercialPerson selector under existing RLS. The underlying reference is submitted only after explicit selection. Name equality never causes automatic merge.
+
+Decision 7 — Same-document retries reopen the persisted semantic review.
+
+The same digest first checks for an existing PENDING_CONFIRMATION packet. Reopen must not invoke Edge again, reclaim the item, repeat 020B processing stages or create a duplicate packet. Rehydrated semantic fields must match the first review.
+
+Decision 8 — Beneficiary privacy remains protected.
+
+General Cartera review may show only that beneficiaries were detected and that their information is protected. Names, percentages, PII and internal references do not enter the general review, logs, fixtures or CI screenshots.
+
+Decision 9 — Semantic enrichment belongs before 020B persistence and at the review boundary.
+
+The v8 Pages adapter intercepts the productive extraction result and enriches extractedFields before forge_cartera020b_record_processing_result is invoked. v7 rehydrates those persisted fields. module-v4 replaces only the PDF review surface while preserving existing manual, CSV, XLSX, home and workspace behavior.
+
+Decision 10 — Canonical Pages imports are explicit.
+
+The Aura app imports cartera-module-v4 directly. The import map promotes adapter v8 and stale Cartera module specifiers to the semantic root. The change does not rely on implicit symlink or query-string side effects.
+
+Consequences
+
+Positive:
+- document evidence survives upload, first review and same-document reopen;
+- UI can distinguish what the document says from what the advisor confirms;
+- coverage candidates become reviewable without becoming automatic truth;
+- mobile review can expose one clear confirmation action with protected beneficiary handling.
+
+Constraints:
+- distinct contractor and insured identities cannot be silently collapsed; if the current 020C UI path cannot resolve both identities safely, confirmation remains blocked rather than inventing linkage;
+- coverage confirmation uses the existing governed coverage writer and read-after-write verification;
+- no direct table writes are introduced.
+
+Acceptance
+
+The phase may pass only when:
+- the prior RED regression is GREEN due to implementation;
+- the golden candidate yields policyType=NORMAL, status null/UNKNOWN, currency=UDI, paymentFrequency=MONTHLY, civil dates 2026-08-05 / 2053-08-05, premiums 3976.96 / 2840 / 6816.96 and at least 10 coverage candidates;
+- same-PDF reopen does not reprocess;
+- desktop and 390x844, 412x915, 430x932 browser acceptance has no destructive overflow or hidden confirmation CTA;
+- canonical Pages artifact contains module-v4, adapter-v8, semantic helper and semantic CSS;
+- inherited Auth, REP-17, Direct Route, Income and applicable Command OS gates remain green;
+- merge uses the exact tested head SHA;
+- governed Pages deploy uses expected_sha and authorization=DEPLOY_FORGE_PAGES.
