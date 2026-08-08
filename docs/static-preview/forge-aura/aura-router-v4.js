@@ -5,8 +5,9 @@ const ROUTES = Object.freeze({
   actividad: "actividad",
   cartera: "cartera",
   comisiones: "comisiones",
+  cotizaciones: "cotizaciones",
 });
-const ALIASES = Object.freeze({ home: "inicio", dashboard: "inicio", ingresos: "comisiones" });
+const ALIASES = Object.freeze({ home: "inicio", dashboard: "inicio", ingresos: "comisiones", quotes: "cotizaciones" });
 const AURA_MARKER = "/static-preview/forge-aura/";
 
 export function resolveRuntimeBase(urlLike = globalThis.location?.href || "http://localhost/") {
