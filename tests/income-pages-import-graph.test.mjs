@@ -45,7 +45,7 @@ test("Income Pages mirrors are byte-identical to governed source modules", () =>
   }
 });
 
-test("Income artifact has no Material3 visual dependency or direct productive writer", () => {
+test("Income artifact has no Material3 visual dependency, direct productive writer or invented money formula", () => {
   const files = [
     read("static-preview/forge-aura/income/income-core.js"),
     read("static-preview/forge-aura/income/income-adapter-pages-v1.js"),
@@ -54,5 +54,7 @@ test("Income artifact has no Material3 visual dependency or direct productive wr
   ].join("\n");
   assert.doesNotMatch(files, /forge-alive-material3|material3|md3/i);
   assert.doesNotMatch(files, /\.insert\(|\.update\(|\.upsert\(|\.delete\(/);
-  assert.doesNotMatch(files, /commissionRate|hardcodedRate|probability\s*\*/i);
+  assert.doesNotMatch(files, /hardcodedRate|probability\s*\*|commissionRate\s*=|commission_rate\s*=|premium\s*\*\s*(?:rate|commission)/i);
+  assert.match(files, /frontendCommissionRateCalculation:\s*false/);
+  assert.match(files, /pipelineProbabilityWeighting:\s*false/);
 });
