@@ -2,9 +2,13 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { GoogleGenerativeAI } from "npm:@google/generative-ai";
 
-const FUNCTION_VERSION = "cartera-pdf-intake-v2-recovery-review";
+const FUNCTION_VERSION = "cartera-pdf-intake-v3-semantic-review-012";
 const MODEL_VERSION = "gemini-3.1-flash-lite";
 const MAX_BYTES = 8 * 1024 * 1024;
+const MONTHS: Record<string, string> = {
+  ENE: "01", FEB: "02", MAR: "03", ABR: "04", MAY: "05", JUN: "06",
+  JUL: "07", AGO: "08", SEP: "09", OCT: "10", NOV: "11", DIC: "12",
+};
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -25,24 +29,153 @@ function decodeBase64(value: string) {
   return bytes;
 }
 
+function text(value: unknown, max = 240) {
+  return typeof value === "string" ? value.trim().slice(0, max) : "";
+}
+
+function ascii(value: unknown) {
+  return text(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+}
+
+function numberValue(value: unknown) {
+  if (value === null || value === undefined || value === "") return null;
+  const parsed = typeof value === "number"
+    ? value
+    : Number(String(value).replace(/,/g, "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+}
+
+function validCivilDate(year: number, month: number, day: number) {
+  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day) || month < 1 || month > 12 || day < 1) return false;
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return day <= days[month - 1];
+}
+
+function civilDate(value: unknown) {
+  const source = ascii(value);
+  if (!source) return null;
+  let year = 0, month = 0, day = 0;
+  let match = source.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (match) {
+    year = Number(match[1]); month = Number(match[2]); day = Number(match[3]);
+  } else {
+    match = source.match(/^(\d{1,2})[\/-]([A-Z]{3,})[\/-](\d{4})$/);
+    if (match) {
+      day = Number(match[1]);
+      month = Number(MONTHS[match[2].slice(0, 3)] || 0);
+      year = Number(match[3]);
+    } else {
+      match = source.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+      if (match) {
+        day = Number(match[1]); month = Number(match[2]); year = Number(match[3]);
+      }
+    }
+  }
+  if (!validCivilDate(year, month, day)) return null;
+  return `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function currency(value: unknown) {
+  const normalized = ascii(value);
+  return /^[A-Z]{3}$/.test(normalized) ? normalized : null;
+}
+
+function paymentFrequency(value: unknown) {
+  const normalized = ascii(value);
+  if (/MENSUAL|MONTHLY/.test(normalized)) return "MONTHLY";
+  if (/TRIMESTRAL|QUARTERLY/.test(normalized)) return "QUARTERLY";
+  if (/SEMESTRAL|SEMIANNUAL|SEMI-ANNUAL/.test(normalized)) return "SEMIANNUAL";
+  if (/ANUAL|ANNUAL|YEARLY/.test(normalized)) return "ANNUAL";
+  if (/UNICO|UNICA|SINGLE/.test(normalized)) return "SINGLE";
+  return null;
+}
+
+function policyStatus(value: unknown) {
+  const normalized = ascii(value);
+  if (!normalized || normalized === "NORMAL") return null;
+  if (/ACTIVA|ACTIVE/.test(normalized)) return "ACTIVE";
+  if (/EMITIDA|ISSUED/.test(normalized)) return "ISSUED";
+  if (/PENDIENTE|PENDING/.test(normalized)) return "PENDING";
+  if (/SUSPENDIDA|SUSPENDED/.test(normalized)) return "SUSPENDED";
+  if (/VENCIDA|LAPSED|CAIDA/.test(normalized)) return "LAPSED";
+  if (/CANCELADA|CANCELLED/.test(normalized)) return "CANCELLED";
+  return null;
+}
+
+function period(value: any) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const amount = numberValue(value.value);
+  const unit = ascii(value.unit);
+  return amount === null && !unit ? null : { value: amount, unit: unit || null };
+}
+
+function sanitizeCoverageCandidates(rows: unknown) {
+  if (!Array.isArray(rows)) return [];
+  return rows.slice(0, 100).map((row: any, index) => {
+    const confidence = Number(row?.confidence);
+    return {
+      candidateReference: text(row?.candidateReference) || `PDF_COVERAGE_CANDIDATE:${index + 1}`,
+      coverageLabel: text(row?.coverageLabel || row?.label) || null,
+      coverageCode: text(row?.coverageCode || row?.code, 120) || null,
+      annexReference: text(row?.annexReference || row?.annex, 120) || null,
+      sumInsured: numberValue(row?.sumInsured),
+      currency: currency(row?.currency),
+      effectiveFrom: civilDate(row?.effectiveFrom),
+      coveragePeriod: period(row?.coveragePeriod),
+      paymentPeriod: period(row?.paymentPeriod),
+      premiumAmount: numberValue(row?.premiumAmount),
+      source: text(row?.source) || "PDF_DOCUMENT",
+      sourceSection: text(row?.sourceSection) || "COBERTURAS",
+      sourceLocation: row?.sourceLocation ?? null,
+      confidence: Number.isFinite(confidence) ? Math.max(0, Math.min(1, confidence)) : null,
+      createsTruth: false,
+      requiresHumanReview: true,
+    };
+  }).filter((row) =>
+    row.coverageLabel || row.coverageCode || row.annexReference ||
+    row.sumInsured !== null || row.premiumAmount !== null
+  );
+}
+
 function sanitizeRows(rows: unknown) {
   if (!Array.isArray(rows)) return [];
-  return rows.slice(0, 500).map((row: any, index) => ({
-    id: `candidate_${String(index + 1).padStart(3, "0")}`,
-    person: typeof row?.person === "string" ? row.person.trim().slice(0, 180) : "",
-    insured: typeof row?.insured === "string" ? row.insured.trim().slice(0, 180) : "",
-    contractor: typeof row?.contractor === "string" ? row.contractor.trim().slice(0, 180) : "",
-    policyNumber: typeof row?.policyNumber === "string" ? row.policyNumber.trim().slice(0, 120) : "",
-    product: typeof row?.product === "string" ? row.product.trim().slice(0, 180) : "",
-    status: typeof row?.status === "string" ? row.status.trim().slice(0, 100) : "",
-    premium: typeof row?.premium === "string" ? row.premium.trim().slice(0, 100) : "",
-    effectiveDate: typeof row?.effectiveDate === "string" ? row.effectiveDate.trim().slice(0, 80) : "",
-    expirationDate: typeof row?.expirationDate === "string" ? row.expirationDate.trim().slice(0, 80) : "",
-    confidence: Number.isFinite(Number(row?.confidence)) ? Math.max(0, Math.min(1, Number(row.confidence))) : 0,
-    requiresHumanReview: true,
-  })).filter((row) =>
+  return rows.slice(0, 500).map((row: any, index) => {
+    const rawStatus = text(row?.status, 100);
+    let policyType = text(row?.policyType, 100).toUpperCase() || null;
+    let status = policyStatus(rawStatus);
+    if (!policyType && ascii(rawStatus) === "NORMAL") {
+      policyType = "NORMAL";
+      status = null;
+    }
+    return {
+      id: `candidate_${String(index + 1).padStart(3, "0")}`,
+      person: text(row?.person, 180),
+      insured: text(row?.insured, 180),
+      contractor: text(row?.contractor, 180),
+      policyNumber: text(row?.policyNumber, 120),
+      product: text(row?.product, 180),
+      policyType,
+      status,
+      issueDate: civilDate(row?.issueDate),
+      effectiveDate: civilDate(row?.effectiveDate),
+      expirationDate: civilDate(row?.expirationDate),
+      currency: currency(row?.currency),
+      paymentFrequency: paymentFrequency(row?.paymentFrequency),
+      basicPremiumTotal: numberValue(row?.basicPremiumTotal),
+      plannedPremium: numberValue(row?.plannedPremium),
+      annualTotal: numberValue(row?.annualTotal),
+      beneficiariesDetected: row?.beneficiariesDetected === true,
+      coverageCandidates: sanitizeCoverageCandidates(row?.coverageCandidates),
+      confidence: Number.isFinite(Number(row?.confidence)) ? Math.max(0, Math.min(1, Number(row.confidence))) : 0,
+      requiresHumanReview: true,
+      createsTruth: false,
+    };
+  }).filter((row) =>
     row.person || row.insured || row.contractor || row.policyNumber || row.product ||
-    row.status || row.premium || row.effectiveDate || row.expirationDate
+    row.policyType || row.status || row.issueDate || row.effectiveDate || row.expirationDate ||
+    row.currency || row.paymentFrequency || row.basicPremiumTotal !== null ||
+    row.plannedPremium !== null || row.annualTotal !== null || row.coverageCandidates.length
   );
 }
 
@@ -54,19 +187,65 @@ function emptyReviewCandidate() {
     contractor: "",
     policyNumber: "",
     product: "",
-    status: "",
-    premium: "",
-    effectiveDate: "",
-    expirationDate: "",
+    policyType: null,
+    status: null,
+    issueDate: null,
+    effectiveDate: null,
+    expirationDate: null,
+    currency: null,
+    paymentFrequency: null,
+    basicPremiumTotal: null,
+    plannedPremium: null,
+    annualTotal: null,
+    beneficiariesDetected: false,
+    coverageCandidates: [],
     confidence: 0,
     requiresHumanReview: true,
+    createsTruth: false,
   };
 }
 
+const semanticContract = `Devuelve JSON válido con:
+{"candidates":[{
+"person":"","insured":"","contractor":"",
+"policyNumber":"","product":"",
+"policyType":"","status":"",
+"issueDate":"","effectiveDate":"","expirationDate":"",
+"currency":"","paymentFrequency":"",
+"basicPremiumTotal":null,"plannedPremium":null,"annualTotal":null,
+"beneficiariesDetected":false,
+"coverageCandidates":[{
+"coverageLabel":"","coverageCode":"","annexReference":"",
+"sumInsured":null,"currency":"","effectiveFrom":"",
+"coveragePeriod":{"value":null,"unit":""},
+"paymentPeriod":{"value":null,"unit":""},
+"premiumAmount":null,
+"source":"PDF_DOCUMENT","sourceSection":"COBERTURAS","sourceLocation":null,
+"confidence":0.0
+}],
+"confidence":0.0
+}]}.`;
+
 async function extractCandidates(model: any, base64: string, recovery = false) {
-  const prompt = recovery
-    ? `Segunda pasada de recuperación. Revisa cuidadosamente el PDF como documento de seguro. Busca etiquetas y variantes como: contratante, titular, propietario, asegurado, nombre del asegurado, número de póliza, póliza, certificado, plan, producto, cobertura principal, prima, prima anual/mensual, vigencia, fecha de inicio, fecha de término, vencimiento, estatus.\n\nNo inventes ni completes datos ausentes. Si sólo encuentras uno de esos datos, devuelve de todos modos un candidato con ese único dato y deja los demás campos vacíos. Devuelve JSON válido con {"candidates":[{"person":"","insured":"","contractor":"","policyNumber":"","product":"","status":"","premium":"","effectiveDate":"","expirationDate":"","confidence":0.0}]}. Todo resultado es staging y requiere revisión humana.`
-    : `Extrae únicamente datos visibles de pólizas de este PDF. No inventes ni completes datos ausentes.\n\nMapeo: person = titular/propietario/contratante principal cuando sea visible; insured = asegurado cuando sea visible; contractor = contratante cuando sea visible. policyNumber = número de póliza/certificado; product = plan/producto; premium = prima; effectiveDate/expirationDate = vigencia.\n\nSi sólo puedes identificar uno de esos campos, devuelve de todos modos un candidato con ese dato y deja los demás campos vacíos. Devuelve JSON válido con {"candidates":[{"person":"","insured":"","contractor":"","policyNumber":"","product":"","status":"","premium":"","effectiveDate":"","expirationDate":"","confidence":0.0}]}. Todo resultado es staging y requiere revisión humana.`;
+  const prefix = recovery
+    ? "Segunda pasada de recuperación. Revisa cuidadosamente el PDF como documento de seguro."
+    : "Extrae únicamente hechos visibles de pólizas de este PDF.";
+
+  const prompt = `${prefix}
+
+No inventes ni completes datos ausentes.
+Separa estrictamente significado documental:
+- TIPO DE PÓLIZA / TIPO DE POLIZA pertenece a policyType. NORMAL es policyType; NUNCA es status.
+- status sólo contiene estado real como activa, emitida, pendiente, suspendida, vencida o cancelada. Si no hay evidencia de estado, déjalo vacío.
+- FECHA DE EMISIÓN, FECHA DE EFECTIVIDAD y FECHA DE VENCIMIENTO son fechas civiles; conserva el día del documento.
+- MONEDA UDI debe producir currency=UDI; nunca la conviertas a MXN.
+- FORMA DE PAGO MENSUAL/TRIMESTRAL/SEMESTRAL/ANUAL pertenece a paymentFrequency.
+- PRIMA BÁSICA TOTAL / PRIMA BASICA TOTAL, PRIMA PLANEADA y TOTAL ANUAL son tres hechos distintos. No los colapses en premium.
+- Si existe tabla de coberturas, extrae una fila por beneficio con suma asegurada, moneda, anexo, fecha de efectividad, periodo de cobertura, periodo de pago y prima cuando existan.
+- beneficiariesDetected sólo indica presencia documental; no devuelvas nombres ni porcentajes de beneficiarios.
+- Todo resultado es evidencia/candidato, requiresHumanReview=true y crea cero verdad canónica.
+
+${semanticContract}`;
 
   const result = await model.generateContent({
     contents: [{
@@ -140,6 +319,7 @@ serve(async (request) => {
       requiresHumanReview: true,
       persisted: false,
       automaticPolicyCreation: false,
+      automaticCoverageCreation: false,
     });
   } catch (error) {
     return response({

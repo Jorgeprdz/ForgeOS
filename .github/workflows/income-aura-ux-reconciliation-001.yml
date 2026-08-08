@@ -12,6 +12,7 @@ on:
       - 'docs/static-preview/forge-aura/aura-shell.js'
       - 'docs/static-preview/forge-aura/aura-shell.css'
       - 'docs/static-preview/forge-aura/index.html'
+      - 'supabase/functions/cartera-pdf-intake/index.ts'
       - 'tests/income-*'
       - 'tests/e2e/income-*'
       - 'tests/fixtures/aura-income-*'
@@ -106,10 +107,20 @@ jobs:
           BASE_SHA="${{ github.event.pull_request.base.sha }}"
           HEAD_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
           if [ -z "$BASE_SHA" ]; then BASE_SHA="$(git merge-base origin/main HEAD)"; fi
-          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          mapfile -d '' -t changed < <(git -c core.quotepath=false diff --name-only -z "$BASE_SHA" "$HEAD_SHA")
           printf '%s\n' "${changed[@]}"
           forbidden='^(compensation/advisor/engine/|compensation/advisor-development/.*engine|compensation/new-professional/.*rule-data|compensation/advisor/rules/rule-data|supabase/migrations/|supabase/functions/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
+          allowed_cartera_edge='^supabase/functions/cartera-pdf-intake/index\.ts$'
+          edge_changed=0
           for file in "${changed[@]}"; do
+            if [[ "$file" =~ ^supabase/functions/ ]]; then
+              if [[ ! "$file" =~ $allowed_cartera_edge ]]; then
+                echo "INCOME_SCOPE_FORBIDDEN_MUTATION=$file" >&2
+                exit 1
+              fi
+              edge_changed=1
+              continue
+            fi
             if [[ "$file" =~ $forbidden ]]; then
               echo "INCOME_SCOPE_FORBIDDEN_MUTATION=$file" >&2
               exit 1
@@ -121,6 +132,8 @@ jobs:
           echo 'RLS_WEAKENING=ZERO'
           echo 'PIPELINE_MUTATION=ZERO'
           echo 'CARTERA_WRITER_MUTATION=ZERO'
+          echo "CARTERA_PDF_INTAKE_EDGE_CHANGED=$edge_changed"
+          if [[ "$edge_changed" = '1' ]]; then echo 'CARTERA_PDF_INTAKE_EDGE_SCOPE=BOUNDED_COMPATIBILITY'; fi
 
   canonical-pages-artifact:
     name: Canonical Pages artifact and import graph

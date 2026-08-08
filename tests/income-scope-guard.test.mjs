@@ -22,16 +22,21 @@ const incomeAllowed = [
   /^docs\/evidence\/FORGE_AURA_INCOME_UX_RECONCILIATION_ACCEPTANCE_001\.md$/,
 ];
 
+const carteraSemanticEdge = /^supabase\/functions\/cartera-pdf-intake\/index\.ts$/;
 const carteraCompatibilityAllowed = [
   /^docs\/static-preview\/forge-aura\/cartera\//,
   /^docs\/static-preview\/forge-aura\/app-v4\.js$/,
   /^docs\/static-preview\/forge-aura\/aura-bootstrap-v4\.js$/,
   /^docs\/static-preview\/forge-aura\/index\.html$/,
+  carteraSemanticEdge,
   /^tests\/aura-cartera-/,
   /^tests\/cartera-/,
   /^tests\/e2e\/aura-cartera-pdf-spanish-date-regression\.spec\.mjs$/,
   /^tests\/fixtures\/aura-cartera-pdf-spanish-date-regression\.html$/,
   /^\.github\/workflows\/aura-cartera-pdf-real-regression\.yml$/,
+  /^\.github\/workflows\/aura-cartera-productive-reconciliation-001\.yml$/,
+  /^\.github\/workflows\/income-aura-ux-reconciliation-001\.yml$/,
+  /^adr\/ADR-025 .*Cartera PDF Semantic Review Boundary\.txt$/,
   /^tests\/income-(?:pages-import-graph|cartera-cross-module|scope-guard)\.test\.mjs$/,
 ];
 
@@ -65,8 +70,8 @@ const forbidden = [
 function changedFiles() {
   const base = process.env.BASE_SHA || process.env.GITHUB_BASE_SHA;
   if (!base) return [];
-  const output = execFileSync("git", ["diff", "--name-only", base, "HEAD"], { encoding: "utf8" });
-  return output.split(/\r?\n/).map(value => value.trim()).filter(Boolean);
+  const output = execFileSync("git", ["-c", "core.quotepath=false", "diff", "--name-only", "-z", base, "HEAD"], { encoding: "utf8" });
+  return output.split("\0").map(value => value.trim()).filter(Boolean);
 }
 
 function matchesAny(file, patterns) {
@@ -78,7 +83,7 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
   if (!changed.length && !process.env.CI) return;
   assert.ok(changed.length > 0, "CI scope guard requires a non-empty diff");
 
-  const forbiddenHits = changed.filter(file => matchesAny(file, forbidden));
+  const forbiddenHits = changed.filter(file => matchesAny(file, forbidden) && !carteraSemanticEdge.test(file));
   assert.deepEqual(forbiddenHits, [], `Forbidden mutation detected: ${forbiddenHits.join(", ")}`);
 
   const incomeProductMutation = changed.some(file => /^docs\/static-preview\/forge-aura\/income\//.test(file));
@@ -102,14 +107,17 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
   assert.deepEqual(outOfScope, [], `${scopeName}: ${outOfScope.join(", ")}`);
 });
 
-test("scope guard explicitly blocks engine, rule pack, database and deployment mutations", () => {
+test("scope guard explicitly blocks engine, rule pack, database, unrelated Edge and deployment mutations", () => {
   const samples = [
     "compensation/advisor/engine/new-engine.js",
     "compensation/new-professional/rule-data/new.rule-pack.json",
     "supabase/migrations/20260808_income.sql",
+    "supabase/functions/unrelated-edge/index.ts",
     ".github/workflows/pages.yml",
   ];
   for (const sample of samples) {
     assert.equal(forbidden.some(pattern => pattern.test(sample)), true, sample);
   }
+  assert.equal(carteraSemanticEdge.test('supabase/functions/cartera-pdf-intake/index.ts'), true);
+  assert.equal(carteraSemanticEdge.test('supabase/functions/unrelated-edge/index.ts'), false);
 });
