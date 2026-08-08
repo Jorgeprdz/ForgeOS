@@ -1,0 +1,92 @@
+name: Aura Home Command Center + Mobile Nav 001
+
+on:
+  push:
+    branches:
+      - feature/aura-home-command-center-mobile-nav-001
+    paths:
+      - docs/static-preview/forge-aura/**
+      - scripts/prepare-aura-home-pages-authorities.mjs
+      - scripts/build-advisor-presentation-pages-runtime.mjs
+      - tests/aura-home-command-center-mobile-nav-001.test.mjs
+      - tests/e2e/aura-home-command-center-mobile-nav-001.spec.mjs
+      - playwright.aura-home.config.mjs
+      - docs/architecture/source-truth/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_RECONCILIATION_REPORT_001.md
+      - docs/evidence/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_ACCEPTANCE_001.md
+      - .github/workflows/aura-home-command-center-mobile-nav-001.yml
+  pull_request:
+    paths:
+      - docs/static-preview/forge-aura/**
+      - scripts/prepare-aura-home-pages-authorities.mjs
+      - scripts/build-advisor-presentation-pages-runtime.mjs
+      - tests/aura-home-command-center-mobile-nav-001.test.mjs
+      - tests/e2e/aura-home-command-center-mobile-nav-001.spec.mjs
+      - playwright.aura-home.config.mjs
+      - docs/architecture/source-truth/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_RECONCILIATION_REPORT_001.md
+      - docs/evidence/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_ACCEPTANCE_001.md
+      - .github/workflows/aura-home-command-center-mobile-nav-001.yml
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Syntax gate
+        run: |
+          node --check docs/static-preview/forge-aura/home/home-core.js
+          node --check docs/static-preview/forge-aura/home/home-adapter-pages-v1.js
+          node --check docs/static-preview/forge-aura/home/home-module.js
+          node --check docs/static-preview/forge-aura/aura-shell.js
+          node --check docs/static-preview/forge-aura/aura-router-v4.js
+          node --check docs/static-preview/forge-aura/app-v4.js
+          node --check scripts/prepare-aura-home-pages-authorities.mjs
+
+      - name: Contract acceptance
+        run: node tests/aura-home-command-center-mobile-nav-001.test.mjs
+
+      - name: Generate Pages authority closure
+        run: node scripts/prepare-aura-home-pages-authorities.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser acceptance
+        run: npx playwright test --config=playwright.aura-home.config.mjs --project=chromium
+
+      - name: Verify acceptance screenshots
+        run: |
+          test -s artifacts/aura-home-acceptance/mobile-390x844.png
+          test -s artifacts/aura-home-acceptance/mobile-430x932.png
+          test -s artifacts/aura-home-acceptance/tablet-834x1194.png
+          test -s artifacts/aura-home-acceptance/desktop-1440x900.png
+          echo "AURA_HOME_SCREENSHOTS=PASS"
+
+      - name: Upload acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-home-command-center-mobile-nav-001-acceptance
+          path: |
+            artifacts/aura-home-acceptance/
+            artifacts/aura-home-playwright-results/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Production safety declaration
+        run: |
+          echo "NEW_PRODUCTIVE_ENGINE_COUNT=0"
+          echo "DIRECT_MAIN_MUTATION=NO"
+          echo "AUTO_MERGE=NO"
+          echo "PRODUCTION_DEPLOY=NO"
