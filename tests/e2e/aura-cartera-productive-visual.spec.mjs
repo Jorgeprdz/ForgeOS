@@ -89,7 +89,7 @@ test('dialog keyboard contract traps focus, Escape closes and returns focus', as
 test('Policy Workspace renders multiple independent coverages and honest unknowns', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await ready(page);
-  await page.getByRole('button', { name: /SYN-2026-0001|0001/ }).click();
+  await page.locator('[data-directory-kind="POLICY"]').click();
   await expect(page.getByText('POLICY WORKSPACE')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Coberturas' })).toBeVisible();
   await expect(page.getByText('Fallecimiento')).toBeVisible();
@@ -103,7 +103,7 @@ test('Policy Workspace renders multiple independent coverages and honest unknown
 test('Person Workspace composes relationship context without technical subsystem navigation', async ({ page }) => {
   await page.setViewportSize({ width: 834, height: 1194 });
   await ready(page);
-  await page.getByRole('button', { name: /Ana/ }).click();
+  await page.locator('[data-directory-kind="PERSON"]').click();
   await expect(page.getByText('PERSON WORKSPACE')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Relación' })).toBeVisible();
   await expect(page.getByText(/Candidatos de relación no equivalen a oportunidad/)).toBeVisible();
