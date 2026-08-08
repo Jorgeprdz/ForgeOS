@@ -1,0 +1,44 @@
+name: WhatsApp Context Humanizer
+
+on:
+  pull_request:
+    paths:
+      - 'platform/communications/whatsapp-context-humanizer.js'
+      - 'docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js'
+      - 'supabase/functions/whatsapp-draft/index.ts'
+      - 'tests/whatsapp-context-humanizer-test.mjs'
+      - 'docs/roadmaps/FORGE_WHATSAPP_CONTEXT_HUMANIZER_FIX_001.md'
+      - '.github/workflows/whatsapp-context-humanizer.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p0-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax
+        run: |
+          node --check platform/communications/whatsapp-context-humanizer.js
+          node --check docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js
+      - name: Contract acceptance
+        run: node tests/whatsapp-context-humanizer-test.mjs
+      - name: P0 boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -E "supabase\.|\.insert\(|\.update\(|\.delete\(" platform/communications/whatsapp-context-humanizer.js
+          grep -q 'renderWhatsAppBaseMessage' platform/communications/whatsapp-context-humanizer.js
+          grep -q 'validateHumanizedMessage' platform/communications/whatsapp-context-humanizer.js
+          grep -q 'Hacerlo sonar natural' docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js
+          grep -q 'sent: false' docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js
+          grep -q 'baseMessage' supabase/functions/whatsapp-draft/index.ts
+          grep -q 'lockedCta' supabase/functions/whatsapp-draft/index.ts
+          ! grep -q 'Eres el redactor de WhatsApp' supabase/functions/whatsapp-draft/index.ts
+          echo 'WSP_P0_CORE_CONTRACT=PASS'
