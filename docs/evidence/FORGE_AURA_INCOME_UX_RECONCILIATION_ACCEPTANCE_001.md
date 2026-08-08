@@ -3,148 +3,91 @@
 ```text
 EXECUTION_ID=FORGE_AURA_INCOME_UX_RECONCILIATION_001
 PHASE=FORGE_AURA_INCOME_UX_RECONCILIATION_001
-SOURCE_SHA=6b8e01fb4434cfc22c7356e82cdd35348dc6a2da
-VALIDATED_HEAD_SHA=4e2e51b29f1e777bb3168a79f98c980f105c8553
 BRANCH=codex/forge-aura-income-ux-reconciliation-001
-CI_RUN_ID=31262989102
-EVIDENCE_STATE=CI_VALIDATED_REVIEW_CANDIDATE
+PR_NUMBER=299
+BASE_MAIN_HEAD=6c97326c6558f64ffc8e58fd5e8997ae2e11cab3
+RECONCILED_IMPLEMENTATION_HEAD=da303b7e0ae54e87b87ccd10b81cf253cb0f9c07
+EVIDENCE_STATE=FINAL_RECONCILIATION_CI_PENDING
 MAIN_MUTATED=NO
 MERGE_EXECUTED=NO
 PRODUCTION_DEPLOYMENT=NO
 ```
 
-## Constitutional result before implementation
+## Constitutional acceptance
+
+The final reconciliation re-read Article 0, the Constitution Map, economic/forecast truth boundaries, Aura Light 2026, the locked UX behavior directive, compensation ownership and Pages deployment governance.
 
 ```text
 ARTICLE_0=PASS
 CONSTITUTIONAL_GATE=PASS
-ADR_001=PASS
-ADR_002=PASS
-ADR_003=PASS
-ADR_004=PASS
-ADR_005=PASS
-ADR_006=PASS
-ADR_007=PASS
-ADR_008=PASS
-ADR_009=PASS
-ADR_012=PASS
-ADR_014=PASS
-ADR_016=PASS
-ADR_017=PASS
-ADR_018=PASS
-ADR_023=PASS
-ADR_024=PASS
 CONSTITUTIONAL_CONFLICTS=NONE
+ADR_007_FORECAST_BOUNDARY=PASS
+ADR_008_ECONOMIC_EVIDENCE_BOUNDARY=PASS
+AURA_LIGHT_2026=PASS
+UX_BEHAVIOR_DIRECTIVE=PASS
+PAGES_DEPLOYMENT_GOVERNANCE=PASS
 ```
 
-## Implemented product surface
-
-The visible Aura product is `Ingresos`; the technical route remains `comisiones`.
-
-Implemented read-only capabilities:
-
-- protagonist `Ingreso generado este mes` using earned canonical compensation evidence;
-- initial / renewal / generated-bonus composition from canonical compensation event concept/kind;
-- adjustment and reversal preservation;
-- expected-renewal presentation only from explicitly typed, evidence-complete forward signals;
-- Pipeline what-if presentation only from explicitly typed, evidence-complete forward signals and never `probability × money`;
-- explicit separation of `GENERATED`, `EXPECTED`, `SCENARIO`, and `UNKNOWN`;
-- generated bonus versus Bonus Coach eligibility separation;
-- Bonus Coach refuses to infer Training / New Professional eligibility without governed metadata;
-- annual view refuses to manufacture missing months beyond canonical history;
-- movement ledger with progressive `Cómo se calculó` evidence;
-- payout evidence remains advanced disclosure and never becomes the hero claim;
-- session scrub, late-result rejection and active-advisor switch scrub;
-- exact-owner adapter validation;
-- canonical Aura Light token-only module styling;
-- mobile 390, tablet 834, desktop 1440 and 200%-effective viewport acceptance coverage;
-- keyboard, visible focus, minimum target and reduced-motion acceptance coverage.
-
-## Canonical reuse
+Economic assertions remain locked:
 
 ```text
-COMPENSATION_READ_RPC=forge_advisor_compensation_read_product
-PRODUCT_READ_MODEL=ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_001
-PERIOD_SNAPSHOT=ADVISOR_COMPENSATION_PERIOD_SNAPSHOT_001
-HISTORY_SERIES=ADVISOR_COMPENSATION_HISTORY_SERIES_001
-COMPENSATION_EVENT_CONCEPTS=REUSED
-BONUS_ENGINES=READ_ONLY_AUTHORITY_REUSED
-RULE_PACKS=READ_ONLY_AUTHORITY_REUSED
-FRONTEND_COMMISSION_RATE_CALCULATION=NO
-PIPELINE_PROBABILITY_WEIGHTING=NO
+UNKNOWN_IS_NOT_ZERO=PASS
+PROJECTED_IS_NOT_GENERATED=PASS
+NO_DEPOSIT_CLAIM=PASS
+NO_PROBABILITY_WEIGHTED_MONEY=PASS
+NO_FRONTEND_COMMISSION_ENGINE=PASS
 ```
 
-## Blocked capabilities preserved honestly
+## Current-main reconciliation evidence
+
+Before reconciliation:
 
 ```text
-EXPECTED_RENEWAL_PRODUCTIVE_SIGNAL_AUTHORITY=NOT_GUARANTEED
-PIPELINE_WHAT_IF_PRODUCTIVE_SIGNAL_AUTHORITY=NOT_GUARANTEED
-BONUS_COACH_ELIGIBILITY_SNAPSHOT=NOT_GUARANTEED
-FULL_YTD_HISTORY=NOT_AVAILABLE_FROM_CURRENT_SIX_MONTH_WINDOW
+MAIN_HEAD=6c97326c6558f64ffc8e58fd5e8997ae2e11cab3
+INCOME_BRANCH_HEAD=ec7dd073db925b39ce13862f143714814435a9ac
+MERGE_BASE=6b8e01fb4434cfc22c7356e82cdd35348dc6a2da
+BEHIND_BY=17
+AHEAD_BY=38
+PR_MERGEABLE_BEFORE=false
+PR_DRAFT_BEFORE=true
 ```
 
-The UI supports these contracts but shows `UNKNOWN`, `DISCONNECTED`, or `BLOCKED` when the productive read model does not provide sufficient evidence. It never substitutes zero.
+The branch was then reconciled non-destructively by merging current `main` into the controlled Income branch. The resulting implementation merge commit is:
 
-## Canonical Pages publication boundary
+`da303b7e0ae54e87b87ccd10b81cf253cb0f9c07`
 
-The governed Income sources remain `.mjs`. Canonical Pages does not currently publish `.mjs` from `docs/`, so this phase adds byte-identical `.js` mirrors inside the Income surface and maps the runtime to those published assets. A CI test fails if a mirror diverges from its governed source. `pages.yml` remains unmodified.
-
-```text
-PAGES_WORKFLOW_MUTATION=ZERO
-INCOME_CORE_JS_MIRROR=BYTE_IDENTICAL
-INCOME_ADAPTER_JS_MIRROR=BYTE_IDENTICAL
-INCOME_MODULE_JS_MIRROR=BYTE_IDENTICAL
-CANONICAL_IMPORT_GRAPH=PASS
-```
-
-## Synthetic browser fixture boundary
+After reconciliation:
 
 ```text
-FIXTURE_PURPOSE=ISOLATED_UX_RESPONSIVE_ACCESSIBILITY_LIFECYCLE_TESTING
-FIXTURE_PRESENTED_AS_PRODUCTION=NO
-FAKE_PRODUCTION_DATA=FORBIDDEN_AND_NOT_USED
-PRODUCTIVE_ACCEPTANCE_SOURCE=CANONICAL_READ_MODEL_ONLY
-```
-
-## Scope classification
-
-```text
-INCOME_DIRECT=
-docs/static-preview/forge-aura/income/income-core.mjs
-docs/static-preview/forge-aura/income/income-adapter-pages-v1.mjs
-docs/static-preview/forge-aura/income/income-module.mjs
-docs/static-preview/forge-aura/income/income-core.js
-docs/static-preview/forge-aura/income/income-adapter-pages-v1.js
-docs/static-preview/forge-aura/income/income-module.js
-docs/static-preview/forge-aura/income/income.css
-
-AURA_SHARED_REQUIRED=
-docs/static-preview/forge-aura/app-v4.js
-docs/static-preview/forge-aura/aura-bootstrap-v4.js
-docs/static-preview/forge-aura/aura-router-v4.js
-docs/static-preview/forge-aura/aura-shell.js
-docs/static-preview/forge-aura/aura-shell.css
-docs/static-preview/forge-aura/index.html
-
-TEST_ONLY=
-tests/income-aura-ux-reconciliation.test.mjs
-tests/income-owner-isolation.test.mjs
-tests/income-pages-import-graph.test.mjs
-tests/income-scope-guard.test.mjs
-tests/income-playwright.config.mjs
-tests/e2e/income-aura-ux-reconciliation.spec.mjs
-tests/fixtures/aura-income-visual.html
-tests/fixtures/aura-income-late-result.html
-.github/workflows/income-aura-ux-reconciliation-001.yml
-
-EVIDENCE_ONLY=
-docs/architecture/source-truth/FORGE_AURA_INCOME_UX_RECONCILIATION_REPORT_001.md
-docs/evidence/FORGE_AURA_INCOME_UX_RECONCILIATION_ACCEPTANCE_001.md
-
+MERGE_BASE=6c97326c6558f64ffc8e58fd5e8997ae2e11cab3
+BEHIND_BY=0
+MAIN_SYNC_ONLY_NOT_BRANCH_DIFF=PASS
 OUT_OF_SCOPE_VIOLATION=0
 ```
 
-## Mutation proof
+Current-main Cartera behavior preserved:
+
+- import map publishes `cartera-adapter-pages-v3.js?v=aura-cartera-pdf-idempotency-004`;
+- v3 preserves retry-safe admission idempotency;
+- v3 wraps v2 rather than replacing the authenticated transport;
+- v2 preserves `client.functions.invoke(...)`;
+- manual bearer construction remains absent;
+- current Cartera PDF recovery/review Edge Function is inherited from `main` unchanged;
+- current-main Cartera tests are inherited through the merge rather than recreated by Income.
+
+Income behavior preserved:
+
+- route `comisiones` mounts Income;
+- visible product label is `Ingresos`;
+- generated / expected / scenario layers remain distinct;
+- complete YTD remains unavailable when authority is incomplete;
+- session scrub and advisor-switch scrub remain active;
+- late async results are rejected after unmount;
+- Pages `.js` mirrors remain byte-identical to governed `.mjs` source modules.
+
+## Scope evidence
+
+The post-reconciliation diff against current `main` contains only authorized Income phase files and required shared Aura integration files.
 
 ```text
 COMPENSATION_ENGINE_MUTATION=ZERO
@@ -152,58 +95,98 @@ RULE_PACK_MUTATION=ZERO
 DATABASE_MUTATION=ZERO
 SCHEMA_MUTATION=ZERO
 RLS_MUTATION=ZERO
-PIPELINE_MUTATION=ZERO
+PIPELINE_WRITER_MUTATION=ZERO
 CARTERA_WRITER_MUTATION=ZERO
 FORECAST_ENGINE_MUTATION=ZERO
+FRONTEND_COMMISSION_RATE_CALCULATION=ZERO
+PROBABILITY_WEIGHTED_MONEY=ZERO
+OUT_OF_SCOPE_VIOLATION=0
+```
+
+## Canonical Pages acceptance target
+
+The final workflow uses the canonical Pages workflow's build/validation programs; it does not replace `.github/workflows/pages.yml` and does not deploy.
+
+Required artifact evidence:
+
+```text
+PAGES_ARTIFACT_BUILD=PENDING_FINAL_CI
+INCOME_IMPORT_GRAPH=PENDING_FINAL_CI
+CARTERA_IMPORT_GRAPH=PENDING_FINAL_CI
+NO_BLANK_SCREEN_IMPORT_FAILURE=PENDING_FINAL_CI
+```
+
+The artifact contract now checks that current Cartera v2 and v3 assets survive canonical publication and that the published import graph still resolves v3 → v2 `functions.invoke` while Income mirrors resolve correctly.
+
+## Browser acceptance target
+
+Playwright acceptance covers:
+
+- 1440 desktop;
+- 834 tablet;
+- 390 mobile;
+- 200% effective viewport;
+- visible keyboard focus;
+- minimum actionable target sizing;
+- one H1 and semantic sections;
+- reduced motion;
+- generated/expected/scenario truth separation;
+- UNKNOWN as unavailable, not zero;
+- no bank/deposit payout claim;
+- session scrub;
+- unmount and late-result rejection;
+- browser import smoke proving current Cartera and Income modules can be imported together under the reconciled runtime/import map.
+
+Required browser evidence:
+
+```text
+BROWSER_GATE=PENDING_FINAL_CI
+ACCESSIBILITY_GATE=PENDING_FINAL_CI
+LIFECYCLE_GATE=PENDING_FINAL_CI
+CROSS_MODULE_CARTERA_GATE=PENDING_FINAL_CI
+```
+
+Expected screenshot evidence remains:
+
+- `01-income-desktop.png`
+- `02-income-mobile-390.png`
+- `03-income-tablet-834.png`
+- `04-income-zoom-200-effective.png`
+- `05-income-reduced-motion.png`
+
+## Historical evidence retained
+
+A prior full acceptance run succeeded before `main` advanced again:
+
+```text
+VALIDATED_HEAD_SHA=4e2e51b29f1e777bb3168a79f98c980f105c8553
+CI_RUN_ID=31262989102
+INCOME_CONSTITUTIONAL_SCOPE_JOB=PASS
+CANONICAL_PAGES_JOB=PASS
+BROWSER_ACCEPTANCE_JOB=PASS
+```
+
+Earlier attempts also exposed and corrected three test/infrastructure issues: `.mjs` files were not published by the canonical Pages extension allowlist, an economic safeguard literal triggered an overly broad regex, and Playwright initially served fixtures from the wrong directory. That history is intentionally retained; this evidence does not claim first-attempt success.
+
+The historical green run is not used as the final acceptance for the reconciled branch.
+
+## Final immutable-evidence rule
+
+GitHub assigns a workflow run ID only after a commit exists, and a Git commit cannot contain its own SHA before that commit is created. To avoid falsifying self-referential evidence, this file records the reconciled implementation SHA and the PR gate records the exact final head/run pair after GitHub creates the validating run.
+
+```text
+FINAL_BRANCH_HEAD=RESOLVED_IN_PR_GATE_AFTER_VALIDATION
+FINAL_CI_RUN=RESOLVED_IN_PR_GATE_AFTER_VALIDATION
+CONSTITUTIONAL_GATE=PASS
+STATIC_CONTRACT_GATE=PENDING_FINAL_CI
+PAGES_GATE=PENDING_FINAL_CI
+BROWSER_GATE=PENDING_FINAL_CI
+CROSS_MODULE_CARTERA_GATE=PENDING_FINAL_CI
+OUT_OF_SCOPE_VIOLATION=0
 MAIN_MUTATED=NO
 MERGE_EXECUTED=NO
 PRODUCTION_DEPLOYMENT=NO
+FINAL_STATUS=CI_PENDING
 ```
 
-## CI acceptance
-
-Workflow: `.github/workflows/income-aura-ux-reconciliation-001.yml`
-
-Validated run: `31262989102` against head `4e2e51b29f1e777bb3168a79f98c980f105c8553`.
-
-```text
-INCOME_CONSTITUTIONAL_CONTRACT_AND_SCOPE=PASS
-CANONICAL_PAGES_ARTIFACT_AND_IMPORT_GRAPH=PASS
-INCOME_RESPONSIVE_ACCESSIBILITY_AND_LIFECYCLE_ACCEPTANCE=PASS
-PAGES_ARTIFACT_BUILD=PASS
-INCOME_IMPORT_GRAPH=PASS
-DESKTOP_1440=PASS
-TABLET_834=PASS
-MOBILE_390=PASS
-ZOOM_200_EFFECTIVE=PASS
-KEYBOARD=PASS
-VISIBLE_FOCUS=PASS
-REDUCED_MOTION=PASS
-UNKNOWN_IS_NOT_ZERO=PASS
-SESSION_SCRUB=PASS
-LATE_RESULT_REJECTION=PASS
-REQUIRED_SCREENSHOT_EVIDENCE=PASS
-```
-
-The validation run created the required desktop, mobile, tablet, 200%-effective viewport and reduced-motion screenshot set as CI artifacts.
-
-## Final phase gate
-
-```text
-DOES_IT_STRENGTHEN_HUMAN_JUDGMENT=YES
-DOES_IT_CREATE_DEPENDENCY=NO
-ECONOMIC_VALUES_EVIDENCE_BOUND=YES
-FORECAST_REMAINS_SCENARIO=YES
-COMPENSATION_REMAINS_RULE_BOUND=YES
-UNKNOWN_REMAINS_UNKNOWN=YES
-CLIENT_FIRST_PRESERVED=YES
-MONEY_USED_AS_PRESSURE=NO
-PAYOUT_FIRST_BEHAVIOR=NO
-HUMAN_AUTHORITY_PRESERVED=YES
-
-CI_STATUS=PASS
-FINAL_STATUS=PASS
-MAIN_MUTATED=NO
-MERGE_EXECUTED=NO
-PRODUCTION_DEPLOYMENT=NO
-```
+No merge to `main`, auto-merge or production deployment is part of this acceptance phase.
