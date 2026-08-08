@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const adapter = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v4.js', 'utf8');
+const guard = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v5.js', 'utf8');
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 const bootstrap = fs.readFileSync('docs/static-preview/forge-aura/aura-bootstrap-v4.js', 'utf8');
 
@@ -39,8 +40,9 @@ test('result stages have attempt-scoped idempotency and preserve packet replay i
   assert.doesNotMatch(adapter, /delete\(/);
 });
 
-test('Aura publishes the governed state-machine adapter with a coherent cache bust', () => {
-  assert.match(index, /cartera-adapter-pages-v4\.js\?v=aura-cartera-result-state-machine-006/);
-  assert.match(index, /aura-bootstrap-v4\.js\?v=aura-cartera-result-state-machine-006/);
-  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-result-state-machine-006/);
+test('Aura preserves the governed state-machine adapter behind the invalid-date review guard', () => {
+  assert.match(guard, /cartera-adapter-pages-v4\.js\?base=aura-cartera-invalid-date-review-007/);
+  assert.match(index, /cartera-adapter-pages-v5\.js\?v=aura-cartera-invalid-date-review-007/);
+  assert.match(index, /aura-bootstrap-v4\.js\?v=aura-cartera-invalid-date-review-007/);
+  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-invalid-date-review-007/);
 });
