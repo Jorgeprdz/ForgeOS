@@ -56,12 +56,23 @@ test("complete evidence delegates scoring to the official engine", () => {
 
 test("next-action combination comes from official rules and only exposes manual Activity actions", () => {
   const projection = projectOfficialActivityPoints({
-    activityPointsInput: { counts: completeCounts({ referidos: 2, llamadas: 2, citas_agendadas: 1 }) },
+    activityPointsInput: {
+      counts: completeCounts({
+        referidos: 2,
+        llamadas: 3,
+        citas_agendadas: 1,
+        citas_iniciales: 3,
+      }),
+    },
   });
   assert.equal(projection.state, "READY");
+  assert.equal(projection.total, 18);
+  assert.equal(projection.remaining, 7);
   const recommendation = recommendOfficialActivityActions(projection);
   assert.ok(recommendation);
-  assert.equal(recommendation.totalPoints >= projection.remaining, true);
+  assert.equal(recommendation.totalPoints, 7);
+  assert.equal(recommendation.exact, true);
   assert.ok(recommendation.actions.every(action => ["referidos", "llamadas", "citas_agendadas", "citas_iniciales", "citas_cierre"].includes(action.metricKey)));
+  assert.equal(recommendation.actions.some(action => ["solicitudes_firmadas", "polizas_pagadas", "referido_asesor"].includes(action.metricKey)), false);
   assert.equal(recommendation.decisionBoundary.includes("Tú decides"), true);
 });
