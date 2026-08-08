@@ -15,7 +15,7 @@
 <body>
   <main id="fixture-main" tabindex="-1"></main>
   <script type="module">
-    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v3.js?v=aura-cartera-pdf-real-acceptance-root-010';
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v3.js?v=aura-cartera-pdf-already-admitted-reopen-011';
 
     window.__ENV__ = { SUPABASE_ANON_KEY: 'TEST_ONLY' };
     const trace = window.__PDF_FULL_CHAIN_TRACE__ = {
@@ -25,6 +25,8 @@
       resultEffectiveDates: [],
       admitted: false,
       claims: 0,
+      pendingReviewReads: 0,
+      storedPendingReview: false,
     };
 
     function emptyQuery(data = []) {
@@ -35,7 +37,7 @@
           if (property === 'then') {
             return (resolve, reject) => Promise.resolve(result).then(resolve, reject);
           }
-          if (property === 'single') {
+          if (property === 'single' || property === 'maybeSingle') {
             return async () => ({ data: null, error: null });
           }
           return () => proxy;
@@ -46,17 +48,39 @@
 
     let admitted = null;
     let stateVersion = 1;
+    let storedPacket = null;
+
+    function packetQuery() {
+      let proxy;
+      proxy = new Proxy({}, {
+        get(_target, property) {
+          if (property === 'then') {
+            const rows = storedPacket ? [storedPacket] : [];
+            return (resolve, reject) => Promise.resolve({ data: rows, error: null }).then(resolve, reject);
+          }
+          if (property === 'maybeSingle' || property === 'single') {
+            return async () => {
+              trace.pendingReviewReads += 1;
+              return { data: storedPacket, error: null };
+            };
+          }
+          return () => proxy;
+        },
+      });
+      return proxy;
+    }
 
     const fakeClient = {
       auth: {
         async getUser() {
-          return { data: { user: { id: 'advisor:test:cartera-pdf-010b' } }, error: null };
+          return { data: { user: { id: 'advisor:test:cartera-pdf-011' } }, error: null };
         },
         async getSession() {
           return { data: { session: { access_token: 'TEST_ONLY' } }, error: null };
         },
       },
-      from() {
+      from(table) {
+        if (table === 'cartera020b_policy_evidence_packets') return packetQuery();
         return emptyQuery([]);
       },
       functions: {
@@ -73,11 +97,11 @@
           return {
             data: {
               ok: true,
-              intakeId: 'INTAKE:AURA:FULL_CHAIN_010B',
-              modelVersion: 'fixture-spanish-date-010b',
+              intakeId: 'INTAKE:AURA:FULL_CHAIN_011',
+              modelVersion: 'fixture-spanish-date-011',
               candidates: [{
                 person: 'Persona Sintetica',
-                policyNumber: 'SYN-IMAGINA-010B',
+                policyNumber: 'SYN-IMAGINA-011',
                 product: 'IMAGINA SER',
                 premium: '3976.96',
                 status: 'ACTIVA',
@@ -128,6 +152,16 @@
           if (effectiveFrom || effectiveTo) {
             trace.resultEffectiveDates.push({ stage, effectiveFrom, effectiveTo });
           }
+          if (stage === 'confirmation_required' && result.packet) {
+            storedPacket = {
+              packet_reference: result.packet.packetReference,
+              extracted_fields: result.packet.extractedFields,
+              extraction_confidence: result.packet.extractionConfidence,
+              identity_candidates: result.packet.identityCandidates,
+              confirmation_state: result.packet.confirmationState,
+            };
+            trace.storedPendingReview = true;
+          }
           return { data: { status: stage || 'RECORDED' }, error: null };
         }
 
@@ -148,7 +182,7 @@
       globalState: () => {},
     });
     await module.mount();
-    document.documentElement.dataset.regressionHarness = 'READY_FULL_CHAIN';
+    document.documentElement.dataset.regressionHarness = 'READY_FULL_CHAIN_REOPEN';
   </script>
 </body>
 </html>

@@ -8,7 +8,7 @@ document.documentElement.dataset.auraEnvState = hasProductiveConfig()
   : "PRODUCTIVE_CONFIG_BLOCKED";
 
 try {
-  await import("./app-v4.js?v=aura-cartera-pdf-real-acceptance-root-010-aura-home-command-center-mobile-nav-001");
+  await import("./app-v4.js?v=aura-cartera-pdf-already-admitted-reopen-011-income-aura-ux-reconciliation-001-aura-home-command-center-mobile-nav-001");
 } catch (error) {
   document.documentElement.dataset.auraBootState = "BOOT_IMPORT_FAILED";
   const root = document.querySelector("[data-aura-app]");
