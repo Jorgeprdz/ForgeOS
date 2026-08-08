@@ -42,7 +42,17 @@ jobs:
       - name: Product benefit summary regression
         run: node tests/quote-benefit-summary-engine-test.mjs
       - name: Accepted Quote regression
-        run: node tests/quote-preview-automatic-calculation-after-extraction-test.mjs
+        shell: bash
+        run: |
+          set +e
+          output="$(node tests/quote-preview-automatic-calculation-after-extraction-test.mjs 2>&1)"
+          status=$?
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            message="$(printf '%s' "$output" | tr '\n' ' ' | head -c 3500)"
+            echo "::error title=Accepted Quote regression::$message"
+            exit "$status"
+          fi
       - name: SeguBeca Accepted Quote regression
         run: node tests/segubeca-accepted-quote-integration-test.mjs
       - name: Productive PDF parser regression
