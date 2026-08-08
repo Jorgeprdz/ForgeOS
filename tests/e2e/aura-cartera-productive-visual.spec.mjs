@@ -129,12 +129,13 @@ test('attention state remains capped, explanatory and non-automatic', async ({ p
   await shot(page, '10-attention-state');
 });
 
-test('200% zoom keeps primary operating controls visible', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
+test('200% zoom equivalent reflows and keeps primary controls visible', async ({ page }) => {
+  // At 200% browser zoom a 1440 device-pixel viewport exposes about 720 CSS px.
+  await page.setViewportSize({ width: 720, height: 900 });
   await ready(page);
-  await page.evaluate(() => { document.documentElement.style.zoom = '2'; });
   await expect(page.getByRole('heading', { name: '¿Cómo está mi cartera?' })).toBeVisible();
   await expect(page.getByRole('button', { name: /Agregar póliza/ })).toBeVisible();
+  expect(await noHorizontalOverflow(page)).toBeTruthy();
   await shot(page, '11-zoom-200');
 });
 
