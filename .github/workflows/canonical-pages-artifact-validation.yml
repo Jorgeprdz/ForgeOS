@@ -6,7 +6,11 @@ on:
       - main
     paths:
       - '.github/workflows/pages.yml'
+      - '.github/workflows/aura-pages-dispatch.yml'
+      - '.github/workflows/pages-public-acceptance.yml'
+      - '.github/workflows/pages-deploy-observer.yml'
       - '.github/workflows/canonical-pages-artifact-validation.yml'
+      - 'tests/pages-explicit-deployment-governance.test.mjs'
       - 'index.html'
       - 'service-worker.js'
       - 'docs/static-preview/forge-alive-material3/**'
@@ -49,6 +53,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Validate explicit Pages deployment governance
+        run: node --test tests/pages-explicit-deployment-governance.test.mjs
 
       - name: Extract canonical build and validation programs
         run: |
