@@ -10,7 +10,7 @@ function buildRegressionPdf() {
   const lines = [
     'CARATULA DE LA POLIZA DE SEGURO DE VIDA INDIVIDUAL',
     'PLAN BASICO IMAGINA SER 65 - 15 PAGOS UDI',
-    'POLIZA SYN-IMAGINA-010B',
+    'POLIZA SYN-IMAGINA-011',
     'FECHA DE EMISION 05/AGO/2026',
     'FECHA DE EFECTIVIDAD 05/AGO/2026',
     'FECHA DE VENCIMIENTO 05/AGO/2053',
@@ -48,48 +48,76 @@ function buildRegressionPdf() {
   return Buffer.from(pdf, 'utf8');
 }
 
-test('uploaded Imagina Ser-style PDF crosses productive adapter chain and keeps DD/AGO/YYYY date-safe', async ({ page }) => {
-  const pageErrors = [];
-  page.on('pageerror', error => pageErrors.push(error.message));
-
-  await page.goto(FIXTURE, { waitUntil: 'networkidle' });
-  await expect(page.locator('html')).toHaveAttribute('data-regression-harness', 'READY_FULL_CHAIN');
-
-  await page.locator('[data-add-policy]').first().click();
-  await expect(page.locator('[data-pdf-input]')).toBeAttached();
+const upload = async page => {
   await page.locator('[data-pdf-input]').setInputFiles({
     name: 'imagina-ser-spanish-date-regression.pdf',
     mimeType: 'application/pdf',
     buffer: buildRegressionPdf(),
   });
+};
+
+test('same already-admitted Imagina Ser PDF reopens pending review without reprocessing', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+
+  await page.goto(FIXTURE, { waitUntil: 'networkidle' });
+  await expect(page.locator('html')).toHaveAttribute('data-regression-harness', 'READY_FULL_CHAIN_REOPEN');
+
+  await page.locator('[data-add-policy]').first().click();
+  await expect(page.locator('[data-pdf-input]')).toBeAttached();
+  await upload(page);
 
   await expect(page.getByText('PÓLIZA DETECTADA')).toBeVisible({ timeout: 8000 });
   await expect(page.locator('input[name="effectiveFrom"]')).toHaveValue('2026-08-05');
   await expect(page.locator('input[name="effectiveTo"]')).toHaveValue('2053-08-05');
   await expect(page.locator('body')).not.toContainText('Invalid time value');
-  expect(pageErrors).toEqual([]);
 
-  const trace = await page.evaluate(() => window.__PDF_FULL_CHAIN_TRACE__);
-  expect(trace.functionInvocations).toHaveLength(1);
-  expect(trace.functionInvocations[0]).toMatchObject({
+  const firstTrace = await page.evaluate(() => window.__PDF_FULL_CHAIN_TRACE__);
+  expect(firstTrace.functionInvocations).toHaveLength(1);
+  expect(firstTrace.functionInvocations[0]).toMatchObject({
     name: 'cartera-pdf-intake',
     fileName: 'imagina-ser-spanish-date-regression.pdf',
     mimeType: 'application/pdf',
     hasBase64: true,
   });
-  expect(trace.admitted).toBe(true);
-  expect(trace.claims).toBeGreaterThanOrEqual(4);
-  expect(trace.resultStages).toEqual([
+  expect(firstTrace.admitted).toBe(true);
+  expect(firstTrace.claims).toBeGreaterThanOrEqual(4);
+  expect(firstTrace.resultStages).toEqual([
     'classified',
     'extraction_candidate_created',
     'packet_created',
     'confirmation_required',
   ]);
-  expect(trace.rpcNames).toContain('forge_cartera020b_admit_evidence');
-  expect(trace.rpcNames).toContain('forge_cartera020b_record_processing_result');
-  expect(trace.resultEffectiveDates.length).toBeGreaterThanOrEqual(3);
-  for (const observed of trace.resultEffectiveDates) {
+  expect(firstTrace.storedPendingReview).toBe(true);
+  expect(firstTrace.rpcNames).toContain('forge_cartera020b_admit_evidence');
+  expect(firstTrace.rpcNames).toContain('forge_cartera020b_record_processing_result');
+  expect(firstTrace.resultEffectiveDates.length).toBeGreaterThanOrEqual(3);
+  for (const observed of firstTrace.resultEffectiveDates) {
     expect(observed.effectiveFrom).toBe('2026-08-05');
     expect(observed.effectiveTo).toBe('2053-08-05');
   }
+
+  const firstFunctionCount = firstTrace.functionInvocations.length;
+  const firstClaimCount = firstTrace.claims;
+  const firstRpcCount = firstTrace.rpcNames.length;
+  const firstStageCount = firstTrace.resultStages.length;
+
+  await page.locator('.cartera-dialog-close').click();
+  await page.locator('[data-add-policy]').first().click();
+  await expect(page.locator('[data-pdf-input]')).toBeAttached();
+  await upload(page);
+
+  await expect(page.getByText('PÓLIZA DETECTADA')).toBeVisible({ timeout: 5000 });
+  await expect(page.locator('input[name="effectiveFrom"]')).toHaveValue('2026-08-05');
+  await expect(page.locator('input[name="effectiveTo"]')).toHaveValue('2053-08-05');
+  await expect(page.locator('body')).not.toContainText('No pudimos completar el procesamiento del PDF');
+  await expect(page.locator('body')).not.toContainText('Invalid time value');
+
+  const secondTrace = await page.evaluate(() => window.__PDF_FULL_CHAIN_TRACE__);
+  expect(secondTrace.pendingReviewReads).toBeGreaterThanOrEqual(2);
+  expect(secondTrace.functionInvocations).toHaveLength(firstFunctionCount);
+  expect(secondTrace.claims).toBe(firstClaimCount);
+  expect(secondTrace.rpcNames).toHaveLength(firstRpcCount);
+  expect(secondTrace.resultStages).toHaveLength(firstStageCount);
+  expect(pageErrors).toEqual([]);
 });
