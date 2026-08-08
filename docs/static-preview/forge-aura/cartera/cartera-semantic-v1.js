@@ -4,6 +4,12 @@ const MONTHS = Object.freeze({
 });
 const MONTH_LABELS = Object.freeze(['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']);
 const STATUS_VALUES = new Set(['PENDING','ISSUED','ACTIVE','SUSPENDED','LAPSED','CANCELLED','MATURED','CLAIMED','UNKNOWN']);
+const COVERAGE_STATES = new Set([
+  'CANDIDATES_REVIEW_REQUIRED',
+  'INCOMPLETE_REVIEW_REQUIRED',
+  'NO_COVERAGE_SECTION_DETECTED',
+  'COVERAGE_PRESENCE_UNKNOWN',
+]);
 
 function strip(value) {
   return String(value ?? '').trim();
@@ -11,6 +17,10 @@ function strip(value) {
 
 function asciiUpper(value) {
   return strip(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+}
+
+function present(value) {
+  return !(value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0));
 }
 
 function validCivilDate(year, month, day) {
@@ -129,6 +139,10 @@ function period(value) {
   return strip(value) || null;
 }
 
+function coverageSectionFlag(value) {
+  return value === true ? true : (value === false ? false : null);
+}
+
 export function normalizeCoverageCandidates(value) {
   if (!Array.isArray(value)) return [];
   return value.slice(0, 100).map((row, index) => {
@@ -145,6 +159,7 @@ export function normalizeCoverageCandidates(value) {
       paymentPeriod: period(row?.paymentPeriod),
       premiumAmount: normalizeMoneyValue(row?.premiumAmount),
       source: strip(row?.source) || 'PDF_DOCUMENT',
+      evidenceReference: strip(row?.evidenceReference ?? row?.sourceLocation) || null,
       sourceSection: strip(row?.sourceSection) || 'COBERTURAS',
       sourceLocation: row?.sourceLocation ?? null,
       confidence: Number.isFinite(confidence) ? Math.max(0, Math.min(1, confidence)) : null,
@@ -152,6 +167,23 @@ export function normalizeCoverageCandidates(value) {
       requiresHumanReview: true,
     };
   }).filter(row => row.coverageLabel || row.coverageCode || row.annexReference || row.sumInsured !== null || row.premiumAmount !== null);
+}
+
+export function coverageExtractionState(value = {}) {
+  const candidate = Array.isArray(value) ? { coverageCandidates: value } : (value || {});
+  const explicit = asciiUpper(candidate.coverageExtractionState);
+  if (COVERAGE_STATES.has(explicit)) return explicit;
+  const rows = normalizeCoverageCandidates(candidate.coverageCandidates);
+  if (rows.length) return 'CANDIDATES_REVIEW_REQUIRED';
+  const section = coverageSectionFlag(candidate.coverageSectionDetected);
+  if (section === true) return 'INCOMPLETE_REVIEW_REQUIRED';
+  if (section === false) return 'NO_COVERAGE_SECTION_DETECTED';
+  return 'COVERAGE_PRESENCE_UNKNOWN';
+}
+
+function semanticProvenance(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  return Object.fromEntries(Object.entries(value).map(([key, state]) => [key, strip(state) || null]));
 }
 
 export function normalizeSemanticCandidate(raw = {}) {
@@ -162,7 +194,8 @@ export function normalizeSemanticCandidate(raw = {}) {
     policyType = 'NORMAL';
     status = null;
   }
-  return {
+  const coverageCandidates = normalizeCoverageCandidates(raw.coverageCandidates);
+  const normalized = {
     ...raw,
     person: strip(raw.person) || null,
     insured: strip(raw.insured) || null,
@@ -180,8 +213,40 @@ export function normalizeSemanticCandidate(raw = {}) {
     plannedPremium: normalizeMoneyValue(raw.plannedPremium),
     annualTotal: normalizeMoneyValue(raw.annualTotal),
     beneficiariesDetected: raw.beneficiariesDetected === true,
+    coverageSectionDetected: coverageSectionFlag(raw.coverageSectionDetected),
+    coverageCandidates,
+    semanticProvenance: semanticProvenance(raw.semanticProvenance),
+  };
+  normalized.coverageExtractionState = coverageExtractionState(normalized);
+  normalized.reviewCompleteness = semanticReviewCompleteness(normalized);
+  return normalized;
+}
+
+export function semanticReviewCompleteness(raw = {}) {
+  const candidate = {
+    ...raw,
     coverageCandidates: normalizeCoverageCandidates(raw.coverageCandidates),
   };
+  const gaps = [];
+  if (!present(candidate.policyNumber)) gaps.push('policyNumber');
+  if (!present(candidate.product)) gaps.push('product');
+  if (!present(candidate.policyType) && !present(candidate.status)) gaps.push('policyTypeOrStatus');
+  if (!present(candidate.issueDate)) gaps.push('issueDate');
+  if (!present(candidate.effectiveDate)) gaps.push('effectiveDate');
+  if (!present(candidate.expirationDate)) gaps.push('expirationDate');
+  if (!present(candidate.currency)) gaps.push('currency');
+  if (!present(candidate.paymentFrequency)) gaps.push('paymentFrequency');
+  if (!present(candidate.basicPremiumTotal)) gaps.push('basicPremiumTotal');
+  if (!present(candidate.plannedPremium)) gaps.push('plannedPremium');
+  if (!present(candidate.annualTotal)) gaps.push('annualTotal');
+  if (coverageSectionFlag(candidate.coverageSectionDetected) === true && candidate.coverageCandidates.length === 0) {
+    gaps.push('coverageCandidates');
+  }
+  return Object.freeze({
+    state: gaps.length ? 'REVIEW_REQUIRED' : 'COMPLETE_FOR_HUMAN_REVIEW',
+    gaps: Object.freeze(gaps),
+    criticalGapCount: gaps.length,
+  });
 }
 
 const SOURCE_SECTIONS = Object.freeze({
@@ -190,16 +255,13 @@ const SOURCE_SECTIONS = Object.freeze({
   issueDate: 'VIGENCIA', effectiveFrom: 'VIGENCIA', effectiveTo: 'VIGENCIA',
   currency: 'PRIMA_Y_COBRO', paymentFrequency: 'PRIMA_Y_COBRO',
   basicPremiumTotal: 'PRIMA_Y_COBRO', plannedPremium: 'PRIMA_Y_COBRO', annualTotal: 'PRIMA_Y_COBRO',
-  beneficiariesDetected: 'BENEFICIARIOS', coverageCandidates: 'COBERTURAS',
+  beneficiariesDetected: 'BENEFICIARIOS', coverageSectionDetected: 'COBERTURAS', coverageCandidates: 'COBERTURAS',
 });
-
-function present(value) {
-  return !(value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0));
-}
 
 export function semanticField(name, value, candidate = {}, previous = null) {
   const resolved = present(value) ? value : (previous?.value ?? null);
   const confidence = previous?.confidence ?? (Number.isFinite(Number(candidate?.confidence)) ? Number(candidate.confidence) : null);
+  const extractionPass = previous?.extractionPass || candidate?.semanticProvenance?.[name] || null;
   return {
     ...(previous && typeof previous === 'object' ? previous : {}),
     value: resolved,
@@ -212,6 +274,7 @@ export function semanticField(name, value, candidate = {}, previous = null) {
     state: present(resolved) ? 'EXTRACTED' : 'UNKNOWN',
     sourceLocation: previous?.sourceLocation ?? null,
     extractionMethod: previous?.extractionMethod || 'EDGE_FUNCTION_REVIEW',
+    extractionPass,
     parserId: previous?.parserId || 'cartera-pdf-intake',
     parserVersion: previous?.parserVersion || String(candidate?.modelVersion || 'current'),
     createsTruth: false,
@@ -239,6 +302,7 @@ export function enrichSemanticFields(existing = {}, raw = {}) {
     plannedPremium: pick('plannedPremium', candidate.plannedPremium),
     annualTotal: pick('annualTotal', candidate.annualTotal),
     beneficiariesDetected: pick('beneficiariesDetected', candidate.beneficiariesDetected === true ? true : null),
+    coverageSectionDetected: pick('coverageSectionDetected', candidate.coverageSectionDetected),
     coverageCandidates: pick('coverageCandidates', candidate.coverageCandidates),
   };
 }
@@ -249,7 +313,7 @@ export function fieldValue(fields, name) {
 
 export function semanticReviewCandidate(fields = {}, fallback = {}) {
   const coverageCandidates = normalizeCoverageCandidates(fieldValue(fields, 'coverageCandidates'));
-  return {
+  const candidate = {
     ...fallback,
     person: fieldValue(fields, 'holderName') ?? fallback.person ?? null,
     insured: fieldValue(fields, 'insuredName') ?? fallback.insured ?? null,
@@ -267,7 +331,11 @@ export function semanticReviewCandidate(fields = {}, fallback = {}) {
     plannedPremium: normalizeMoneyValue(fieldValue(fields, 'plannedPremium')),
     annualTotal: normalizeMoneyValue(fieldValue(fields, 'annualTotal')),
     beneficiariesDetected: fieldValue(fields, 'beneficiariesDetected') === true,
+    coverageSectionDetected: coverageSectionFlag(fieldValue(fields, 'coverageSectionDetected') ?? fallback.coverageSectionDetected),
     coverageCandidates,
     premium: null,
   };
+  candidate.coverageExtractionState = coverageExtractionState(candidate);
+  candidate.reviewCompleteness = semanticReviewCompleteness(candidate);
+  return candidate;
 }
