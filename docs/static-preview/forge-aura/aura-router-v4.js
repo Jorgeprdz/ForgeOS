@@ -1,4 +1,4 @@
-const ROUTES = Object.freeze({ login: "login", pipeline: "pipeline", actividad: "actividad" });
+const ROUTES = Object.freeze({ login: "login", pipeline: "pipeline", actividad: "actividad", cartera: "cartera" });
 const AURA_MARKER = "/static-preview/forge-aura/";
 
 export function resolveRuntimeBase(urlLike = globalThis.location?.href || "http://localhost/") {
