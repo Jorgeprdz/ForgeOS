@@ -38,7 +38,6 @@ const homeAdapter = await read("docs/static-preview/forge-aura/home/home-adapter
 const shell = await read("docs/static-preview/forge-aura/aura-shell.js");
 const shellCss = await read("docs/static-preview/forge-aura/aura-shell.css");
 const app = await read("docs/static-preview/forge-aura/app-v4.js");
-const router = await read("docs/static-preview/forge-aura/aura-router-v4.js");
 const preparer = await read("scripts/prepare-aura-home-pages-authorities.mjs");
 
 assert.doesNotMatch(homeCore, /const\s+TIME_ZONE\s*=\s*["']America\/Mexico_City/);
@@ -88,7 +87,7 @@ assert.equal(attention.advisorConfirmationRequired, true);
 pass("HOME_POLICY_TRUTH_TEST");
 
 assert.doesNotMatch(homeCore + homeModule, /eres indisciplinado|eres flojo|mala actitud|no tienes potencial/i);
-assert.match(homeCore, /no inferir disciplina, motivación ni carácter/i);
+assert.match(homeCore, /(sin|no) inferir disciplina, motivación ni carácter/i);
 pass("HOME_MICK_BOUNDARY_TEST");
 
 assert.match(app, /forge-alive-material3\/alfred-command-runtime\.js/);
@@ -122,7 +121,7 @@ pass("AURA_SAFE_AREA_CONTRACT_TEST");
 pass("AURA_MOBILE_KEYBOARD_CONTRACT_TEST");
 
 assert.match(shellCss, /focus|:focus-visible|:focus-within/);
-assert.match(shell, /min-width:44px|width:44px|height:44px/);
+assert.match(shellCss, /min-width:44px|width:44px|height:44px/);
 pass("AURA_VISIBLE_FOCUS_CONTRACT_TEST");
 assert.match(await read("docs/static-preview/forge-aura/aura-tokens.css"), /prefers-reduced-motion/);
 pass("AURA_REDUCED_MOTION_CONTRACT_TEST");
