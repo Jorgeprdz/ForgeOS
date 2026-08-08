@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aura Cartera synthetic visual acceptance</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <style>html,body{margin:0;min-height:100%;background:#f5f6fa}body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.fixture-shell{min-height:100vh}.fixture-bar{height:68px;display:flex;align-items:center;padding:0 24px;background:rgba(255,255,255,.92);border-bottom:1px solid #e7e9ee;position:sticky;top:0;z-index:60}.fixture-brand{font-weight:850;letter-spacing:-.03em}.fixture-brand span{color:#6d5dfc}.fixture-main{min-height:calc(100vh - 68px)}</style>
+</head>
+<body>
+  <div class="fixture-shell">
+    <header class="fixture-bar"><div class="fixture-brand">Forge <span>Aura</span> · Cartera</div></header>
+    <main id="fixture-main" class="fixture-main" tabindex="-1"></main>
+  </div>
+  <script type="module">
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module.js';
+    const fixture = await fetch('/tests/fixtures/aura-cartera-productive.synthetic.json').then(r => r.json());
+    const empty = new URL(location.href).searchParams.get('mode') === 'empty';
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const policy = fixture.policy;
+    const directory = empty ? [] : [
+      {type:'PERSON',reference:fixture.person.person_reference,label:fixture.person.preferred_name,secondary:'Persona',searchText:fixture.person.display_name},
+      {type:'POLICY',reference:policy.policy_reference,label:policy.product_reference,secondary:policy.policy_number,searchText:`${policy.policy_number} ${policy.product_reference}`},
+    ];
+    const adapter = Object.freeze({
+      capabilities:{pdf020:true,pdfMultiCoverageExtraction:false,bulk:true,manual:true,coverageReadRpc:true,directory010d:true,pagesSafeAuthority:true},
+      async loadHome(){return empty?{policies:[],calendar:{summary:{}},radar:{items:[]},reviews:[]}:{policies:[policy],calendar:fixture.calendar,radar:fixture.radar,reviews:[{packetReference:'POLICY_PACKET:SYN:1',title:'Póliza pendiente de revisión'}]};},
+      async loadDirectory(){return directory;},
+      async loadPolicyWorkspace(reference){if(reference!==policy.policy_reference)throw new Error('SYNTHETIC_POLICY_NOT_FOUND');return {policy,roles:fixture.roles,coverages:fixture.coverages,calendar:fixture.calendar};},
+      async loadPersonWorkspace(reference){if(reference!==fixture.person.person_reference)throw new Error('SYNTHETIC_PERSON_NOT_FOUND');return {person:fixture.person,policies:[policy],memory:fixture.memory,growth:fixture.growth,relationshipCapital:{sourceState:'SYNTHETIC'}};},
+      async processPdf(file,{signal}={}){await sleep(650);if(signal?.aborted)throw new DOMException('Aborted','AbortError');return {packetReference:'POLICY_PACKET:AURA:SYNTHETIC',candidateReference:'POLICY_CANDIDATE:AURA:SYNTHETIC',personCandidateReference:'IDENTITY_CANDIDATE:AURA:SYNTHETIC',sourceReference:'EVIDENCE_SOURCE:AURA:SYNTHETIC',documentDigest:'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',edgeCandidate:fixture.pdfCandidate,fields:{},pdfCoverageExtraction:'NOT_SUPPORTED',requiresHumanReview:true,createsPolicyTruth:false};},
+      async confirmPdfReview(){return {state:'CONFIRMED',policyResult:{policyReference:policy.policy_reference}};},
+      async analyzePortfolioFile(){return [{row:2,state:'READY',draft:{holderName:'Ana Ejemplo',policyNumber:'SYN-BULK-1',productLabel:'Producto Sintético'}}];},
+      async importReviewedRows(){return [{row:2,state:'IMPORTED'}];},
+      async persistReviewedDraft(){return {status:'CONFIRMED',policyReference:policy.policy_reference,readAfterWriteVerified:true};},
+    });
+    const client={};
+    const module=createCarteraModule({root:document.querySelector('#fixture-main'),client,windowRef:window,adapterFactory:async()=>adapter,globalState:(message,state)=>{document.body.dataset.globalState=state||'status';document.body.dataset.globalMessage=message||'';}});
+    await module.mount();
+    window.__CARTERA_FIXTURE__={module,adapter,fixture};
+  </script>
+</body>
+</html>
