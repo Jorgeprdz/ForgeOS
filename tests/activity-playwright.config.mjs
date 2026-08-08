@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: "./e2e",
   testMatch: [
     "activity-aura-ux-reconciliation.spec.mjs",
+    "activity-aura-points-boundaries.spec.mjs",
     "activity-daily-confirmation.spec.mjs",
     "activity-fes-point-suggestions.spec.mjs",
   ],
