@@ -35,6 +35,7 @@ const carteraCompatibilityAllowed = [
   /^tests\/fixtures\/aura-cartera-pdf-spanish-date-regression\.html$/,
   /^\.github\/workflows\/aura-cartera-pdf-real-regression\.yml$/,
   /^\.github\/workflows\/aura-cartera-productive-reconciliation-001\.yml$/,
+  /^\.github\/workflows\/income-aura-ux-reconciliation-001\.yml$/,
   /^adr\/ADR-025 .*Cartera PDF Semantic Review Boundary\.txt$/,
   /^tests\/income-(?:pages-import-graph|cartera-cross-module|scope-guard)\.test\.mjs$/,
 ];
