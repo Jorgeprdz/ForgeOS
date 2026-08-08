@@ -8,6 +8,7 @@ const moduleSource = read("docs/static-preview/forge-aura/quotes/quotes-module.j
 const css = read("docs/static-preview/forge-aura/quotes/quotes.css");
 const router = read("docs/static-preview/forge-aura/aura-router-v4.js");
 const app = read("docs/static-preview/forge-aura/app-v4.js");
+const appR1 = read("docs/static-preview/forge-aura/app-v4-r1.js");
 
 assert.match(adapter, /forge-pdf-browser-parser\.js/);
 assert.match(adapter, /forge-accepted-quote-adapter\.js/);
@@ -49,6 +50,11 @@ assert.match(app, /createQuotesModule/);
 assert.match(app, /route === "cotizaciones"/);
 assert.match(app, /quotes\/quotes\.css/);
 assert.match(app, /data-aura-productive-link=\"cotizaciones\"/);
+assert.match(appR1, /import\("\.\/quotes\/quotes-module\.js\?v=aura-quotes-product-intelligence-001"\)/);
+assert.match(appR1, /route === "cotizaciones"/);
+assert.match(appR1, /quotes\/quotes\.css/);
+assert.match(appR1, /data-aura-productive-link=\"cotizaciones\"/);
+assert.match(appR1, /forge:alfred-navigation/);
 
 const productiveEnginePatterns = [
   /function\s+calculate[A-Z]/g,
