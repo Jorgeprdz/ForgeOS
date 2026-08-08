@@ -44,7 +44,7 @@ jobs:
           grep -Ev '^(docs/static-preview/forge-aura/activity/.*|docs/static-preview/forge-aura/aura-tokens\.css|tests/activity-aura-points-authority\.test\.mjs|tests/activity-aura-scope-contract\.test\.mjs|tests/activity-daily-confirmation-contract\.test\.mjs|tests/activity-fes-point-suggestions\.test\.mjs|tests/activity-playwright\.config\.mjs|tests/e2e/activity-aura-ux-reconciliation\.spec\.mjs|tests/e2e/activity-aura-points-boundaries\.spec\.mjs|tests/e2e/activity-capture-directory-ux\.spec\.mjs|tests/e2e/activity-daily-confirmation\.spec\.mjs|tests/e2e/activity-fes-point-suggestions\.spec\.mjs|docs/architecture/source-truth/FORGE_AURA_ACTIVITY_25PT_PRODUCTIVITY_COCKPIT_RECONCILIATION_REPORT_001\.md|\.github/workflows/activity-reports-aura\.yml)$' /tmp/changed.txt > /tmp/outside.txt || true
           cat /tmp/outside.txt
           test ! -s /tmp/outside.txt
-      - name: Syntax, authority and Pages contracts
+      - name: Syntax, authority, tenant and Pages contracts
         run: |
           node --input-type=module --check < docs/static-preview/forge-aura/activity/activity-module.js
           node --input-type=module --check < docs/static-preview/forge-aura/activity/activity-daily-confirmation.js
@@ -55,6 +55,7 @@ jobs:
             tests/activity-aura-scope-contract.test.mjs \
             tests/activity-daily-confirmation-contract.test.mjs \
             tests/activity-fes-point-suggestions.test.mjs \
+            tests/fes-02a-activity-ledger-migration-security-test.mjs \
             tests/forge-aura-pages-import-graph.test.mjs
 
   browser-acceptance:
