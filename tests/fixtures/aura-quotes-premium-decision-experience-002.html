@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Quotes Premium Decision Experience 002</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/quotes/quotes.css">
+  <style>
+    html,body{margin:0;min-height:100%;background:var(--forge-canvas);font-family:var(--aura-font);color:var(--forge-text-primary)}
+    body{min-height:100vh}
+    #fixture-status{position:fixed;left:-9999px}
+  </style>
+</head>
+<body>
+  <div id="fixture-status" aria-live="polite"></div>
+  <main id="quotes-root"></main>
+  <script type="module">
+    import { createQuotesModule } from "/docs/static-preview/forge-aura/quotes/quotes-module.js";
+
+    const query = new URLSearchParams(location.search);
+    const partial = query.get("partial") === "1";
+    const economic = query.get("economic") !== "0";
+    const model = {
+      product: "Imagina Ser",
+      family: "imagina_ser",
+      sourceFile: "fixture-cotizacion.pdf",
+      source: "TEST_FIXTURE_NOT_PRODUCTION",
+      contractual: [
+        { id: "client", label: "Cliente", value: "Cliente de prueba", display: "Cliente de prueba" },
+        { id: "annual_premium", label: "Prima anual", value: "MXN 48,000", display: "MXN 48,000" },
+        { id: "sum_assured", label: "Suma asegurada", value: "MXN 1,500,000", display: "MXN 1,500,000" },
+        { id: "payment_years", label: "Plazo de pago", value: "10 años", display: "10 años" },
+      ],
+      current: economic ? [{ id: "reference", label: "Referencia actual", value: "MXN 52,000", display: "MXN 52,000" }] : [],
+      projected: [{ id: "estimated_recovery", label: "Escenario estimado", value: "MXN 820,000", display: "MXN 820,000" }],
+      economicEvidence: economic
+        ? { available: true, value: "8.81842", asOf: "2026-08-08", source: "BANXICO_SIE_API", status: "OFFICIAL" }
+        : { available: false, status: "UNAVAILABLE" },
+      intelligence: {
+        objective: "Protección de vida con componentes publicados por Product Intelligence.",
+        structure: "Información sintética exclusiva para aceptación visual.",
+        components: ["Protección", "Componente de largo plazo"],
+        restrictions: ["Revisión humana requerida"],
+      },
+      benefitBlocks: [
+        {
+          type: "protection",
+          title: "Qué protege",
+          lines: [
+            { id: "protection", label: "Protección", value: "Según evidencia del producto" },
+            { id: "currency", label: "Moneda", value: "MXN" },
+          ],
+        },
+        {
+          type: "projection",
+          title: "Escenarios disponibles",
+          scenarios: [{ id: "age65", label: "Escenario a edad 65", targetAge: 65, singlePayment: "MXN 820,000" }],
+        },
+        ...(partial ? [{ type: "missing_information", title: "Información pendiente", lines: [{ id: "beneficiary", label: "Beneficiario", value: "MISSING" }] }] : []),
+      ],
+      humanConfirmationRequired: true,
+    };
+
+    function fixtureAdapterFactory() {
+      const state = { packet: null, calculation: null, viewModel: null, accepted: false, lifecycleReceipt: null };
+      return {
+        async loadFile(file) {
+          await new Promise(resolve => setTimeout(resolve, 30));
+          state.packet = { sourceFile: file.name };
+          state.calculation = { fixture: true };
+          state.viewModel = { ...model, sourceFile: file.name };
+          state.accepted = false;
+          state.lifecycleReceipt = null;
+          return { ...state };
+        },
+        async accept() {
+          state.accepted = true;
+          state.lifecycleReceipt = { status: "LOCAL_REVIEW_ONLY", durable: false, message: "Fixture: revisión local, sin persistencia productiva." };
+          return { ...state };
+        },
+        async previewPrintable() {
+          return { bundle: { pageFormat: "A4", pdfPacket: { pageCount: 1 }, printableDocument: { html: "<!doctype html><html><body><h1>Cotización de prueba</h1><p>Artefacto sintético de aceptación visual.</p></body></html>" } } };
+        },
+        async downloadPrintable() { return { fixture: true }; },
+        openPresentation() { document.documentElement.dataset.presentationOpened = "true"; },
+        clear() { state.packet = null; state.calculation = null; state.viewModel = null; state.accepted = false; state.lifecycleReceipt = null; },
+        state() { return { ...state }; },
+      };
+    }
+
+    const module = createQuotesModule({
+      root: document.querySelector("#quotes-root"),
+      adapterFactory: fixtureAdapterFactory,
+      globalState(message) { document.querySelector("#fixture-status").textContent = message; },
+    });
+    await module.mount();
+    window.__quotesFixture = { module };
+  </script>
+</body>
+</html>
