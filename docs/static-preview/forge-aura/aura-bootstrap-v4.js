@@ -7,4 +7,4 @@ document.documentElement.dataset.auraEnvState = hasProductiveConfig()
   ? "PRODUCTIVE_CONFIG_READY"
   : "PRODUCTIVE_CONFIG_BLOCKED";
 
-await import("./app-v4.js?v=pages-adapter-858a4f0e");
+await import("./app-v4.js?v=income-aura-ux-reconciliation-001");
