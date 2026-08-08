@@ -2,6 +2,7 @@ const icon = (name) => ({
   pipeline: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v5H4V4Zm0 7h16v9H4v-9Zm3 3v3h4v-3H7Zm6 0v3h4v-3h-4Z"/></svg>',
   activity: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2 5h10V6H7v2Zm0 5h10v-2H7v2Zm0 5h7v-2H7v2Z"/></svg>',
   cartera: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14H4V5Zm3 1v3h10V6H7Zm0 6v2h10v-2H7Zm0 5h6v-2H7v2Z"/></svg>',
+  income: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2h1a1 1 0 0 1 1 1v8a3 3 0 0 1-3 3H6a4 4 0 0 1-4-4V7a3 3 0 0 1 3-3h1v2H5a1 1 0 0 0 0 2h15V6H6v10a2 2 0 0 0 2 2h11a1 1 0 0 0 1-1v-2h-4a3 3 0 1 1 0-6h4v2h-4a1 1 0 1 0 0 2h6V9h-2V8H5A3 3 0 0 1 4 6Z"/></svg>',
   logout: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5v-2H7V6h3V4Zm4.6 3.6L13.2 9l2 2H9v2h6.2l-2 2 1.4 1.4L19 12l-4.4-4.4Z"/></svg>'
 })[name] || "";
 
@@ -23,6 +24,7 @@ export function createAuraShell({ root, onLogout, onNavigate } = {}) {
           <a href="?route=pipeline" data-aura-route-link="pipeline">${icon("pipeline")}<span>Pipeline</span></a>
           <a href="?route=actividad" data-aura-route-link="actividad">${icon("activity")}<span>Actividad</span></a>
           <a href="?route=cartera" data-aura-route-link="cartera">${icon("cartera")}<span>Cartera</span></a>
+          <a href="?route=comisiones" data-aura-route-link="comisiones">${icon("income")}<span>Ingresos</span></a>
         </nav>
         <div class="aura-session" data-aura-session>
           <span class="aura-session__avatar" data-aura-avatar aria-hidden="true">F</span>
