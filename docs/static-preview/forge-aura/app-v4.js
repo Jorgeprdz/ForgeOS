@@ -4,7 +4,7 @@ import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
 import { createPipelineModule } from "./pipeline/pipeline-module.js?v=pages-adapter-c5a90d95";
 import { createActivityModule } from "./activity/activity-module.js?v=activity-reports-ux-001-corrected";
 import { createCarteraModule } from "./cartera/cartera-module.js?v=aura-cartera-pdf-auth-002";
-import { createIncomeModule } from "./income/income-module.mjs?v=income-aura-ux-reconciliation-001";
+import { createIncomeModule } from "./income/income-module.js?v=income-aura-ux-reconciliation-001";
 
 const root = document.querySelector("[data-aura-app]");
 const auth = createAuraAuth();
