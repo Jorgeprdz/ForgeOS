@@ -5,6 +5,7 @@ export default defineConfig({
   testMatch: [
     "activity-aura-ux-reconciliation.spec.mjs",
     "activity-aura-points-boundaries.spec.mjs",
+    "activity-capture-directory-ux.spec.mjs",
     "activity-daily-confirmation.spec.mjs",
     "activity-fes-point-suggestions.spec.mjs",
   ],
