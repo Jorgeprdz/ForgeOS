@@ -1,5 +1,6 @@
 import {
   calculateActivityPoints,
+  findPointCombinations,
   POINTS_AUTHORITY_METADATA,
 } from "../../../platform/productivity/activity-points-authority-adapter.js";
 
@@ -13,6 +14,16 @@ const LABELS = Object.freeze({
   polizas_pagadas: "Pólizas pagadas",
   referido_asesor: "Referido de asesor",
 });
+
+const ACTION_LABELS = Object.freeze({
+  referidos: "Referido recibido",
+  llamadas: "Llamada completada",
+  citas_agendadas: "Cita agendada",
+  citas_iniciales: "Cita inicial realizada",
+  citas_cierre: "Cita de cierre realizada",
+});
+
+const MANUAL_ACTIONABLE_METRICS = new Set(Object.keys(ACTION_LABELS));
 
 function freeze(value) {
   if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
@@ -52,3 +63,46 @@ export function pointRuleRows(projection) {
     points,
   }));
 }
+
+export function pointImpactForMetric(projection, metricKey) {
+  const points = projection?.weights?.[metricKey];
+  return Number.isInteger(points) && points >= 0 ? points : null;
+}
+
+export function recommendOfficialActivityActions(projection, { maxUnits = 4 } = {}) {
+  if (projection?.state !== "READY" || !Number.isInteger(projection.remaining) || projection.remaining <= 0) {
+    return null;
+  }
+
+  const candidates = findPointCombinations(projection.remaining, { maxUnits, limit: 48 })
+    .filter(candidate => Object.keys(candidate.counts).every(metricKey => MANUAL_ACTIONABLE_METRICS.has(metricKey)));
+  if (!candidates.length) return null;
+
+  const candidate = candidates[0];
+  const actions = Object.entries(candidate.counts).flatMap(([metricKey, count]) => {
+    const unitPoints = pointImpactForMetric(projection, metricKey);
+    if (!unitPoints || count < 1) return [];
+    return [freeze({
+      metricKey,
+      label: ACTION_LABELS[metricKey] || LABELS[metricKey] || metricKey,
+      count,
+      unitPoints,
+      points: unitPoints * count,
+    })];
+  });
+  if (!actions.length) return null;
+
+  return freeze({
+    remaining: projection.remaining,
+    exact: candidate.exact,
+    totalPoints: candidate.totalPoints,
+    excessPoints: candidate.excessPoints,
+    actions,
+    reason: candidate.exact
+      ? `Estas acciones suman exactamente los ${projection.remaining} puntos pendientes usando el baremo oficial.`
+      : `Esta combinación cubre los ${projection.remaining} puntos pendientes usando el baremo oficial, con ${candidate.excessPoints} punto${candidate.excessPoints === 1 ? "" : "s"} adicional${candidate.excessPoints === 1 ? "" : "es"}.`,
+    decisionBoundary: "Es una opción, no una instrucción. Tú decides qué acción tiene sentido hacer.",
+  });
+}
+
+export const ACTIVITY_POINT_LABELS = LABELS;
