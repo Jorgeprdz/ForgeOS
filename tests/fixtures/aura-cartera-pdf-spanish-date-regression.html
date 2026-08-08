@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aura Cartera PDF full-chain Spanish-date regression</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <style>
+    html,body{margin:0;min-height:100%;background:#f5f6fa}
+    body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    #fixture-main{min-height:100vh}
+  </style>
+</head>
+<body>
+  <main id="fixture-main" tabindex="-1"></main>
+  <script type="module">
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v3.js?v=aura-cartera-pdf-real-acceptance-root-010';
+
+    window.__ENV__ = { SUPABASE_ANON_KEY: 'TEST_ONLY' };
+    const trace = window.__PDF_FULL_CHAIN_TRACE__ = {
+      functionInvocations: [],
+      rpcNames: [],
+      resultStages: [],
+      resultEffectiveDates: [],
+      admitted: false,
+      claims: 0,
+    };
+
+    function emptyQuery(data = []) {
+      const result = { data, error: null };
+      let proxy;
+      proxy = new Proxy({}, {
+        get(_target, property) {
+          if (property === 'then') {
+            return (resolve, reject) => Promise.resolve(result).then(resolve, reject);
+          }
+          if (property === 'single') {
+            return async () => ({ data: null, error: null });
+          }
+          return () => proxy;
+        },
+      });
+      return proxy;
+    }
+
+    let admitted = null;
+    let stateVersion = 1;
+
+    const fakeClient = {
+      auth: {
+        async getUser() {
+          return { data: { user: { id: 'advisor:test:cartera-pdf-010b' } }, error: null };
+        },
+        async getSession() {
+          return { data: { session: { access_token: 'TEST_ONLY' } }, error: null };
+        },
+      },
+      from() {
+        return emptyQuery([]);
+      },
+      functions: {
+        async invoke(name, { body } = {}) {
+          trace.functionInvocations.push({
+            name,
+            fileName: body?.fileName || null,
+            mimeType: body?.mimeType || null,
+            hasBase64: typeof body?.base64 === 'string' && body.base64.length > 0,
+          });
+          if (name !== 'cartera-pdf-intake') {
+            return { data: null, error: new Error('UNEXPECTED_FUNCTION') };
+          }
+          return {
+            data: {
+              ok: true,
+              intakeId: 'INTAKE:AURA:FULL_CHAIN_010B',
+              modelVersion: 'fixture-spanish-date-010b',
+              candidates: [{
+                person: 'Persona Sintetica',
+                policyNumber: 'SYN-IMAGINA-010B',
+                product: 'IMAGINA SER',
+                premium: '3976.96',
+                status: 'ACTIVA',
+                confidence: 0.99,
+                effectiveDate: '05/AGO/2026',
+                expirationDate: '05/AGO/2053',
+              }],
+            },
+            error: null,
+          };
+        },
+      },
+      async rpc(name, args = {}) {
+        trace.rpcNames.push(name);
+
+        if (name === 'forge_cartera020b_admit_evidence') {
+          admitted = {
+            inboxReference: args?.p_command?.inboxReference,
+            sourceReference: args?.p_command?.sourceReference,
+          };
+          trace.admitted = true;
+          return { data: admitted, error: null };
+        }
+
+        if (name === 'forge_cartera020b_claim_evidence') {
+          trace.claims += 1;
+          return {
+            data: {
+              status: 'CLAIMED',
+              inboxReference: admitted?.inboxReference,
+              leaseToken: `LEASE:${trace.claims}`,
+              stateVersion: stateVersion++,
+            },
+            error: null,
+          };
+        }
+
+        if (name === 'forge_cartera020b_record_processing_result') {
+          const result = args?.p_command?.result || {};
+          const stage = result.evidenceStatus || null;
+          if (stage) trace.resultStages.push(stage);
+          const effectiveFrom = result?.candidate?.extractedFields?.effectiveFrom?.value
+            ?? result?.packet?.extractedFields?.effectiveFrom?.value
+            ?? null;
+          const effectiveTo = result?.candidate?.extractedFields?.effectiveTo?.value
+            ?? result?.packet?.extractedFields?.effectiveTo?.value
+            ?? null;
+          if (effectiveFrom || effectiveTo) {
+            trace.resultEffectiveDates.push({ stage, effectiveFrom, effectiveTo });
+          }
+          return { data: { status: stage || 'RECORDED' }, error: null };
+        }
+
+        if (name === 'forge_cartera030d_list_policy_payment_calendar') {
+          return { data: { summary: {}, items: [] }, error: null };
+        }
+        if (name === 'forge_cartera050_list_future_radar') {
+          return { data: { items: [] }, error: null };
+        }
+        return { data: [], error: null };
+      },
+    };
+
+    const module = createCarteraModule({
+      root: document.querySelector('#fixture-main'),
+      client: fakeClient,
+      windowRef: window,
+      globalState: () => {},
+    });
+    await module.mount();
+    document.documentElement.dataset.regressionHarness = 'READY_FULL_CHAIN';
+  </script>
+</body>
+</html>

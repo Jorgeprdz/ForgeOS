@@ -1,8 +1,12 @@
 import {
   createCarteraAdapter as createGuardedAdapter,
-  normalizeReviewDate,
   sanitizePdfReview,
 } from './cartera-adapter-pages-v5.js?base=aura-cartera-invalid-time-value-root-009';
+import {
+  sanitizePdfCandidateDates,
+  sanitizePdfPayloadDates,
+  sanitizePdfReviewDates,
+} from './cartera-date-v1.js?v=aura-cartera-pdf-real-acceptance-root-010';
 
 const PDF_FUNCTION_NAME = 'cartera-pdf-intake';
 
@@ -12,20 +16,11 @@ function bindValue(target, property) {
 }
 
 export function sanitizePdfCandidate(candidate) {
-  if (!candidate || typeof candidate !== 'object') return candidate;
-  return Object.freeze({
-    ...candidate,
-    effectiveDate: normalizeReviewDate(candidate.effectiveDate),
-    expirationDate: normalizeReviewDate(candidate.expirationDate),
-  });
+  return sanitizePdfCandidateDates(candidate);
 }
 
 export function sanitizePdfPayload(payload) {
-  if (!payload || typeof payload !== 'object' || !Array.isArray(payload.candidates)) return payload;
-  return Object.freeze({
-    ...payload,
-    candidates: Object.freeze(payload.candidates.map(sanitizePdfCandidate)),
-  });
+  return sanitizePdfPayloadDates(payload);
 }
 
 function clientWithSanitizedPdfExtraction(client) {
@@ -62,7 +57,7 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
     ...adapter,
     async processPdf(file, options = {}) {
       const review = await adapter.processPdf(file, options);
-      return sanitizePdfReview(review);
+      return sanitizePdfReviewDates(sanitizePdfReview(review));
     },
   });
 }

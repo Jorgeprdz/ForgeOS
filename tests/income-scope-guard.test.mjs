@@ -25,6 +25,9 @@ const carteraCompatibilityAllowed = [
   /^docs\/static-preview\/forge-aura\/index\.html$/,
   /^tests\/aura-cartera-/,
   /^tests\/cartera-/,
+  /^tests\/e2e\/aura-cartera-pdf-spanish-date-regression\.spec\.mjs$/,
+  /^tests\/fixtures\/aura-cartera-pdf-spanish-date-regression\.html$/,
+  /^\.github\/workflows\/aura-cartera-pdf-real-regression\.yml$/,
   /^tests\/income-(?:pages-import-graph|cartera-cross-module|scope-guard)\.test\.mjs$/,
 ];
 
