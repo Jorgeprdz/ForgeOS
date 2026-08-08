@@ -24,6 +24,7 @@ const ACTION_LABELS = Object.freeze({
 });
 
 const MANUAL_ACTIONABLE_METRICS = new Set(Object.keys(ACTION_LABELS));
+const OFFICIAL_COMBINATION_LIMIT = 4096;
 
 function freeze(value) {
   if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
@@ -74,8 +75,13 @@ export function recommendOfficialActivityActions(projection, { maxUnits = 4 } = 
     return null;
   }
 
-  const candidates = findPointCombinations(projection.remaining, { maxUnits, limit: 48 })
-    .filter(candidate => Object.keys(candidate.counts).every(metricKey => MANUAL_ACTIONABLE_METRICS.has(metricKey)));
+  // The official adapter owns enumeration and scoring. We request its complete
+  // bounded candidate set first, then apply the Activity manual-action safety
+  // boundary so a policy/application truth is never suggested merely for points.
+  const candidates = findPointCombinations(projection.remaining, {
+    maxUnits,
+    limit: OFFICIAL_COMBINATION_LIMIT,
+  }).filter(candidate => Object.keys(candidate.counts).every(metricKey => MANUAL_ACTIONABLE_METRICS.has(metricKey)));
   if (!candidates.length) return null;
 
   const candidate = candidates[0];
