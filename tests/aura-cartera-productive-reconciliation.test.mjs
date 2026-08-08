@@ -76,10 +76,11 @@ test('policy entry hierarchy is PDF first, bulk second and manual third', () => 
   assert.match(moduleSource, /Sube la carátula de la póliza|Subir carátula/);
   assert.match(moduleSource, /Excel o CSV/);
   assert.match(moduleSource, /Capturar manualmente/);
-  const pdf = moduleSource.indexOf('Sube la carátula de la póliza');
-  const bulk = moduleSource.indexOf('Excel o CSV');
-  const manual = moduleSource.indexOf('Capturar manualmente');
-  assert.ok(pdf >= 0 && bulk > pdf && manual > bulk, 'entry modes must remain PDF → XLSX/CSV → manual');
+  assert.match(
+    moduleSource,
+    /data-add-policy>Subir carátula<\/button><div class="cartera-entry-options"><button class="cartera-link" data-entry-mode="bulk">[^<]*Importar Excel o CSV[^<]*<\/button><button class="cartera-link" data-entry-mode="manual">Capturar manualmente/,
+    'empty-state entry controls must remain PDF → XLSX/CSV → manual in rendered DOM order',
+  );
 });
 
 test('PDF extraction enters Evidence 020B and only human confirmation crosses 020C', () => {
@@ -211,7 +212,7 @@ test('session lifecycle has abort, revision guard, unmount and DOM scrub boundar
   assert.match(moduleSource, /unmount/);
   assert.match(app, /unmount/);
   assert.match(app, /bootRevision|revision/i);
-  assert.match(app, /innerHTML\s*=\s*["']{2}/);
+  assert.match(app, /replaceChildren\s*\(\s*\)/);
 });
 
 test('Product Intelligence, identity, Policy and Coverage authorities are not duplicated', () => {
