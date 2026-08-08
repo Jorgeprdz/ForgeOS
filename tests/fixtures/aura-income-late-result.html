@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es-MX" data-test-fixture="AURA_INCOME_LATE_RESULT_SYNTHETIC_ONLY">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Income late result fixture</title></head>
+<body>
+  <main id="aura-main"></main>
+  <script type="module">
+    import { createIncomeModule } from "../../docs/static-preview/forge-aura/income/income-module.mjs";
+    const adapterFactory = () => ({
+      async load() {
+        await new Promise(resolve => setTimeout(resolve, 180));
+        return Object.freeze({ state: "DISCONNECTED", advisorReference: "synthetic-advisor-a", periodKey: "2026-08", errorCode: "SYNTHETIC_LATE_RESULT" });
+      },
+    });
+    window.__incomeLateRejected = false;
+    addEventListener("aura-income:late-result-rejected", () => { window.__incomeLateRejected = true; });
+    const module = createIncomeModule({
+      root: document.querySelector("#aura-main"),
+      client: { rpc: async () => ({ data: null, error: null }) },
+      user: { id: "synthetic-advisor-a" },
+      adapterFactory,
+      clock: () => new Date("2026-08-08T12:00:00.000Z"),
+    });
+    window.__incomeModule = module;
+    window.__incomeReady = module.mount();
+  </script>
+</body>
+</html>
