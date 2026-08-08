@@ -9,8 +9,10 @@ on:
       - 'docs/static-preview/forge-aura/app-v4.js'
       - 'docs/static-preview/forge-aura/aura-bootstrap-v4.js'
       - 'docs/static-preview/forge-aura/index.html'
+      - 'supabase/functions/cartera-pdf-intake/**'
       - 'tests/e2e/aura-cartera-pdf-spanish-date-regression.spec.mjs'
       - 'tests/fixtures/aura-cartera-pdf-spanish-date-regression.html'
+      - 'tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs'
       - 'tests/cartera-pdf-regression-playwright.config.mjs'
       - '.github/workflows/aura-cartera-pdf-real-regression.yml'
   workflow_dispatch:
@@ -24,7 +26,7 @@ concurrency:
 
 jobs:
   pdf-upload-regression:
-    name: Upload PDF and prove review is date-safe
+    name: Upload PDF and prove semantic review
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -41,6 +43,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Prove semantic contract before browser acceptance
+        run: node --test tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
