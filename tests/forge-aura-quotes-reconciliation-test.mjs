@@ -24,24 +24,29 @@ assert.doesNotMatch(adapter, /quotes-module\.css/);
 assert.match(adapter, /rawKey === "ave"/i);
 assert.match(adapter, /PRODUCT_LABELS\[family\]/);
 assert.doesNotMatch(moduleSource, /<option[^>]*>\s*AVE\s*<\/option>/i);
-assert.match(moduleSource, /Prima|Product Intelligence|Accepted Quote/);
+assert.match(moduleSource, /Product Intelligence|Accepted Quote/);
 
 for (const state of ["EMPTY", "LOADING", "READY", "ACCEPTED", "PARTIAL", "ERROR", "UNAVAILABLE"]) {
   assert.match(moduleSource, new RegExp(`\\b${state}\\b`), `missing ${state} state`);
 }
-for (const action of ["accept", "preview", "download", "presentation"]) {
+for (const action of ["new", "accept", "preview", "download", "presentation"]) {
   assert.match(moduleSource, new RegExp(`data-quotes-action=\\"${action}\\"`), `missing ${action} action`);
 }
-assert.match(moduleSource, /Contractual/);
-assert.match(moduleSource, /Referencia actual/);
+for (const label of ["Resumen", "Beneficios", "Proyección", "Evidencia"]) assert.match(moduleSource, new RegExp(label));
+assert.match(moduleSource, /Cotización calculada/);
+assert.match(moduleSource, /Revisar y confirmar/);
+assert.match(moduleSource, /Cotización confirmada/);
 assert.match(moduleSource, /Proyección \/ estimación/);
 assert.match(moduleSource, /no reemplaza el documento contractual/i);
-assert.match(moduleSource, /Forge no sobrescribió la verdad del PDF/i);
+assert.match(moduleSource, /no se convirtió en cero/i);
+assert.doesNotMatch(moduleSource, /Lista para revisar|Confirmar Accepted Quote|01 Contractual|02 Referencia actual|03 Proyección/);
 
 assert.equal((css.match(/#[0-9a-fA-F]{3,8}\b/g) || []).length, 0, "Quotes CSS must not introduce local hex colors");
 assert.equal((css.match(/rgba?\(/g) || []).length, 0, "Quotes CSS must use Aura tokens rather than local rgb colors");
 assert.match(css, /var\(--forge-/);
 assert.match(css, /@media \(max-width: 760px\)/);
+assert.match(css, /@media \(max-width: 430px\)/);
+assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 assert.match(css, /\.forge-r16j1__panel/);
 
 assert.match(router, /cotizaciones: "cotizaciones"/);
@@ -68,5 +73,6 @@ for (const pattern of productiveEnginePatterns) {
 
 console.log("FORGE_AURA_QUOTES_RECONCILIATION_TEST=PASS");
 console.log("NEW_PRODUCTIVE_ENGINE_COUNT=0");
+console.log("NEW_QUOTE_CALCULATION_COUNT=0");
 console.log("MATERIAL_QUOTES_VISUAL_IMPORT_COUNT=0");
 console.log("LOCAL_QUOTES_HEX_COLOR_COUNT=0");
