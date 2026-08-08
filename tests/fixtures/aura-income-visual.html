@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es-MX" data-test-fixture="AURA_INCOME_SYNTHETIC_ONLY">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aura Income Synthetic Acceptance Fixture</title>
+  <link rel="stylesheet" href="../../docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="../../docs/static-preview/forge-aura/income/income.css">
+  <style>
+    body{padding:24px;background:var(--forge-canvas)}
+    main{width:min(100%,1180px);margin:0 auto}
+    @media(max-width:620px){body{padding:16px}}
+  </style>
+</head>
+<body>
+  <main id="aura-main" tabindex="-1" aria-label="Fixture sintético de Ingresos"></main>
+  <script type="module">
+    import { createIncomeModule } from "../../docs/static-preview/forge-aura/income/income-module.mjs";
+
+    const digest = char => char.repeat(64);
+    const aggregate = ({ key, concept, kind = "COMMISSION", amount, policyYear }) => ({
+      aggregateKey: key,
+      concept,
+      kind,
+      latestState: "EARNED",
+      earnedEventId: `${key}:earned`,
+      earnedNetAmount: amount,
+      earnedGrossAmount: amount,
+      adjustmentAmount: 0,
+      reversalAmount: 0,
+      policyReference: `POL-${key.toUpperCase()}`,
+      paymentEventId: `PAY-${key.toUpperCase()}`,
+      sourceCalculationDigest: digest("c"),
+      rulePackDigest: digest("d"),
+      events: [{
+        concept,
+        kind,
+        createdAt: "2026-08-08T12:00:00.000Z",
+        metadata: { policyYear, productName: concept.includes("GMM") ? "Alfa Medical Flex" : "Vida" },
+      }],
+    });
+    const signal = ({ id, type, amount, metadata, char }) => ({
+      signalId: id,
+      kind: "POTENTIAL",
+      state: "ACTIVE",
+      periodKey: "2026-08",
+      amount: { value: amount, currency: "MXN" },
+      source: { authority: type === "PIPELINE_WHAT_IF" ? "PIPELINE_COMPENSATION_SCENARIO" : "POLICY_RENEWAL_COMPENSATION_SCENARIO", reference: `SRC-${id}`, snapshotReference: `SNAP-${id}` },
+      metadata: { scenarioType: type, ...metadata },
+      signalDigest: digest(char),
+      safeguards: { incomeTruth: false, earnedTruth: false, paidTruth: false, includedInRealIncome: false, probabilityWeightingApplied: false },
+    });
+
+    const aggregates = [
+      aggregate({ key: "ana", concept: "LIFE_INITIAL", amount: 52400, policyYear: 1 }),
+      aggregate({ key: "luis", concept: "LIFE_RENEWAL", amount: 13600, policyYear: 2 }),
+      aggregate({ key: "training", concept: "TRAINING_ALLOWANCE", kind: "BONUS", amount: 8280, policyYear: 1 }),
+    ];
+    const signals = [
+      signal({ id: "renewal-aug", type: "EXPECTED_RENEWAL", amount: 16840, char: "a", metadata: { policyReference: "POL-REN-009", policyYear: 2, expectedPaymentPeriod: "2026-08", ruleSnapshotReference: "RULE-REN-2026-08" } }),
+      signal({ id: "pipeline-aug", type: "PIPELINE_WHAT_IF", amount: 42680, char: "b", metadata: { opportunityReference: "OPP-204", opportunityLabel: "Escenario identificado", ruleSnapshotReference: "RULE-PIPE-2026-08" } }),
+    ];
+    const baseSnapshot = periodKey => ({
+      contractVersion: "ADVISOR_COMPENSATION_PERIOD_SNAPSHOT_001",
+      snapshotId: `synthetic:${periodKey}`,
+      snapshotDigest: digest("e"),
+      advisorReference: "synthetic-advisor-a",
+      periodKey,
+      currency: "MXN",
+      status: "PARTIAL",
+      capturedAt: "2026-08-08T12:00:00.000Z",
+      amounts: {
+        estimated: 0,
+        earned: { gross: periodKey === "2026-08" ? 74280 : 51000, adjustments: 0, reversals: 0, net: periodKey === "2026-08" ? 74280 : 51000 },
+        paid: { sourceState: "DISCONNECTED", value: null, knownZero: false },
+        real: { basis: "EARNED", value: periodKey === "2026-08" ? 74280 : 51000 },
+        potential: periodKey === "2026-08" ? 59520 : 0,
+        atRisk: 0,
+      },
+      counts: { earnedAggregates: periodKey === "2026-08" ? 3 : 1 },
+      sourceHealth: { compensationEvents: "AVAILABLE", payoutTruth: "DISCONNECTED", forwardSignals: periodKey === "2026-08" ? "AVAILABLE" : "DISCONNECTED" },
+      details: {
+        aggregates: periodKey === "2026-08" ? aggregates : [aggregate({ key: `history-${periodKey}`, concept: "LIFE_INITIAL", amount: 51000, policyYear: 1 })],
+        forwardSignals: periodKey === "2026-08" ? signals : [],
+        metadata: periodKey === "2026-08" ? {
+          bonusCoach: {
+            authority: "SYNTHETIC_TEST_ONLY",
+            rulePackId: "synthetic-rule-pack",
+            ruleSnapshotId: "synthetic-rule-snapshot",
+            periodKey: "2026-08",
+            careerStage: "Training",
+            eligibilityState: "IN_PROGRESS",
+            explanation: "Fixture sintético: el widget consume un snapshot gobernado; no infiere por antigüedad.",
+            gap: "Fixture: faltante de condición elegible",
+          },
+        } : {},
+      },
+      safeguards: { unknownAsZero: false },
+    });
+
+    const periods = ["2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"];
+    const snapshots = periods.map(baseSnapshot);
+    const current = snapshots.at(-1);
+    const params = new URL(location.href).searchParams;
+    const mode = params.get("mode") || "ready";
+    const delay = Number(params.get("delay") || 0);
+    if (mode === "unknown") {
+      current.sourceHealth.compensationEvents = "DISCONNECTED";
+      current.counts.earnedAggregates = 0;
+    }
+
+    const readModel = Object.freeze({
+      contractVersion: "ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_001",
+      state: "PARTIAL",
+      advisorReference: "synthetic-advisor-a",
+      periodKey: "2026-08",
+      periodKeys: periods,
+      snapshot: current,
+      history: {
+        contractVersion: "ADVISOR_COMPENSATION_HISTORY_SERIES_001",
+        seriesDigest: digest("f"),
+        advisorReference: "synthetic-advisor-a",
+        currency: "MXN",
+        capturedAt: "2026-08-08T12:00:00.000Z",
+        points: snapshots.map(item => ({ periodKey: item.periodKey, earnedNet: item.amounts.earned.net, status: item.status })),
+        snapshots,
+      },
+      sourceHealth: current.sourceHealth,
+      stale: false,
+      errorCode: null,
+    });
+
+    const adapterFactory = () => ({
+      async load({ signal: abortSignal }) {
+        if (delay) await new Promise(resolve => setTimeout(resolve, delay));
+        if (abortSignal?.aborted) throw new DOMException("Aborted", "AbortError");
+        return readModel;
+      },
+    });
+    const client = { rpc: async () => ({ data: null, error: null }) };
+    const module = createIncomeModule({
+      root: document.querySelector("#aura-main"),
+      client,
+      user: { id: "synthetic-advisor-a" },
+      adapterFactory,
+      clock: () => new Date("2026-08-08T12:00:00.000Z"),
+    });
+    window.__incomeSyntheticFixture = true;
+    window.__incomeModule = module;
+    window.__incomeLateRejected = false;
+    addEventListener("aura-income:late-result-rejected", () => { window.__incomeLateRejected = true; });
+    window.__incomeReady = module.mount();
+  </script>
+</body>
+</html>
