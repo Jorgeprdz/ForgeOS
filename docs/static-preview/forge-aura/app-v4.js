@@ -4,7 +4,7 @@ import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
 import { createHomeModule } from "./home/home-module.js?v=aura-home-command-center-001";
 import { createPipelineModule } from "./pipeline/pipeline-module.js?v=pages-adapter-c5a90d95";
 import { createActivityModule } from "./activity/activity-module.js?v=activity-reports-ux-001-corrected";
-import { createCarteraModule } from "./cartera/cartera-module-v3.js?v=aura-cartera-invalid-time-value-root-009";
+import { createCarteraModule } from "./cartera/cartera-module-v3.js?v=aura-cartera-pdf-real-acceptance-root-010";
 import { createIncomeModule } from "./income/income-module.js?v=income-aura-ux-reconciliation-001";
 
 const root = document.querySelector("[data-aura-app]");
