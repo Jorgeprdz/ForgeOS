@@ -176,12 +176,13 @@ test("mobile navigation, More and Alfred surfaces are canonical", async ({ page 
 });
 
 test("200 percent zoom, reduced motion and keyboard focus remain usable", async ({ page }) => {
-  await page.setViewportSize({ width: 430, height: 932 });
+  // 1440x900 at 200% page zoom yields a 720x450 effective CSS viewport.
+  await page.setViewportSize({ width: 720, height: 450 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mountProductHome(page);
-  await page.evaluate(() => { document.documentElement.style.zoom = "2"; });
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
+  await expect(page.locator("[data-aura-mobile-nav]")).toBeVisible();
   await page.keyboard.press("Tab");
   const focused = await page.evaluate(() => document.activeElement?.tagName || "");
   expect(focused).not.toBe("BODY");
