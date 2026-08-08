@@ -1,3 +1,4 @@
+import "./activity-capture-directory-ux.js";
 import {
   calculateActivityPoints,
   findPointCombinations,
