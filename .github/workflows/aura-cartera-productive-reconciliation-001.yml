@@ -102,7 +102,8 @@ jobs:
           node --test
           tests/cartera-010b-contract-foundation-test.mjs
           tests/cartera-010b-general-role-read-authority-test.mjs
-          tests/cartera-010c-canonical-read-model-route-adapter-test.mjs
+          tests/cartera-010c-policy-detail-timeline-projection-test.mjs
+          tests/cartera-010c-policy-timeline-person-account-projection-scope-test.mjs
           tests/cartera-010d-unified-directory-read-model-service-test.mjs
           tests/cartera-010d-restricted-entity-privacy-test.mjs
           tests/cartera-020b-persistence-foundation-test.mjs
