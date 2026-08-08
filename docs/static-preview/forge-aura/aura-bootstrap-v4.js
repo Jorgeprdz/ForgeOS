@@ -7,4 +7,14 @@ document.documentElement.dataset.auraEnvState = hasProductiveConfig()
   ? "PRODUCTIVE_CONFIG_READY"
   : "PRODUCTIVE_CONFIG_BLOCKED";
 
-await import("./app-v4.js?v=income-aura-ux-reconciliation-001");
+try {
+  await import("./app-v4.js?v=income-aura-ux-reconciliation-001-cartera-pdf-auth-002");
+} catch (error) {
+  document.documentElement.dataset.auraBootState = "BOOT_IMPORT_FAILED";
+  const root = document.querySelector("[data-aura-app]");
+  if (root) {
+    root.setAttribute("aria-busy", "false");
+    root.innerHTML = `<section class="aura-login" data-aura-auth-state="BOOT_ERROR"><div class="aura-loading"><h1>No pudimos cargar Forge Aura</h1><p>Recarga la página para obtener la versión más reciente.</p></div></section>`;
+  }
+  console.error("AURA_BOOT_IMPORT_FAILED", error);
+}
