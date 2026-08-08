@@ -7,6 +7,7 @@ import {
   greetingFor,
   normalizeRadarForOrchestrator,
   resolveBrowserTimeZone,
+  rhythmFromStack,
   selectCarteraAttention,
 } from "../docs/static-preview/forge-aura/home/home-core.js";
 import { buildAgendaReadModel } from "../advisor-os/next-action/agenda-read-model.js";
@@ -85,6 +86,26 @@ assert.equal(attention.truthClass, "DETECTED_EVIDENCE");
 assert.equal(attention.uncertainty, "Pago no confirmado");
 assert.equal(attention.advisorConfirmationRequired, true);
 pass("HOME_POLICY_TRUTH_TEST");
+
+const policyWidget = Object.freeze({
+  widgetId: "policy-widget-test",
+  widgetFamily: "POLICY_SERVICE_WIDGET",
+  state: "READY",
+  title: "Pólizas que requieren atención",
+});
+const policyOnlyRhythm = rhythmFromStack({ inventory: [policyWidget], visible: [policyWidget] });
+assert.equal(policyOnlyRhythm.primary, null);
+assert.deepEqual(policyOnlyRhythm.supporting, []);
+const activityWidget = Object.freeze({
+  widgetId: "activity-widget-test",
+  widgetFamily: "ACTIVITY_PROGRESS_WIDGET",
+  state: "READY",
+  title: "Actividad de hoy",
+});
+const activityRhythm = rhythmFromStack({ inventory: [policyWidget, activityWidget], visible: [policyWidget, activityWidget] });
+assert.equal(activityRhythm.primary?.widgetId, "activity-widget-test");
+assert.equal(activityRhythm.supporting.some(widget => widget.widgetFamily === "POLICY_SERVICE_WIDGET"), false);
+pass("HOME_PRODUCTIVITY_OWNER_REUSE_TEST");
 
 assert.doesNotMatch(homeCore + homeModule, /eres indisciplinado|eres flojo|mala actitud|no tienes potencial/i);
 assert.match(homeCore, /(sin|no) inferir disciplina, motivación ni carácter/i);
