@@ -108,25 +108,9 @@ Coverage Intelligence remains interpretation. Existing engines can interpret a f
 
 ## Canonical contract
 
-New child contract:
+New child contract: `schemas/policy-v2-coverage.schema.json`.
 
-`schemas/policy-v2-coverage.schema.json`
-
-It supports independently per contracted coverage:
-
-- stable Policy Coverage reference;
-- exact Policy and PolicyVersion references;
-- optional Product Coverage taxonomy reference;
-- code, label, kind and evidence-backed state;
-- sum insured and currency;
-- premium and premium currency;
-- annex and rider references;
-- effective period;
-- coverage period;
-- payment period;
-- source evidence references;
-- verification, completeness, freshness and conflict state;
-- current version and correction/supersession lineage.
+It supports independently per contracted coverage: stable Policy Coverage reference; exact Policy and PolicyVersion references; optional Product Coverage taxonomy reference; code, label, kind and evidence-backed state; sum insured and currency; premium and premium currency; annex/rider references; effective period; coverage/payment periods; source evidence; truth state; and correction/supersession lineage.
 
 Unknown values remain `null`; no field defaults an unknown amount to zero, unknown currency to MXN, an unknown period to Policy duration, or an unknown coverage state to ACTIVE.
 
@@ -143,7 +127,7 @@ AUTO_AGGREGATE_CHILDREN_INTO_POLICY=FORBIDDEN
 
 A Policy-level value may remain useful as historical summary evidence, but this phase does not assert whether it is total, base coverage, document total or another carrier-specific meaning. Future normalization requires explicit evidence.
 
-## Versioning model
+## Versioning and evidence
 
 The extension follows the existing Policy pattern:
 
@@ -156,27 +140,13 @@ previous_coverage_version_id=supersession lineage
 correction_of=explicit correction lineage
 ```
 
-Historical coverage versions are never silently overwritten.
+No evidence authority is duplicated. Canonical mutation requires the referenced `policy_evidence_versions` row to belong to the same owner and Policy and to be `REVIEWED` or `CONFIRMED`.
 
-## Evidence model
+## Writer and atomicity
 
-No evidence authority is duplicated. Coverage rows reference the existing `policy_evidence_versions` authority. Canonical mutation requires the referenced evidence version to belong to the same owner and Policy and to be `REVIEWED` or `CONFIRMED`.
+`forge_policy_intelligence_confirm_policy_coverages(jsonb)` is a bounded child command. It does not create Policy, PolicyRole, Policy Evidence or Product Truth. It reuses existing CARTERA 010B digest, idempotency, changed-input conflict, command receipt and Policy conflict helpers.
 
-## Writer model
-
-`forge_policy_intelligence_confirm_policy_coverages(jsonb)` is a bounded child command. It does not create Policy, PolicyRole, Policy Evidence or Product Truth.
-
-It reuses existing CARTERA 010B helpers for:
-
-- server digest;
-- deterministic idempotency;
-- changed-input conflict;
-- command receipt;
-- Policy conflict recording.
-
-The command requires authenticated ownership, exact Policy/PolicyVersion/Evidence ownership, reviewed evidence, explicit human-confirmable rows, safe replay and read-after-write verification.
-
-`forge_cartera010b_confirm_identity_policy_and_coverages(...)` is an orchestration wrapper only. It calls the already accepted atomic identity+Policy command, then the bounded coverage command in the same database transaction. A coverage failure therefore prevents a successful combined operation from being reported.
+`forge_cartera010b_confirm_identity_policy_and_coverages(...)` is orchestration only: it calls the accepted atomic identity+Policy command and then the coverage command in the same database transaction. A coverage failure prevents a successful combined operation from being reported.
 
 ## RLS model
 
@@ -184,28 +154,20 @@ Both new tables are `advisor_id` scoped, have composite owner foreign keys, RLS 
 
 ## Read model
 
-`forge_policy_intelligence_read_policy_coverages(policyReference)` returns only a safe projection:
+`forge_policy_intelligence_read_policy_coverages(policyReference)` returns only a safe projection and no database ids, raw documents, beneficiary data, bank data, provider prompts or LLM traffic.
 
-```text
-Policy
-→ coverageDetailState
-→ contracted coverages[]
-```
-
-It does not expose database ids, raw policy documents, beneficiary data, bank data, provider prompts or LLM traffic.
-
-Honest absence states:
+Honest detail states:
 
 - `LEGACY_POLICY_SUMMARY_ONLY`
 - `COVERAGE_DETAIL_NOT_CAPTURED`
 - `COVERAGE_DETAIL_PARTIAL`
 - `COVERAGE_DETAIL_AVAILABLE`
 
-An empty array never claims confirmed absence of coverage by itself.
+An empty child array never claims confirmed absence of coverage by itself.
 
 ## Beneficiary boundary
 
-Beneficiary remains `PolicyRole` restricted authority. The coverage schema has no beneficiary fields and the safe projection exposes no beneficiary information.
+Beneficiary remains restricted `PolicyRole` authority. The coverage contract and projection contain no beneficiary fields.
 
 ## Legacy compatibility
 
@@ -224,16 +186,62 @@ Existing Policies require no destructive migration. No synthetic child is genera
 
 No Aura, Material 3, Pipeline, Activity, Dashboard, Commissions, Quotes or NASH file is in scope.
 
-## Acceptance state
+## CI and final Robocop
+
+Implementation acceptance:
 
 ```text
-TARGETED_TESTS=REQUIRED_IN_CI
-INHERITED_CARTERA_010B_020C_REGRESSIONS=REQUIRED_IN_CI
-CI_RESULTS=PENDING_PR_CHECKS
-REMOTE_SUPABASE_MUTATION=NO
-AURA_MUTATION=NO
-MAIN_MUTATION=NO
-MERGE=NO
-DEPLOY=NO
-COVERAGE_MODEL_READY_FOR_AURA=PENDING_GREEN_CI
+IMPLEMENTATION_ACCEPTANCE_SHA=2412440f5733ccb929bd2ce816a95cf92ede9261
+WORKFLOW_RUN=31237345250
+WORKFLOW_JOB=93052203619
+TARGETED_POLICY_COVERAGE_TESTS=22/22_PASS
+INHERITED_CARTERA_010B_020C_TESTS=34/34_PASS
 ```
+
+Final constitutional recheck:
+
+```text
+CONSTITUTION=PASS
+ARTICLE_0=PASS
+APPLICABLE_ADRS=PASS
+POLICY_TRUTH_OWNER=PASS
+PRODUCT_TRUTH_SEPARATION=PASS
+COVERAGE_INTELLIGENCE_BOUNDARY=PASS
+EVIDENCE_OWNERSHIP=PASS
+ONE_POLICY_MULTIPLE_COVERAGES=PASS
+PER_COVERAGE_SUM_INSURED=PASS
+PER_COVERAGE_PREMIUM=PASS
+PER_COVERAGE_EFFECTIVE_DATE=PASS
+PER_COVERAGE_PERIOD=PASS
+PER_COVERAGE_PAYMENT_PERIOD=PASS
+PER_COVERAGE_ANNEX=PASS
+UNKNOWN_NOT_ZERO=PASS
+VERSIONING=PASS
+EVIDENCE_LINEAGE=PASS
+CORRECTION_HISTORY=PASS
+IDEMPOTENCY=PASS
+READ_AFTER_WRITE=PASS
+ATOMICITY=PASS
+RLS=PASS_REPOSITORY_CONTRACT
+TENANT_ISOLATION=PASS_REPOSITORY_CONTRACT
+DIRECT_WRITE_BLOCKED=PASS_REPOSITORY_CONTRACT
+BENEFICIARY_BOUNDARY=PASS
+NO_DUPLICATE_POLICY_AUTHORITY=PASS
+NO_DUPLICATE_PRODUCT_AUTHORITY=PASS
+NO_DUPLICATE_EVIDENCE_AUTHORITY=PASS
+NO_PARALLEL_WRITER=PASS
+LEGACY_COMPATIBILITY=PASS
+COVERAGE_READ_MODEL=PASS
+INHERITED_REGRESSIONS=PASS
+AURA_FILES_MUTATED=NO
+MAIN_MUTATED=NO
+REMOTE_SUPABASE_MUTATED=NO
+MERGE_EXECUTED=NO
+AUTO_MERGE=NO
+DEPLOY_EXECUTED=NO
+COVERAGE_MODEL_READY_FOR_AURA=YES
+FINAL_STATUS=PASS_REPOSITORY_IMPLEMENTATION
+NEXT_AUTHORIZED_CANDIDATE=RERUN_FORGE_AURA_CARTERA_PRODUCTIVE_UX_RECONCILIATION_001
+```
+
+`RLS`, tenant isolation and direct-write denial are accepted here at repository-contract level because this authorization explicitly forbids remote migration execution. Remote database acceptance remains a deployment-stage responsibility and is not falsely claimed in this phase.
