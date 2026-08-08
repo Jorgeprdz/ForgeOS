@@ -1,10 +1,12 @@
 name: Observe Canonical Pages Deployment
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact deployed main SHA to observe
+        required: true
+        type: string
 
 permissions:
   actions: read
@@ -21,10 +23,10 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Locate, wait and verify Pages deployment
+      - name: Locate, wait and verify explicit Pages deployment
         env:
           GH_TOKEN: ${{ github.token }}
-          EXPECTED_SHA: ${{ github.sha }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
           REPOSITORY: ${{ github.repository }}
           OBSERVER_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PAGE_URL: https://jorgeprdz.github.io/ForgeOS/static-preview/forge-alive/?nav=cotizaciones
@@ -59,7 +61,7 @@ jobs:
           }
 
           trap fail_observer ERR
-          post_status pending "Waiting for canonical Pages deployment"
+          post_status pending "Waiting for explicit canonical Pages deployment"
 
           for attempt in $(seq 1 60); do
             pages_run_id="$(
@@ -67,7 +69,7 @@ jobs:
                 --repo "$REPOSITORY" \
                 --workflow pages.yml \
                 --branch main \
-                --event push \
+                --event workflow_dispatch \
                 --limit 20 \
                 --json databaseId,headSha \
                 --jq '.[] | select(.headSha == env.EXPECTED_SHA) | .databaseId' \
@@ -80,7 +82,7 @@ jobs:
           done
 
           if [[ -z "$pages_run_id" ]]; then
-            echo "BLOCKED=PAGES_RUN_NOT_FOUND"
+            echo "BLOCKED=EXPLICIT_PAGES_RUN_NOT_FOUND"
             exit 1
           fi
 
