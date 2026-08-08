@@ -55,6 +55,14 @@ const homeCompatibilityAllowed = [
   /^docs\/evidence\/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_ACCEPTANCE_001\.md$/,
 ];
 
+const quotesCompatibilityAllowed = [
+  /^docs\/static-preview\/forge-aura\/quotes\//,
+  ...sharedAuraRuntime,
+  /^tests\/forge-aura-quotes-reconciliation-test\.mjs$/,
+  /^tests\/income-scope-guard\.test\.mjs$/,
+  /^\.github\/workflows\/aura-quotes-reconciliation\.yml$/,
+];
+
 const forbidden = [
   /^compensation\/advisor\/engine\//,
   /^compensation\/advisor-development\/.*engine/,
@@ -87,6 +95,11 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
   assert.deepEqual(forbiddenHits, [], `Forbidden mutation detected: ${forbiddenHits.join(", ")}`);
 
   const incomeProductMutation = changed.some(file => /^docs\/static-preview\/forge-aura\/income\//.test(file));
+  const quotePhaseMutation = changed.some(file =>
+    /^docs\/static-preview\/forge-aura\/quotes\//.test(file)
+      || /^\.github\/workflows\/aura-quotes-reconciliation\.yml$/.test(file)
+      || /^tests\/forge-aura-quotes-reconciliation-test\.mjs$/.test(file),
+  );
   const homePhaseMutation = changed.some(file =>
     /^docs\/static-preview\/forge-aura\/home\//.test(file)
       || /^\.github\/workflows\/aura-home-command-center-mobile-nav-001\.yml$/.test(file)
@@ -95,14 +108,18 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
 
   const activeAllowlist = incomeProductMutation
     ? incomeAllowed
-    : homePhaseMutation
-      ? homeCompatibilityAllowed
-      : carteraCompatibilityAllowed;
+    : quotePhaseMutation
+      ? quotesCompatibilityAllowed
+      : homePhaseMutation
+        ? homeCompatibilityAllowed
+        : carteraCompatibilityAllowed;
   const scopeName = incomeProductMutation
     ? "OUT_OF_SCOPE_VIOLATION"
-    : homePhaseMutation
-      ? "HOME_COMPATIBILITY_SCOPE_VIOLATION"
-      : "CARTERA_COMPATIBILITY_SCOPE_VIOLATION";
+    : quotePhaseMutation
+      ? "QUOTES_COMPATIBILITY_SCOPE_VIOLATION"
+      : homePhaseMutation
+        ? "HOME_COMPATIBILITY_SCOPE_VIOLATION"
+        : "CARTERA_COMPATIBILITY_SCOPE_VIOLATION";
   const outOfScope = changed.filter(file => !matchesAny(file, activeAllowlist));
   assert.deepEqual(outOfScope, [], `${scopeName}: ${outOfScope.join(", ")}`);
 });

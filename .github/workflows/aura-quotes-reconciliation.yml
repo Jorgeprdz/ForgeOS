@@ -1,0 +1,55 @@
+name: Aura Quotes reconciliation
+
+on:
+  push:
+    branches:
+      - feature/aura-quotes-product-intelligence-pdf-presentation-001
+    paths:
+      - "docs/static-preview/forge-aura/quotes/**"
+      - "docs/static-preview/forge-aura/app-v4.js"
+      - "docs/static-preview/forge-aura/aura-router-v4.js"
+      - "tests/forge-aura-quotes-reconciliation-test.mjs"
+      - ".github/workflows/aura-quotes-reconciliation.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "docs/static-preview/forge-aura/quotes/**"
+      - "docs/static-preview/forge-aura/app-v4.js"
+      - "docs/static-preview/forge-aura/aura-router-v4.js"
+      - "tests/forge-aura-quotes-reconciliation-test.mjs"
+      - ".github/workflows/aura-quotes-reconciliation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  quote-truth-and-aura-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+      - name: Syntax gates
+        run: |
+          node --check docs/static-preview/forge-aura/quotes/quotes-adapter.js
+          node --check docs/static-preview/forge-aura/quotes/quotes-module.js
+          node --check docs/static-preview/forge-aura/app-v4.js
+          node --check docs/static-preview/forge-aura/aura-router-v4.js
+      - name: Aura Quotes boundary
+        run: node tests/forge-aura-quotes-reconciliation-test.mjs
+      - name: Product benefit summary regression
+        run: node tests/quote-benefit-summary-engine-test.mjs
+      - name: Accepted Quote review snapshot authority
+        run: node manager-os/tests/accepted-quote-review-snapshot-boundary-master-test.js
+      - name: SeguBeca Accepted Quote regression
+        run: node tests/segubeca-accepted-quote-integration-test.mjs
+      - name: Productive PDF parser smoke
+        run: node tests/pdf-browser-parser-smoke-test.mjs
+      - name: Real printable PDF generator authority
+        run: node advisor-os/quotes/tests/quote-printable-pdf-generator-master-test.js
+      - name: Productive printable route controller
+        run: node advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
+      - name: Presentation Maker existing assembly authority
+        run: node manager-os/tests/sales-presentation-existing-assembly-contract-e2e-master-test.js

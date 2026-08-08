@@ -6,6 +6,7 @@ import { createPipelineModule } from "./pipeline/pipeline-module.js?v=pages-adap
 import { createActivityModule } from "./activity/activity-module.js?v=activity-reports-ux-001-corrected";
 import { createCarteraModule } from "./cartera/cartera-module-v4.js?v=cartera-pdf-semantic-reconciliation-012";
 import { createIncomeModule } from "./income/income-module.js?v=income-aura-ux-reconciliation-001";
+import { createQuotesModule } from "./quotes/quotes-module.js?v=aura-quotes-product-intelligence-001";
 
 const root = document.querySelector("[data-aura-app]");
 const auth = createAuraAuth();
@@ -94,6 +95,19 @@ async function ensureAlfredRuntime(currentShell) {
     });
   return alfredRuntimePromise;
 }
+function wireQuotesEntry(currentShell) {
+  const link = root.querySelector('[data-aura-productive-link="cotizaciones"]');
+  if (!link || link.dataset.auraQuotesNativeBound === "true") return;
+  link.dataset.auraQuotesNativeBound = "true";
+  link.href = "?route=cotizaciones";
+  const detail = link.querySelector("small");
+  if (detail) detail.textContent = "Propuestas, PDF y presentación";
+  link.addEventListener("click", event => {
+    event.preventDefault();
+    currentShell.setMore(false);
+    router.navigate("cotizaciones");
+  });
+}
 function ensureShell(snapshot) {
   if (!shell) {
     shell = createAuraShell({
@@ -105,6 +119,7 @@ function ensureShell(snapshot) {
         finally { router.navigate("login", { replace: true }); showLogin(); }
       },
     });
+    wireQuotesEntry(shell);
   }
   activeAdvisorId = snapshot.user?.id || null;
   shell.setUser(snapshot.user);
@@ -116,6 +131,7 @@ function createRouteModule(route, currentShell, client, snapshot) {
   if (route === "actividad") return createActivityModule({ root: currentShell.main, client, user: snapshot.user, globalState: currentShell.setGlobalState });
   if (route === "cartera") return createCarteraModule({ root: currentShell.main, client, globalState: currentShell.setGlobalState });
   if (route === "comisiones") return createIncomeModule({ root: currentShell.main, client, user: snapshot.user, globalState: currentShell.setGlobalState });
+  if (route === "cotizaciones") return createQuotesModule({ root: currentShell.main, client, globalState: currentShell.setGlobalState });
   return createPipelineModule({ root: currentShell.main, client, globalState: currentShell.setGlobalState });
 }
 async function mountRoute(route, snapshot) {
@@ -132,6 +148,7 @@ async function mountRoute(route, snapshot) {
     ensureStylesheet("./cartera/cartera-semantic-012.css?v=cartera-pdf-semantic-reconciliation-012", "cartera-semantic-012");
   }
   if (route === "comisiones") ensureStylesheet("./income/income.css?v=income-aura-ux-reconciliation-001", "comisiones");
+  if (route === "cotizaciones") ensureStylesheet("./quotes/quotes.css?v=aura-quotes-product-intelligence-001", "cotizaciones");
   if (revision !== bootRevision) return;
   activeModule = createRouteModule(route, currentShell, client, snapshot);
   activeRoute = route;
@@ -178,4 +195,13 @@ async function boot() {
     showLogin(`Error de sesión v4: ${diagnostic || "desconocido"}`);
   }
 }
+
+globalThis.addEventListener("forge:alfred-navigation", event => {
+  const route = String(event.detail?.route || "").toLowerCase();
+  if (route !== "quotes" && route !== "cotizaciones") return;
+  event.stopImmediatePropagation();
+  shell?.setAlfred(false);
+  router?.navigate("cotizaciones");
+}, { capture: true });
+
 void boot();
