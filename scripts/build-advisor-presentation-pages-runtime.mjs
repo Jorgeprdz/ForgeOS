@@ -14,4 +14,5 @@ await import("./prepare-advisor-forecast-pages-runtime.mjs");
 await import("./prepare-mick-goal-gap-pages-runtime.mjs");
 await import("./prepare-cartera-policy-entry-pages-runtime.mjs");
 await import("./prepare-cartera-canonical-pages-runtime.mjs");
+await import("./prepare-aura-home-pages-authorities.mjs");
 await import("./forge-pages-transitive-cache-versioning.mjs");

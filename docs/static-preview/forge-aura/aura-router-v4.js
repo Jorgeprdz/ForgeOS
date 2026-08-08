@@ -1,4 +1,12 @@
-const ROUTES = Object.freeze({ login: "login", pipeline: "pipeline", actividad: "actividad", cartera: "cartera", comisiones: "comisiones" });
+const ROUTES = Object.freeze({
+  login: "login",
+  inicio: "inicio",
+  pipeline: "pipeline",
+  actividad: "actividad",
+  cartera: "cartera",
+  comisiones: "comisiones",
+});
+const ALIASES = Object.freeze({ home: "inicio", dashboard: "inicio", ingresos: "comisiones" });
 const AURA_MARKER = "/static-preview/forge-aura/";
 
 export function resolveRuntimeBase(urlLike = globalThis.location?.href || "http://localhost/") {
@@ -10,13 +18,14 @@ export function resolveRuntimeBase(urlLike = globalThis.location?.href || "http:
 }
 
 export function normalizeRoute(value) {
-  const route = String(value || "").toLowerCase();
-  return ROUTES[route] || ROUTES.pipeline;
+  const input = String(value || "").toLowerCase();
+  const route = ALIASES[input] || input;
+  return ROUTES[route] || ROUTES.inicio;
 }
 
 export function readRoute(urlLike = globalThis.location?.href || "http://localhost/") {
   const url = new URL(urlLike, "http://localhost/");
-  return normalizeRoute(url.searchParams.get("route") || url.searchParams.get("nav") || "pipeline");
+  return normalizeRoute(url.searchParams.get("route") || url.searchParams.get("nav") || "inicio");
 }
 
 export function routeUrl(route, current = globalThis.location?.href || "http://localhost/") {
@@ -33,7 +42,7 @@ export function oauthCallbackUrl(current = globalThis.location?.href || "http://
 
 export function createAuraRouter({ windowRef = window, onChange } = {}) {
   let returnRoute = readRoute(windowRef.location.href);
-  if (returnRoute === ROUTES.login) returnRoute = ROUTES.pipeline;
+  if (returnRoute === ROUTES.login) returnRoute = ROUTES.inicio;
 
   const remember = route => {
     if (route !== ROUTES.login) returnRoute = route;
@@ -59,7 +68,7 @@ export function createAuraRouter({ windowRef = window, onChange } = {}) {
     current: () => readRoute(windowRef.location.href),
     navigate,
     restoreAfterAuth() {
-      const target = returnRoute === ROUTES.login ? ROUTES.pipeline : returnRoute;
+      const target = returnRoute === ROUTES.login ? ROUTES.inicio : returnRoute;
       const url = routeUrl(target, windowRef.location.href);
       windowRef.history.replaceState({}, "", url);
       emit();
