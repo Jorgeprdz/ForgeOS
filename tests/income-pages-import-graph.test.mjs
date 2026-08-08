@@ -9,9 +9,9 @@ const exists = relative => fs.existsSync(path.join(siteRoot, relative));
 
 test("canonical Pages artifact publishes every Aura Income transitive asset", () => {
   for (const relative of [
-    "static-preview/forge-aura/income/income-core.mjs",
-    "static-preview/forge-aura/income/income-adapter-pages-v1.mjs",
-    "static-preview/forge-aura/income/income-module.mjs",
+    "static-preview/forge-aura/income/income-core.js",
+    "static-preview/forge-aura/income/income-adapter-pages-v1.js",
+    "static-preview/forge-aura/income/income-module.js",
     "static-preview/forge-aura/income/income.css",
   ]) {
     assert.equal(exists(relative), true, `Missing canonical Pages asset: ${relative}`);
@@ -23,19 +23,33 @@ test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () =>
   const router = read("static-preview/forge-aura/aura-router-v4.js");
   const shell = read("static-preview/forge-aura/aura-shell.js");
   const bootstrap = read("static-preview/forge-aura/aura-bootstrap-v4.js");
+  const index = read("static-preview/forge-aura/index.html");
   assert.match(app, /createIncomeModule/);
   assert.match(app, /route === "comisiones"/);
   assert.match(app, /income\/income\.css/);
   assert.match(router, /comisiones/);
   assert.match(shell, />Ingresos</);
   assert.match(bootstrap, /income-aura-ux-reconciliation-001/);
+  assert.match(index, /income-core\.mjs[^\n]+income-core\.js/);
+  assert.match(index, /income-adapter-pages-v1\.mjs[^\n]+income-adapter-pages-v1\.js/);
+});
+
+test("Income Pages mirrors are byte-identical to governed source modules", () => {
+  const pairs = [
+    ["docs/static-preview/forge-aura/income/income-core.mjs", "static-preview/forge-aura/income/income-core.js"],
+    ["docs/static-preview/forge-aura/income/income-adapter-pages-v1.mjs", "static-preview/forge-aura/income/income-adapter-pages-v1.js"],
+    ["docs/static-preview/forge-aura/income/income-module.mjs", "static-preview/forge-aura/income/income-module.js"],
+  ];
+  for (const [source, mirror] of pairs) {
+    assert.equal(fs.readFileSync(path.resolve(source), "utf8"), read(mirror), `Pages mirror drift: ${mirror}`);
+  }
 });
 
 test("Income artifact has no Material3 visual dependency or direct productive writer", () => {
   const files = [
-    read("static-preview/forge-aura/income/income-core.mjs"),
-    read("static-preview/forge-aura/income/income-adapter-pages-v1.mjs"),
-    read("static-preview/forge-aura/income/income-module.mjs"),
+    read("static-preview/forge-aura/income/income-core.js"),
+    read("static-preview/forge-aura/income/income-adapter-pages-v1.js"),
+    read("static-preview/forge-aura/income/income-module.js"),
     read("static-preview/forge-aura/income/income.css"),
   ].join("\n");
   assert.doesNotMatch(files, /forge-alive-material3|material3|md3/i);
