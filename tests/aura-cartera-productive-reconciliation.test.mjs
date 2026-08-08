@@ -94,6 +94,12 @@ test('PDF extraction enters Evidence 020B and only human confirmation crosses 02
   assert.match(adapterSource, /requiresExplicitExecution:true/);
 });
 
+test('PDF Edge intake authenticates from the Aura V4 client session only', () => {
+  assert.match(adapterSource, /client\.auth\.getSession\(\)/);
+  assert.match(adapterSource, /sessionHeaders\(client,windowRef\)/);
+  assert.doesNotMatch(adapterSource, /ForgeProductiveProspectBootstrap067G17B|ForgeAlivePublicConfig067G17A1/);
+});
+
 test('PDF multi-Coverage limitation is explicit and no parser is invented', () => {
   assert.match(adapterSource, /POLICY_COVERAGE_EXTRACTION_NOT_SUPPORTED/);
   assert.match(adapterSource, /pdfMultiCoverageExtraction:false/);
