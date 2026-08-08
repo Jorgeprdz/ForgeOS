@@ -45,7 +45,7 @@ jobs:
         run: node manager-os/tests/accepted-quote-review-snapshot-boundary-master-test.js
       - name: SeguBeca Accepted Quote regression
         run: node tests/segubeca-accepted-quote-integration-test.mjs
-      - name: Productive PDF parser regression
-        run: node tests/forge-pdf-browser-parser-local-runtime-test.mjs
-      - name: Presentation Maker responsive contract
-        run: node tests/r16j2-advisor-presentation-runtime-responsive-browser-test.mjs
+      - name: Productive PDF parser smoke
+        run: node tests/pdf-browser-parser-smoke-test.mjs
+      - name: Presentation Maker existing assembly authority
+        run: node manager-os/tests/sales-presentation-existing-assembly-contract-e2e-master-test.js
