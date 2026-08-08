@@ -76,7 +76,12 @@ const forbidden = [
 ];
 
 function changedFiles() {
-  const base = process.env.BASE_SHA || process.env.GITHUB_BASE_SHA;
+  const requestedBase = process.env.BASE_SHA || process.env.GITHUB_BASE_SHA;
+  let base = requestedBase;
+  try {
+    const mergeBase = execFileSync("git", ["merge-base", "origin/main", "HEAD"], { encoding: "utf8" }).trim();
+    if (mergeBase) base = mergeBase;
+  } catch {}
   if (!base) return [];
   const output = execFileSync("git", ["-c", "core.quotepath=false", "diff", "--name-only", "-z", base, "HEAD"], { encoding: "utf8" });
   return output.split("\0").map(value => value.trim()).filter(Boolean);
