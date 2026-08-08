@@ -217,12 +217,10 @@ export function rhythmFromStack(stack) {
   const inventory = Array.isArray(stack?.inventory) ? stack.inventory : [];
   const activity = inventory.find(widget => widget.widgetFamily === "ACTIVITY_PROGRESS_WIDGET") || null;
   const monthlyGoal = inventory.find(widget => widget.widgetFamily === "MONTHLY_POLICY_GOAL_WIDGET") || null;
-  const visible = Array.isArray(stack?.visible) ? stack.visible : [];
   const useful = widget => widget && ["READY", "PARTIAL", "STALE"].includes(widget.state);
-  const signal = useful(activity) ? activity : visible.find(useful) || null;
-  const supporting = [monthlyGoal, ...visible]
+  const signal = useful(activity) ? activity : useful(monthlyGoal) ? monthlyGoal : null;
+  const supporting = [activity, monthlyGoal]
     .filter(widget => useful(widget) && widget?.widgetId !== signal?.widgetId)
-    .filter((widget, index, all) => all.findIndex(item => item.widgetId === widget.widgetId) === index)
     .slice(0, 2);
   return Object.freeze({
     state: signal ? signal.state : HOME_STATES.SOURCE_UNAVAILABLE,
