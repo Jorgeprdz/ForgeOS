@@ -1,3 +1,5 @@
+import { civilDateToTransportInstant, normalizeCivilDate } from './cartera-semantic-v1.js?v=cartera-pdf-semantic-reconciliation-012';
+
 const REF = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,239}$/;
 
 function fail(code, cause = null) {
@@ -52,11 +54,19 @@ function optionalReference(value) {
   return normalized;
 }
 
+function optionalText(value, max = 240) {
+  const normalized = String(value || '').trim();
+  if (!normalized) return null;
+  return normalized.slice(0, max);
+}
+
 function optionalIso(value) {
   if (!value) return null;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) throw fail('COVERAGE_DATE_INVALID');
-  return date.toISOString();
+  const civil = normalizeCivilDate(value);
+  if (civil) return civilDateToTransportInstant(civil);
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) throw fail('COVERAGE_DATE_INVALID');
+  return parsed.toISOString();
 }
 
 async function resolvePolicyVersionContext(client, policyReference) {
@@ -122,8 +132,8 @@ export async function confirmNewPolicyCoverage({ client, policyReference, input 
     policyReference,
     policyVersionReference: version.policy_version_reference,
     productCoverageReference: optionalReference(input.productCoverageReference),
-    coverageCode: optionalReference(input.coverageCode),
-    coverageLabel: String(input.coverageLabel || '').trim() || null,
+    coverageCode: optionalText(input.coverageCode, 120),
+    coverageLabel: optionalText(input.coverageLabel, 240),
     coverageKind: optionalReference(input.coverageKind) || 'OTHER',
     coverageState: optionalReference(input.coverageState),
     sumInsured: optionalNumber(input.sumInsured),

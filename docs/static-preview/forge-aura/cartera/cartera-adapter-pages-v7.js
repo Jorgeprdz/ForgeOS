@@ -1,5 +1,10 @@
 import { createCarteraAdapter as createDateSafeAdapter } from './cartera-adapter-pages-v6.js?base=aura-cartera-pdf-already-admitted-reopen-011';
-import { normalizePolicyDate, sanitizePdfCandidateDates, sanitizePdfReviewDates } from './cartera-date-v1.js?v=aura-cartera-pdf-already-admitted-reopen-011';
+import {
+  enrichSemanticFields,
+  fieldValue,
+  normalizeCivilDate,
+  semanticReviewCandidate,
+} from './cartera-semantic-v1.js?v=cartera-pdf-semantic-reconciliation-012';
 
 const MAX_PDF_BYTES = 8 * 1024 * 1024;
 
@@ -15,18 +20,27 @@ async function sha256(buffer) {
   return [...new Uint8Array(hash)].map(value => value.toString(16).padStart(2, '0')).join('');
 }
 
-function fieldValue(fields, name) {
-  return fields?.[name]?.value ?? null;
-}
-
 function sanitizeStoredFields(fields = {}) {
-  const effectiveFrom = fields.effectiveFrom
-    ? { ...fields.effectiveFrom, value: normalizePolicyDate(fields.effectiveFrom.value) }
-    : fields.effectiveFrom;
-  const effectiveTo = fields.effectiveTo
-    ? { ...fields.effectiveTo, value: normalizePolicyDate(fields.effectiveTo.value) }
-    : fields.effectiveTo;
-  return freeze({ ...fields, effectiveFrom, effectiveTo });
+  const normalized = enrichSemanticFields(fields, {
+    person: fieldValue(fields, 'holderName'),
+    insured: fieldValue(fields, 'insuredName'),
+    contractor: fieldValue(fields, 'contractorName'),
+    policyNumber: fieldValue(fields, 'policyNumber'),
+    product: fieldValue(fields, 'productName'),
+    policyType: fieldValue(fields, 'policyType'),
+    status: fieldValue(fields, 'status'),
+    issueDate: normalizeCivilDate(fieldValue(fields, 'issueDate')),
+    effectiveDate: normalizeCivilDate(fieldValue(fields, 'effectiveFrom')),
+    expirationDate: normalizeCivilDate(fieldValue(fields, 'effectiveTo')),
+    currency: fieldValue(fields, 'currency'),
+    paymentFrequency: fieldValue(fields, 'paymentFrequency'),
+    basicPremiumTotal: fieldValue(fields, 'basicPremiumTotal'),
+    plannedPremium: fieldValue(fields, 'plannedPremium'),
+    annualTotal: fieldValue(fields, 'annualTotal'),
+    beneficiariesDetected: fieldValue(fields, 'beneficiariesDetected') === true,
+    coverageCandidates: fieldValue(fields, 'coverageCandidates'),
+  });
+  return freeze(normalized);
 }
 
 function reviewFromStoredPacket(packet, digest) {
@@ -35,22 +49,14 @@ function reviewFromStoredPacket(packet, digest) {
   const identityCandidate = Array.isArray(packet.identity_candidates)
     ? packet.identity_candidates[0]
     : null;
-  const edgeCandidate = sanitizePdfCandidateDates({
-    person: fieldValue(fields, 'holderName'),
-    insured: fieldValue(fields, 'insuredName'),
-    contractor: fieldValue(fields, 'contractorName'),
-    policyNumber: fieldValue(fields, 'policyNumber'),
-    product: fieldValue(fields, 'productName'),
-    status: fieldValue(fields, 'status'),
-    premium: fieldValue(fields, 'premiumAmount'),
-    effectiveDate: fieldValue(fields, 'effectiveFrom'),
-    expirationDate: fieldValue(fields, 'effectiveTo'),
+  const edgeCandidate = freeze(semanticReviewCandidate(fields, {
     confidence: Number.isFinite(Number(packet.extraction_confidence))
       ? Number(packet.extraction_confidence)
       : null,
-  });
+  }));
+  const coverageCandidates = edgeCandidate.coverageCandidates || [];
 
-  return sanitizePdfReviewDates(freeze({
+  return freeze({
     admission: freeze({ status: 'ALREADY_ADMITTED', evidenceStatus: 'confirmation_required' }),
     claim: null,
     processing: freeze({ status: 'EXISTING_PENDING_REVIEW' }),
@@ -61,18 +67,19 @@ function reviewFromStoredPacket(packet, digest) {
     documentDigest: digest,
     edgeCandidate,
     fields,
-    pdfCoverageExtraction: 'NOT_SUPPORTED',
+    coverageCandidates,
+    pdfCoverageExtraction: coverageCandidates.length ? 'CANDIDATES_REVIEW_REQUIRED' : 'NO_CANDIDATES',
     requiresHumanReview: true,
     createsPolicyTruth: false,
     resumedExistingReview: true,
-  }));
+  });
 }
 
 async function findPendingReview(client, digest) {
   const token = digest.slice(0, 40);
   const result = await client
     .from('cartera020b_policy_evidence_packets')
-    .select('packet_reference,extracted_fields,extraction_confidence,identity_candidates,confirmation_state')
+    .select('packet_reference,extracted_fields,extraction_confidence,identity_candidates,policy_role_candidates,confirmation_state')
     .eq('packet_reference', `POLICY_PACKET:AURA:${token}`)
     .eq('confirmation_state', 'PENDING_CONFIRMATION')
     .maybeSingle();

@@ -4,7 +4,7 @@ import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
 import { createHomeModule } from "./home/home-module.js?v=aura-home-command-center-001";
 import { createPipelineModule } from "./pipeline/pipeline-module.js?v=pages-adapter-c5a90d95";
 import { createActivityModule } from "./activity/activity-module.js?v=activity-reports-ux-001-corrected";
-import { createCarteraModule } from "./cartera/cartera-module-v3.js?v=aura-cartera-pdf-already-admitted-reopen-011";
+import { createCarteraModule } from "./cartera/cartera-module-v4.js?v=cartera-pdf-semantic-reconciliation-012";
 import { createIncomeModule } from "./income/income-module.js?v=income-aura-ux-reconciliation-001";
 
 const root = document.querySelector("[data-aura-app]");
@@ -127,7 +127,10 @@ async function mountRoute(route, snapshot) {
   currentShell.main.replaceChildren();
   const client = await auth.getClient();
   if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
-  if (route === "cartera") ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
+  if (route === "cartera") {
+    ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
+    ensureStylesheet("./cartera/cartera-semantic-012.css?v=cartera-pdf-semantic-reconciliation-012", "cartera-semantic-012");
+  }
   if (route === "comisiones") ensureStylesheet("./income/income.css?v=income-aura-ux-reconciliation-001", "comisiones");
   if (revision !== bootRevision) return;
   activeModule = createRouteModule(route, currentShell, client, snapshot);
