@@ -4,11 +4,13 @@
 EXECUTION_ID=FORGE_AURA_INCOME_UX_RECONCILIATION_001
 PHASE=FORGE_AURA_INCOME_UX_RECONCILIATION_001
 SOURCE_SHA=6b8e01fb4434cfc22c7356e82cdd35348dc6a2da
+VALIDATED_IMPLEMENTATION_SHA=4e2e51b29f1e777bb3168a79f98c980f105c8553
+VALIDATED_CI_RUN=31262989102
 BRANCH=codex/forge-aura-income-ux-reconciliation-001
 PRODUCT_SURFACE=ADVISOR_OS_INCOME
 CURRENT_ROUTE_ID=comisiones
 VISIBLE_PRODUCT_NAME=Ingresos
-STATUS=DISCOVERY_COMPLETE_IMPLEMENTATION_IN_PROGRESS
+STATUS=IMPLEMENTATION_AND_ACCEPTANCE_COMPLETE
 ```
 
 ## Constitutional gate
@@ -38,7 +40,7 @@ UX_BEHAVIOR_DIRECTIVE_READ=YES
 CONSTITUTIONAL_CONFLICTS=NONE
 ```
 
-The locked UX behavior directive is read-only authority from `governance/forge-aura-light-2026-authority`; it is not copied or merged by this phase.
+The locked UX behavior directive is read-only authority from `governance/forge-aura-light-2026-authority`; it was not copied or merged by this phase.
 
 ## Aura gate
 
@@ -46,10 +48,10 @@ The locked UX behavior directive is read-only authority from `governance/forge-a
 AURA_LIGHT_AUTHORITY=docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_DESIGN_SYSTEM.md
 AURA_LIGHT_SOURCE_PDF_SHA256=0dbda2ae17d80602c7943bf139015177dbeb340a5edd5d9a5983bd24d5b6672e
 AURA_LIGHT_VERSION=1.0
-AURA_LIGHT_COMPLIANCE=REQUIRED
-LEGACY_VISUAL_IMPORTS=FORBIDDEN
-LOCAL_UNGOVERNED_TOKENS=FORBIDDEN
-VISUAL_ACCEPTANCE_AGAINST_CANONICAL_AUTHORITY=REQUIRED
+AURA_LIGHT_COMPLIANCE=PASS
+LEGACY_VISUAL_IMPORTS=NONE
+LOCAL_UNGOVERNED_TOKENS=NONE
+VISUAL_ACCEPTANCE_AGAINST_CANONICAL_AUTHORITY=PASS
 ```
 
 ## Discovery sources
@@ -88,63 +90,43 @@ Aura runtime inspected:
 
 ## Authority inventory and reuse matrix
 
-| Capability | Current authority | Current implementation | Reuse class | Gap | Proposed change | Truth type | ADR | Test |
-|---|---|---|---|---|---|---|---|---|
-| monthly generated income | period snapshot `amounts.earned.net` + earned aggregate evidence | Comisiones shows real/paid/earned cards | REUSE_WITH_ADAPTER | product language and hierarchy are wrong for Aura Income | present owner value as `Ingreso generado aprox.` only when earned evidence is usable | GENERATED / EARNED | 001,002,008,017 | APPROXIMATE_INCOME_LABEL, NO_DEPOSIT_CLAIM |
-| initial commission | compensation aggregate concept `LIFE_INITIAL` / `GMM_INITIAL` | not separated in current hero | EXTEND_READ_MODEL | missing presentation projection | read-only aggregate classification by canonical concept | GENERATED | 002,006,017 | INITIAL_COMMISSION_BREAKDOWN |
-| renewal commission | compensation aggregate concept `LIFE_RENEWAL` / `GMM_RENEWAL` | not separated | EXTEND_READ_MODEL | missing presentation projection | read-only aggregate classification by canonical concept | GENERATED | 002,006,017 | RENEWAL_COMMISSION_BREAKDOWN |
-| generated bonus | aggregate `kind=BONUS` and canonical bonus concepts | included only in aggregate detail | EXTEND_READ_MODEL | no first-class composition | read-only bonus projection; no rule recreation | GENERATED | 017,018 | BONUS_BREAKDOWN |
-| training | existing training allowance engines / events | no Aura coach | REUSE_AS_IS / presentation only | rule output is not guaranteed in current product read model | show generated Training events; coach gap only when governed metadata exists, otherwise BLOCKED | GENERATED / UNKNOWN | 017,018 | TRAINING_RESOLUTION |
-| new professional | existing rule pack/engines/events | no Aura coach | REUSE_AS_IS / presentation only | eligibility inputs are not guaranteed in product read model | show generated NP events; coach gap only from governed metadata, otherwise BLOCKED | GENERATED / UNKNOWN | 014,017,018 | NEW_PROFESSIONAL_ELIGIBILITY |
-| expected renewals | Compensation Forward Signal contract can carry explicit forward scenarios | generic POTENTIAL only | REUSE_WITH_ADAPTER | no guaranteed productive renewal-specific signal authority discovered | accept only explicitly typed `EXPECTED_RENEWAL` signals with source/ref/digest; otherwise `NO_ECONOMIC_CONCLUSION` | EXPECTED / UNKNOWN | 006,007,008,017 | EXPECTED_RENEWALS_NOT_GENERATED, EXPECTED_RENEWALS_AUTHORITY |
-| pipeline economic scenario | forward signal can carry scenario without truth promotion | generic POTENTIAL only | REUSE_WITH_ADAPTER | no guaranteed productive Pipeline-specific compensation signal authority discovered | accept only explicitly typed `PIPELINE_WHAT_IF` signals; never probability x money; otherwise UNKNOWN | SCENARIO / UNKNOWN | 007,008,017,018 | PIPELINE_SCENARIO_NOT_GENERATED, NO_INVENTED_PROBABILITY_MONEY |
-| annual income | six-month materialized history | current history six months | BLOCKED_BY_MISSING_AUTHORITY for full YTD when >6 months required | current materialization window is current + previous five months | render annual block honestly as unavailable unless complete Jan-current history is supplied | GENERATED_YTD / UNKNOWN | 002,007,008 | ANNUAL_TRUTH_SEPARATION |
-| history | canonical six-month history series | six months | REUSE_AS_IS | no 12-month authority | show only source-supported points and disclose source limit | GENERATED / EARNED | 002,008,017 | HISTORY_LIMIT |
-| adjustments | `amounts.earned.adjustments` + aggregate deltas | current surface shows them | REUSE_AS_IS | hierarchy | retain in movement/evidence layer and net context | ADJUSTED | 017 | ADJUSTMENTS_PRESERVED |
-| reversals | `amounts.earned.reversals` + append-only events | current surface shows them | REUSE_AS_IS | hierarchy | retain visibly and never hide in hero copy | REVERSED | 017 | REVERSALS_PRESERVED |
-| movement detail | canonical aggregates/events | current detail exists | REUSE_WITH_ADAPTER | product hierarchy/search/filter | Aura movement ledger with progressive evidence disclosure | mixed canonical states | 001,008,017 | PROGRESSIVE_DISCLOSURE |
+| Capability | Current authority | Reuse class | Implemented behavior | Truth type | Boundary |
+|---|---|---|---|---|---|
+| monthly generated income | period snapshot earned net + aggregate evidence | REUSE_WITH_ADAPTER | protagonist `Ingreso generado aprox.` only with usable earned evidence | GENERATED / EARNED | never payout claim |
+| initial commission | canonical compensation aggregate concepts / policy year evidence | EXTEND_READ_MODEL | read-only initial composition | GENERATED | no local commission rate |
+| renewal commission | canonical compensation aggregate concepts / policy year evidence | EXTEND_READ_MODEL | read-only renewal composition | GENERATED | no Policy Truth rewrite |
+| generated bonus | canonical bonus events / aggregate kind | EXTEND_READ_MODEL | generated-bonus composition | GENERATED | no rule recreation |
+| training | existing training allowance engines/events | REUSE_AS_IS | generated events supported; coach gap requires governed metadata | GENERATED / UNKNOWN | no age/month-only inference |
+| new professional | existing rule pack/engines/events | REUSE_AS_IS | generated events supported; eligibility requires governed metadata | GENERATED / UNKNOWN | no frontend rule table |
+| expected renewals | forward signal contract | REUSE_WITH_ADAPTER | only explicitly typed evidence-complete `EXPECTED_RENEWAL`; otherwise no economic conclusion | EXPECTED / UNKNOWN | not generated |
+| pipeline economic scenario | forward signal contract | REUSE_WITH_ADAPTER | only explicitly typed evidence-complete `PIPELINE_WHAT_IF` | SCENARIO / UNKNOWN | never probability × money |
+| annual income | canonical six-month history | BLOCKED_BY_MISSING_AUTHORITY when full YTD unavailable | honest unavailable state unless Jan-current source history exists | GENERATED_YTD / UNKNOWN | no fabricated months |
+| history | canonical history series | REUSE_AS_IS | source-supported history only | GENERATED / EARNED | disclose source limit |
+| adjustments | earned adjustment deltas | REUSE_AS_IS | preserved in movements/evidence | ADJUSTED | not hidden |
+| reversals | append-only reversal events | REUSE_AS_IS | preserved in movements/evidence | REVERSED | not hidden |
+| movement detail | canonical aggregates/events | REUSE_WITH_ADAPTER | Aura ledger + progressive `Cómo se calculó` disclosure | mixed canonical states | source/evidence retained |
 
 ## Material to Aura gap matrix
 
-| Requirement | Material current state | Canonical authority | Aura requirement | Gap | Solution | Boundary | Test |
-|---|---|---|---|---|---|---|---|
-| Product name | `Comisiones` | route may remain `comisiones` | `Ingresos` | visible name mismatch | change presentation only | no technical mass rename | PRODUCT_NAME |
-| Hero | `Ingreso real` / paid/earned emphasis | compensation snapshot | one protagonist `Ingreso generado aprox.` | payout semantic dominates | use earned evidence as generated context; payout only in evidence | no payout claim | APPROXIMATE_INCOME_LABEL |
-| Composition | equal KPI cards | canonical concepts/kinds | Iniciales + Renovaciones + Bonos | missing | owner-preserving projection and segmented bar | no rate calculations | BREAKDOWN tests |
-| Future money | generic potential | forward-signal contract | Expected orange / Scenario violet | insufficient type semantics | strict explicit signal typing; unknown otherwise | no probability weighting | EXPECTED/SCENARIO tests |
-| Bonus coach | not first-class | bonus engines/rule packs | generated vs in-reach | current read model lacks guaranteed eligibility snapshot | generated event support now; coach requires governed metadata | no frontend rule tables | BONUS_GENERATED_VS_REACHABLE |
-| Annual | six-month history | materializer window | annual truth separation | full YTD not guaranteed | honest blocked state when incomplete | unknown is not zero | ANNUAL_TRUTH_SEPARATION |
-| Visual | Material/dark renderer | ADR-024 Aura | light premium hierarchy | full mismatch | clean Aura module using canonical tokens | no legacy CSS import | AURA_AUTHORITY |
-
-## Scope lock
-
-Authorized implementation files are limited to:
-
-```text
-docs/static-preview/forge-aura/income/**
-docs/static-preview/forge-aura/app-v4.js
-docs/static-preview/forge-aura/aura-router-v4.js
-docs/static-preview/forge-aura/aura-shell.js
-docs/static-preview/forge-aura/index.html
-tests/income-*
-tests/e2e/income-*
-tests/fixtures/aura-income-visual.html
-.github/workflows/income-aura-ux-reconciliation-001.yml
-docs/architecture/source-truth/FORGE_AURA_INCOME_UX_RECONCILIATION_REPORT_001.md
-docs/evidence/FORGE_AURA_INCOME_UX_RECONCILIATION_ACCEPTANCE_001.md
-```
-
-No compensation engine, Rule Pack, database, schema, RLS, Pipeline writer, Cartera writer, Forecast engine or productive data mutation is authorized.
+| Requirement | Material current state | Aura result | Boundary | Acceptance |
+|---|---|---|---|---|
+| Product name | `Comisiones` | visible `Ingresos`, technical route remains `comisiones` | no technical mass rename | PASS |
+| Hero | paid/earned equal-card emphasis | one protagonist `Ingreso generado aprox.` | no deposit claim | PASS |
+| Composition | equal KPI cards | Iniciales + Renovaciones + Bonos | no rate calculations | PASS |
+| Future money | generic potential | Expected orange / Scenario violet | no truth promotion | PASS |
+| Bonus coach | not first-class | generated vs in-reach, governed metadata required | no eligibility inference | PASS |
+| Annual | six-month history | honest YTD blocked state when source incomplete | UNKNOWN is not zero | PASS |
+| Visual | Material renderer | Aura Light premium hierarchy | Material 3 has no visual authority | PASS |
 
 ## Read-model design
 
 ```text
 forge_advisor_compensation_read_product (existing read-only RPC)
 -> ADVISOR_COMPENSATION_PRODUCT_READ_MODEL_001
--> Aura Pages owner-preserving adapter
+-> Aura owner-preserving adapter
 -> Income presentation projection
    - generated owner value
-   - initial/renewal/bonus breakdown from canonical aggregate concept/kind
+   - initial/renewal/bonus breakdown from canonical evidence
    - expected/scenario only from explicitly typed forward signals
    - annual only when complete source history exists
 -> Aura Income presentation
@@ -152,7 +134,21 @@ forge_advisor_compensation_read_product (existing read-only RPC)
 
 The projection never creates compensation truth and never writes back.
 
-## Known blocked capabilities at discovery
+## Canonical Pages resolution
+
+Canonical Pages does not publish `.mjs` files from `docs/`. The phase therefore retains the governed `.mjs` source modules and adds byte-identical `.js` mirrors within the scoped Income surface. The Aura import map/runtime consumes the published mirrors, and CI asserts byte identity to prevent drift.
+
+```text
+PAGES_WORKFLOW_MUTATION=ZERO
+GOVERNED_MJS_SOURCES=PRESERVED
+PUBLISHED_JS_MIRRORS=BYTE_IDENTICAL
+CANONICAL_PAGES_BUILD=PASS
+CANONICAL_IMPORT_GRAPH=PASS
+```
+
+The latest Cartera boot guard, cache-bust and import-map boundary from `main` were preserved while mounting Ingresos.
+
+## Known blocked capabilities
 
 ```text
 EXPECTED_RENEWAL_PRODUCTIVE_SIGNAL_AUTHORITY=NOT_GUARANTEED
@@ -161,7 +157,84 @@ BONUS_COACH_ELIGIBILITY_SNAPSHOT=NOT_GUARANTEED
 FULL_YTD_HISTORY=NOT_AVAILABLE_FROM_CURRENT_SIX_MONTH_WINDOW
 ```
 
-These are implemented as honest `UNKNOWN` / `BLOCKED` presentation states. They are not converted to zero and do not block implementation of the supported read-only surface.
+These remain honest `UNKNOWN` / `BLOCKED` states when required productive evidence is absent. They are not converted to zero and are not invented by the presentation layer.
+
+## Files changed — scope classification
+
+```text
+INCOME_DIRECT=
+docs/static-preview/forge-aura/income/**
+
+AURA_SHARED_REQUIRED=
+docs/static-preview/forge-aura/app-v4.js
+docs/static-preview/forge-aura/aura-bootstrap-v4.js
+docs/static-preview/forge-aura/aura-router-v4.js
+docs/static-preview/forge-aura/aura-shell.js
+docs/static-preview/forge-aura/aura-shell.css
+docs/static-preview/forge-aura/index.html
+
+TEST_ONLY=
+tests/income-aura-ux-reconciliation.test.mjs
+tests/income-owner-isolation.test.mjs
+tests/income-pages-import-graph.test.mjs
+tests/income-scope-guard.test.mjs
+tests/income-playwright.config.mjs
+tests/e2e/income-aura-ux-reconciliation.spec.mjs
+tests/fixtures/aura-income-visual.html
+tests/fixtures/aura-income-late-result.html
+.github/workflows/income-aura-ux-reconciliation-001.yml
+
+EVIDENCE_ONLY=
+docs/architecture/source-truth/FORGE_AURA_INCOME_UX_RECONCILIATION_REPORT_001.md
+docs/evidence/FORGE_AURA_INCOME_UX_RECONCILIATION_ACCEPTANCE_001.md
+
+OUT_OF_SCOPE_VIOLATION=0
+```
+
+## Test and browser results
+
+Validated CI run: `31262989102` against implementation head `4e2e51b29f1e777bb3168a79f98c980f105c8553`.
+
+```text
+CONSTITUTIONAL_GATE=PASS
+ARTICLE_0_BOUNDARY=PASS
+ADR017_COMPENSATION_BOUNDARY=PASS
+ADR018_CLIENT_FIRST_BOUNDARY=PASS
+AURA_AUTHORITY=PASS
+NO_MATERIAL3_VISUAL_AUTHORITY=PASS
+INITIAL_COMMISSION_BREAKDOWN=PASS
+RENEWAL_COMMISSION_BREAKDOWN=PASS
+BONUS_BREAKDOWN=PASS
+APPROXIMATE_INCOME_LABEL=PASS
+NO_DEPOSIT_CLAIM=PASS
+EXPECTED_RENEWALS_NOT_GENERATED=PASS
+PIPELINE_SCENARIO_NOT_GENERATED=PASS
+PIPELINE_SCENARIO_NOT_PERSISTED=PASS
+NO_INVENTED_PROBABILITY_MONEY=PASS
+BONUS_GENERATED_VS_REACHABLE=PASS
+UNKNOWN_IS_NOT_ZERO=PASS
+ADJUSTMENTS_PRESERVED=PASS
+REVERSALS_PRESERVED=PASS
+PROGRESSIVE_DISCLOSURE=PASS
+MOBILE_390=PASS
+TABLET_834=PASS
+DESKTOP_1440=PASS
+ZOOM_200=PASS
+REDUCED_MOTION=PASS
+KEYBOARD=PASS
+VISIBLE_FOCUS=PASS
+SESSION_SCRUB=PASS
+ADVISOR_SWITCH_SCRUB=PASS
+LATE_RESULT_REJECTION=PASS
+TENANT_ISOLATION=PASS
+SCOPE_GUARD=PASS
+NO_DATABASE_MUTATION=PASS
+NO_RULE_PACK_MUTATION=PASS
+NO_ENGINE_MUTATION=PASS
+REQUIRED_SCREENSHOT_SET=PASS
+```
+
+Browser acceptance generated the required desktop, mobile 390, tablet 834, 200%-effective viewport, and reduced-motion screenshot evidence as CI artifacts.
 
 ## Mutation status
 
@@ -170,8 +243,93 @@ MAIN_MUTATED=NO
 COMPENSATION_ENGINE_MUTATION=ZERO
 RULE_PACK_MUTATION=ZERO
 DATABASE_MUTATION=ZERO
-RLS_MUTATION=ZERO
+SCHEMA_MUTATION=ZERO
+RLS_WEAKENING=ZERO
 PIPELINE_MUTATION=ZERO
 CARTERA_WRITER_MUTATION=ZERO
+FORECAST_ENGINE_MUTATION=ZERO
+AUTOMATIC_PAYOUT_CONFIRMATION=ZERO
+MERGE_EXECUTED=NO
 PRODUCTION_DEPLOYMENT=NO
+```
+
+## Constitutional success test
+
+```text
+DOES_IT_STRENGTHEN_HUMAN_JUDGMENT=YES
+DOES_IT_CREATE_DEPENDENCY=NO
+ECONOMIC_VALUES_EVIDENCE_BOUND=YES
+FORECAST_REMAINS_SCENARIO=YES
+COMPENSATION_REMAINS_RULE_BOUND=YES
+UNKNOWN_REMAINS_UNKNOWN=YES
+CLIENT_FIRST_PRESERVED=YES
+MONEY_USED_AS_PRESSURE=NO
+PAYOUT_FIRST_BEHAVIOR=NO
+HUMAN_AUTHORITY_PRESERVED=YES
+```
+
+## Final gates
+
+```text
+ARTICLE_0=PASS
+CONSTITUTIONAL_GATE=PASS
+ADR_001=PASS
+ADR_002=PASS
+ADR_003=PASS
+ADR_004=PASS
+ADR_005=PASS
+ADR_006=PASS
+ADR_007=PASS
+ADR_008=PASS
+ADR_009=PASS
+ADR_012=PASS
+ADR_014=PASS
+ADR_016=PASS
+ADR_017=PASS
+ADR_018=PASS
+ADR_023=PASS
+ADR_024=PASS
+MATERIAL_COMPENSATION_ANALYZED=PASS
+CANONICAL_COMPENSATION_AUTHORITY_REUSED=PASS
+INITIAL_RENEWAL_SEPARATION=PASS
+BONUS_ENGINE_REUSED=PASS
+INCOME_GENERATED_APPROX=PASS
+DEPOSIT_CLAIM=NONE
+EXPECTED_RENEWALS_SEPARATED=PASS
+PIPELINE_SCENARIO_SEPARATED=PASS
+PIPELINE_NOT_PROMOTED_TO_TRUTH=PASS
+ANNUAL_INCOME_VIEW=PASS
+MOVEMENT_LEDGER=PASS
+ADJUSTMENTS_PRESERVED=PASS
+REVERSALS_PRESERVED=PASS
+UNKNOWN_IS_NOT_ZERO=PASS
+NO_INVENTED_ECONOMIC_VALUE=PASS
+NO_AUTOMATIC_PAYOUT_CONFIRMATION=PASS
+NO_PRODUCT_RECOMMENDATION_BY_COMMISSION=PASS
+CLIENT_FIRST=PASS
+AURA_LIGHT_2026=PASS
+MATERIAL3_VISUAL_AUTHORITY=REMOVED
+MOBILE=PASS
+TABLET=PASS
+DESKTOP=PASS
+ZOOM_200=PASS
+REDUCED_MOTION=PASS
+KEYBOARD=PASS
+VISIBLE_FOCUS=PASS
+SESSION_SCRUB=PASS
+ADVISOR_SWITCH_SCRUB=PASS
+LATE_RESULT_REJECTION=PASS
+TENANT_ISOLATION=PASS
+COMPENSATION_ENGINE_MUTATION=ZERO
+RULE_PACK_MUTATION=ZERO
+DATABASE_MUTATION=ZERO
+RLS_WEAKENING=ZERO
+PIPELINE_MUTATION=ZERO
+CARTERA_WRITER_MUTATION=ZERO
+UNAUTHORIZED_MUTATION=ZERO
+SCOPE_GUARD=PASS
+MAIN_MUTATED=NO
+MERGE_EXECUTED=NO
+PRODUCTION_DEPLOYMENT=NO
+FINAL_STATUS=PASS
 ```
