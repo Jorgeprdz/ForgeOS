@@ -1,0 +1,58 @@
+name: Aura Cartera PDF Real Regression
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/cartera/**'
+      - 'docs/static-preview/forge-aura/app-v4.js'
+      - 'docs/static-preview/forge-aura/aura-bootstrap-v4.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/e2e/aura-cartera-pdf-spanish-date-regression.spec.mjs'
+      - 'tests/fixtures/aura-cartera-pdf-spanish-date-regression.html'
+      - 'tests/cartera-pdf-regression-playwright.config.mjs'
+      - '.github/workflows/aura-cartera-pdf-real-regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-cartera-pdf-real-regression-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pdf-upload-regression:
+    name: Upload PDF and prove review is date-safe
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Automatically upload Imagina Ser-style regression PDF
+        run: npx playwright test --config tests/cartera-pdf-regression-playwright.config.mjs
+
+      - name: Upload failure trace
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-cartera-pdf-regression-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/aura-cartera-pdf-regression
+          if-no-files-found: warn
+          retention-days: 30
