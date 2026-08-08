@@ -18,12 +18,14 @@ function createWindow(initialHref) {
   };
 }
 
-test("canonical Aura entrypoint loads the v4 runtime", () => {
+test("canonical Aura entrypoint loads the cache-isolated v4 runtime", () => {
   const html = readFileSync("docs/static-preview/forge-aura/index.html", "utf8");
   assert.match(html, /data-aura-runtime="FORGE_AURA_LIGHT_2026_V4"/);
-  assert.match(html, /aura-bootstrap-v4\.js/);
+  assert.match(html, /aura-bootstrap-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
+  assert.match(html, /env\.js\?v=aura-boot-cache-isolation-013/);
   assert.match(html, /pipeline-adapter-pages-v1\.js/);
   assert.doesNotMatch(html, /src="\.\/aura-bootstrap\.js/);
+  assert.doesNotMatch(html, /src="\.\/aura-bootstrap-v4\.js/);
 });
 
 test("direct Activity route survives an unauthenticated login roundtrip", () => {
@@ -61,4 +63,13 @@ test("explicit Pipeline route remains restorable", () => {
   router.restoreAfterAuth();
   assert.equal(router.current(), "pipeline");
   assert.match(windowRef.location.href, /route=pipeline/);
+});
+
+test("explicit Quotes route remains restorable after hotfix", () => {
+  const windowRef = createWindow("https://example.test/ForgeOS/static-preview/forge-aura/?route=cotizaciones");
+  const router = createAuraRouter({ windowRef });
+  router.navigate("login", { replace: true });
+  router.restoreAfterAuth();
+  assert.equal(router.current(), "cotizaciones");
+  assert.match(windowRef.location.href, /route=cotizaciones/);
 });
