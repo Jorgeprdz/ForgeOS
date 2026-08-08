@@ -1,4 +1,4 @@
-const ROUTES = Object.freeze({ login: "login", pipeline: "pipeline", actividad: "actividad", cartera: "cartera" });
+const ROUTES = Object.freeze({ login: "login", pipeline: "pipeline", actividad: "actividad", cartera: "cartera", comisiones: "comisiones" });
 const AURA_MARKER = "/static-preview/forge-aura/";
 
 export function resolveRuntimeBase(urlLike = globalThis.location?.href || "http://localhost/") {
@@ -11,7 +11,8 @@ export function resolveRuntimeBase(urlLike = globalThis.location?.href || "http:
 
 export function normalizeRoute(value) {
   const route = String(value || "").toLowerCase();
-  return ROUTES[route] || ROUTES.pipeline;
+  const alias = route === "ingresos" ? ROUTES.comisiones : route;
+  return ROUTES[alias] || ROUTES.pipeline;
 }
 
 export function readRoute(urlLike = globalThis.location?.href || "http://localhost/") {
