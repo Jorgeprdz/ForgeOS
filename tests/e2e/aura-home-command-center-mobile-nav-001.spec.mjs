@@ -121,6 +121,7 @@ for (const size of sizes) {
     await expect(page.getByRole("heading", { name: "Ahora / Hoy" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Requiere atención" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Cómo vas hoy" })).toBeVisible();
+    await expect(page.getByText("Tu ritmo todavía no tiene una métrica verificable", { exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Patrón contextual" })).toBeVisible();
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
