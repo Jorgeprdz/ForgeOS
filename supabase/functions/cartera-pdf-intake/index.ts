@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { GoogleGenerativeAI } from "npm:@google/generative-ai";
 
-const FUNCTION_VERSION = "cartera-pdf-intake-v1";
+const FUNCTION_VERSION = "cartera-pdf-intake-v2-recovery-review";
 const MODEL_VERSION = "gemini-3.1-flash-lite";
 const MAX_BYTES = 8 * 1024 * 1024;
 const corsHeaders = {
@@ -30,6 +30,8 @@ function sanitizeRows(rows: unknown) {
   return rows.slice(0, 500).map((row: any, index) => ({
     id: `candidate_${String(index + 1).padStart(3, "0")}`,
     person: typeof row?.person === "string" ? row.person.trim().slice(0, 180) : "",
+    insured: typeof row?.insured === "string" ? row.insured.trim().slice(0, 180) : "",
+    contractor: typeof row?.contractor === "string" ? row.contractor.trim().slice(0, 180) : "",
     policyNumber: typeof row?.policyNumber === "string" ? row.policyNumber.trim().slice(0, 120) : "",
     product: typeof row?.product === "string" ? row.product.trim().slice(0, 180) : "",
     status: typeof row?.status === "string" ? row.status.trim().slice(0, 100) : "",
@@ -38,7 +40,47 @@ function sanitizeRows(rows: unknown) {
     expirationDate: typeof row?.expirationDate === "string" ? row.expirationDate.trim().slice(0, 80) : "",
     confidence: Number.isFinite(Number(row?.confidence)) ? Math.max(0, Math.min(1, Number(row.confidence))) : 0,
     requiresHumanReview: true,
-  })).filter((row) => row.person || row.policyNumber || row.product);
+  })).filter((row) =>
+    row.person || row.insured || row.contractor || row.policyNumber || row.product ||
+    row.status || row.premium || row.effectiveDate || row.expirationDate
+  );
+}
+
+function emptyReviewCandidate() {
+  return {
+    id: "candidate_001",
+    person: "",
+    insured: "",
+    contractor: "",
+    policyNumber: "",
+    product: "",
+    status: "",
+    premium: "",
+    effectiveDate: "",
+    expirationDate: "",
+    confidence: 0,
+    requiresHumanReview: true,
+  };
+}
+
+async function extractCandidates(model: any, base64: string, recovery = false) {
+  const prompt = recovery
+    ? `Segunda pasada de recuperación. Revisa cuidadosamente el PDF como documento de seguro. Busca etiquetas y variantes como: contratante, titular, propietario, asegurado, nombre del asegurado, número de póliza, póliza, certificado, plan, producto, cobertura principal, prima, prima anual/mensual, vigencia, fecha de inicio, fecha de término, vencimiento, estatus.\n\nNo inventes ni completes datos ausentes. Si sólo encuentras uno de esos datos, devuelve de todos modos un candidato con ese único dato y deja los demás campos vacíos. Devuelve JSON válido con {"candidates":[{"person":"","insured":"","contractor":"","policyNumber":"","product":"","status":"","premium":"","effectiveDate":"","expirationDate":"","confidence":0.0}]}. Todo resultado es staging y requiere revisión humana.`
+    : `Extrae únicamente datos visibles de pólizas de este PDF. No inventes ni completes datos ausentes.\n\nMapeo: person = titular/propietario/contratante principal cuando sea visible; insured = asegurado cuando sea visible; contractor = contratante cuando sea visible. policyNumber = número de póliza/certificado; product = plan/producto; premium = prima; effectiveDate/expirationDate = vigencia.\n\nSi sólo puedes identificar uno de esos campos, devuelve de todos modos un candidato con ese dato y deja los demás campos vacíos. Devuelve JSON válido con {"candidates":[{"person":"","insured":"","contractor":"","policyNumber":"","product":"","status":"","premium":"","effectiveDate":"","expirationDate":"","confidence":0.0}]}. Todo resultado es staging y requiere revisión humana.`;
+
+  const result = await model.generateContent({
+    contents: [{
+      role: "user",
+      parts: [
+        { text: prompt },
+        { inlineData: { mimeType: "application/pdf", data: base64 } },
+      ],
+    }],
+    generationConfig: { responseMimeType: "application/json", temperature: recovery ? 0.1 : 0.05 },
+  });
+
+  const parsed = JSON.parse(result.response.text());
+  return sanitizeRows(parsed?.candidates);
 }
 
 serve(async (request) => {
@@ -67,18 +109,22 @@ serve(async (request) => {
 
     const genAI = new GoogleGenerativeAI(Deno.env.get("GEMINI_API_KEY") || "");
     const model = genAI.getGenerativeModel({ model: MODEL_VERSION });
-    const result = await model.generateContent({
-      contents: [{
-        role: "user",
-        parts: [
-          { text: "Extrae únicamente datos visibles de pólizas de este PDF. No inventes ni completes datos ausentes. Devuelve JSON válido con {\"candidates\":[{\"person\":\"\",\"policyNumber\":\"\",\"product\":\"\",\"status\":\"\",\"premium\":\"\",\"effectiveDate\":\"\",\"expirationDate\":\"\",\"confidence\":0.0}]}. Todo resultado es staging y requiere revisión humana." },
-          { inlineData: { mimeType: "application/pdf", data: base64 } },
-        ],
-      }],
-      generationConfig: { responseMimeType: "application/json", temperature: 0.05 },
-    });
-    const parsed = JSON.parse(result.response.text());
-    const candidates = sanitizeRows(parsed?.candidates);
+
+    let candidates = await extractCandidates(model, base64, false);
+    let recoveryUsed = false;
+    const warnings: string[] = [];
+
+    if (candidates.length === 0) {
+      recoveryUsed = true;
+      candidates = await extractCandidates(model, base64, true);
+    }
+
+    let extractionState = "FIELDS_EXTRACTED";
+    if (candidates.length === 0) {
+      extractionState = "NO_FIELDS_REVIEW_REQUIRED";
+      warnings.push("PDF_EXTRACTION_NO_FIELDS");
+      candidates = [emptyReviewCandidate()];
+    }
 
     return response({
       ok: true,
@@ -87,6 +133,9 @@ serve(async (request) => {
       functionVersion: FUNCTION_VERSION,
       modelVersion: MODEL_VERSION,
       state: "review",
+      extractionState,
+      recoveryUsed,
+      warnings,
       candidates,
       requiresHumanReview: true,
       persisted: false,

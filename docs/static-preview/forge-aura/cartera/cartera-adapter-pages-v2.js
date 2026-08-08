@@ -12,6 +12,9 @@ function clientWithInvokeTransport(client) {
   const auth = new Proxy(client.auth, {
     get(target, property) {
       if (property === 'getSession') {
+        // The base adapter only uses getSession() to build a manual fetch header.
+        // The v2 transport intercepts that fetch and delegates auth to
+        // supabase.functions.invoke(), so no browser-side token extraction is needed.
         return async () => ({
           data: { session: { access_token: 'AURA_FUNCTIONS_INVOKE' } },
           error: null,
@@ -38,6 +41,7 @@ async function functionErrorPayload(error) {
       if (parsed && typeof parsed === 'object') payload = parsed;
     }
   } catch {
+    // Preserve the stable fallback code; no sensitive details are surfaced.
   }
   return payload;
 }
