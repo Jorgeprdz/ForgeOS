@@ -34,7 +34,7 @@ test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () =>
   assert.match(index, /income-adapter-pages-v1\.mjs[^\n]+income-adapter-pages-v1\.js/);
 });
 
-test("canonical Pages artifact preserves Cartera root 010 date-safe module and v6 transport chain", () => {
+test("canonical Pages artifact preserves Cartera root 011 pending-review reopen and v7 to v1 chain", () => {
   for (const relative of [
     "static-preview/forge-aura/cartera/cartera-module-v3.js",
     "static-preview/forge-aura/cartera/cartera-date-v1.js",
@@ -43,6 +43,7 @@ test("canonical Pages artifact preserves Cartera root 010 date-safe module and v
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v4.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v5.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v6.js",
+    "static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js",
   ]) {
     assert.equal(exists(relative), true, `Missing current Cartera asset: ${relative}`);
   }
@@ -56,19 +57,23 @@ test("canonical Pages artifact preserves Cartera root 010 date-safe module and v
   const v4 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v4.js");
   const v5 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v5.js");
   const v6 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v6.js");
-  assert.match(app, /cartera-module-v3\.js\?v=aura-cartera-pdf-real-acceptance-root-010/);
-  assert.match(index, /cartera-adapter-pages-v6\.js\?v=aura-cartera-pdf-real-acceptance-root-010/);
-  assert.match(index, /cartera-module-v3\.js\?v=aura-cartera-pdf-real-acceptance-root-010/);
-  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-pdf-real-acceptance-root-010-income-aura-ux-reconciliation-001/);
+  const v7 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js");
+  assert.match(app, /cartera-module-v3\.js\?v=aura-cartera-pdf-already-admitted-reopen-011/);
+  assert.match(index, /cartera-adapter-pages-v7\.js\?v=aura-cartera-pdf-already-admitted-reopen-011/);
+  assert.match(index, /cartera-module-v3\.js\?v=aura-cartera-pdf-already-admitted-reopen-011/);
+  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-pdf-already-admitted-reopen-011-income-aura-ux-reconciliation-001/);
   assert.match(moduleV3, /options\.adapterFactory \|\| createRootSafeCarteraAdapter/);
   assert.match(moduleV3, /adapterFactory:\s*guardedAdapterFactory\(adapterFactory\)/);
   assert.match(moduleV3, /sanitizePdfReviewDates\(review\)/);
-  assert.match(moduleV3, /cartera-adapter-pages-v6\.js\?base=aura-cartera-pdf-real-acceptance-root-010/);
+  assert.match(moduleV3, /cartera-adapter-pages-v7\.js\?base=aura-cartera-pdf-already-admitted-reopen-011/);
+  assert.match(v7, /cartera-adapter-pages-v6\.js\?base=aura-cartera-pdf-already-admitted-reopen-011/);
+  assert.match(v7, /cartera020b_policy_evidence_packets/);
+  assert.match(v7, /PENDING_CONFIRMATION/);
+  assert.match(v7, /resumedExistingReview:\s*true/);
   assert.match(dateV1, /AGO:\s*8/);
   assert.match(dateV1, /normalizePolicyDate/);
   assert.match(v6, /data:\s*sanitizePdfPayload\(result\.data\)/);
   assert.match(v6, /sanitizePdfPayloadDates/);
-  assert.match(v6, /cartera-date-v1\.js\?v=aura-cartera-pdf-real-acceptance-root-010/);
   assert.match(v6, /cartera-adapter-pages-v5\.js\?base=aura-cartera-invalid-time-value-root-009/);
   assert.match(v5, /cartera-adapter-pages-v4\.js\?base=aura-cartera-invalid-date-review-007/);
   assert.match(v4, /cartera-adapter-pages-v3\.js\?base=aura-cartera-result-state-machine-006/);
