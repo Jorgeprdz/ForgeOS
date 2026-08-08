@@ -18,16 +18,33 @@ on:
       - 'docs/architecture/source-truth/FORGE_AURA_INCOME_UX_RECONCILIATION_REPORT_001.md'
       - 'docs/evidence/FORGE_AURA_INCOME_UX_RECONCILIATION_ACCEPTANCE_001.md'
       - '.github/workflows/income-aura-ux-reconciliation-001.yml'
+  push:
+    branches:
+      - codex/forge-aura-income-ux-reconciliation-001
+    paths:
+      - 'docs/static-preview/forge-aura/income/**'
+      - 'docs/static-preview/forge-aura/app-v4.js'
+      - 'docs/static-preview/forge-aura/aura-bootstrap-v4.js'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'docs/static-preview/forge-aura/aura-shell.js'
+      - 'docs/static-preview/forge-aura/aura-shell.css'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/income-*'
+      - 'tests/e2e/income-*'
+      - 'tests/fixtures/aura-income-*'
+      - 'docs/architecture/source-truth/FORGE_AURA_INCOME_UX_RECONCILIATION_REPORT_001.md'
+      - 'docs/evidence/FORGE_AURA_INCOME_UX_RECONCILIATION_ACCEPTANCE_001.md'
+      - '.github/workflows/income-aura-ux-reconciliation-001.yml'
 
 permissions:
   contents: read
 
 concurrency:
-  group: income-aura-ux-reconciliation-${{ github.event.pull_request.number }}
+  group: income-aura-ux-reconciliation-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 env:
-  FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha }}
+  FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
   FORGE_PAGES_RUNTIME_MODE: 'pages'
   GITHUB_PAGES: 'true'
   DEMO_MODE: 'true'
@@ -41,10 +58,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Checkout exact pull request head
+      - name: Checkout exact reconciliation head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Setup Node 22
@@ -69,9 +86,10 @@ jobs:
         run: node --test tests/income-aura-ux-reconciliation.test.mjs tests/income-owner-isolation.test.mjs
 
       - name: Scope guard
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: node --test tests/income-scope-guard.test.mjs
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          if [ -z "$BASE_SHA" ]; then BASE_SHA="$(git merge-base origin/main HEAD)"; fi
+          BASE_SHA="$BASE_SHA" node --test tests/income-scope-guard.test.mjs
 
       - name: Inherited compensation product regressions
         run: |
@@ -83,11 +101,11 @@ jobs:
 
       - name: Prohibited mutation assertions
         shell: bash
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+          if [ -z "$BASE_SHA" ]; then BASE_SHA="$(git merge-base origin/main HEAD)"; fi
           mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
           printf '%s\n' "${changed[@]}"
           forbidden='^(compensation/advisor/engine/|compensation/advisor-development/.*engine|compensation/new-professional/.*rule-data|compensation/advisor/rules/rule-data|supabase/migrations/|supabase/functions/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
@@ -110,10 +128,10 @@ jobs:
     timeout-minutes: 20
     needs: constitutional-contract-scope
     steps:
-      - name: Checkout exact pull request head
+      - name: Checkout exact reconciliation head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Setup Node 22
@@ -166,7 +184,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aura-income-canonical-site-${{ github.event.pull_request.head.sha }}
+          name: aura-income-canonical-site-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             _site/build-info.json
             _site/production-surface.json
@@ -179,10 +197,10 @@ jobs:
     timeout-minutes: 20
     needs: constitutional-contract-scope
     steps:
-      - name: Checkout exact pull request head
+      - name: Checkout exact reconciliation head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Setup Node 22
         uses: actions/setup-node@v4
@@ -217,7 +235,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aura-income-visual-${{ github.event.pull_request.head.sha }}
+          name: aura-income-visual-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             test-results/aura-income-visual
             test-results/aura-income-productive
