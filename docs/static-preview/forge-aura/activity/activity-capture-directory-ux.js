@@ -73,7 +73,8 @@ function scan(root = document) {
 }
 
 export function installActivityCaptureDirectoryUx() {
-  if (typeof document === "undefined" || document[INSTALL_KEY]) return document?.[INSTALL_KEY] || null;
+  if (typeof document === "undefined") return null;
+  if (document[INSTALL_KEY]) return document[INSTALL_KEY];
   ensureStyles();
   scan(document);
   const observer = new MutationObserver(records => {
