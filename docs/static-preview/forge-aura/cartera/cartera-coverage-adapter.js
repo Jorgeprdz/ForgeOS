@@ -137,11 +137,11 @@ export async function confirmNewPolicyCoverage({ client, policyReference, input 
     coveragePeriodValue,
     coveragePeriodUnit: coveragePeriodValue === null
       ? null
-      : (optionalReference(input.coveragePeriodUnit) || 'MONTH'),
+      : optionalReference(input.coveragePeriodUnit),
     paymentPeriodValue,
     paymentPeriodUnit: paymentPeriodValue === null
       ? null
-      : (optionalReference(input.paymentPeriodUnit) || 'MONTH'),
+      : optionalReference(input.paymentPeriodUnit),
     sourceEvidenceReferences: [evidenceReference],
     verificationState: 'REVIEWED',
     completenessState: 'PARTIAL',
