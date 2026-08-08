@@ -34,10 +34,11 @@ test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () =>
   assert.match(index, /income-adapter-pages-v1\.mjs[^\n]+income-adapter-pages-v1\.js/);
 });
 
-test("canonical Pages artifact preserves current Cartera v3 to v2 transport chain", () => {
+test("canonical Pages artifact preserves current Cartera v4 to v3 to v2 transport chain", () => {
   for (const relative of [
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v2.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v3.js",
+    "static-preview/forge-aura/cartera/cartera-adapter-pages-v4.js",
   ]) {
     assert.equal(exists(relative), true, `Missing current Cartera asset: ${relative}`);
   }
@@ -45,10 +46,13 @@ test("canonical Pages artifact preserves current Cartera v3 to v2 transport chai
   const bootstrap = read("static-preview/forge-aura/aura-bootstrap-v4.js");
   const v2 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v2.js");
   const v3 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v3.js");
-  assert.match(index, /cartera-adapter-pages-v3\.js\?v=aura-cartera-pdf-idempotency-004/);
-  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-pdf-idempotency-004/);
+  const v4 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v4.js");
+  assert.match(index, /cartera-adapter-pages-v4\.js\?v=aura-cartera-result-state-machine-006/);
+  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-result-state-machine-006/);
+  assert.match(v4, /cartera-adapter-pages-v3\.js\?base=aura-cartera-result-state-machine-006/);
   assert.match(v3, /cartera-adapter-pages-v2\.js\?base=aura-cartera-pdf-idempotency-004/);
   assert.match(v2, /client\.functions\.invoke\(PDF_FUNCTION_NAME, \{ body \}\)/);
+  assert.doesNotMatch(v2, /Authorization:\s*`Bearer/);
 });
 
 test("Income Pages mirrors are byte-identical to governed source modules", () => {

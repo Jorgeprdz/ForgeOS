@@ -8,7 +8,7 @@ document.documentElement.dataset.auraEnvState = hasProductiveConfig()
   : "PRODUCTIVE_CONFIG_BLOCKED";
 
 try {
-  await import("./app-v4.js?v=aura-cartera-pdf-idempotency-004-income-aura-ux-reconciliation-001");
+  await import("./app-v4.js?v=aura-cartera-result-state-machine-006-income-aura-ux-reconciliation-001");
 } catch (error) {
   document.documentElement.dataset.auraBootState = "BOOT_IMPORT_FAILED";
   const root = document.querySelector("[data-aura-app]");

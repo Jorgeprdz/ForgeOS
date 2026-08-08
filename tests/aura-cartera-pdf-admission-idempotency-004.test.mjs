@@ -22,8 +22,8 @@ test('retry wrapper leaves Evidence identity and server-side document dedupe aut
   assert.match(adapter, /createTransportAdapter/);
 });
 
-test('Aura publishes the retry-safe adapter with a coherent cache bust', () => {
-  assert.match(index, /cartera-adapter-pages-v3\.js\?v=aura-cartera-pdf-idempotency-004/);
-  assert.match(index, /aura-bootstrap-v4\.js\?v=aura-cartera-pdf-idempotency-004/);
-  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-pdf-idempotency-004/);
+test('Aura keeps the retry-safe adapter in the governed v4 chain', () => {
+  assert.match(index, /cartera-adapter-pages-v4\.js\?v=aura-cartera-result-state-machine-006/);
+  assert.match(index, /aura-bootstrap-v4\.js\?v=aura-cartera-result-state-machine-006/);
+  assert.match(bootstrap, /app-v4\.js\?v=aura-cartera-result-state-machine-006/);
 });
