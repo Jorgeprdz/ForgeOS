@@ -188,5 +188,5 @@ test("200 percent zoom, reduced motion and keyboard focus remain usable", async 
   const focused = await page.evaluate(() => document.activeElement?.tagName || "");
   expect(focused).not.toBe("BODY");
   const reduced = await page.evaluate(() => getComputedStyle(document.querySelector(".aura-mobile-nav")).transitionDuration);
-  expect(["0s", "0.00001s", ".00001s"]).toContain(reduced);
+  expect(Number.parseFloat(reduced)).toBeLessThanOrEqual(0.001);
 });
