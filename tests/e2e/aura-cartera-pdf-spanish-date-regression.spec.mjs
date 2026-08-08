@@ -6,8 +6,23 @@ const FIXTURE = 'http://127.0.0.1:4174/tests/fixtures/aura-cartera-pdf-spanish-d
 
 function escapePdfText(value) { return String(value).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)'); }
 function buildRegressionPdf() {
-  const coverageLines = Array.from({ length: 10 }, (_, index) => `COBERTURA ${index + 1} COV-${String(index + 1).padStart(2, '0')} SUMA ${100000 + index * 10000} UDI ANEXO-${String(index + 1).padStart(2, '0')} EFECTIVA 05/AGO/2026`);
-  const lines = ['CARATULA DE LA POLIZA DE SEGURO DE VIDA INDIVIDUAL','PLAN BASICO IMAGINA SER 65 - 15 PAGOS UDI','POLIZA SYN-IMAGINA-012','TIPO DE POLIZA NORMAL','MONEDA UDI','FORMA DE PAGO MENSUAL','FECHA DE EMISION 05/AGO/2026','FECHA DE EFECTIVIDAD 05/AGO/2026','FECHA DE VENCIMIENTO 05/AGO/2053','PRIMA BASICA TOTAL 3,976.96','PRIMA PLANEADA 2,840.00','TOTAL ANUAL 6,816.96',...coverageLines];
+  const coverageLines = Array.from({ length: 10 }, (_, index) => `COBERTURA ${index + 1} COV-${String(index + 1).padStart(2, '0')} SUMA ${100000 + index * 10000} UDI ANEXO-${String(index + 1).padStart(2, '0')} EFECTIVA 05/AGO/2026 PERIODO 27 ANOS PAGO ${index < 5 ? 15 : 10} ANOS PRIMA ${100 + index * 10}`);
+  const lines = [
+    'CARATULA DE LA POLIZA DE SEGURO DE VIDA INDIVIDUAL',
+    'PLAN BASICO IMAGINA SER 65 - 15 PAGOS UDI',
+    'POLIZA VI0003006169',
+    'TIPO DE POLIZA NORMAL',
+    'MONEDA UDI',
+    'FORMA DE PAGO MENSUAL',
+    'FECHA DE EMISION 05/AGO/2026',
+    'FECHA DE EFECTIVIDAD 05/AGO/2026',
+    'FECHA DE VENCIMIENTO 05/AGO/2053',
+    'PRIMA BASICA TOTAL 3,976.96',
+    'PRIMA PLANEADA 2,840.00',
+    'TOTAL ANUAL 6,816.96',
+    'COBERTURAS CONTRATADAS',
+    ...coverageLines,
+  ];
   const stream = ['BT','/F1 9 Tf','54 750 Td',...lines.flatMap((line,index)=>index===0?[`(${escapePdfText(line)}) Tj`]:['0 -15 Td',`(${escapePdfText(line)}) Tj`]),'ET'].join('\n');
   const objects = ['1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n','2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n','3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>\nendobj\n',`4 0 obj\n<< /Length ${Buffer.byteLength(stream)} >>\nstream\n${stream}\nendstream\nendobj\n`,'5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n'];
   let pdf='%PDF-1.4\n'; const offsets=[0];
@@ -16,19 +31,141 @@ function buildRegressionPdf() {
   for(let index=1;index<=objects.length;index+=1)pdf+=`${String(offsets[index]).padStart(10,'0')} 00000 n \n`;
   pdf+=`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`; return Buffer.from(pdf,'utf8');
 }
-const upload=async page=>page.locator('[data-pdf-input]').setInputFiles({name:'imagina-ser-semantic-regression-012.pdf',mimeType:'application/pdf',buffer:buildRegressionPdf()});
-async function openAndUpload(page){await page.locator('[data-add-policy]').first().click();await expect(page.locator('[data-pdf-input]')).toBeAttached();await upload(page);await page.screenshot({path:'test-results/aura-cartera-pdf-regression/loading-after-upload.png',fullPage:true});await expect(page.locator('[data-semantic-review="012"]')).toBeVisible({timeout:8000});}
 
-test('semantic golden survives full productive adapter chain and same-PDF reopen',async({page})=>{
+const upload=async page=>page.locator('[data-pdf-input]').setInputFiles({name:'imagina-ser-semantic-completion-014.pdf',mimeType:'application/pdf',buffer:buildRegressionPdf()});
+async function openAndUpload(page){
+  await page.locator('[data-add-policy]').first().click();
+  await expect(page.locator('[data-pdf-input]')).toBeAttached();
+  await upload(page);
+  await page.screenshot({path:'test-results/aura-cartera-pdf-regression/loading-after-upload.png',fullPage:true});
+  await expect(page.locator('[data-semantic-review="014"]')).toBeVisible({timeout:8000});
+}
+
+async function visibleSemanticSnapshot(page) {
+  return page.evaluate(() => {
+    const facts = {};
+    document.querySelectorAll('.cartera-semantic-facts > div').forEach(node => {
+      const key = node.querySelector('dt')?.textContent?.trim();
+      const value = node.querySelector('dd')?.textContent?.trim();
+      if (key) facts[key] = value || '';
+    });
+    const premiums = {};
+    document.querySelectorAll('.cartera-semantic-premiums article').forEach(node => {
+      const key = node.querySelector('small')?.textContent?.trim();
+      const value = node.querySelector('strong')?.textContent?.trim();
+      if (key) premiums[key] = value || '';
+    });
+    return {
+      facts,
+      premiums,
+      coverageLabels: [...document.querySelectorAll('[data-coverage-candidate] .cartera-semantic-coverage__main strong')].map(node => node.textContent.trim()),
+      coverageSummary: document.querySelector('.cartera-semantic-rail strong')?.textContent?.trim() || '',
+      reviewSummary: document.querySelector('.cartera-semantic-rail small')?.textContent?.trim() || '',
+    };
+  });
+}
+
+test('partial production-like extraction is recovered, persisted and reopened without semantic loss',async({page})=>{
   const pageErrors=[]; page.on('pageerror',error=>pageErrors.push(error.message));
-  await page.goto(FIXTURE,{waitUntil:'networkidle'}); await expect(page.locator('html')).toHaveAttribute('data-regression-harness','READY_SEMANTIC_012'); await openAndUpload(page);
-  await expect(page.getByText('IMAGINA SER 65 - 15 PAGOS UDI').first()).toBeVisible(); await expect(page.getByText('Tipo de póliza')).toBeVisible(); await expect(page.getByText('Normal',{exact:true})).toBeVisible(); await expect(page.getByText('No identificado',{exact:true}).first()).toBeVisible(); await expect(page.getByText('UDI',{exact:true}).first()).toBeVisible(); await expect(page.getByText('Mensual',{exact:true})).toBeVisible(); await expect(page.getByText('05 ago 2026',{exact:true}).first()).toBeVisible(); await expect(page.getByText('05 ago 2053',{exact:true})).toBeVisible(); await expect(page.getByText('3,976.96 UDI',{exact:true})).toBeVisible(); await expect(page.getByText('2,840.00 UDI',{exact:true})).toBeVisible(); await expect(page.getByText('6,816.96 UDI',{exact:true})).toBeVisible(); await expect(page.getByText('Beneficiarios detectados')).toBeVisible(); await expect(page.getByText('Información protegida.')).toBeVisible(); await expect(page.locator('[data-coverage-candidate]')).toHaveCount(10); await expect(page.locator('input[name="existingPersonReference"]')).toHaveCount(0); await expect(page.locator('body')).not.toContainText('Referencia de persona existente'); await expect(page.locator('body')).not.toContainText('Coberturas detectadas: no disponibles en este parser'); await expect(page.locator('body')).not.toContainText('04 ago 2026'); await expect(page.locator('body')).not.toContainText('Invalid time value'); await page.screenshot({path:'test-results/aura-cartera-pdf-regression/semantic-loaded-desktop.png',fullPage:true});
-  const firstTrace=await page.evaluate(()=>window.__PDF_FULL_CHAIN_TRACE__); expect(firstTrace.functionInvocations).toHaveLength(1); expect(firstTrace.functionInvocations[0]).toMatchObject({name:'cartera-pdf-intake',fileName:'imagina-ser-semantic-regression-012.pdf',mimeType:'application/pdf',hasBase64:true}); expect(firstTrace.admitted).toBe(true); expect(firstTrace.claims).toBeGreaterThanOrEqual(4); expect(firstTrace.resultStages).toEqual(['classified','extraction_candidate_created','packet_created','confirmation_required']); expect(firstTrace.storedPendingReview).toBe(true); expect(firstTrace.resultSemanticSnapshots.at(-1)).toMatchObject({policyType:'NORMAL',status:null,currency:'UDI',paymentFrequency:'MONTHLY',issueDate:'2026-08-05',effectiveFrom:'2026-08-05',effectiveTo:'2053-08-05',basicPremiumTotal:3976.96,plannedPremium:2840,annualTotal:6816.96,coverageCount:10});
+  await page.goto(FIXTURE,{waitUntil:'networkidle'});
+  await expect(page.locator('html')).toHaveAttribute('data-regression-harness','READY_SEMANTIC_014');
+  await openAndUpload(page);
+
+  await expect(page.getByText('IMAGINA SER 65 - 15 PAGOS UDI').first()).toBeVisible();
+  await expect(page.getByText('VI0003006169',{exact:true}).first()).toBeVisible();
+  await expect(page.getByText('Tipo de póliza')).toBeVisible();
+  await expect(page.getByText('Normal',{exact:true})).toBeVisible();
+  await expect(page.getByText('No identificado',{exact:true}).first()).toBeVisible();
+  await expect(page.getByText('UDI',{exact:true}).first()).toBeVisible();
+  await expect(page.getByText('Mensual',{exact:true})).toBeVisible();
+  await expect(page.getByText('05 ago 2026',{exact:true}).first()).toBeVisible();
+  await expect(page.getByText('05 ago 2053',{exact:true})).toBeVisible();
+  await expect(page.getByText('3,976.96 UDI',{exact:true})).toBeVisible();
+  await expect(page.getByText('2,840.00 UDI',{exact:true})).toBeVisible();
+  await expect(page.getByText('6,816.96 UDI',{exact:true})).toBeVisible();
+  await expect(page.getByText('Beneficiarios detectados')).toBeVisible();
+  await expect(page.getByText('Información protegida.')).toBeVisible();
+  await expect(page.locator('[data-coverage-candidate]')).toHaveCount(10);
+  await expect(page.getByText('10 coberturas candidatas',{exact:true})).toBeVisible();
+  await expect(page.locator('body')).not.toContainText('0 coberturas');
+  await expect(page.locator('body')).not.toContainText('Confianza alta');
+  await expect(page.locator('input[name="existingPersonReference"]')).toHaveCount(0);
+  await expect(page.locator('body')).not.toContainText('Referencia de persona existente');
+  await expect(page.locator('body')).not.toContainText('Coberturas detectadas: no disponibles en este parser');
+  await expect(page.locator('body')).not.toContainText('04 ago 2026');
+  await expect(page.locator('body')).not.toContainText('Invalid time value');
+  await page.screenshot({path:'test-results/aura-cartera-pdf-regression/01-cartera-pdf-semantic-desktop.png',fullPage:true});
+
+  const firstTrace=await page.evaluate(()=>window.__PDF_FULL_CHAIN_TRACE__);
+  expect(firstTrace.edgePrimary).toMatchObject({
+    policyNumber:'VI0003006169', policyType:'NORMAL', status:null,
+    issueDate:null, currency:null, paymentFrequency:null, coverageSectionDetected:true, coverageCandidates:[],
+  });
+  expect(firstTrace.semanticRecoveryReasons).toEqual(expect.arrayContaining(['issueDate','currency','paymentFrequency','basicPremiumTotal','plannedPremium','annualTotal','coverageCandidates']));
+  expect(firstTrace.edgeMerged).toMatchObject({
+    policyNumber:'VI0003006169', policyType:'NORMAL', status:null,
+    issueDate:'2026-08-05', effectiveDate:'2026-08-05', expirationDate:'2053-08-05',
+    currency:'UDI', paymentFrequency:'MONTHLY', basicPremiumTotal:3976.96, plannedPremium:2840, annualTotal:6816.96,
+    coverageSectionDetected:true, coverageExtractionState:'CANDIDATES_REVIEW_REQUIRED',
+  });
+  expect(firstTrace.edgeMerged.coverageCandidates).toHaveLength(10);
+  expect(firstTrace.edgeMerged.reviewCompleteness.gaps).toEqual([]);
+  expect(firstTrace.functionInvocations).toHaveLength(1);
+  expect(firstTrace.functionInvocations[0]).toMatchObject({name:'cartera-pdf-intake',fileName:'imagina-ser-semantic-completion-014.pdf',mimeType:'application/pdf',hasBase64:true});
+  expect(firstTrace.admitted).toBe(true);
+  expect(firstTrace.claims).toBeGreaterThanOrEqual(4);
+  expect(firstTrace.resultStages).toEqual(['classified','extraction_candidate_created','packet_created','confirmation_required']);
+  expect(firstTrace.storedPendingReview).toBe(true);
+  expect(firstTrace.resultSemanticSnapshots.at(-1)).toMatchObject({
+    policyType:'NORMAL',status:null,currency:'UDI',paymentFrequency:'MONTHLY',issueDate:'2026-08-05',effectiveFrom:'2026-08-05',effectiveTo:'2053-08-05',
+    basicPremiumTotal:3976.96,plannedPremium:2840,annualTotal:6816.96,coverageSectionDetected:true,coverageCount:10,
+  });
+
+  const firstVisible=await visibleSemanticSnapshot(page);
   const firstFunctionCount=firstTrace.functionInvocations.length,firstClaimCount=firstTrace.claims,firstRpcCount=firstTrace.rpcNames.length,firstStageCount=firstTrace.resultStages.length;
-  await page.locator('.cartera-dialog-close').click(); await openAndUpload(page); await expect(page.getByText('Normal',{exact:true})).toBeVisible(); await expect(page.getByText('UDI',{exact:true}).first()).toBeVisible(); await expect(page.getByText('Mensual',{exact:true})).toBeVisible(); await expect(page.locator('[data-coverage-candidate]')).toHaveCount(10);
-  const secondTrace=await page.evaluate(()=>window.__PDF_FULL_CHAIN_TRACE__); expect(secondTrace.pendingReviewReads).toBeGreaterThanOrEqual(2); expect(secondTrace.functionInvocations).toHaveLength(firstFunctionCount); expect(secondTrace.claims).toBe(firstClaimCount); expect(secondTrace.rpcNames).toHaveLength(firstRpcCount); expect(secondTrace.resultStages).toHaveLength(firstStageCount); expect(pageErrors).toEqual([]);
+  await page.locator('.cartera-dialog-close').click();
+  await openAndUpload(page);
+  const secondVisible=await visibleSemanticSnapshot(page);
+  expect(secondVisible).toEqual(firstVisible);
+  await expect(page.getByText('Normal',{exact:true})).toBeVisible();
+  await expect(page.getByText('UDI',{exact:true}).first()).toBeVisible();
+  await expect(page.getByText('Mensual',{exact:true})).toBeVisible();
+  await expect(page.locator('[data-coverage-candidate]')).toHaveCount(10);
+  const secondTrace=await page.evaluate(()=>window.__PDF_FULL_CHAIN_TRACE__);
+  expect(secondTrace.pendingReviewReads).toBeGreaterThanOrEqual(2);
+  expect(secondTrace.functionInvocations).toHaveLength(firstFunctionCount);
+  expect(secondTrace.claims).toBe(firstClaimCount);
+  expect(secondTrace.rpcNames).toHaveLength(firstRpcCount);
+  expect(secondTrace.resultStages).toHaveLength(firstStageCount);
+  expect(pageErrors).toEqual([]);
 });
 
-for(const viewport of [{width:390,height:844},{width:412,height:915},{width:430,height:932}]) test(`mobile semantic review has no destructive overflow and CTA stays fully reachable at ${viewport.width}x${viewport.height}`,async({page})=>{await page.setViewportSize(viewport);await page.goto(FIXTURE,{waitUntil:'networkidle'});await openAndUpload(page);const geometry=await page.evaluate(()=>{const dialog=document.querySelector('.cartera-dialog');return{pageOverflow:document.documentElement.scrollWidth>window.innerWidth+1,dialogOverflow:dialog?dialog.scrollWidth>dialog.clientWidth+1:true};});expect(geometry.pageOverflow).toBe(false);expect(geometry.dialogOverflow).toBe(false);const dialog=page.locator('.cartera-dialog');await dialog.evaluate(node=>{node.scrollTop=node.scrollHeight;});const cta=page.locator('.cartera-semantic-confirm button');await cta.scrollIntoViewIfNeeded();await expect(cta).toBeVisible();const ctaGeometry=await cta.evaluate(button=>{const rect=button.getBoundingClientRect();const dialogRect=button.closest('.cartera-dialog')?.getBoundingClientRect();const style=getComputedStyle(button);return{top:rect.top,bottom:rect.bottom,left:rect.left,right:rect.right,height:rect.height,viewportHeight:window.innerHeight,viewportWidth:window.innerWidth,backgroundColor:style.backgroundColor,color:style.color,opacity:Number(style.opacity),insideViewport:rect.top>=0&&rect.bottom<=window.innerHeight&&rect.left>=0&&rect.right<=window.innerWidth,insideDialog:dialogRect?rect.top>=dialogRect.top&&rect.bottom<=dialogRect.bottom&&rect.left>=dialogRect.left&&rect.right<=dialogRect.right:false};});expect(ctaGeometry.height).toBeGreaterThanOrEqual(44);expect(ctaGeometry.insideViewport).toBe(true);expect(ctaGeometry.insideDialog).toBe(true);expect(ctaGeometry.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');expect(ctaGeometry.opacity).toBeGreaterThanOrEqual(.5);await page.screenshot({path:`test-results/aura-cartera-pdf-regression/mobile-${viewport.width}x${viewport.height}.png`,fullPage:false});});
+for(const viewport of [{width:390,height:844},{width:412,height:915},{width:430,height:932}]) test(`mobile semantic review has no destructive overflow and CTA stays fully reachable at ${viewport.width}x${viewport.height}`,async({page})=>{
+  await page.setViewportSize(viewport);
+  await page.goto(FIXTURE,{waitUntil:'networkidle'});
+  await openAndUpload(page);
+  const geometry=await page.evaluate(()=>{const dialog=document.querySelector('.cartera-dialog');return{pageOverflow:document.documentElement.scrollWidth>window.innerWidth+1,dialogOverflow:dialog?dialog.scrollWidth>dialog.clientWidth+1:true};});
+  expect(geometry.pageOverflow).toBe(false);
+  expect(geometry.dialogOverflow).toBe(false);
+  const dialog=page.locator('.cartera-dialog');
+  await dialog.evaluate(node=>{node.scrollTop=node.scrollHeight;});
+  const cta=page.locator('.cartera-semantic-confirm button');
+  await cta.scrollIntoViewIfNeeded();
+  await expect(cta).toBeVisible();
+  const ctaGeometry=await cta.evaluate(button=>{const rect=button.getBoundingClientRect();const dialogRect=button.closest('.cartera-dialog')?.getBoundingClientRect();const style=getComputedStyle(button);return{top:rect.top,bottom:rect.bottom,left:rect.left,right:rect.right,height:rect.height,viewportHeight:window.innerHeight,viewportWidth:window.innerWidth,backgroundColor:style.backgroundColor,color:style.color,opacity:Number(style.opacity),insideViewport:rect.top>=0&&rect.bottom<=window.innerHeight&&rect.left>=0&&rect.right<=window.innerWidth,insideDialog:dialogRect?rect.top>=dialogRect.top&&rect.bottom<=dialogRect.bottom&&rect.left>=dialogRect.left&&rect.right<=dialogRect.right:false};});
+  expect(ctaGeometry.height).toBeGreaterThanOrEqual(44);
+  expect(ctaGeometry.insideViewport).toBe(true);
+  expect(ctaGeometry.insideDialog).toBe(true);
+  expect(ctaGeometry.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  expect(ctaGeometry.opacity).toBeGreaterThanOrEqual(.5);
+  await page.screenshot({path:`test-results/aura-cartera-pdf-regression/0${viewport.width===390?2:viewport.width===412?3:4}-cartera-pdf-semantic-mobile-${viewport.width}.png`,fullPage:false});
+});
 
-test('invalid PDF shows explicit contained retry state',async({page})=>{await page.goto(FIXTURE,{waitUntil:'networkidle'});await page.locator('[data-add-policy]').first().click();await page.locator('[data-pdf-input]').setInputFiles({name:'invalid-regression.pdf',mimeType:'application/pdf',buffer:Buffer.from('not-a-pdf','utf8')});await expect(page.getByText(/No pudimos completar el procesamiento del PDF|PDF/i).first()).toBeVisible();await expect(page.getByRole('button',{name:/Elegir otro PDF/i})).toBeVisible();await page.screenshot({path:'test-results/aura-cartera-pdf-regression/error-retry.png',fullPage:true});});
+test('invalid PDF shows explicit contained retry state',async({page})=>{
+  await page.goto(FIXTURE,{waitUntil:'networkidle'});
+  await page.locator('[data-add-policy]').first().click();
+  await page.locator('[data-pdf-input]').setInputFiles({name:'invalid-regression.pdf',mimeType:'application/pdf',buffer:Buffer.from('not-a-pdf','utf8')});
+  await expect(page.getByText(/No pudimos completar el procesamiento del PDF|PDF/i).first()).toBeVisible();
+  await expect(page.getByRole('button',{name:/Elegir otro PDF/i})).toBeVisible();
+  await page.screenshot({path:'test-results/aura-cartera-pdf-regression/error-retry.png',fullPage:true});
+});
