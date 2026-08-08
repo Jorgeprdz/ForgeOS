@@ -43,7 +43,7 @@ const homeCompatibilityAllowed = [
   /^tests\/aura-home-command-center-mobile-nav-001\.test\.mjs$/,
   /^tests\/e2e\/aura-home-command-center-mobile-nav-001\.spec\.mjs$/,
   /^tests\/forge-aura-direct-route\.test\.mjs$/,
-  /^tests\/income-scope-guard\.test\.mjs$/,
+  /^tests\/income-(?:pages-import-graph|scope-guard)\.test\.mjs$/,
   /^playwright\.aura-home\.config\.mjs$/,
   /^\.github\/workflows\/aura-home-command-center-mobile-nav-001\.yml$/,
   /^docs\/architecture\/source-truth\/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_RECONCILIATION_REPORT_001\.md$/,
