@@ -40,9 +40,18 @@ test("Activity is a 25-point cockpit, not a duplicate eight-counter intake", () 
 
 test("user-facing Activity copy hides implementation jargon and preserves unknown", () => {
   const userCopy = `${moduleSource}\n${dailySource}`;
-  assert.doesNotMatch(userCopy, />[^<]*(FES|ledger|HUMAN_CONFIRMED|idempotency key|provenance)[^<]*</i);
+  assert.doesNotMatch(userCopy, /Esta confirmación crea un hecho operativo FES|HUMAN_CONFIRMED|evidence strength|idempotency key|source reference|provenance/i);
   assert.match(moduleSource, /Lo desconocido no se convierte en cero/);
   assert.match(dailySource, /No hay evidencia suficiente para asumir cero/);
+});
+
+test("session scrub and late-result rejection remain present in the Activity boundary", () => {
+  assert.match(moduleSource, /if \(!mounted \|\| selected !== revision\) return/);
+  assert.match(moduleSource, /revision \+= 1/);
+  assert.match(moduleSource, /manual\?\.scrub/);
+  assert.match(moduleSource, /daily\?\.scrub/);
+  assert.match(moduleSource, /mail\?\.scrub/);
+  assert.match(moduleSource, /reporting\?\.scrub/);
 });
 
 test("Router and shell retain Pipeline and Activity", () => {
