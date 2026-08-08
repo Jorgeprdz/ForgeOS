@@ -20,6 +20,13 @@ async function noPageOverflow(page) {
   expect(values.scrollWidth).toBeLessThanOrEqual(values.clientWidth + 1);
 }
 
+function durationMs(value) {
+  const text = String(value || "").trim();
+  if (text.endsWith("ms")) return parseFloat(text);
+  if (text.endsWith("s")) return parseFloat(text) * 1000;
+  return Number.POSITIVE_INFINITY;
+}
+
 test("desktop presents generated, expected and scenario truth layers without payout claim", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1100 });
   await openIncome(page);
@@ -55,7 +62,7 @@ test("tablet 834 remains usable and does not compress desktop grid", async ({ pa
   await page.setViewportSize({ width: 834, height: 1050 });
   await openIncome(page);
   await noPageOverflow(page);
-  const columns = await page.locator(".income-next__grid").evaluate(el => getComputedStyle(el).gridTemplateColumns.split(" ").length);
+  const columns = await page.locator(".income-next__grid").evaluate(el => getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
   expect(columns).toBe(1);
   await page.screenshot({ path: `${evidenceDir}/03-income-tablet-834.png`, fullPage: true });
 });
@@ -65,7 +72,8 @@ test("200 percent effective zoom reflows at the equivalent CSS viewport", async 
   await openIncome(page);
   await page.evaluate(() => { document.documentElement.dataset.acceptanceZoom = "200_PERCENT_EFFECTIVE_VIEWPORT"; });
   await noPageOverflow(page);
-  await expect(page.locator(".income-next__grid")).toHaveCSS("grid-template-columns", /.+/);
+  const columns = await page.locator(".income-next__grid").evaluate(el => getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length);
+  expect(columns).toBe(1);
   await page.screenshot({ path: `${evidenceDir}/04-income-zoom-200-effective.png`, fullPage: true });
 });
 
@@ -93,11 +101,20 @@ test("keyboard focus is visible and actionable controls meet 44px minimum", asyn
   }
 });
 
+test("screen-reader structure exposes one page heading and labelled economic sections", async ({ page }) => {
+  await openIncome(page);
+  await expect(page.getByRole("heading", { level: 1, name: "Ingresos" })).toHaveCount(1);
+  await expect(page.getByRole("heading", { level: 2, name: "Ingreso generado este mes" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "¿De dónde viene?" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "Movimientos" })).toBeVisible();
+  await expect(page.getByRole("group", { name: "Filtrar movimientos" })).toBeVisible();
+});
+
 test("reduced motion is honored by canonical Aura tokens", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await openIncome(page);
   const duration = await page.locator(".income-period button").first().evaluate(el => getComputedStyle(el).transitionDuration);
-  expect(["0s", "0.00001s", "0.01ms"]).toContain(duration);
+  expect(durationMs(duration)).toBeLessThanOrEqual(0.02);
   await page.screenshot({ path: `${evidenceDir}/05-income-reduced-motion.png`, fullPage: true });
 });
 
@@ -106,7 +123,8 @@ test("unknown evidence is rendered as unavailable rather than zero", async ({ pa
   await openIncome(page, "?mode=unknown");
   await expect(page.locator(".income-hero__metric")).toHaveText("No disponible");
   await expect(page.locator("[data-income-generated-state=UNKNOWN]")).toBeVisible();
-  await expect(page.locator("#income-composition-title").locator(".." ).locator("..")).toContainText("Unknown no se convierte en cero");
+  const compositionSection = page.locator(".income-section").filter({ has: page.locator("#income-composition-title") });
+  await expect(compositionSection).toContainText("Unknown no se convierte en cero");
 });
 
 test("session scrub removes private snapshot state", async ({ page }) => {
