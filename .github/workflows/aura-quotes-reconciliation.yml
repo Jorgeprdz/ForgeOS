@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - feature/aura-quotes-product-intelligence-pdf-presentation-001
+      - main
     paths:
       - "docs/static-preview/forge-aura/quotes/**"
       - "docs/static-preview/forge-aura/app-v4.js"
+      - "docs/static-preview/forge-aura/app-v4-r1.js"
       - "docs/static-preview/forge-aura/aura-router-v4.js"
       - "tests/forge-aura-quotes-reconciliation-test.mjs"
       - ".github/workflows/aura-quotes-reconciliation.yml"
@@ -15,6 +17,7 @@ on:
     paths:
       - "docs/static-preview/forge-aura/quotes/**"
       - "docs/static-preview/forge-aura/app-v4.js"
+      - "docs/static-preview/forge-aura/app-v4-r1.js"
       - "docs/static-preview/forge-aura/aura-router-v4.js"
       - "tests/forge-aura-quotes-reconciliation-test.mjs"
       - ".github/workflows/aura-quotes-reconciliation.yml"
@@ -36,6 +39,7 @@ jobs:
           node --check docs/static-preview/forge-aura/quotes/quotes-adapter.js
           node --check docs/static-preview/forge-aura/quotes/quotes-module.js
           node --check docs/static-preview/forge-aura/app-v4.js
+          node --check docs/static-preview/forge-aura/app-v4-r1.js
           node --check docs/static-preview/forge-aura/aura-router-v4.js
       - name: Aura Quotes boundary
         run: node tests/forge-aura-quotes-reconciliation-test.mjs
