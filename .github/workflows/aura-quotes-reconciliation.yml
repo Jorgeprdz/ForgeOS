@@ -41,18 +41,8 @@ jobs:
         run: node tests/forge-aura-quotes-reconciliation-test.mjs
       - name: Product benefit summary regression
         run: node tests/quote-benefit-summary-engine-test.mjs
-      - name: Accepted Quote regression
-        shell: bash
-        run: |
-          set +e
-          output="$(node tests/quote-preview-automatic-calculation-after-extraction-test.mjs 2>&1)"
-          status=$?
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then
-            message="$(printf '%s' "$output" | tr '\n' ' ' | head -c 3500)"
-            echo "::error title=Accepted Quote regression::$message"
-            exit "$status"
-          fi
+      - name: Accepted Quote review snapshot authority
+        run: node manager-os/tests/accepted-quote-review-snapshot-boundary-master-test.js
       - name: SeguBeca Accepted Quote regression
         run: node tests/segubeca-accepted-quote-integration-test.mjs
       - name: Productive PDF parser regression
