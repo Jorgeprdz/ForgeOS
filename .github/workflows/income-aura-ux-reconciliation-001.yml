@@ -191,7 +191,7 @@ jobs:
 
       - name: Validate artifact and Income import graph
         run: |
-          node scripts/validate-pages-public-config.mjs _site/env.js
+          EXPECTED_DEMO_MODE=true node scripts/validate-pages-public-config.mjs _site/env.js
           node /tmp/validate-canonical.cjs
           node --test tests/income-pages-import-graph.test.mjs
 
@@ -230,19 +230,22 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run synthetic browser acceptance
-        run: npx playwright test --config=playwright.aura-income.config.mjs
+        run: npx playwright test --config=tests/income-playwright.config.mjs
 
       - name: Verify required screenshot evidence exists
         run: |
-          test -f test-results/aura-income-ux/desktop-ready.png
-          test -f test-results/aura-income-ux/mobile-ready.png
-          test -f test-results/aura-income-ux/tablet-ready.png
+          test -f test-results/aura-income-visual/01-income-desktop.png
+          test -f test-results/aura-income-visual/02-income-mobile-390.png
+          test -f test-results/aura-income-visual/03-income-tablet-834.png
+          test -f test-results/aura-income-visual/04-income-zoom-200-effective.png
+          test -f test-results/aura-income-visual/05-income-reduced-motion.png
 
       - name: Upload Aura Income screenshots and traces
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aura-income-ux-${{ github.event.pull_request.head.sha || github.sha }}
+          name: aura-income-visual-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
-            test-results/aura-income-ux
+            test-results/aura-income-visual
+            test-results/aura-income-productive
           if-no-files-found: ignore
