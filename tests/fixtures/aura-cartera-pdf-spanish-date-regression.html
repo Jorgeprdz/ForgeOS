@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aura Cartera PDF Spanish-date regression</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <style>
+    html,body{margin:0;min-height:100%;background:#f5f6fa}
+    body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    #fixture-main{min-height:100vh}
+  </style>
+</head>
+<body>
+  <main id="fixture-main" tabindex="-1"></main>
+  <script type="module">
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v3.js?v=aura-cartera-pdf-real-acceptance-root-010';
+
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const adapter = Object.freeze({
+      capabilities: {
+        pdf020: true,
+        pdfMultiCoverageExtraction: false,
+        bulk: true,
+        manual: true,
+        coverageReadRpc: true,
+        directory010d: true,
+        pagesSafeAuthority: true,
+      },
+      async loadHome() {
+        return { policies: [], calendar: { summary: {} }, radar: { items: [] }, reviews: [] };
+      },
+      async loadDirectory() { return []; },
+      async processPdf(file, { signal } = {}) {
+        await sleep(80);
+        if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+        if (!(file instanceof File) || file.type !== 'application/pdf') throw new Error('PDF_FIXTURE_NOT_UPLOADED');
+        return {
+          packetReference: 'POLICY_PACKET:AURA:SPANISH_DATE',
+          candidateReference: 'POLICY_CANDIDATE:AURA:SPANISH_DATE',
+          personCandidateReference: 'IDENTITY_CANDIDATE:AURA:SPANISH_DATE',
+          sourceReference: 'EVIDENCE_SOURCE:AURA:SPANISH_DATE',
+          documentDigest: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+          edgeCandidate: {
+            person: 'Persona Sintetica',
+            policyNumber: 'SYN-IMAGINA-010',
+            product: 'IMAGINA SER',
+            premium: '3976.96',
+            effectiveDate: '05/AGO/2026',
+            expirationDate: '05/AGO/2053',
+          },
+          fields: {},
+          pdfCoverageExtraction: 'NOT_SUPPORTED',
+          requiresHumanReview: true,
+          createsPolicyTruth: false,
+        };
+      },
+      async confirmPdfReview() { throw new Error('NOT_USED_IN_REGRESSION'); },
+      async analyzePortfolioFile() { return []; },
+      async importReviewedRows() { return []; },
+      async persistReviewedDraft() { throw new Error('NOT_USED_IN_REGRESSION'); },
+    });
+
+    const module = createCarteraModule({
+      root: document.querySelector('#fixture-main'),
+      client: {},
+      windowRef: window,
+      adapterFactory: async () => adapter,
+      globalState: () => {},
+    });
+    await module.mount();
+    document.documentElement.dataset.regressionHarness = 'READY';
+  </script>
+</body>
+</html>
