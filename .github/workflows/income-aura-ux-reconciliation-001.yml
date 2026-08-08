@@ -7,7 +7,9 @@ on:
     paths:
       - 'docs/static-preview/forge-aura/income/**'
       - 'docs/static-preview/forge-aura/app-v4.js'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
       - 'docs/static-preview/forge-aura/aura-bootstrap-v4.js'
+      - 'docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js'
       - 'docs/static-preview/forge-aura/aura-router-v4.js'
       - 'docs/static-preview/forge-aura/aura-shell.js'
       - 'docs/static-preview/forge-aura/aura-shell.css'
@@ -25,7 +27,9 @@ on:
     paths:
       - 'docs/static-preview/forge-aura/income/**'
       - 'docs/static-preview/forge-aura/app-v4.js'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
       - 'docs/static-preview/forge-aura/aura-bootstrap-v4.js'
+      - 'docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js'
       - 'docs/static-preview/forge-aura/aura-router-v4.js'
       - 'docs/static-preview/forge-aura/aura-shell.js'
       - 'docs/static-preview/forge-aura/aura-shell.css'
@@ -80,6 +84,8 @@ jobs:
           node --check docs/static-preview/forge-aura/income/income-adapter-pages-v1.mjs
           node --check docs/static-preview/forge-aura/income/income-module.mjs
           node --check docs/static-preview/forge-aura/app-v4.js
+          node --check docs/static-preview/forge-aura/app-v4-r1.js
+          node --check docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js
           node --check docs/static-preview/forge-aura/aura-router-v4.js
           node --check docs/static-preview/forge-aura/aura-shell.js
 
@@ -184,27 +190,22 @@ jobs:
           node /tmp/build-canonical.cjs
 
       - name: Validate artifact and Income import graph
-        env:
-          EXPECTED_DEMO_MODE: 'true'
         run: |
+          EXPECTED_DEMO_MODE=true node scripts/validate-pages-public-config.mjs _site/env.js
           node /tmp/validate-canonical.cjs
-          node scripts/validate-pages-public-config.mjs _site/env.js
           node --test tests/income-pages-import-graph.test.mjs
-          echo 'PAGES_ARTIFACT_BUILD=PASS'
-          echo 'INCOME_IMPORT_GRAPH=PASS'
 
       - name: Upload canonical artifact diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aura-income-canonical-site-${{ github.event.pull_request.head.sha || github.sha }}
+          name: income-canonical-pages-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             _site/build-info.json
             _site/production-surface.json
-          if-no-files-found: warn
-          retention-days: 30
+          if-no-files-found: ignore
 
-  browser-acceptance:
+  responsive-accessibility:
     name: Income responsive accessibility and lifecycle acceptance
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -214,6 +215,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
 
       - name: Setup Node 22
         uses: actions/setup-node@v4
@@ -228,21 +230,15 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run synthetic browser acceptance
-        run: npx playwright test --config tests/income-playwright.config.mjs
+        run: npx playwright test --config=tests/income-playwright.config.mjs
 
       - name: Verify required screenshot evidence exists
-        shell: bash
         run: |
-          set -euo pipefail
-          for name in \
-            01-income-desktop \
-            02-income-mobile-390 \
-            03-income-tablet-834 \
-            04-income-zoom-200-effective \
-            05-income-reduced-motion; do
-            test -s "test-results/aura-income-visual/${name}.png"
-          done
-          echo 'INCOME_BROWSER_SCREENSHOT_SET=PASS'
+          test -f test-results/aura-income-visual/01-income-desktop.png
+          test -f test-results/aura-income-visual/02-income-mobile-390.png
+          test -f test-results/aura-income-visual/03-income-tablet-834.png
+          test -f test-results/aura-income-visual/04-income-zoom-200-effective.png
+          test -f test-results/aura-income-visual/05-income-reduced-motion.png
 
       - name: Upload Aura Income screenshots and traces
         if: always()
@@ -252,5 +248,4 @@ jobs:
           path: |
             test-results/aura-income-visual
             test-results/aura-income-productive
-          if-no-files-found: warn
-          retention-days: 30
+          if-no-files-found: ignore

@@ -4,16 +4,25 @@ import { execFileSync } from "node:child_process";
 
 const sharedAuraRuntime = [
   /^docs\/static-preview\/forge-aura\/app-v4\.js$/,
+  /^docs\/static-preview\/forge-aura\/app-v4-r1\.js$/,
   /^docs\/static-preview\/forge-aura\/aura-bootstrap-v4\.js$/,
+  /^docs\/static-preview\/forge-aura\/aura-bootstrap-v4-r1\.js$/,
   /^docs\/static-preview\/forge-aura\/aura-router-v4\.js$/,
   /^docs\/static-preview\/forge-aura\/aura-shell\.js$/,
   /^docs\/static-preview\/forge-aura\/aura-shell\.css$/,
   /^docs\/static-preview\/forge-aura\/index\.html$/,
 ];
 
+const auraBootCompatibilityAllowed = [
+  /^tests\/aura-boot-cache-isolation-013\.test\.mjs$/,
+  /^tests\/forge-aura-direct-route\.test\.mjs$/,
+  /^\.github\/workflows\/forge-aura-direct-route\.yml$/,
+];
+
 const incomeAllowed = [
   /^docs\/static-preview\/forge-aura\/income\//,
   ...sharedAuraRuntime,
+  ...auraBootCompatibilityAllowed,
   /^tests\/income-/,
   /^tests\/e2e\/income-/,
   /^tests\/fixtures\/aura-income-/,
@@ -25,9 +34,8 @@ const incomeAllowed = [
 const carteraSemanticEdge = /^supabase\/functions\/cartera-pdf-intake\/index\.ts$/;
 const carteraCompatibilityAllowed = [
   /^docs\/static-preview\/forge-aura\/cartera\//,
-  /^docs\/static-preview\/forge-aura\/app-v4\.js$/,
-  /^docs\/static-preview\/forge-aura\/aura-bootstrap-v4\.js$/,
-  /^docs\/static-preview\/forge-aura\/index\.html$/,
+  ...sharedAuraRuntime,
+  ...auraBootCompatibilityAllowed,
   carteraSemanticEdge,
   /^tests\/aura-cartera-/,
   /^tests\/cartera-/,
@@ -43,14 +51,15 @@ const carteraCompatibilityAllowed = [
 const homeCompatibilityAllowed = [
   /^docs\/static-preview\/forge-aura\/home\//,
   ...sharedAuraRuntime,
+  ...auraBootCompatibilityAllowed,
   /^scripts\/prepare-aura-home-pages-authorities\.mjs$/,
   /^scripts\/build-advisor-presentation-pages-runtime\.mjs$/,
   /^tests\/aura-home-command-center-mobile-nav-001\.test\.mjs$/,
   /^tests\/e2e\/aura-home-command-center-mobile-nav-001\.spec\.mjs$/,
-  /^tests\/forge-aura-direct-route\.test\.mjs$/,
   /^tests\/income-(?:pages-import-graph|scope-guard)\.test\.mjs$/,
   /^playwright\.aura-home\.config\.mjs$/,
   /^\.github\/workflows\/aura-home-command-center-mobile-nav-001\.yml$/,
+  /^\.github\/workflows\/income-aura-ux-reconciliation-001\.yml$/,
   /^docs\/architecture\/source-truth\/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_RECONCILIATION_REPORT_001\.md$/,
   /^docs\/evidence\/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_ACCEPTANCE_001\.md$/,
 ];
@@ -58,9 +67,11 @@ const homeCompatibilityAllowed = [
 const quotesCompatibilityAllowed = [
   /^docs\/static-preview\/forge-aura\/quotes\//,
   ...sharedAuraRuntime,
+  ...auraBootCompatibilityAllowed,
   /^tests\/forge-aura-quotes-reconciliation-test\.mjs$/,
   /^tests\/income-scope-guard\.test\.mjs$/,
   /^\.github\/workflows\/aura-quotes-reconciliation\.yml$/,
+  /^\.github\/workflows\/income-aura-ux-reconciliation-001\.yml$/,
 ];
 
 const forbidden = [
