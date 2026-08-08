@@ -4,6 +4,7 @@ import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
 import { createPipelineModule } from "./pipeline/pipeline-module.js?v=pages-adapter-c5a90d95";
 import { createActivityModule } from "./activity/activity-module.js?v=activity-reports-ux-001-corrected";
 import { createCarteraModule } from "./cartera/cartera-module.js?v=aura-cartera-pdf-auth-002";
+import { createIncomeModule } from "./income/income-module.js?v=aura-income-ux-001";
 
 const root = document.querySelector("[data-aura-app]");
 const auth = createAuraAuth();
@@ -101,6 +102,14 @@ function createRouteModule(route, currentShell, client, snapshot) {
       globalState: currentShell.setGlobalState,
     });
   }
+  if (route === "comisiones") {
+    return createIncomeModule({
+      root: currentShell.main,
+      client,
+      user: snapshot.user,
+      globalState: currentShell.setGlobalState,
+    });
+  }
   return createPipelineModule({
     root: currentShell.main,
     client,
@@ -118,6 +127,7 @@ async function mountRoute(route, snapshot) {
   const client = await auth.getClient();
   if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
   if (route === "cartera") ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
+  if (route === "comisiones") ensureStylesheet("./income/income.css?v=aura-income-ux-001", "ingresos");
   if (revision !== bootRevision) return;
   activeModule = createRouteModule(route, currentShell, client, snapshot);
   activeRoute = route;
