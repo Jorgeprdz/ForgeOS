@@ -15,7 +15,7 @@ on:
       - 'tests/cartera-pdf-ingress-parity-playwright.config.mjs'
       - 'tests/fixtures/aura-cartera-pdf-ingress-parity.html'
       - 'tests/e2e/aura-cartera-pdf-ingress-parity.spec.mjs'
-      - 'tests/cartera-020c-durable-attach-pipeline-person-015.test.mjs'
+      - 'tests/cartera-020c-durable-attach-015.test.mjs'
       - '.github/workflows/aura-cartera-pdf-ingress-parity.yml'
       - '.github/workflows/aura-cartera-020c-durable-confirmation-015.yml'
   workflow_dispatch:
@@ -51,7 +51,7 @@ jobs:
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v5.js
           node --check tests/e2e/aura-cartera-pdf-ingress-parity.spec.mjs
       - name: Prove governed append-only refresh and ingress wiring
-        run: node --test tests/cartera-pdf-ingress-legacy-refresh.test.mjs tests/cartera-020c-durable-attach-pipeline-person-015.test.mjs
+        run: node --test tests/cartera-pdf-ingress-legacy-refresh.test.mjs tests/cartera-020c-durable-attach-015.test.mjs
 
   selector-triple-check:
     name: Media selector — triple check 1/3 + 2/3 + 3/3
