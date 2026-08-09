@@ -1,0 +1,38 @@
+name: Audit real PDF - ORVI
+
+on:
+  push:
+    branches:
+      - audit/quotes-real-pdf-product-intelligence-008
+    paths:
+      - "audit/quote-real-pdf-audit.mjs"
+      - "audit/fixtures/orvi-real-pdf.txt"
+      - ".github/workflows/audit-real-pdf-orvi.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-orvi-real-pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+      - name: Syntax gate
+        run: node --check audit/quote-real-pdf-audit.mjs
+      - name: Replay ORVI PDF evidence through Product Intelligence and Material 3
+        run: |
+          node audit/quote-real-pdf-audit.mjs \
+            --family orvi \
+            --text-fixture audit/fixtures/orvi-real-pdf.txt \
+            --name Solucionline_20260714_09_06PDF_260714_090644.pdf \
+            --pdf-sha256 bc875a36f20f3416a9b790842ab6d5aea6343b25a456bbf7e798d66a9064e01f
+      - name: Upload ORVI audit evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-pdf-orvi-product-intelligence-audit
+          path: tmp/quote-real-pdf-audit/orvi.*
+          if-no-files-found: error
