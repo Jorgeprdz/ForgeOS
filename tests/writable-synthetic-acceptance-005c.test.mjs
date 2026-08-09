@@ -55,7 +55,9 @@ test('005C data plane has no privileged credential or management path', () => {
 test('005C migration deployer is control-plane DDL only', () => {
   assert.match(deployer, /SUPABASE_ACCESS_TOKEN/);
   assert.match(deployer, /database\/query/);
-  assert.match(deployer, /20260809010000_governed_writable_synthetic_acceptance_005c\.sql/);
+  assert.match(deployer, /const VERSION = '20260809010000'/);
+  assert.match(deployer, /const NAME = 'governed_writable_synthetic_acceptance_005c'/);
+  assert.match(deployer, /const FILE = `supabase\/migrations\/\$\{VERSION\}_\$\{NAME\}\.sql`/);
   assert.doesNotMatch(deployer, /from\(['"]prospects|insert\s+into\s+public\.(prospects|commercial_people|canonical_policies)/i);
 });
 
