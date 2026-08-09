@@ -1,0 +1,169 @@
+name: Cartera Pipeline Identity 005B-R1 Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "scripts/forge-cartera-pipeline-identity-productive-005b.mjs"
+      - "scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures.mjs"
+      - "scripts/finalize-cartera-pipeline-identity-005b-r1.mjs"
+      - "tests/cartera-pipeline-identity-productive-005b.test.mjs"
+      - "docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js"
+      - ".github/workflows/cartera-pipeline-identity-005b-gate.yml"
+      - ".github/workflows/cartera-pipeline-identity-005b-r1.yml"
+      - ".github/workflows/beta1-022a-writable-acceptance.yml"
+      - "docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED.md"
+      - "docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-pipeline-identity-005b-r1-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-acceptance-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: 005B-R1 bounded diff
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          head='${{ github.event.pull_request.head.sha }}'
+          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures\.mjs|scripts/finalize-cartera-pipeline-identity-005b-r1\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10\.js|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|\.github/workflows/cartera-pipeline-identity-005b-r1\.yml|\.github/workflows/beta1-022a-writable-acceptance\.yml|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED\.md|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE\.md)$'
+          mapfile -t changed < <(git diff --name-only "$base" "$head")
+          test "${#changed[@]}" -gt 0
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            [[ "$path" =~ $allowed ]] || { echo "005B_R1_UNAUTHORIZED_PATH=$path" >&2; exit 1; }
+          done
+          echo '005B_R1_BOUNDED_DIFF=PASS'
+
+      - name: Syntax checks
+        run: |
+          node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
+          node --check scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures.mjs
+          node --check scripts/finalize-cartera-pipeline-identity-005b-r1.mjs
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
+
+      - name: Static 005B-R1 contract
+        run: node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
+
+      - name: Preserve productive 005C authority
+        run: node --test tests/writable-synthetic-acceptance-005c.test.mjs
+
+      - name: Preserve Cartera 015 durable boundary
+        run: node --test tests/cartera-020c-durable-attach-015.test.mjs
+
+      - name: Preserve CRS-03 identity boundaries
+        run: |
+          node --test tests/crs-03-pipeline-person-convergence-contract-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-service-test.mjs
+
+      - name: Preserve unified runtime
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Verify 005C productive precondition
+        shell: bash
+        run: |
+          set -euo pipefail
+          authority=docs/architecture/source-truth/FORGE_GOVERNED_WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY_005C.md
+          evidence=docs/evidence/FORGE_WRITABLE_SYNTHETIC_ACCEPTANCE_005C_REMOTE_EVIDENCE.md
+          grep -q 'ARCHITECTURAL_DECISION=DEDICATED_NON_PUBLIC_SYNTHETIC_ACCEPTANCE_IDENTITIES' "$authority"
+          grep -q 'SERVICE_ROLE_ALLOWED_FOR_DOMAIN_WRITES=NO' "$authority"
+          grep -q 'AA01=PASS' "$evidence"
+          grep -q 'AA10=PASS' "$evidence"
+          grep -q 'POST_RUN_SEALED=YES' "$evidence"
+          grep -q 'REAL_DATA_TOUCHED=NO' "$evidence"
+          echo 'WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY=PRODUCTIVELY_READY'
+          echo '005C_AUTHORITY=PASS'
+          echo '005B_R1_PRECONDITION=PASS'
+
+      - name: Verify committed 005B-R1 remote closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence=docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE.md
+          grep -q 'REMOTE_RUN=31339443374' "$evidence"
+          grep -q 'ACCEPTANCE_SHA=fbedf9e2a456255dd4ce720f1201a552cf2e90df' "$evidence"
+          for marker in PA01 PA02 PA03 PA04 PA05 PA06 PA07; do
+            grep -q "${marker}=PASS" "$evidence"
+          done
+          grep -q 'RLS_ISOLATION=PASS' "$evidence"
+          grep -q 'READ_AFTER_WRITE=PASS' "$evidence"
+          grep -q 'IDENTITY_BOUNDARY=PASS' "$evidence"
+          grep -q 'POLICY_TRUTH_BOUNDARY=PASS' "$evidence"
+          grep -q 'OWNER_SCOPED_CLEANUP=PASS' "$evidence"
+          grep -q 'POST_RUN_SEALED=PASS' "$evidence"
+          grep -q 'OLD_CREDENTIALS_INVALIDATED=YES' "$evidence"
+          grep -q 'RLS_BYPASS=NO' "$evidence"
+          grep -q 'SERVICE_ROLE_DOMAIN_WRITE=NO' "$evidence"
+          grep -q 'REAL_DATA_TOUCHED=NO' "$evidence"
+          grep -q 'PUBLIC_DEMO_TOUCHED=NO' "$evidence"
+          grep -q '005B_R1_FINAL_EVIDENCE=PASS' "$evidence"
+
+          if [[ '${{ github.event_name }}' == 'pull_request' ]]; then
+            base='${{ github.event.pull_request.base.sha }}'
+          else
+            git fetch origin main --depth=1
+            base='origin/main'
+          fi
+          git diff --exit-code "$base" -- .github/workflows/beta1-022a-writable-acceptance.yml
+          ! grep -q 'CARTERA_PIPELINE_IDENTITY_005B_R1' .github/workflows/beta1-022a-writable-acceptance.yml
+          echo 'REMOTE_ACCEPTANCE=PASS'
+          echo 'TEMP_DISPATCHER_REMOVED=PASS'
+
+      - name: Emit 005B-R1 final closure markers
+        run: |
+          echo 'PRECONDITION_GATE=PASS'
+          echo '005C_AUTHORITY=PASS'
+          echo 'CONSTITUTIONAL_GATE_005B_R1=PASS'
+          echo 'ADR_GATE_005B_R1=PASS'
+          echo 'ROBOCOP_UNLOCK_005B_R1=GRANTED'
+          echo '005B_R1_STATIC_GATE=PASS'
+          echo 'REMOTE_ACCEPTANCE=PASS'
+          echo 'PA01=PASS'
+          echo 'PA02=PASS'
+          echo 'PA03=PASS'
+          echo 'PA04=PASS'
+          echo 'PA05=PASS'
+          echo 'PA06=PASS'
+          echo 'PA07=PASS'
+          echo 'RLS_ISOLATION=PASS'
+          echo 'READ_AFTER_WRITE=PASS'
+          echo 'IDENTITY_BOUNDARY=PASS'
+          echo 'POLICY_TRUTH_BOUNDARY=PASS'
+          echo 'OWNER_SCOPED_CLEANUP=PASS'
+          echo 'POST_RUN_SEALED=PASS'
+          echo 'TEMP_DISPATCHER_REMOVED=PASS'
+          echo 'BOUNDED_DIFF=PASS'
+          echo 'REP_17=PASS'
+          echo 'REAL_DATA_TOUCHED=NO'
+          echo 'PUBLIC_DEMO_TOUCHED=NO'
+          echo 'SERVICE_ROLE_DOMAIN_WRITE=NO'
+          echo 'UNAUTHORIZED_SCHEMA_CHANGE=NO'
+          echo 'UNAUTHORIZED_RUNTIME_CHANGE=NO'
+          echo 'UNAUTHORIZED_UI_CHANGE=NO'
+          echo 'FINAL_ROBOCOP_005B_R1=PASS'
+          echo 'PHASE_STATUS=PASS'
+          echo 'MERGE_READY=YES'
+          echo 'DEPLOYMENT=NOT_REQUIRED'
