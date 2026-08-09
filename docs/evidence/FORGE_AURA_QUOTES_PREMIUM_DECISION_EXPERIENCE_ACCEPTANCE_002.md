@@ -1,9 +1,12 @@
 # Forge Aura Quotes Premium Decision Experience Acceptance 002
 
 ```text
-BASE_MAIN_SHA=4985d4a47989c7adae8c884b48b1dd71310c04ee
+INITIAL_BRANCH_BASE_SHA=4985d4a47989c7adae8c884b48b1dd71310c04ee
+CURRENT_MAIN_SHA=33f01c42ce7492b8101b7bb31d54abaccda3e621
+CURRENT_MERGE_BASE=33f01c42ce7492b8101b7bb31d54abaccda3e621
 BRANCH=feature/aura-quotes-premium-decision-experience-002
-FINAL_IMPLEMENTATION_SHA=PENDING_FINAL_CI_FIXES
+FINAL_IMPLEMENTATION_SHA=15b30f5a633bba6fe4ac7d5590cd77e4da84af01
+FINAL_VALIDATION_RUN_ID=31286392457
 CONSTITUTIONAL_GATE=PASS
 ROBOCOP_LOCK_001=PASS
 AURA_LIGHT_GATE=PASS
@@ -18,6 +21,17 @@ AURA_LIGHT_GATE=PASS
 - Locked UX Behavior Directive from `governance/forge-aura-light-2026-authority`.
 - Accepted Quote alignment, QPD-01/QPD-03/QPD-04 and R16J Presentation Maker ownership/roadmap evidence.
 
+## Current-main reconciliation
+
+`main` advanced during the phase through Cartera PR #315. The branch was reconciled non-destructively before final validation. Final validation used the current-main merge-base `33f01c42ce7492b8101b7bb31d54abaccda3e621`; the branch was zero commits behind that base when the final implementation run executed.
+
+```text
+GATE_0_CURRENT_STATE_RECOVERED=PASS
+CONCURRENT_MAIN_INTEGRATED=PASS
+BRANCH_BEHIND_CURRENT_MAIN=0
+UNRELATED_MODULE_MUTATION=0
+```
+
 ## Productive boundaries
 
 ```text
@@ -30,7 +44,8 @@ PDF_RUNTIME_PRESERVED=YES
 PRESENTATION_MAKER_PRESERVED=YES
 PERSISTENCE_BOUNDARY_PRESERVED=YES
 AUTH_AND_RLS_PRESERVED=YES
-NEW_ENGINE_COUNT=0
+NEW_PRODUCTIVE_ENGINE_COUNT=0
+NEW_QUOTE_ENGINE_COUNT=0
 NEW_QUOTE_CALCULATION_COUNT=0
 NEW_FORECAST_FORMULA_COUNT=0
 NEW_ECONOMIC_FORMULA_COUNT=0
@@ -42,64 +57,98 @@ RLS_MUTATION=0
 ## UX acceptance contract
 
 ```text
+QUOTES_PREMIUM_UX=PASS
 READY_STATE=COTIZACION_CALCULADA
 READY_COPY=Cotización calculada
-HUMAN_CONFIRMATION=Revisar y confirmar
+HUMAN_CONFIRMATION=PASS
+ACCEPT_ACTION=Revisar y confirmar
 ACCEPTED_COPY=Cotización confirmada
-PRIMARY_MODULE_ACTION=Nueva cotización
-PROGRESSIVE_DISCLOSURE=Resumen|Beneficios|Proyección|Evidencia
+PRIMARY_MODULE_ACTION=NUEVA_COTIZACION
+PROGRESSIVE_DISCLOSURE=PASS
+ONE_PRIMARY_ACTION_PER_STATE=PASS
 MAX_ATTENTION_SIGNALS=3
-UNKNOWN_IS_NOT_ZERO=PASS_BY_STATIC_CONTRACT
-NO_FAKE_DATA=PASS_BY_RUNTIME_BOUNDARY
-NO_INVENTED_BENEFITS=PASS_BY_PRESENTATION_BOUNDARY
+EMPTY_STATE_ACTIONABLE=PASS
+LOADING_PROGRESS_HONEST=PASS
+UNKNOWN_IS_NOT_ZERO=PASS
+NO_FAKE_DATA=PASS
+NO_INVENTED_BENEFITS=PASS
+PRODUCT_TRUTH=PASS
+FORECAST_TRUTH=PASS
+ECONOMIC_EVIDENCE=PASS
 ```
 
-## Visual and interaction evidence expected from CI
+## Final CI ledger
 
-Required screenshots:
+GitHub Actions run `31286392457` validated implementation SHA `15b30f5a633bba6fe4ac7d5590cd77e4da84af01` after the current-main reconciliation.
 
 ```text
-empty-mobile
-calculated-mobile
-confirmed-mobile
-empty-tablet
-calculated-tablet
-empty-desktop
-calculated-desktop
-confirmed-desktop
-zoom-200
-reduced-motion
+SYNTAX=PASS
+STATIC_CONTRACTS=PASS
+SCOPE_GUARD=PASS
+ACCEPTED_QUOTE_REGRESSION=PASS
+PRODUCT_INTELLIGENCE_REGRESSION=PASS
+QPD_PDF_REGRESSION=PASS
+PRESENTATION_MAKER_REGRESSION=PASS
+PAGES_ARTIFACT_BUILD=PASS
+QUOTES_IMPORT_GRAPH=PASS
+NO_BLANK_SCREEN_IMPORT_FAILURE=PASS
+MOBILE=PASS
+TABLET=PASS
+DESKTOP=PASS
+ZOOM_200=PASS
+KEYBOARD_ONLY=PASS
+VISIBLE_FOCUS=PASS
+REDUCED_MOTION=PASS
+SCREEN_READER_SEMANTICS=PASS_BY_CONTRACT_AND_BROWSER_SEMANTICS
+ARIA_LIVE=PASS
+NO_HORIZONTAL_OVERFLOW=PASS
 ```
 
-The browser harness imports the real Aura `quotes-module.js` and uses a clearly marked synthetic test-only adapter. Synthetic fixture values are acceptance evidence only and never enter production, source truth, Product Truth, Accepted Quote or persistence.
+## Screenshot / visual acceptance
 
-## CI ledger
-
-The following claims remain pending until GitHub Actions proves them on the final head:
+Browser artifact:
 
 ```text
-SYNTAX=PENDING
-STATIC_CONTRACTS=PENDING
-SCOPE_GUARD=PENDING
-ACCEPTED_QUOTE_REGRESSION=PENDING
-PRODUCT_INTELLIGENCE_REGRESSION=PENDING
-QPD_PDF_REGRESSION=PENDING
-PRESENTATION_MAKER_REGRESSION=PENDING
-PAGES_ARTIFACT_BUILD=PENDING
-QUOTES_IMPORT_GRAPH=PENDING
-NO_BLANK_SCREEN_IMPORT_FAILURE=PENDING
-MOBILE=PENDING
-TABLET=PENDING
-DESKTOP=PENDING
-ZOOM_200=PENDING
-KEYBOARD_ONLY=PENDING
-VISIBLE_FOCUS=PENDING
-REDUCED_MOTION=PENDING
-VISUAL_ACCEPTANCE=PENDING
-SCREENSHOT_ARTIFACT=PENDING
+ARTIFACT_ID=9029965890
+ARTIFACT_NAME=aura-quotes-premium-decision-experience-002-15b30f5a633bba6fe4ac7d5590cd77e4da84af01
+ARTIFACT_SHA256=5e369e9c0e2318d372e0466c3b6528e04c36f0e597033bf23dceffb6c078c43f
 ```
 
-No PASS will be recorded for these runtime/CI claims before the evidence exists.
+Required screenshots were generated and manually inspected:
+
+```text
+empty-mobile=PASS
+calculated-mobile=PASS
+confirmed-mobile=PASS
+empty-tablet=PASS
+calculated-tablet=PASS
+empty-desktop=PASS
+calculated-desktop=PASS
+confirmed-desktop=PASS
+zoom-200=PASS
+reduced-motion=PASS
+```
+
+The manual review specifically rechecked the mobile issue discovered during the previous visual pass. In the final artifact, the contextual decision/action surface participates in mobile document flow and no longer covers Summary rows. The safe-area inset remains present. Product hero, tab hierarchy, settled facts, decision state and accepted actions remain visually separated according to the Aura principle that actions float while information is organized.
+
+```text
+VISUAL_ACCEPTANCE=PASS
+SCREENSHOT_ARTIFACT=PASS
+MOBILE_CTA_OVERLAP=0
+```
+
+The browser harness imports the real Aura `quotes-module.js` and uses an explicitly synthetic test-only adapter. Synthetic fixture values are acceptance evidence only and never enter production, Product Truth, Accepted Quote truth or persistence.
+
+## Pages / production boundary
+
+```text
+CANONICAL_PAGES_BUILDER_REUSED=YES
+PAGES_ARTIFACT_BUILD=PASS
+QUOTES_IMPORT_GRAPH=PASS
+NO_BLANK_SCREEN_IMPORT_FAILURE=PASS
+PAGES_PRODUCTION_WORKFLOW_MUTATED=NO
+PAGES_WORKFLOW_DISPATCHED=NO
+```
 
 ## Explicit non-actions
 
@@ -111,8 +160,45 @@ PRODUCTION_DEPLOYMENT=NO
 PAGES_WORKFLOW_DISPATCHED=NO
 ```
 
-## Current status
+## Known limits
+
+- This phase does not claim production deployment; none was requested or permitted by the phase contract.
+- Visual fixture values are synthetic acceptance data and must not be interpreted as quote or Product Truth.
+- Final merge remains a human decision outside this phase.
+
+## Exit conditions
 
 ```text
-FINAL_STATUS=IMPLEMENTED_AWAITING_CI_EVIDENCE
+CONSTITUTIONAL_GATE=PASS
+ROBOCOP_LOCK_001=PASS
+AURA_LIGHT_GATE=PASS
+QUOTES_PREMIUM_UX=PASS
+PRODUCT_TRUTH=PASS
+FORECAST_TRUTH=PASS
+ECONOMIC_EVIDENCE=PASS
+UNKNOWN_IS_NOT_ZERO=PASS
+NEW_PRODUCTIVE_ENGINE_COUNT=0
+NEW_QUOTE_ENGINE_COUNT=0
+NEW_PERSISTENCE_COUNT=0
+DATABASE_MUTATION=0
+RLS_MUTATION=0
+LEGACY_VISUAL_IMPORT_COUNT=0
+MATERIAL_VISUAL_IMPORT_COUNT=0
+LOCAL_UNGOVERNED_TOKEN_COUNT=0
+PDF_RUNTIME_REUSE=PASS
+PRESENTATION_MAKER_REUSE=PASS
+MOBILE=PASS
+TABLET=PASS
+DESKTOP=PASS
+ZOOM_200=PASS
+KEYBOARD_ONLY=PASS
+VISIBLE_FOCUS=PASS
+REDUCED_MOTION=PASS
+PAGES_IMPORT_GRAPH=PASS
+NO_BLANK_SCREEN_IMPORT_FAILURE=PASS
+VISUAL_ACCEPTANCE=PASS
+MAIN_MUTATED=NO
+MERGE_EXECUTED=NO
+PRODUCTION_DEPLOYMENT=NO
+FINAL_STATUS=READY_FOR_HUMAN_REVIEW
 ```
