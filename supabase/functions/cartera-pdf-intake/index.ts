@@ -1,8 +1,13 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { GoogleGenerativeAI } from "npm:@google/generative-ai";
+import {
+  finalizeSemanticCandidates,
+  mergeSemanticCandidateLists,
+  semanticRecoveryReasons,
+} from "./semantic-recovery.js";
 
-const FUNCTION_VERSION = "cartera-pdf-intake-v3-semantic-review-012";
+const FUNCTION_VERSION = "cartera-pdf-intake-v4-semantic-completion-014";
 const MODEL_VERSION = "gemini-3.1-flash-lite";
 const MAX_BYTES = 8 * 1024 * 1024;
 const MONTHS: Record<string, string> = {
@@ -126,6 +131,7 @@ function sanitizeCoverageCandidates(rows: unknown) {
       paymentPeriod: period(row?.paymentPeriod),
       premiumAmount: numberValue(row?.premiumAmount),
       source: text(row?.source) || "PDF_DOCUMENT",
+      evidenceReference: text(row?.evidenceReference || row?.sourceLocation, 240) || null,
       sourceSection: text(row?.sourceSection) || "COBERTURAS",
       sourceLocation: row?.sourceLocation ?? null,
       confidence: Number.isFinite(confidence) ? Math.max(0, Math.min(1, confidence)) : null,
@@ -166,6 +172,7 @@ function sanitizeRows(rows: unknown) {
       plannedPremium: numberValue(row?.plannedPremium),
       annualTotal: numberValue(row?.annualTotal),
       beneficiariesDetected: row?.beneficiariesDetected === true,
+      coverageSectionDetected: row?.coverageSectionDetected === true ? true : (row?.coverageSectionDetected === false ? false : null),
       coverageCandidates: sanitizeCoverageCandidates(row?.coverageCandidates),
       confidence: Number.isFinite(Number(row?.confidence)) ? Math.max(0, Math.min(1, Number(row.confidence))) : 0,
       requiresHumanReview: true,
@@ -180,32 +187,17 @@ function sanitizeRows(rows: unknown) {
 }
 
 function emptyReviewCandidate() {
-  return {
+  return finalizeSemanticCandidates([{
     id: "candidate_001",
-    person: "",
-    insured: "",
-    contractor: "",
-    policyNumber: "",
-    product: "",
-    policyType: null,
-    status: null,
-    issueDate: null,
-    effectiveDate: null,
-    expirationDate: null,
-    currency: null,
-    paymentFrequency: null,
-    basicPremiumTotal: null,
-    plannedPremium: null,
-    annualTotal: null,
-    beneficiariesDetected: false,
-    coverageCandidates: [],
-    confidence: 0,
-    requiresHumanReview: true,
-    createsTruth: false,
-  };
+    person: "", insured: "", contractor: "", policyNumber: "", product: "",
+    policyType: null, status: null, issueDate: null, effectiveDate: null, expirationDate: null,
+    currency: null, paymentFrequency: null, basicPremiumTotal: null, plannedPremium: null, annualTotal: null,
+    beneficiariesDetected: false, coverageSectionDetected: null, coverageCandidates: [], confidence: 0,
+    requiresHumanReview: true, createsTruth: false,
+  }])[0];
 }
 
-const semanticContract = `Devuelve JSON válido con:
+const semanticContract = `Devuelve JSON válido con esta estructura exacta:
 {"candidates":[{
 "person":"","insured":"","contractor":"",
 "policyNumber":"","product":"",
@@ -213,37 +205,40 @@ const semanticContract = `Devuelve JSON válido con:
 "issueDate":"","effectiveDate":"","expirationDate":"",
 "currency":"","paymentFrequency":"",
 "basicPremiumTotal":null,"plannedPremium":null,"annualTotal":null,
-"beneficiariesDetected":false,
+"beneficiariesDetected":false,"coverageSectionDetected":false,
 "coverageCandidates":[{
 "coverageLabel":"","coverageCode":"","annexReference":"",
 "sumInsured":null,"currency":"","effectiveFrom":"",
 "coveragePeriod":{"value":null,"unit":""},
 "paymentPeriod":{"value":null,"unit":""},
-"premiumAmount":null,
+"premiumAmount":null,"evidenceReference":"page/section/row",
 "source":"PDF_DOCUMENT","sourceSection":"COBERTURAS","sourceLocation":null,
 "confidence":0.0
 }],
 "confidence":0.0
 }]}.`;
 
-async function extractCandidates(model: any, base64: string, recovery = false) {
+async function extractCandidates(model: any, base64: string, mode: "primary" | "recovery", recoveryReasons: string[] = []) {
+  const recovery = mode === "recovery";
   const prefix = recovery
-    ? "Segunda pasada de recuperación. Revisa cuidadosamente el PDF como documento de seguro."
+    ? `PASADA SEMÁNTICA DE RECUPERACIÓN. La primera lectura dejó incompletos: ${recoveryReasons.join(", ") || "campos críticos"}. Recorre TODAS las páginas y devuelve únicamente hechos visibles.`
     : "Extrae únicamente hechos visibles de pólizas de este PDF.";
 
   const prompt = `${prefix}
 
-No inventes ni completes datos ausentes.
+No inventes ni completes datos ausentes. No uses el nombre del producto como sustituto de evidencia documental si el PDF no contiene el dato.
 Separa estrictamente significado documental:
 - TIPO DE PÓLIZA / TIPO DE POLIZA pertenece a policyType. NORMAL es policyType; NUNCA es status.
 - status sólo contiene estado real como activa, emitida, pendiente, suspendida, vencida o cancelada. Si no hay evidencia de estado, déjalo vacío.
-- FECHA DE EMISIÓN, FECHA DE EFECTIVIDAD y FECHA DE VENCIMIENTO son fechas civiles; conserva el día del documento.
-- MONEDA UDI debe producir currency=UDI; nunca la conviertas a MXN.
-- FORMA DE PAGO MENSUAL/TRIMESTRAL/SEMESTRAL/ANUAL pertenece a paymentFrequency.
-- PRIMA BÁSICA TOTAL / PRIMA BASICA TOTAL, PRIMA PLANEADA y TOTAL ANUAL son tres hechos distintos. No los colapses en premium.
-- Si existe tabla de coberturas, extrae una fila por beneficio con suma asegurada, moneda, anexo, fecha de efectividad, periodo de cobertura, periodo de pago y prima cuando existan.
-- beneficiariesDetected sólo indica presencia documental; no devuelvas nombres ni porcentajes de beneficiarios.
-- Todo resultado es evidencia/candidato, requiresHumanReview=true y crea cero verdad canónica.
+- FECHA DE EMISIÓN, FECHA DE EFECTIVIDAD y FECHA DE VENCIMIENTO son conceptos distintos y fechas civiles; conserva exactamente el día del documento.
+- Busca etiquetas MONEDA, MONEDA DEL PLAN, UNIDAD o valores UDI/MXN/USD. Si el documento declara UDI, currency=UDI; nunca conviertas a MXN.
+- Busca FORMA DE PAGO, PERIODICIDAD o FRECUENCIA. MENSUAL/TRIMESTRAL/SEMESTRAL/ANUAL pertenece a paymentFrequency.
+- PRIMA BÁSICA TOTAL / PRIMA BASICA TOTAL, PRIMA PLANEADA y TOTAL ANUAL son tres hechos distintos. No los colapses en premium y no calcules uno a partir de otro.
+- coverageSectionDetected=true sólo si el PDF contiene una sección, tabla o listado de coberturas/beneficios contratados.
+- Si coverageSectionDetected=true, recorre TODAS las filas de esa sección y extrae una fila por cobertura con etiqueta, clave, anexo, suma asegurada, moneda, fecha de efectividad, periodo de cobertura, periodo de pago, prima, evidencia y confianza cuando estén visibles.
+- No confundas descripciones generales del producto con coberturas contratadas de esta póliza.
+- beneficiariesDetected sólo indica presencia documental; no devuelvas nombres, parentescos ni porcentajes de beneficiarios.
+- Todo resultado es evidencia/candidato, requiere revisión humana y crea cero verdad canónica.
 
 ${semanticContract}`;
 
@@ -255,7 +250,7 @@ ${semanticContract}`;
         { inlineData: { mimeType: "application/pdf", data: base64 } },
       ],
     }],
-    generationConfig: { responseMimeType: "application/json", temperature: recovery ? 0.1 : 0.05 },
+    generationConfig: { responseMimeType: "application/json", temperature: recovery ? 0 : 0.05 },
   });
 
   const parsed = JSON.parse(result.response.text());
@@ -288,22 +283,35 @@ serve(async (request) => {
 
     const genAI = new GoogleGenerativeAI(Deno.env.get("GEMINI_API_KEY") || "");
     const model = genAI.getGenerativeModel({ model: MODEL_VERSION });
-
-    let candidates = await extractCandidates(model, base64, false);
-    let recoveryUsed = false;
     const warnings: string[] = [];
 
-    if (candidates.length === 0) {
+    const primaryCandidates = await extractCandidates(model, base64, "primary");
+    const recoveryReasons = semanticRecoveryReasons(primaryCandidates[0] || {});
+    let candidates = finalizeSemanticCandidates(primaryCandidates);
+    let recoveryUsed = false;
+
+    if (recoveryReasons.length > 0) {
       recoveryUsed = true;
-      candidates = await extractCandidates(model, base64, true);
+      try {
+        const recoveryCandidates = await extractCandidates(model, base64, "recovery", recoveryReasons);
+        candidates = mergeSemanticCandidateLists(primaryCandidates, recoveryCandidates);
+      } catch (_error) {
+        warnings.push("PDF_SEMANTIC_RECOVERY_FAILED");
+      }
     }
 
-    let extractionState = "FIELDS_EXTRACTED";
+    let extractionState = candidates.some((candidate: any) => candidate.reviewCompleteness?.gaps?.length)
+      ? "SEMANTIC_REVIEW_REQUIRED"
+      : "FIELDS_EXTRACTED";
+
     if (candidates.length === 0) {
       extractionState = "NO_FIELDS_REVIEW_REQUIRED";
       warnings.push("PDF_EXTRACTION_NO_FIELDS");
       candidates = [emptyReviewCandidate()];
     }
+
+    const remainingGaps = candidates[0]?.reviewCompleteness?.gaps || [];
+    if (remainingGaps.length) warnings.push(`PDF_SEMANTIC_GAPS:${remainingGaps.join(",")}`);
 
     return response({
       ok: true,
@@ -314,6 +322,8 @@ serve(async (request) => {
       state: "review",
       extractionState,
       recoveryUsed,
+      semanticRecoveryReasons: recoveryReasons,
+      reviewCompleteness: candidates[0]?.reviewCompleteness || null,
       warnings,
       candidates,
       requiresHumanReview: true,

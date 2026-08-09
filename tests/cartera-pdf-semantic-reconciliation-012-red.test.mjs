@@ -7,7 +7,7 @@ const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapt
 const v7 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js', 'utf8');
 const semantic = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js', 'utf8');
 const ui = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v4.js', 'utf8');
-const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4.js', 'utf8');
+const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4-r1.js', 'utf8');
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 
 const requiredSemanticKeys = [
@@ -30,9 +30,10 @@ test('Edge extraction contract preserves the golden document semantics', () => {
   assert.match(edge, /PRIMA B[ÁA]SICA TOTAL|PRIMA BASICA TOTAL/i);
   assert.match(edge, /PRIMA PLANEADA/i);
   assert.match(edge, /TOTAL ANUAL/i);
-  assert.match(edge, /MONEDA UDI/);
+  assert.match(edge, /declara UDI, currency=UDI/);
   assert.match(edge, /NORMAL es policyType/);
   assert.match(edge, /automaticCoverageCreation:\s*false/);
+  assert.match(edge, /semanticRecoveryReasons/);
 });
 
 test('v8 enriches the productive 020B result before persistence', () => {
@@ -46,12 +47,13 @@ test('v8 enriches the productive 020B result before persistence', () => {
   assert.match(semantic, /confirmationStatus:\s*previous\?\.confirmationStatus \|\| 'PENDING_CONFIRMATION'/);
 });
 
-test('same-PDF v7 rehydration preserves semantic fields and coverage candidates', () => {
+test('same-PDF v7 rehydration preserves semantic fields and coverage state', () => {
   for (const key of requiredSemanticKeys) {
-    assert.match(v7, new RegExp(`\\b${key}\\b`), `v7 reopen mapping is missing ${key}`);
+    assert.match(v7 + semantic, new RegExp(`\\b${key}\\b`), `v7 reopen mapping is missing ${key}`);
   }
   assert.match(v7, /semanticReviewCandidate/);
-  assert.match(v7, /CANDIDATES_REVIEW_REQUIRED/);
+  assert.match(v7, /pdfCoverageExtraction:\s*edgeCandidate\.coverageExtractionState/);
+  assert.match(v7, /reviewCompleteness:\s*edgeCandidate\.reviewCompleteness/);
   assert.doesNotMatch(v7, /pdfCoverageExtraction:\s*'NOT_SUPPORTED'/);
 });
 
@@ -65,13 +67,15 @@ test('review UI distinguishes type/status, protected beneficiaries and document 
   assert.match(ui, /Información protegida/);
   assert.match(ui, /Coberturas detectadas/i);
   assert.match(ui, /Vincular persona existente/);
+  assert.match(ui, /data-semantic-review="014"/);
   assert.doesNotMatch(ui, /Referencia de persona existente/);
   assert.doesNotMatch(ui, /person:…/);
+  assert.doesNotMatch(ui, /Confianza alta/);
 });
 
-test('canonical Aura import graph points Cartera at module v4 and adapter v8', () => {
+test('canonical Aura import graph maps Cartera at module v4 and adapter v8 completion 014', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(app, /cartera-semantic-012\.css\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-adapter-pages-v8\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
+  assert.match(index, /cartera-adapter-pages-v8\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-completion-014"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-semantic-completion-014/);
 });

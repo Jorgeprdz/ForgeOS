@@ -7,7 +7,9 @@ on:
     paths:
       - 'docs/static-preview/forge-aura/cartera/**'
       - 'docs/static-preview/forge-aura/app-v4.js'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
       - 'docs/static-preview/forge-aura/aura-bootstrap-v4.js'
+      - 'docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js'
       - 'docs/static-preview/forge-aura/index.html'
       - 'supabase/functions/cartera-pdf-intake/**'
       - 'tests/e2e/aura-cartera-pdf-spanish-date-regression.spec.mjs'
@@ -15,6 +17,7 @@ on:
       - 'tests/aura-cartera-pdf-review-date-ui-008.test.mjs'
       - 'tests/cartera-pdf-semantic-normalization-012.test.mjs'
       - 'tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs'
+      - 'tests/cartera-pdf-semantic-completion-014.test.mjs'
       - 'tests/cartera-pdf-regression-playwright.config.mjs'
       - 'tests/income-pages-import-graph.test.mjs'
       - '.github/workflows/aura-cartera-pdf-real-regression.yml'
@@ -44,19 +47,22 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Syntax check semantic browser modules
+      - name: Syntax check semantic browser and Edge helper modules
         run: |
+          node --check supabase/functions/cartera-pdf-intake/semantic-recovery.js
           node --check docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v4.js
           node --check docs/static-preview/forge-aura/cartera/cartera-coverage-adapter.js
           node --check docs/static-preview/forge-aura/app-v4.js
-      - name: Prove semantic and civil-date contracts
+          node --check docs/static-preview/forge-aura/app-v4-r1.js
+      - name: Prove semantic recovery completeness and civil-date contracts
         run: |
           node --test \
             tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs \
             tests/cartera-pdf-semantic-normalization-012.test.mjs \
+            tests/cartera-pdf-semantic-completion-014.test.mjs \
             tests/aura-cartera-pdf-review-date-ui-008.test.mjs
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -66,7 +72,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: aura-cartera-pdf-semantic-012-${{ github.event.pull_request.head.sha || github.sha }}
+          name: aura-cartera-pdf-semantic-014-${{ github.event.pull_request.head.sha || github.sha }}
           path: test-results/aura-cartera-pdf-regression
           if-no-files-found: warn
           retention-days: 30

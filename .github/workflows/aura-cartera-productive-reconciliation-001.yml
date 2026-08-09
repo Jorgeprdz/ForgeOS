@@ -10,7 +10,7 @@ on:
       - 'docs/static-preview/forge-aura/aura-router-v4.js'
       - 'docs/static-preview/forge-aura/aura-shell.js'
       - 'docs/static-preview/forge-aura/index.html'
-      - 'supabase/functions/cartera-pdf-intake/index.ts'
+      - 'supabase/functions/cartera-pdf-intake/**'
       - 'tests/aura-cartera-productive-reconciliation.test.mjs'
       - 'tests/aura-cartera-pages-import-graph.test.mjs'
       - 'tests/cartera-playwright.config.mjs'
@@ -63,10 +63,10 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
-          mapfile -t changed < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          mapfile -t changed < <(git -c core.quotepath=false diff --name-only "$BASE_SHA" "$HEAD_SHA")
           printf '%s\n' "${changed[@]}"
           forbidden='^(supabase/migrations/|platform/policy-intelligence/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
-          allowed_edge='^supabase/functions/cartera-pdf-intake/index\.ts$'
+          allowed_edge='^supabase/functions/cartera-pdf-intake/(index\.ts|semantic-recovery\.js)$'
           edge_changed=0
           for file in "${changed[@]}"; do
             if [[ "$file" =~ ^supabase/functions/ ]]; then
@@ -89,6 +89,7 @@ jobs:
           echo 'MATERIAL3_RUNTIME_REDESIGN=0'
       - name: Syntax check Aura Cartera modules
         run: |
+          node --check supabase/functions/cartera-pdf-intake/semantic-recovery.js
           node --check docs/static-preview/forge-aura/cartera/cartera-core.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v1.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js
