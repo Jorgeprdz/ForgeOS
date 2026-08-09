@@ -16,6 +16,7 @@ on:
       - 'docs/static-preview/forge-aura/index.html'
       - 'supabase/functions/cartera-pdf-intake/index.ts'
       - 'supabase/functions/cartera-pdf-intake/semantic-recovery.js'
+      - 'supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql'
       - 'tests/income-*'
       - 'tests/e2e/income-*'
       - 'tests/fixtures/aura-income-*'
@@ -118,7 +119,9 @@ jobs:
           printf '%s\n' "${changed[@]}"
           forbidden='^(compensation/advisor/engine/|compensation/advisor-development/.*engine|compensation/new-professional/.*rule-data|compensation/advisor/rules/rule-data|supabase/migrations/|supabase/functions/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
           allowed_cartera_edge='^supabase/functions/cartera-pdf-intake/(index\.ts|semantic-recovery\.js)$'
+          allowed_cartera_migration='^supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc\.sql$'
           edge_changed=0
+          migration_changed=0
           for file in "${changed[@]}"; do
             if [[ "$file" =~ ^supabase/functions/ ]]; then
               if [[ ! "$file" =~ $allowed_cartera_edge ]]; then
@@ -128,6 +131,14 @@ jobs:
               edge_changed=1
               continue
             fi
+            if [[ "$file" =~ ^supabase/migrations/ ]]; then
+              if [[ ! "$file" =~ $allowed_cartera_migration ]]; then
+                echo "INCOME_SCOPE_FORBIDDEN_MUTATION=$file" >&2
+                exit 1
+              fi
+              migration_changed=1
+              continue
+            fi
             if [[ "$file" =~ $forbidden ]]; then
               echo "INCOME_SCOPE_FORBIDDEN_MUTATION=$file" >&2
               exit 1
@@ -135,7 +146,11 @@ jobs:
           done
           echo 'COMPENSATION_ENGINE_MUTATION=ZERO'
           echo 'RULE_PACK_MUTATION=ZERO'
-          echo 'DATABASE_MUTATION=ZERO'
+          if [[ "$migration_changed" = '1' ]]; then
+            echo 'DATABASE_MUTATION=CARTERA_020B_SEMANTIC_REFRESH_ONLY'
+          else
+            echo 'DATABASE_MUTATION=ZERO'
+          fi
           echo 'RLS_WEAKENING=ZERO'
           echo 'PIPELINE_MUTATION=ZERO'
           echo 'CARTERA_WRITER_MUTATION=ZERO'
