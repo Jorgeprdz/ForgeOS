@@ -3,12 +3,16 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const edge = fs.readFileSync('supabase/functions/cartera-pdf-intake/index.ts', 'utf8');
-const v10 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', 'utf8');
+const v10Entry = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', 'utf8');
+const v10 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10-base-015.js', 'utf8');
+const v11 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js', 'utf8');
 const v9 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js', 'utf8');
 const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js', 'utf8');
 const v7 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js', 'utf8');
 const semantic = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js', 'utf8');
-const ui = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5.js', 'utf8');
+const moduleEntry = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5.js', 'utf8');
+const ui = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5-base-015.js', 'utf8');
+const moduleV6 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v6.js', 'utf8');
 const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4-r1.js', 'utf8');
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 
@@ -37,7 +41,7 @@ test('v8 still enriches new-document 020B results before persistence', () => {
   assert.match(semantic, /confirmationStatus:\s*previous\?\.confirmationStatus \|\| 'PENDING_CONFIRMATION'/);
 });
 
-test('same-PDF chain preserves semantic fields and current boundary repairs stale legacy packets append-only', () => {
+test('same-PDF chain preserves semantic fields and durable 015 base repairs stale legacy packets append-only', () => {
   for (const key of requiredSemanticKeys) assert.match(v7 + v9 + semantic, new RegExp(`\\b${key}\\b`), `same-PDF mapping is missing ${key}`);
   assert.match(v10, /cartera-adapter-pages-v9\.js/);
   assert.match(v7, /semanticReviewCandidate/);
@@ -48,7 +52,7 @@ test('same-PDF chain preserves semantic fields and current boundary repairs stal
   assert.doesNotMatch(v7, /pdfCoverageExtraction:\s*'NOT_SUPPORTED'/);
 });
 
-test('review UI distinguishes type/status, protected beneficiaries and document premiums', () => {
+test('preserved v5 review UI distinguishes type/status, protected beneficiaries and document premiums', () => {
   assert.match(ui, /Tipo de póliza/);
   assert.match(ui, /Estado/);
   assert.match(ui, /Prima básica total/i);
@@ -64,9 +68,13 @@ test('review UI distinguishes type/status, protected beneficiaries and document 
   assert.doesNotMatch(ui, /Confianza alta/);
 });
 
-test('canonical Aura keeps inherited app specifier but maps it through v5 to the v10 durable boundary', () => {
+test('canonical Aura keeps inherited import-map targets while contained 016 entries preserve durable and semantic bases', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
   assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
   assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
   assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
+  assert.match(v10Entry, /cartera-adapter-pages-v11\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(moduleEntry, /cartera-module-v6\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(v11, /cartera-adapter-pages-v10-base-015\.js\?base=cartera-person-workspace-directory-projection-016/);
+  assert.match(moduleV6, /cartera-module-v5-base-015\.js\?base=cartera-person-workspace-directory-projection-016/);
 });
