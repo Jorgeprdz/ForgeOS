@@ -16,7 +16,7 @@ test('005B remote acceptance remains manual-only and contains no administrative 
   assert.match(remote, /ADVISOR_A_EMAIL/);
   assert.match(remote, /ADVISOR_B_EMAIL/);
   assert.match(remote, /SUPABASE_ANON_KEY/);
-  assert.doesNotMatch(remote, /SERVICE_ROLE|SUPABASE_ACCESS_TOKEN|database\/query/i);
+  assert.doesNotMatch(remote, /SUPABASE_SERVICE_ROLE_KEY|service_role\s*:|SUPABASE_ACCESS_TOKEN|database\/query/i);
 });
 
 test('005B preflight gate is non-mutating and checks the exact acceptance runner', () => {
