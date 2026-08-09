@@ -47,17 +47,24 @@ function firstValue(...values) {
   return null;
 }
 
+function normalizedCurrency(value) {
+  const resolved = firstValue(value);
+  if (!hasValue(resolved) || token(resolved) === "pesos") return "MXN";
+  return String(resolved).toUpperCase();
+}
+
 function money(value, currency = "MXN") {
   const numeric = Number(rawValue(value));
   if (!Number.isFinite(numeric)) return null;
+  const resolvedCurrency = normalizedCurrency(currency);
   try {
     return new Intl.NumberFormat("es-MX", {
       style: "currency",
-      currency: hasValue(currency) && currency !== "PESOS" ? String(currency).toUpperCase() : "MXN",
+      currency: resolvedCurrency,
       maximumFractionDigits: 2,
     }).format(numeric);
   } catch {
-    return `${numeric.toLocaleString("es-MX")} ${currency || "MXN"}`;
+    return `${numeric.toLocaleString("es-MX")} ${resolvedCurrency}`;
   }
 }
 
@@ -102,9 +109,7 @@ export function isGmmQuoteText(text) {
 }
 
 export function buildGmmProductIntelligence(parsed = {}) {
-  const currency = hasValue(parsed.currency) && token(parsed.currency) !== "pesos"
-    ? String(parsed.currency).toUpperCase()
-    : "MXN";
+  const currency = normalizedCurrency(parsed.currency);
   const missingInformation = missingFor(parsed);
   return deepFreeze({
     schema: {
@@ -156,7 +161,7 @@ export function parseGmmQuoteTextToAcceptedQuotePacket(text, options = {}) {
     throw new TypeError("GMM source evidence could not be identified by the canonical parser.");
   }
   const productIntelligence = buildGmmProductIntelligence(parsed);
-  const currency = firstValue(parsed.currency) || "MXN";
+  const currency = normalizedCurrency(parsed.currency);
   const missingInformation = [...productIntelligence.missing_information];
   const nativeResult = deepFreeze({
     source: "browser_pdf_parser",
@@ -247,7 +252,7 @@ export function buildGmmAcceptedQuoteCalculation({ packet = {}, nativeResult = p
     || nativeResult.productIntelligence
     || nativeResult.product_intelligence
     || null;
-  const currency = firstValue(nativeResult.currency, packet.currency) || "MXN";
+  const currency = normalizedCurrency(firstValue(nativeResult.currency, packet.currency));
   return deepFreeze({
     adapterId: ADAPTER_ID,
     nativeResult,
@@ -310,7 +315,7 @@ export function buildGmmDashboardModel(input = {}) {
   const medical = productIntelligence.medical_plan || {};
   const protection = productIntelligence.protection_summary || {};
   const premium = productIntelligence.premium_structure || {};
-  const currency = firstValue(input.currency, native.currency, packetCurrency(productIntelligence)) || "MXN";
+  const currency = normalizedCurrency(firstValue(input.currency, native.currency, packetCurrency(productIntelligence)));
 
   const plan = firstValue(input.plan, native.plan, medical.hospital_level, productIntelligence.identity?.plan);
   const deductible = firstValue(input.deductible, native.deductible, medical.deductible);
@@ -393,11 +398,13 @@ export function buildGmmDashboardModel(input = {}) {
 }
 
 function packetCurrency(productIntelligence) {
-  return rawValue(productIntelligence?.premium_structure?.total_annual_premium)?.currency || null;
+  const value = productIntelligence?.premium_structure?.total_annual_premium;
+  return value && typeof value === "object" ? value.currency || null : null;
 }
 
 export const __gmmProductDecisionAdapterTest = Object.freeze({
   firstValue,
   missingFor,
+  normalizedCurrency,
   token,
 });
