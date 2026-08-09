@@ -35,6 +35,8 @@ test('005C control plane is fixed-target lifecycle administration only', () => {
   assert.match(controlPlane, /SUPABASE_SERVICE_ROLE_KEY/);
   assert.match(controlPlane, /admin\.auth\.admin\.(createUser|updateUserById)/);
   assert.match(controlPlane, /\.from\("forge_demo_advisors"\)/);
+  assert.match(controlPlane, /return `\$\{crypto\.randomUUID\(\)\}-Aa1!`;/);
+  assert.doesNotMatch(controlPlane, /randomUUID\(\)\}-\$\{crypto\.randomUUID\(\)/);
   assert.doesNotMatch(controlPlane, /\.from\("(prospects|prospect_contact_methods|commercial_people|commercial_source_identity_links|canonical_policies|policy_roles|cartera010b_command_receipts)"\)/);
   assert.doesNotMatch(controlPlane, /payload\.(table|sql|rpc)|payload\[['"]?(table|sql|rpc)/i);
 });
@@ -46,6 +48,8 @@ test('005C data plane has no privileged credential or management path', () => {
   assert.match(runner, /SUPABASE_ANON_KEY/);
   assert.match(runner, /signInWithPassword/);
   assert.match(runner, /\.from\('prospects'\)/);
+  assert.match(runner, /const SYNTHETIC_PHONE_A = '\+000000000005';/);
+  assert.equal((runner.match(/phone_normalized:\s*SYNTHETIC_PHONE_A/g) || []).length, 2);
   assert.match(runner, /AA04_CROSS_ADVISOR_READ_LEAK/);
   assert.match(runner, /AA04_CROSS_ADVISOR_WRITE_LEAK/);
   assert.match(runner, /AA06_DUPLICATE_ACTIVE_FIXTURE/);
