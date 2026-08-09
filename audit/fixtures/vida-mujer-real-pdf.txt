@@ -1,0 +1,69 @@
+Vida Mujer
+ESTUDIO DE VIDA INDIVIDUAL
+UDI
+Asesor profesional de seguros
+Nombre: ANA KAREN GARZA LOPERENA
+Teléfono oficina: 55525 e-mail: anakarengarza99@gmail.com
+Teléfono personal:
+Gracias por permitirnos presentarte este estudio, esperamos que sea de tu interés:
+Datos Fecha de
+Nombre Edad Género Fumador
+generales Nacimiento
+Titular Alejandra Moleres 07/01/1993 33 Femenino No
+Coberturas Plazo de Suma Prima Anualizada
+Cobertura Asegurada
+Vida Mujer (Vida Mujer) 20 años 50,000 2,926.93
+Beneficio de Asistencia Médica (BAM UI) 1 REN Amparado SIN COSTO
+Beneficio de Pago de Suma Asegurada por Invalidez Total y Permanente (BAIT 60 P) 20 años 50,000 40.00
+Apoyo en Vida (AV UI) 1 REN Amparado SIN COSTO
+Beneficio de Exención de pago de primas por Invalidez Total y Permanente (BIT 60 P) 20 años Amparado 27.89
+Protección por Cáncer Femenino (PCF A) 20 años 50,000 67.00
+Prima Total Anual 3,061.82
+Además te Plazo de Suma Prima
+recomendamos Cobertura Asegurada Anualizada
+adquirir
+ADAPTA (ADAPTA) 5 REN 100,000 350.70
+Beneficio por Muerte Accidental (BMA) 20 años 50,000 47.50
+Protección para Complicaciones del Embarazo y Padecimientos Femeninos (PEP A) 17 años 50,000 79.50
+Cuidados a Largo Plazo (CLP) 1 REN 100,000 350.70
+Prima total con beneficios recomendados 3,890.21
+VALORES GARANTIZADOS
+Porcentaje de Edad Real Prima Anual Prima Anual Valor de Rescate Valor en Efectivo Recuperación Suma Asegurada
+Recuperación Acumulada con AVE Total Básico
+Total AVE
+60.69 % 33 3,062 7,607 4,616 0 4,616 50,000
+61.16 % 34 3,062 15,214 9,305 0 9,305 50,000
+66.77 % 35 3,062 22,820 14,068 1,169 15,237 50,000
+71.97 % 36 3,062 30,427 18,905 2,995 21,899 50,000
+75.60 % 37 3,062 38,034 23,818 4,935 28,753 50,000
+74.32 % 38 3,062 45,641 28,808 5,112 33,920 50,000
+76.99 % 39 3,062 53,248 33,877 7,117 40,993 50,000
+76.33 % 40 3,062 60,855 39,025 7,423 46,448 50,000
+78.52 % 41 3,062 68,461 44,254 9,499 53,753 50,000
+78.22 % 42 3,062 76,068 49,565 9,932 59,497 50,000
+80.24 % 43 3,062 83,675 54,960 12,179 67,138 50,000
+80.32 % 44 3,062 91,282 60,439 12,877 73,316 50,000
+82.15 % 45 3,062 98,889 66,004 15,238 81,242 50,000
+82.41 % 46 3,062 106,495 71,657 16,104 87,761 50,000
+84.15 % 47 3,062 114,102 77,398 18,616 96,014 50,000
+84.55 % 48 3,062 121,709 83,230 19,672 102,901 50,000
+86.24 % 49 3,062 129,316 89,153 22,367 111,519 50,000
+86.77 % 50 3,062 136,923 95,169 23,636 118,805 50,000
+88.41 % 51 3,062 144,530 101,280 26,496 127,775 50,000
+96.94 % 52 3,062 152,136 107,486 40,000 147,486 50,000
+GLOSARIO DE TERMINOS LEER DETALLADAMENTE
+Porcentaje de Recuperación Total Representa lo que el cliente obtendría en caso de que decida no continuar con su seguro en relación con todas las aportaciones que ha efectuado.
+Prima Anual Es el costo del seguro que paga el cliente anualmente por las coberturas contratadas (excepto AVE).
+Prima Anual Acumulada con AVE Es el acumulado del costo anual del seguro por las coberturas contratadas.
+Recuperación Total Es el monto que el cliente puede disponer en caso de que decida no continuar con su seguro por concepto de la cobertura básica y de la(s) cobertura(s) adicional(es) AVE contratada(s).
+Suma Asegurada Básico Es la cantidad contratada en la cobertura básica que se le paga a los beneficiarios designados en la póliza en caso de fallecimiento del (los) asegurado(s).
+Valor de Rescate AVE Es el monto que el cliente puede disponer por la(s) cobertura(s) AVE contratada(s).
+Valor en Efectivo Es el monto que el cliente puede disponer en caso de que decida no continuar con su seguro.
+NOTAS
+Todas las cantidades están expresadas en Unidades de Inversión (UDI).
+En caso de supervivencia del asegurado, al llegar al año 20 recibirá un total de 57,500.00 Unidades de Inversión (UDI).
+Para el cálculo de AVE CP se utilizó una tasa de inversión supuesta del 1.57%.
+El plan básico y sus coberturas terminan al transcurrir los años de cobertura indicados en este estudio.
+Este estudio es ilustrativo y no forma parte del contrato del seguro.
+La presente cotización tendrá una vigencia de 30 días naturales contados a partir de la fecha de su elaboración.
+Este estudio se realizó con Solucionline versión 2.18.5.0 del día sábado, 11 de julio de 2026.
