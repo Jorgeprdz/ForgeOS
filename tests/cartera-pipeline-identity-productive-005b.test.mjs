@@ -90,7 +90,7 @@ test('005B-R1 person workspace projects policies through canonical participant_p
   assert.match(helperBlock, /String\(role\?\.participant_person_id \|\| ''\) === personId/);
   assert.doesNotMatch(helperBlock, /participant_person_reference/);
   const workspaceBlock = adapter.slice(
-    adapter.indexOf('async loadPersonWorkspace\(reference\)'),
+    adapter.indexOf('async loadPersonWorkspace(reference)'),
     adapter.indexOf('async confirmPdfReview'),
   );
   assert.match(workspaceBlock, /loadPersonPoliciesByCanonicalParticipantId\(client, reference\)/);
