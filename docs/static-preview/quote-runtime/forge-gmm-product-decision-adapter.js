@@ -54,7 +54,9 @@ function normalizedCurrency(value) {
 }
 
 function money(value, currency = "MXN") {
-  const numeric = Number(rawValue(value));
+  const resolvedValue = rawValue(value);
+  if (!hasValue(resolvedValue)) return null;
+  const numeric = Number(resolvedValue);
   if (!Number.isFinite(numeric)) return null;
   const resolvedCurrency = normalizedCurrency(currency);
   try {
@@ -69,7 +71,9 @@ function money(value, currency = "MXN") {
 }
 
 function percent(value) {
-  const numeric = Number(rawValue(value));
+  const resolvedValue = rawValue(value);
+  if (!hasValue(resolvedValue)) return null;
+  const numeric = Number(resolvedValue);
   return Number.isFinite(numeric) ? `${numeric}%` : null;
 }
 
