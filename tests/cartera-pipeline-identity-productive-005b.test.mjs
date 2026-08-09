@@ -96,6 +96,24 @@ test('005B-R1 person workspace projects policies through canonical participant_p
   assert.match(workspaceBlock, /loadPersonPoliciesByCanonicalParticipantId\(client, reference\)/);
 });
 
+test('005B-R1 terminal durable replay is projected only as identity-stage satisfaction', () => {
+  const replayBlock = adapter.slice(
+    adapter.indexOf('function identityStageReplayResult'),
+    adapter.indexOf('function clientWithDurable020c'),
+  );
+  assert.match(replayBlock, /\['POLICY_READY','POLICY_EXECUTING','CONFIRMED'\]\.includes\(state\)/);
+  assert.match(replayBlock, /state:\s*'IDENTITY_CONFIRMED'/);
+  assert.match(replayBlock, /replayed:\s*true/);
+  const clientBlock = adapter.slice(
+    adapter.indexOf('function clientWithDurable020c'),
+    adapter.indexOf('async function queryRows'),
+  );
+  assert.match(clientBlock, /return identityStageReplayResult\(statusResult\)/);
+  assert.match(clientBlock, /target\.rpc\(ATTACH_DURABLE_RPC, args, options\)/);
+  assert.match(durableSql, /review\.state in \('POLICY_READY','POLICY_EXECUTING','CONFIRMED'\)/);
+  assert.match(durableSql, /jsonb_build_object\('replayed', true\)/);
+});
+
 test('005B-R1 remote workflow confines privilege to 05C control plane and always seals', () => {
   assert.match(remoteWorkflow, /workflow_call:/);
   assert.doesNotMatch(remoteWorkflow, /workflow_dispatch:/);
