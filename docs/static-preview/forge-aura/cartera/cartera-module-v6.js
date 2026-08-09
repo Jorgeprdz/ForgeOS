@@ -136,6 +136,7 @@ function humanizeDirectory(root) {
 
 function humanizePolicyRows(workspace) {
   workspace.querySelectorAll('button.cartera-directory-row[data-open-policy]:not([data-policy-presentation="016"])').forEach(row => {
+    const icon = row.querySelector('.cartera-directory-icon');
     const strong = row.querySelector('strong');
     const small = row.querySelector('small');
     if (!strong || !small) return;
@@ -143,6 +144,10 @@ function humanizePolicyRows(workspace) {
     const parts = small.textContent.split(' · ');
     const rawProduct = parts.shift() || '';
     const status = parts.join(' · ');
+    if (icon) {
+      icon.textContent = ENTITY_GLYPH.POLICY;
+      icon.setAttribute('aria-hidden', 'true');
+    }
     strong.textContent = presentProductReference(rawProduct);
     small.textContent = `${maskedNumber}${status ? ` · ${status}` : ''}`;
     row.dataset.policyPresentation = '016';
@@ -155,6 +160,7 @@ function humanizePolicyWorkspace(root) {
   const eyebrow = workspace.querySelector('.cartera-workspace__hero .cartera-eyebrow');
   if (String(eyebrow?.textContent || '').trim() !== 'POLICY WORKSPACE') return;
   const title = workspace.querySelector('.cartera-workspace__hero h1');
+  if (eyebrow) eyebrow.textContent = 'PÓLIZA';
   if (title) title.textContent = presentProductReference(title.textContent);
   workspace.dataset.policyPresentation = '016';
 }
@@ -163,6 +169,8 @@ function buildPersonTabs(workspace, projection) {
   if (workspace.dataset.personProjection === '016') return;
   const tablist = workspace.querySelector('.cartera-tabs');
   if (!tablist) return;
+  const heroEyebrow = workspace.querySelector('.cartera-workspace__hero .cartera-eyebrow');
+  if (heroEyebrow) heroEyebrow.textContent = 'PERSONA';
   const directSections = [...workspace.children].filter(node => node.classList?.contains('cartera-section'));
   const policies = directSections.find(section => /^Pólizas relacionadas$/i.test(section.querySelector('h2')?.textContent?.trim() || ''));
   const relationship = directSections.find(section => /^Relación$/i.test(section.querySelector('h2')?.textContent?.trim() || ''));
