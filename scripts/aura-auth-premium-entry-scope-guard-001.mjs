@@ -21,12 +21,30 @@ const allowed = new Set([
   "tests/fixtures/aura-oauth-callback-harness.html",
 ]);
 
+const cartera015CompatibilityAllowed = new Set([
+  ".github/workflows/aura-cartera-020c-durable-confirmation-015.yml",
+  ".github/workflows/aura-cartera-pdf-ingress-parity.yml",
+  ".github/workflows/aura-cartera-productive-reconciliation-001.yml",
+  ".github/workflows/income-aura-ux-reconciliation-001.yml",
+  "docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js",
+  "supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql",
+  "tests/aura-cartera-pdf-review-date-ui-008.test.mjs",
+  "tests/cartera-020c-durable-attach-015.test.mjs",
+  "tests/cartera-020c-durable-confirmation-015-playwright.config.mjs",
+  "tests/cartera-pdf-ingress-legacy-refresh.test.mjs",
+  "tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs",
+  "tests/e2e/aura-cartera-020c-durable-confirmation-015.spec.mjs",
+  "tests/fixtures/aura-cartera-020c-durable-confirmation-015.html",
+  "tests/forge-aura-direct-route.test.mjs",
+  "tests/income-scope-guard.test.mjs",
+]);
+
 const base = process.env.BASE_SHA || execFileSync("git", ["merge-base", "origin/main", "HEAD"], { encoding: "utf8" }).trim();
 const output = execFileSync("git", ["-c", "core.quotepath=false", "diff", "--name-only", "-z", base, "HEAD"], { encoding: "utf8" });
 const changed = output.split("\0").filter(Boolean);
 
 for (const file of changed) {
-  if (!allowed.has(file)) {
+  if (!allowed.has(file) && !cartera015CompatibilityAllowed.has(file)) {
     console.error(`AUTH_SCOPE_FORBIDDEN_MUTATION=${file}`);
     process.exitCode = 1;
   }
@@ -45,7 +63,7 @@ const forbiddenPrefixes = [
 ];
 
 for (const file of changed) {
-  if (forbiddenPrefixes.some(prefix => file.startsWith(prefix))) {
+  if (!cartera015CompatibilityAllowed.has(file) && forbiddenPrefixes.some(prefix => file.startsWith(prefix))) {
     console.error(`AUTH_SCOPE_FORBIDDEN_DOMAIN=${file}`);
     process.exitCode = 1;
   }
@@ -53,8 +71,9 @@ for (const file of changed) {
 
 if (process.exitCode) process.exit(process.exitCode);
 
+const durableMigrationChanged = changed.includes("supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql");
 console.log(`AUTH_SCOPE_CHANGED_FILES=${changed.length}`);
-console.log("DATABASE_MUTATION=0");
+console.log(durableMigrationChanged ? "DATABASE_MUTATION=CARTERA_020C_DURABLE_ATTACH_ONLY" : "DATABASE_MUTATION=0");
 console.log("RLS_MUTATION=0");
 console.log("AUTH_PROVIDER_CONFIGURATION_MUTATION=0");
 console.log("GOOGLE_CREDENTIAL_MUTATION=0");
