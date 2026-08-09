@@ -12,7 +12,7 @@ on:
       - 'tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs'
       - 'tests/cartera-person-016-playwright.config.mjs'
       - 'tests/e2e/aura-cartera-person-workspace-016.spec.mjs'
-      - 'tests/fixtures/aura-cartera-person-workspace-directory-projection-016.synthetic.json'
+      - 'tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json'
       - 'tests/fixtures/aura-cartera-person-workspace-016.html'
       - '.github/workflows/aura-cartera-person-workspace-projection-016.yml'
 
@@ -51,7 +51,7 @@ jobs:
           printf '%s\n' "${changed[@]}"
           for file in "${changed[@]}"; do
             case "$file" in
-              docs/static-preview/forge-aura/cartera/*|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/cartera-pdf-ingress-legacy-refresh.test.mjs|tests/cartera-020c-durable-attach-015.test.mjs|tests/aura-cartera-pdf-review-date-ui-008.test.mjs|tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs|tests/cartera-person-016-playwright.config.mjs|tests/e2e/aura-cartera-person-workspace-016.spec.mjs|tests/fixtures/aura-cartera-person-workspace-directory-projection-016.synthetic.json|tests/fixtures/aura-cartera-person-workspace-016.html|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
+              docs/static-preview/forge-aura/cartera/*|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/cartera-pdf-ingress-legacy-refresh.test.mjs|tests/cartera-020c-durable-attach-015.test.mjs|tests/aura-cartera-pdf-review-date-ui-008.test.mjs|tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs|tests/cartera-person-016-playwright.config.mjs|tests/e2e/aura-cartera-person-workspace-016.spec.mjs|tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json|tests/fixtures/aura-cartera-person-workspace-016.html|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
               *) echo "CARTERA016_SCOPE_VIOLATION=$file" >&2; exit 1 ;;
             esac
           done
