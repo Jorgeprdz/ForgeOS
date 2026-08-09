@@ -11,6 +11,7 @@ const finalizer = await readFile(new URL('../scripts/finalize-writable-synthetic
 const workflow = await readFile(new URL('../.github/workflows/writable-synthetic-acceptance-005c.yml', import.meta.url), 'utf8');
 const dispatcher = await readFile(new URL('../.github/workflows/beta1-022a-writable-acceptance.yml', import.meta.url), 'utf8');
 const authority = await readFile(new URL('../docs/architecture/source-truth/FORGE_GOVERNED_WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY_005C.md', import.meta.url), 'utf8');
+const evidence = await readFile(new URL('../docs/evidence/FORGE_WRITABLE_SYNTHETIC_ACCEPTANCE_005C_REMOTE_EVIDENCE.md', import.meta.url), 'utf8');
 
 test('005C lifecycle migration is additive and makes acceptance expiry fail closed', () => {
   assert.match(migration, /add column if not exists is_acceptance boolean not null default false/i);
@@ -81,14 +82,29 @@ test('005C workflow scopes privilege away from the authenticated data-plane step
   assert.match(workflow, /finalize-writable-synthetic-acceptance-005c\.mjs/);
 });
 
-test('005C pre-merge dispatcher is exact-branch, exact-SHA and does not reroute legacy BETA acceptance', () => {
-  assert.match(dispatcher, /WRITABLE_SYNTHETIC_005C/);
-  assert.match(dispatcher, /github\.ref_name == 'feature\/governed-writable-synthetic-acceptance-005c'/);
-  assert.match(dispatcher, /github\.actor == 'Jorgeprdz'/);
-  assert.match(dispatcher, /inputs\.validated_sha == github\.sha/);
-  assert.match(dispatcher, /uses: \.\/\.github\/workflows\/writable-synthetic-acceptance-005c\.yml/);
-  assert.match(dispatcher, /validate-seed-and-seal:[\s\S]*acceptance_phase != 'WRITABLE_SYNTHETIC_005C'/);
-  assert.match(dispatcher, /contact-books-remote-acceptance:[\s\S]*acceptance_phase != 'WRITABLE_SYNTHETIC_005C'/);
+test('005C temporary pre-merge dispatcher route is removed and legacy acceptance routes are preserved', () => {
+  assert.doesNotMatch(dispatcher, /WRITABLE_SYNTHETIC_005C/);
+  assert.doesNotMatch(dispatcher, /writable-synthetic-acceptance-005c\.yml/);
+  assert.match(dispatcher, /CONTACT_BOOKS_001/);
+  assert.match(dispatcher, /BETA1_022B/);
+  assert.match(dispatcher, /contact-books-remote-acceptance:[\s\S]*uses: \.\/\.github\/workflows\/contact-books-001-remote-acceptance\.yml/);
+  assert.match(dispatcher, /compensation-remote-acceptance:[\s\S]*uses: \.\/\.github\/workflows\/beta1-022b-compensation-remote-acceptance\.yml/);
+});
+
+test('005C committed remote evidence proves complete AA matrix and sealed security boundaries', () => {
+  assert.match(evidence, /PHASE=FORGE_GOVERNED_WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY_005C/);
+  assert.match(evidence, /BASE_SHA=9289197780efd23d70be7528a1191e0509cdae40/);
+  assert.match(evidence, /ACCEPTANCE_SHA=8dd479edb31dffcca618dba03f217534c8653b39/);
+  assert.match(evidence, /WORKFLOW_RUN_ID=31337249510/);
+  for (let index = 1; index <= 10; index += 1) {
+    assert.match(evidence, new RegExp(`AA${String(index).padStart(2, '0')}=PASS`));
+  }
+  assert.match(evidence, /REAL_DATA_TOUCHED=NO/);
+  assert.match(evidence, /PUBLIC_DEMO_MUTATED=NO/);
+  assert.match(evidence, /SERVICE_ROLE_DOMAIN_WRITE=NO/);
+  assert.match(evidence, /RLS_BYPASS=NO/);
+  assert.match(evidence, /POST_RUN_SEALED=YES/);
+  assert.match(evidence, /CREDENTIAL_REUSE_AFTER_SEAL=DENIED/);
 });
 
 test('005C final evidence requires the complete AA matrix and public demo preservation', () => {
