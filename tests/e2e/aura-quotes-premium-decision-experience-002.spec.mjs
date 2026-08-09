@@ -17,7 +17,8 @@ async function loadQuote(page) {
     mimeType: "application/json",
     buffer: Buffer.from("{}"),
   });
-  await expect(page.getByText("Cotización calculada", { exact: true }).first()).toBeVisible();
+  await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", /READY|PARTIAL/);
+  await expect(page.getByRole("button", { name: "Revisar y confirmar" })).toBeVisible();
 }
 
 async function screenshot(page, name) {
@@ -39,8 +40,9 @@ for (const [label, viewport] of [
   test(`calculated-${label} exposes decision support before confirmation`, async ({ page }) => {
     await openFixture(page, viewport);
     await loadQuote(page);
+    await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "READY");
     await expect(page.getByRole("tab", { name: "Resumen" })).toHaveAttribute("aria-selected", "true");
-    await expect(page.getByRole("button", { name: "Revisar y confirmar" })).toBeVisible();
+    await expect(page.locator(".aura-quotes__contextual-cta").getByText("Cotización calculada", { exact: true })).toBeVisible();
     await screenshot(page, `calculated-${label}`);
   });
 }
@@ -49,7 +51,8 @@ test("confirmed-mobile prioritizes Presentation Maker after human review", async
   await openFixture(page, { width: 390, height: 844 });
   await loadQuote(page);
   await page.getByRole("button", { name: "Revisar y confirmar" }).click();
-  await expect(page.getByText("Cotización confirmada", { exact: true }).first()).toBeVisible();
+  await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "ACCEPTED");
+  await expect(page.locator(".aura-quotes__contextual-cta").getByText("✓ Cotización confirmada", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Crear presentación" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Ver PDF" })).toBeVisible();
   await screenshot(page, "confirmed-mobile");
@@ -59,6 +62,7 @@ test("confirmed-desktop prioritizes Presentation Maker after human review", asyn
   await openFixture(page, { width: 1440, height: 900 });
   await loadQuote(page);
   await page.getByRole("button", { name: "Revisar y confirmar" }).click();
+  await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "ACCEPTED");
   await expect(page.getByRole("button", { name: "Crear presentación" })).toBeVisible();
   await screenshot(page, "confirmed-desktop");
 });
@@ -66,8 +70,9 @@ test("confirmed-desktop prioritizes Presentation Maker after human review", asyn
 test("PARTIAL keeps pending evidence visible without turning unknown into zero", async ({ page }) => {
   await openFixture(page, { width: 430, height: 932 }, "?partial=1&economic=0");
   await loadQuote(page);
-  await expect(page.getByText("Cotización calculada con información pendiente", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("Información pendiente", { exact: true }).first()).toBeVisible();
+  await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "PARTIAL");
+  await expect(page.getByText("Cotización calculada con información pendiente", { exact: true }).filter({ visible: true })).toBeVisible();
+  await expect(page.locator(".aura-quotes__contextual-cta").getByText("Información pendiente", { exact: true })).toBeVisible();
   await page.getByRole("tab", { name: "Evidencia" }).click();
   await expect(page.getByText("UNAVAILABLE", { exact: true })).toBeVisible();
   await expect(page.getByText(/No se creó un valor sustituto/)).toBeVisible();
@@ -104,7 +109,10 @@ test("reduced motion keeps the experience functional", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await openFixture(page, { width: 834, height: 1194 });
   await loadQuote(page);
-  const duration = await page.locator("[data-quotes-action='accept']").evaluate(element => getComputedStyle(element).transitionDuration);
-  expect(duration === "0s" || duration === "0.00001s").toBeTruthy();
+  const durationMs = await page.locator("[data-quotes-action='accept']").evaluate(element => {
+    const values = getComputedStyle(element).transitionDuration.split(",").map(value => value.trim());
+    return values.map(value => value.endsWith("ms") ? Number.parseFloat(value) : Number.parseFloat(value) * 1000);
+  });
+  expect(Math.max(...durationMs)).toBeLessThanOrEqual(1);
   await screenshot(page, "reduced-motion");
 });
