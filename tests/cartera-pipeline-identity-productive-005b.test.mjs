@@ -4,19 +4,22 @@ import { readFile } from 'node:fs/promises';
 
 const runner = await readFile(new URL('../scripts/forge-cartera-pipeline-identity-productive-005b.mjs', import.meta.url), 'utf8');
 const gate = await readFile(new URL('../.github/workflows/cartera-pipeline-identity-005b-gate.yml', import.meta.url), 'utf8');
-const remote = await readFile(new URL('../.github/workflows/cartera-pipeline-identity-005b-remote.yml', import.meta.url), 'utf8');
+const dispatcher = await readFile(new URL('../.github/workflows/cartera-020c-remote-dispatch.yml', import.meta.url), 'utf8');
 const adapter = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', import.meta.url), 'utf8');
 const identitySql = await readFile(new URL('../supabase/migrations/20260731000211_cartera010b_identity_resolution_rpc.sql', import.meta.url), 'utf8');
 const durableSql = await readFile(new URL('../supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql', import.meta.url), 'utf8');
 
-test('005B remote acceptance remains manual-only and contains no administrative bypass', () => {
-  assert.match(remote, /workflow_dispatch:/);
-  assert.doesNotMatch(remote, /^\s{2}(push|pull_request):/m);
-  assert.match(remote, /YES:CARTERA_PIPELINE_IDENTITY_005B_REMOTE_MUTATION/);
-  assert.match(remote, /ADVISOR_A_EMAIL/);
-  assert.match(remote, /ADVISOR_B_EMAIL/);
-  assert.match(remote, /SUPABASE_ANON_KEY/);
-  assert.doesNotMatch(remote, /SUPABASE_SERVICE_ROLE_KEY|service_role\s*:|SUPABASE_ACCESS_TOKEN|database\/query/i);
+test('005B remote acceptance reuses the default-branch dispatcher with an exact manual branch checkpoint', () => {
+  assert.match(dispatcher, /workflow_dispatch:/);
+  assert.doesNotMatch(dispatcher, /^\s{2}(push|pull_request):/m);
+  assert.match(dispatcher, /github\.ref_name == 'accept\/cartera-pipeline-identity-productive-005b'/);
+  assert.match(dispatcher, /github\.actor == 'Jorgeprdz'/);
+  assert.match(dispatcher, /YES:CARTERA_PIPELINE_IDENTITY_005B_REMOTE_MUTATION/);
+  assert.match(dispatcher, /ADVISOR_A_EMAIL/);
+  assert.match(dispatcher, /ADVISOR_B_EMAIL/);
+  assert.match(dispatcher, /SUPABASE_ANON_KEY/);
+  assert.match(dispatcher, /REMOTE_ACCEPTANCE_ALREADY_CLOSED=YES/);
+  assert.doesNotMatch(dispatcher, /SUPABASE_SERVICE_ROLE_KEY|service_role\s*:|SUPABASE_ACCESS_TOKEN|database\/query/i);
 });
 
 test('005B preflight gate is non-mutating and checks the exact acceptance runner', () => {
