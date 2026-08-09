@@ -495,7 +495,7 @@ export function createQuotesModule({ root, client, globalState, adapterFactory =
   function closePreview() {
     printablePreview = null;
     render();
-    lastFocused?.focus?.({ preventScroll: true });
+    queueMicrotask(() => root.querySelector('[data-quotes-action="preview"]')?.focus({ preventScroll: true }));
     lastFocused = null;
   }
 
