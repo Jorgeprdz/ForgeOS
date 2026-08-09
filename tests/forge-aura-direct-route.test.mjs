@@ -18,14 +18,15 @@ function createWindow(initialHref) {
   };
 }
 
-test("canonical Aura entrypoint loads cache-isolated v4 with current Cartera ingress boundary", () => {
+test("canonical Aura entrypoint loads cache-isolated v4 with current Cartera durable confirmation boundary", () => {
   const html = readFileSync("docs/static-preview/forge-aura/index.html", "utf8");
   assert.match(html, /data-aura-runtime="FORGE_AURA_LIGHT_2026_V4"/);
-  assert.match(html, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-ingress-legacy-refresh/);
-  assert.match(html, /env\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(html, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
+  assert.match(html, /env\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
   assert.match(html, /pipeline-adapter-pages-v1\.js/);
-  assert.match(html, /cartera-module-v5\.js\?v=cartera-pdf-ingress-legacy-refresh/);
-  assert.match(html, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(html, /cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
+  assert.match(html, /cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
+  assert.match(html, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
   assert.doesNotMatch(html, /src="\.\/aura-bootstrap\.js/);
   assert.doesNotMatch(html, /src="\.\/aura-bootstrap-v4\.js/);
 });

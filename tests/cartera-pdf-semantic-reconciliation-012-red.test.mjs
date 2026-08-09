@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const edge = fs.readFileSync('supabase/functions/cartera-pdf-intake/index.ts', 'utf8');
+const v10 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', 'utf8');
 const v9 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js', 'utf8');
 const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js', 'utf8');
 const v7 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js', 'utf8');
@@ -38,6 +39,7 @@ test('v8 still enriches new-document 020B results before persistence', () => {
 
 test('same-PDF chain preserves semantic fields and current boundary repairs stale legacy packets append-only', () => {
   for (const key of requiredSemanticKeys) assert.match(v7 + v9 + semantic, new RegExp(`\\b${key}\\b`), `same-PDF mapping is missing ${key}`);
+  assert.match(v10, /cartera-adapter-pages-v9\.js/);
   assert.match(v7, /semanticReviewCandidate/);
   assert.match(v7, /pdfCoverageExtraction:\s*edgeCandidate\.coverageExtractionState/);
   assert.match(v7, /reviewCompleteness:\s*edgeCandidate\.reviewCompleteness/);
@@ -62,9 +64,9 @@ test('review UI distinguishes type/status, protected beneficiaries and document 
   assert.doesNotMatch(ui, /Confianza alta/);
 });
 
-test('canonical Aura keeps inherited app specifier but maps it to current v5/v9 ingress boundary', () => {
+test('canonical Aura keeps inherited app specifier but maps it through v5 to the v10 durable boundary', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-pdf-ingress-legacy-refresh"/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
 });

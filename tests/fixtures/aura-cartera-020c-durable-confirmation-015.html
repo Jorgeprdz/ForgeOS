@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Cartera 020C durable confirmation 015</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-semantic-012.css">
+  <script type="importmap">
+    {"imports":{"/docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js?v=cartera-pdf-ingress-legacy-refresh":"/docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js?v=cartera-020c-policy-attach-pipeline-person-015"}}
+  </script>
+  <style>html,body{margin:0;min-height:100%;background:#f5f6fa}body{font-family:Inter,system-ui,sans-serif}#fixture-main{min-height:100vh}</style>
+</head>
+<body>
+  <main id="fixture-main"></main>
+  <script type="module">
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v5.js?v=cartera-020c-policy-attach-pipeline-person-015';
+
+    window.__ENV__ = { SUPABASE_ANON_KEY: 'TEST_ONLY' };
+    const USER_ID = '00000000-0000-4000-8000-000000000015';
+    const PROSPECT_ID = '11111111-1111-4111-8111-111111111111';
+    const PERSON_ID = '22222222-2222-4222-8222-222222222222';
+    const PERSON_REFERENCE = 'person:cartera:durable-adrian';
+    const trace = window.__CARTERA_015_TRACE__ = {
+      rpc: [], pipelineIdentityWrites: [], durableAttach: [], execute: [], links: [], globalStates: [],
+    };
+
+    const identityResults = [{
+      candidateReference: 'IDENTITY_CANDIDATE:AURA:DURABLE015',
+      personReference: PERSON_REFERENCE,
+      status: 'CONFIRMED', outcome: 'CREATE_CONFIRMED',
+      decisionReference: 'IDENTITY_DECISION:DURABLE015',
+      linkReference: 'IDENTITY_LINK:DURABLE015',
+      idempotencyKey: 'AURA:020C:IDENTITY:DURABLE015',
+      serverCommandDigest: 'a'.repeat(64), replayed: false,
+    }];
+    const identityConfirmed = () => ({
+      contractType: 'FORGE_CARTERA_020C_CONFIRMATION_STATUS', contractVersion: 'CARTERA-020C.3',
+      reviewReference: null, packetReference: null,
+      state: 'IDENTITY_CONFIRMED', stateVersion: 3,
+      identityCommandCount: 1, identitySuccessCount: 1, policyCommandCount: 0,
+      identityResults: structuredClone(identityResults), resolvedAccounts: [],
+      policyResult: null, nextAction: 'COMPOSE_AND_AUTHORIZE_POLICY', createsTruth: false,
+    });
+
+    const field = value => ({ value, confidence: .98, state: value == null ? 'UNKNOWN' : 'EXTRACTED', parserId: 'cartera-pdf-intake', parserVersion: 'v3', extractionMethod: 'EDGE_FUNCTION_REVIEW', sourceLocation: null, createsTruth: false });
+    const coverages = [
+      { candidateReference:'PDF_COVERAGE_CANDIDATE:BAM',coverageLabel:'BAM UI',coverageCode:'C1-315-X',annexReference:'C1-315-X',sumInsured:null,currency:'UDI',effectiveFrom:'2026-08-05',coveragePeriod:{value:27,unit:'YEAR'},paymentPeriod:{value:15,unit:'YEAR'},premiumAmount:0,evidenceReference:'page:1:bam',source:'PDF_DOCUMENT',confidence:.95,createsTruth:false,requiresHumanReview:true },
+      { candidateReference:'PDF_COVERAGE_CANDIDATE:BAIT',coverageLabel:'BAIT 65',coverageCode:'C1-652-X',annexReference:'C1-652-X',sumInsured:75000,currency:'UDI',effectiveFrom:'2026-08-05',coveragePeriod:{value:27,unit:'YEAR'},paymentPeriod:{value:15,unit:'YEAR'},premiumAmount:251.10,evidenceReference:'page:1:bait',source:'PDF_DOCUMENT',confidence:.95,createsTruth:false,requiresHumanReview:true },
+    ];
+    const packet = reference => ({
+      packet_reference: reference, confirmation_state:'PENDING_CONFIRMATION', extraction_confidence:.98,
+      warnings:[], identity_candidates:[{candidateReference:'IDENTITY_CANDIDATE:AURA:DURABLE015',candidateType:'EXISTING_PERSON_OR_NEW_PERSON',state:'UNRESOLVED',required:true,displayName:'ADRIAN ORTIZ GARCIA',createsTruth:false}], policy_role_candidates:[], existing_policy_candidates:[],
+      extracted_fields:{
+        holderName:field('ADRIAN ORTIZ GARCIA'),insuredName:field('ADRIAN ORTIZ GARCIA'),contractorName:field('ADRIAN ORTIZ GARCIA'),
+        policyNumber:field('VI0003006169'),productName:field('IMAGINA SER 65 - 15 PAGOS UDI'),policyType:field('NORMAL'),status:field(null),
+        issueDate:field('2026-08-05'),effectiveFrom:field('2026-08-05'),effectiveTo:field('2053-08-05'),currency:field('UDI'),paymentFrequency:field('MONTHLY'),
+        basicPremiumTotal:field(3976.96),plannedPremium:field(2840),annualTotal:field(6816.96),coverageCandidates:field(coverages),coverageSectionDetected:field(true),beneficiariesDetected:field(true)
+      }
+    });
+
+    const tables = {
+      prospects: [{ id:PROSPECT_ID, full_name:'Adrin Ortiz', display_name:'Adrin Ortiz', alias:null, status:'client', created_at:'2026-01-01T00:00:00Z', updated_at:'2026-08-08T00:00:00Z', archived_at:null }],
+      commercial_people: [{ id:PERSON_ID, person_reference:PERSON_REFERENCE, display_name:'ADRIAN ORTIZ GARCIA', preferred_name:null, lifecycle_state:'CONFIRMED', privacy_classification:'PRIVATE', archived_at:null }],
+      commercial_source_identity_links: [], commercial_accounts: [], canonical_policies: [],
+    };
+
+    function filtered(table, filters) {
+      if (table === 'cartera020b_policy_evidence_packets') return [];
+      return (tables[table] || []).filter(row => Object.entries(filters).every(([key,value]) => row[key] === value));
+    }
+    function query(table) {
+      const filters = {};
+      let proxy;
+      proxy = new Proxy({}, { get(_t, prop) {
+        if (prop === 'then') return (resolve,reject) => Promise.resolve({data:filtered(table,filters),error:null}).then(resolve,reject);
+        if (prop === 'eq') return (key,value) => { filters[key]=value; return proxy; };
+        if (prop === 'is') return (key,value) => { filters[key]=value; return proxy; };
+        if (prop === 'single') return async () => ({data:filtered(table,filters)[0] || null,error:filtered(table,filters)[0]?null:{message:'NOT_FOUND'}});
+        if (prop === 'maybeSingle') return async () => ({data:filtered(table,filters)[0] || null,error:null});
+        return () => proxy;
+      }});
+      return proxy;
+    }
+    function packetQuery() {
+      const filters = {};
+      let proxy;
+      proxy = new Proxy({}, { get(_t, prop) {
+        if (prop === 'then') return (resolve,reject) => Promise.resolve({data:[],error:null}).then(resolve,reject);
+        if (prop === 'eq') return (key,value) => { filters[key]=value; return proxy; };
+        if (prop === 'is') return () => proxy;
+        if (prop === 'single' || prop === 'maybeSingle') return async () => {
+          const ref = String(filters.packet_reference || '');
+          return { data: ref.startsWith('POLICY_PACKET:AURA:') ? packet(ref) : null, error:null };
+        };
+        return () => proxy;
+      }});
+      return proxy;
+    }
+
+    const client = {
+      auth:{ async getUser(){return {data:{user:{id:USER_ID}},error:null};}, async getSession(){return {data:{session:{access_token:'TEST'}},error:null};} },
+      from(table){ return table === 'cartera020b_policy_evidence_packets' ? packetQuery() : query(table); },
+      functions:{ async invoke(){ trace.rpc.push('EDGE_UNEXPECTED'); return {data:null,error:{message:'EDGE_MUST_NOT_RUN'}}; } },
+      async rpc(name,args={}){
+        trace.rpc.push(name);
+        if(name==='forge_cartera030d_list_policy_payment_calendar') return {data:{summary:{},items:[]},error:null};
+        if(name==='forge_cartera050_list_future_radar') return {data:{items:[]},error:null};
+        if(name==='forge_cartera020c_get_confirmation_status') {
+          const status=identityConfirmed(); status.reviewReference=args.p_review_reference; return {data:status,error:null};
+        }
+        if(name==='forge_cartera010b_confirm_identity_resolution') {
+          trace.pipelineIdentityWrites.push(structuredClone(args.p_command));
+          tables.commercial_source_identity_links.push({source_record_reference:PROSPECT_ID,person_id:PERSON_ID,match_status:'LINK_CONFIRMED',effective_to:null});
+          trace.links.push({prospectReference:PROSPECT_ID,personReference:PERSON_REFERENCE});
+          return {data:{status:'CONFIRMED',outcome:'LINK_CONFIRMED',personReference:PERSON_REFERENCE,linkReference:'IDENTITY_LINK:PIPELINE015',decisionReference:'IDENTITY_DECISION:PIPELINE015',idempotencyKey:args.p_command.idempotencyKey,serverCommandDigest:'b'.repeat(64),replayed:false},error:null};
+        }
+        if(name==='forge_cartera020c_prepare_identity_orchestration_canonical') return {data:null,error:{message:'CANONICAL_PREPARE_MUST_NOT_RUN_AFTER_IDENTITY_CONFIRMED'}};
+        if(name==='forge_cartera020c_attach_policy_confirmation_durable') {
+          trace.durableAttach.push(structuredClone(args.p_request));
+          const status=identityConfirmed(); status.state='POLICY_READY'; status.stateVersion=4; status.policyCommandCount=1; return {data:status,error:null};
+        }
+        if(name==='forge_cartera020c_attach_policy_confirmation') return {data:null,error:{message:'LEGACY_ATTACH_MUST_NOT_RUN'}};
+        if(name==='forge_cartera020c_execute_next_confirmation_step') {
+          trace.execute.push(structuredClone(args));
+          return {data:{...identityConfirmed(),state:'CONFIRMED',stateVersion:5,policyCommandCount:1,policyResult:{status:'CONFIRMED',policyReference:'policy:cartera:015',policyVersionReference:'POLICY_VERSION:015',evidenceVersionReference:'EVIDENCE_VERSION:015'}},error:null};
+        }
+        return {data:[],error:null};
+      }
+    };
+
+    const module = createCarteraModule({root:document.querySelector('#fixture-main'),client,windowRef:window,globalState:state=>trace.globalStates.push(structuredClone(state))});
+    await module.mount();
+    document.documentElement.dataset.cartera015='READY';
+  </script>
+</body>
+</html>

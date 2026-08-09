@@ -1,0 +1,130 @@
+name: Aura Cartera 020C Durable Confirmation 015
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql'
+      - 'tests/cartera-020c-durable-attach-015.test.mjs'
+      - 'tests/cartera-020c-durable-confirmation-015-playwright.config.mjs'
+      - 'tests/fixtures/aura-cartera-020c-durable-confirmation-015.html'
+      - 'tests/e2e/aura-cartera-020c-durable-confirmation-015.spec.mjs'
+      - '.github/workflows/aura-cartera-020c-durable-confirmation-015.yml'
+      - '.github/workflows/aura-cartera-pdf-ingress-parity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-cartera-020c-durable-015-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: Durable 020C + Pipeline identity contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Syntax check 015 runtime and browser acceptance
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
+          node --check tests/cartera-020c-durable-attach-015.test.mjs
+          node --check tests/e2e/aura-cartera-020c-durable-confirmation-015.spec.mjs
+      - name: Prove durable boundary and no automatic name merge
+        run: node --test tests/cartera-020c-durable-attach-015.test.mjs
+      - name: Prove SQL remains bounded to wrappers and durable reads
+        run: |
+          set -euo pipefail
+          FILE=supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql
+          grep -q 'forge_cartera020c_attach_policy_confirmation_durable' "$FILE"
+          grep -q "c.status = 'SUCCEEDED'" "$FILE"
+          grep -q 'forge_cartera020c_authorization_digest(durable_composition)' "$FILE"
+          if grep -Eiq 'alter table .*disable row level security|drop table|delete from public\.commercial_people|update public\.commercial_people' "$FILE"; then
+            echo 'CARTERA_015_SCOPE_VIOLATION=TRUE'
+            exit 1
+          fi
+          echo 'CARTERA_015_DURABLE_SQL_SCOPE=PASS'
+
+  selector-confirmation-triple:
+    name: Selector confirmation — triple check 1/3 + 2/3 + 3/3
+    needs: contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run selector confirmation checks 1/3, 2/3 and 3/3
+        run: npx playwright test --config tests/cartera-020c-durable-confirmation-015-playwright.config.mjs --grep "selector confirmation check"
+      - name: Upload selector confirmation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-020c-selector-confirmation-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/aura-cartera-020c-015
+          if-no-files-found: warn
+          retention-days: 30
+
+  drag-drop-confirmation-triple:
+    name: Drag and drop confirmation — triple check 1/3 + 2/3 + 3/3
+    needs: contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run drag-drop confirmation checks 1/3, 2/3 and 3/3
+        run: npx playwright test --config tests/cartera-020c-durable-confirmation-015-playwright.config.mjs --grep "drag drop confirmation check"
+      - name: Upload drag/drop confirmation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-020c-drag-drop-confirmation-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/aura-cartera-020c-015
+          if-no-files-found: warn
+          retention-days: 30
+
+  dual-ingress-confirmation-gate:
+    name: Selector + drag/drop confirmation gate
+    needs: [selector-confirmation-triple, drag-drop-confirmation-triple]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo 'SELECTOR_CONFIRMATION_TRIPLE=PASS_3_OF_3'
+          echo 'DRAG_DROP_CONFIRMATION_TRIPLE=PASS_3_OF_3'
+          echo 'CARTERA_020C_DURABLE_CONFIRMATION_015=PASS'
