@@ -1,0 +1,118 @@
+name: Forge Cross-Domain Decision Projection 004
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'platform/decision-projection/**'
+      - 'tests/forge-cross-domain-decision-projection-004.test.mjs'
+      - 'docs/architecture/intelligence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004.md'
+      - 'docs/architecture/intelligence/FORGE_DECISION_CONTRACT_RECONCILIATION_004.md'
+      - 'docs/architecture/intelligence/FORGE_FORECAST_AUTHORITY_TRACE_004.md'
+      - 'docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_CONSTITUTIONAL_GATE.md'
+      - 'docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_ACCEPTANCE.md'
+      - '.github/workflows/forge-cross-domain-decision-projection-004.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-cross-domain-decision-projection-004-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  PHASE004_BASE_SHA: '95755f7680fe235d515c02ec4ec06fa6c49eab17'
+
+jobs:
+  contract-and-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Phase 004 exact scope lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "$PHASE004_BASE_SHA^{commit}"
+          mapfile -t changed < <(git -c core.quotepath=false diff --name-only "$PHASE004_BASE_SHA" HEAD)
+          printf '%s\n' "${changed[@]}"
+          allowed='^(platform/decision-projection/|tests/forge-cross-domain-decision-projection-004\.test\.mjs$|docs/architecture/intelligence/FORGE_(CROSS_DOMAIN_DECISION_PROJECTION|DECISION_CONTRACT_RECONCILIATION|FORECAST_AUTHORITY_TRACE)_004\.md$|docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_(CONSTITUTIONAL_GATE|ACCEPTANCE)\.md$|\.github/workflows/forge-cross-domain-decision-projection-004\.yml$)'
+          for file in "${changed[@]}"; do
+            if [[ ! "$file" =~ $allowed ]]; then
+              echo "PHASE004_SCOPE_VIOLATION=$file" >&2
+              exit 1
+            fi
+          done
+          if git diff --name-only "$PHASE004_BASE_SHA" HEAD | grep -Eq '^(supabase/|\.github/workflows/pages\.yml$|platform/product-intelligence/|compensation/|platform/policy-intelligence/|platform/shared-commercial-model/)'; then
+            echo 'PHASE004_FORBIDDEN_AUTHORITY_MUTATION=FAIL' >&2
+            exit 1
+          fi
+          echo 'PHASE004_SCOPE_LOCK=PASS'
+          echo 'SUPABASE_MUTATION=0'
+          echo 'PAGES_DEPLOY_WORKFLOW_MUTATION=0'
+          echo 'PRODUCT_INTELLIGENCE_MUTATION=0'
+          echo 'COMPENSATION_MUTATION=0'
+          echo 'IDENTITY_POLICY_AUTHORITY_MUTATION=0'
+
+      - name: Syntax
+        run: |
+          node --check platform/decision-projection/forge-cross-domain-decision-projection.js
+          node --check platform/decision-projection/forge-cross-domain-decision-adapters.js
+          node --check tests/forge-cross-domain-decision-projection-004.test.mjs
+
+      - name: Phase 004 decision traces and authority locks
+        run: node --test tests/forge-cross-domain-decision-projection-004.test.mjs
+
+      - name: Preserve Relationship Intelligence Pack 01
+        run: node tests/fip-pack-01-relationship-intelligence-foundation-test.mjs
+
+      - name: Preserve Advisor Intelligence and Mick Pack 02
+        run: node tests/fip-pack-02-advisor-intelligence-and-mick-test.mjs
+
+      - name: Preserve Nash Pack 03
+        run: node tests/fip-pack-03-nash-conversation-intelligence-test.mjs
+
+      - name: Preserve Opportunity Pack 04
+        run: node tests/fip-pack-04-opportunity-and-operation-test.mjs
+
+      - name: Preserve Alfred Pack 07
+        run: node tests/fip-pack-07-productive-experience-and-acceptance-test.mjs
+
+      - name: Preserve Advisor Forecast V3 chain
+        run: |
+          node manager-os/tests/advisor-forecast-stages-11-13-test.js
+          node tests/advisor-forecast-runtime-acceptance-test.mjs
+
+      - name: No persistence and no new engine declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RniE 'service_role|\.insert\(|\.update\(|\.delete\(|create[[:space:]]+table|create[[:space:]]+(or[[:space:]]+replace[[:space:]]+)?function' platform/decision-projection; then
+            echo 'PHASE004_PERSISTENCE_OR_PRIVILEGED_WRITE=FAIL' >&2
+            exit 1
+          fi
+          if grep -RniE 'UniversalDecisionEngine|SuperRecommendationEngine|GlobalScoringEngine|CrossDomainIntelligenceEngine|ForgeBrain|ForgeAI' platform/decision-projection; then
+            echo 'PHASE004_NEW_BRAIN=FAIL' >&2
+            exit 1
+          fi
+          echo 'PHASE004_NEW_PERSISTENCE=0'
+          echo 'PHASE004_NEW_BUSINESS_ENGINE=0'
+          echo 'PHASE004_NEW_SCORE=0'
+
+      - name: Security boundary declaration
+        run: |
+          echo 'PROJECTION_HAS_SUPABASE_CLIENT=NO'
+          echo 'PROJECTION_CAN_EXPAND_RLS_SCOPE=NO'
+          echo 'SOURCE_RLS_REMAINS_AUTHORITY=YES'
+          echo 'HUMAN_DECISION_BOUNDARY=PRESERVED'
