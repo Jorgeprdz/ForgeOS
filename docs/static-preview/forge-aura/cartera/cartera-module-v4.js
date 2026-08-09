@@ -1,5 +1,5 @@
 import { createCarteraModule as createBaseCarteraModule } from './cartera-module.js?base=cartera-pdf-semantic-completion-014';
-import { createCarteraAdapter as createSemanticCarteraAdapter } from './cartera-adapter-pages-v8.js?v=cartera-pdf-semantic-completion-014';
+import { createCarteraAdapter as createSemanticCarteraAdapter } from './cartera-adapter-pages-v10.js?v=forge-shared-authority-identity-convergence-003';
 import {
   coverageExtractionState,
   formatCivilDateEs,
