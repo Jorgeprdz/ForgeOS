@@ -9,9 +9,15 @@ function pdfBuffer() {
 }
 const PDF = pdfBuffer();
 
+async function assertV10Loaded(page) {
+  const resources = await page.evaluate(() => performance.getEntriesByType('resource').map(entry => entry.name));
+  expect(resources.some(name => name.includes('/cartera/cartera-adapter-pages-v10.js'))).toBeTruthy();
+}
+
 async function open(page) {
   await page.goto(FIXTURE, { waitUntil: 'networkidle' });
   await expect(page.locator('html')).toHaveAttribute('data-cartera015', 'READY');
+  await assertV10Loaded(page);
   await page.locator('[data-add-policy]').first().click();
   await expect(page.locator('[data-pdf-input]')).toBeAttached();
   await expect(page.locator('[data-pdf-drop]')).toBeVisible();
@@ -54,7 +60,6 @@ async function trace(page) {
   return page.evaluate(()=>structuredClone(window.__CARTERA_015_TRACE__));
 }
 
-// SELECTOR 1/3 — exact production partial state: semantic refresh reopens, Pipeline prospect is visible, no automatic match.
 test('selector confirmation check 1/3 — IDENTITY_CONFIRMED review exposes unresolved Pipeline prospect without auto-link', async ({page})=>{
   await open(page); await selector(page);
   await expect(page.getByText('ADRIAN ORTIZ GARCIA').first()).toBeVisible();
@@ -65,7 +70,6 @@ test('selector confirmation check 1/3 — IDENTITY_CONFIRMED review exposes unre
   expect(value.links).toHaveLength(0);
 });
 
-// SELECTOR 2/3 — explicit human selection links the Pipeline prospect to the already durable person, never creates another person.
 test('selector confirmation check 2/3 — explicit Pipeline selection links to durable 020C person', async ({page})=>{
   await open(page); await selector(page); await confirm(page);
   const value=await trace(page);
@@ -75,7 +79,6 @@ test('selector confirmation check 2/3 — explicit Pipeline selection links to d
   expect(value.links).toEqual([{prospectReference:'11111111-1111-4111-8111-111111111111',personReference:DURABLE_PERSON}]);
 });
 
-// SELECTOR 3/3 — policy attach uses durable server boundary and does not replay Identity preparation or legacy attach.
 test('selector confirmation check 3/3 — durable policy attach resumes without identity replay', async ({page})=>{
   await open(page); await selector(page); await confirm(page);
   const value=await trace(page);
@@ -86,7 +89,6 @@ test('selector confirmation check 3/3 — durable policy attach resumes without 
   expect(value.globalStates.some(item=>String(item).includes('Póliza incorporada'))).toBeTruthy();
 });
 
-// DRAG/DROP 1/3 — octet-stream items-only drop reaches the exact same semantic review and Pipeline candidate surface.
 test('drag drop confirmation check 1/3 — items-only octet-stream reopens durable review', async ({page})=>{
   await open(page); await drop(page);
   await expect(page.locator('[data-pdf-drop-error]')).toHaveCount(0);
@@ -96,7 +98,6 @@ test('drag drop confirmation check 1/3 — items-only octet-stream reopens durab
   expect(value.rpc).not.toContain('EDGE_UNEXPECTED');
 });
 
-// DRAG/DROP 2/3 — the same explicit Pipeline decision resolves to the same durable CommercialPerson.
 test('drag drop confirmation check 2/3 — Pipeline convergence is identical to selector path', async ({page})=>{
   await open(page); await drop(page); await confirm(page);
   const value=await trace(page);
@@ -106,7 +107,6 @@ test('drag drop confirmation check 2/3 — Pipeline convergence is identical to 
   expect(value.links).toHaveLength(1);
 });
 
-// DRAG/DROP 3/3 — final Policy execution also uses durable attach only and reaches CONFIRMED.
 test('drag drop confirmation check 3/3 — durable attach confirms policy without duplicate truth writes', async ({page})=>{
   await open(page); await drop(page); await confirm(page);
   const value=await trace(page);
