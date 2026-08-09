@@ -12,9 +12,11 @@ on:
       - 'docs/static-preview/forge-aura/index.html'
       - 'supabase/functions/cartera-pdf-intake/**'
       - 'supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql'
+      - 'supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql'
       - 'tests/aura-cartera-productive-reconciliation.test.mjs'
       - 'tests/aura-cartera-pages-import-graph.test.mjs'
       - 'tests/cartera-pdf-ingress-legacy-refresh.test.mjs'
+      - 'tests/cartera-020c-durable-attach-015.test.mjs'
       - 'tests/cartera-playwright.config.mjs'
       - 'tests/e2e/aura-cartera-productive-visual.spec.mjs'
       - 'tests/fixtures/aura-cartera-productive.synthetic.json'
@@ -69,7 +71,7 @@ jobs:
           printf '%s\n' "${changed[@]}"
           forbidden='^(platform/policy-intelligence/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
           allowed_edge='^supabase/functions/cartera-pdf-intake/(index\.ts|semantic-recovery\.js)$'
-          allowed_migration='^supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc\.sql$'
+          allowed_migration='^supabase/migrations/(20260809000100_cartera020b_semantic_refresh_rpc|20260809000200_cartera020c_durable_attach_pipeline_person)\.sql$'
           edge_changed=0
           migration_changed=0
           for file in "${changed[@]}"; do
@@ -95,7 +97,7 @@ jobs:
             fi
           done
           echo "SUPABASE_MIGRATIONS_CHANGED=$migration_changed"
-          if [[ "$migration_changed" = '1' ]]; then echo 'SUPABASE_MIGRATION_SCOPE=CARTERA020B_SEMANTIC_REFRESH_ONLY'; fi
+          if [[ "$migration_changed" = '1' ]]; then echo 'SUPABASE_MIGRATION_SCOPE=CARTERA_020B_REFRESH_OR_020C_DURABLE_ATTACH_ONLY'; fi
           echo "EDGE_FUNCTIONS_CHANGED=$edge_changed"
           if [[ "$edge_changed" = '1' ]]; then echo 'EDGE_FUNCTION_SCOPE=CARTERA_PDF_INTAKE_ONLY'; fi
           echo 'POLICY_INTELLIGENCE_BACKEND_CHANGED=0'
@@ -109,6 +111,7 @@ jobs:
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
           node --check docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js
           node --check docs/static-preview/forge-aura/cartera/cartera-coverage-adapter.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module.js
@@ -116,7 +119,7 @@ jobs:
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v5.js
           node --check docs/static-preview/forge-aura/app-v4.js
       - name: Aura Cartera productive contract
-        run: node --test tests/aura-cartera-productive-reconciliation.test.mjs tests/cartera-pdf-ingress-legacy-refresh.test.mjs
+        run: node --test tests/aura-cartera-productive-reconciliation.test.mjs tests/cartera-pdf-ingress-legacy-refresh.test.mjs tests/cartera-020c-durable-attach-015.test.mjs
       - name: Policy Coverage authority and versioning
         run: >-
           node --test
