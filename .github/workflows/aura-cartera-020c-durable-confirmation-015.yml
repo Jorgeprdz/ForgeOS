@@ -8,6 +8,7 @@ on:
       - 'docs/static-preview/forge-aura/index.html'
       - 'supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql'
       - 'tests/cartera-020c-durable-attach-015.test.mjs'
+      - 'tests/cartera-pipeline-prospect-identity-selector-005a.test.mjs'
       - 'tests/cartera-020c-durable-confirmation-015-playwright.config.mjs'
       - 'tests/fixtures/aura-cartera-020c-durable-confirmation-015.html'
       - 'tests/e2e/aura-cartera-020c-durable-confirmation-015.spec.mjs'
@@ -43,9 +44,12 @@ jobs:
         run: |
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
           node --check tests/cartera-020c-durable-attach-015.test.mjs
+          node --check tests/cartera-pipeline-prospect-identity-selector-005a.test.mjs
           node --check tests/e2e/aura-cartera-020c-durable-confirmation-015.spec.mjs
       - name: Prove durable boundary and no automatic name merge
         run: node --test tests/cartera-020c-durable-attach-015.test.mjs
+      - name: Prove 005A Pipeline prospect identity selector boundary
+        run: node --test tests/cartera-pipeline-prospect-identity-selector-005a.test.mjs
       - name: Prove SQL remains bounded to wrappers and durable reads
         run: |
           set -euo pipefail
