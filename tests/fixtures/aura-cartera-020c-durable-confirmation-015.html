@@ -92,7 +92,7 @@
         if (prop === 'is') return () => proxy;
         if (prop === 'single' || prop === 'maybeSingle') return async () => {
           const ref = String(filters.packet_reference || '');
-          return { data: ref.startsWith('POLICY_PACKET:AURA:SEMANTIC_REFRESH:') ? packet(ref) : null, error:null };
+          return { data: ref.startsWith('POLICY_PACKET:AURA:') ? packet(ref) : null, error:null };
         };
         return () => proxy;
       }});
