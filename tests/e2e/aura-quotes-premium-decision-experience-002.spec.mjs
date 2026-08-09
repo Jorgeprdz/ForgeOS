@@ -99,7 +99,7 @@ test("ERROR is explicit when the quote cannot be calculated", async ({ page }) =
   await page.locator("[data-quotes-file]").setInputFiles(filePayload());
   await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "ERROR");
   await expect(page.getByRole("heading", { name: "No se pudo calcular la cotización" })).toBeVisible();
-  await expect(page.getByText("Archivo de prueba inválido", { exact: true })).toBeVisible();
+  await expect(page.locator(".aura-quotes__empty-copy-block").getByText("Archivo de prueba inválido", { exact: true })).toBeVisible();
 });
 
 test("UNAVAILABLE is explicit when the productive authority is unavailable", async ({ page }) => {
@@ -107,7 +107,7 @@ test("UNAVAILABLE is explicit when the productive authority is unavailable", asy
   await page.locator("[data-quotes-file]").setInputFiles(filePayload());
   await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "UNAVAILABLE");
   await expect(page.getByRole("heading", { name: "Cotización no disponible" })).toBeVisible();
-  await expect(page.getByText("Cotización no disponible: runtime unavailable", { exact: true })).toBeVisible();
+  await expect(page.locator(".aura-quotes__empty-copy-block").getByText("Cotización no disponible: runtime unavailable", { exact: true })).toBeVisible();
 });
 
 test("keyboard tabs, visible focus and modal focus trap remain usable", async ({ page }) => {
