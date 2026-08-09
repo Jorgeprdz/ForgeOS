@@ -17,6 +17,7 @@ on:
       - 'supabase/functions/cartera-pdf-intake/index.ts'
       - 'supabase/functions/cartera-pdf-intake/semantic-recovery.js'
       - 'supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql'
+      - 'supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql'
       - 'tests/income-*'
       - 'tests/e2e/income-*'
       - 'tests/fixtures/aura-income-*'
@@ -119,7 +120,7 @@ jobs:
           printf '%s\n' "${changed[@]}"
           forbidden='^(compensation/advisor/engine/|compensation/advisor-development/.*engine|compensation/new-professional/.*rule-data|compensation/advisor/rules/rule-data|supabase/migrations/|supabase/functions/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
           allowed_cartera_edge='^supabase/functions/cartera-pdf-intake/(index\.ts|semantic-recovery\.js)$'
-          allowed_cartera_migration='^supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc\.sql$'
+          allowed_cartera_migration='^supabase/migrations/(20260809000100_cartera020b_semantic_refresh_rpc|20260809000200_cartera020c_durable_attach_pipeline_person)\.sql$'
           edge_changed=0
           migration_changed=0
           for file in "${changed[@]}"; do
@@ -147,7 +148,7 @@ jobs:
           echo 'COMPENSATION_ENGINE_MUTATION=ZERO'
           echo 'RULE_PACK_MUTATION=ZERO'
           if [[ "$migration_changed" = '1' ]]; then
-            echo 'DATABASE_MUTATION=CARTERA_020B_SEMANTIC_REFRESH_ONLY'
+            echo 'DATABASE_MUTATION=CARTERA_NAMED_COMPATIBILITY_ONLY'
           else
             echo 'DATABASE_MUTATION=ZERO'
           fi
