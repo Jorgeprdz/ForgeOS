@@ -192,14 +192,14 @@ test("Trace 5 — Advisor Forecast V3 projects planning semantics without money/
   assert.equal(projected.boundaries.calculatesImpact, false);
 });
 
-test("Trace 6 — same-person Relationship + Nash can AGREE without dropping either authority", () => {
+test("Trace 6 — same-person Relationship + Nash remain COMPLEMENT without dropping either authority", () => {
   const foundation = relationshipFixture();
   const relationshipDecision = projectRelationshipCommitmentDecision({ foundation, commitment: foundation.commitments[0] });
   const nashDecision = projectNashRecommendationDecision({ recommendation: nashFixture() });
   const set = composeDecisionProjectionSet([relationshipDecision, nashDecision]);
   assert.equal(set.items.length, 2);
   assert.equal(set.groups.length, 1);
-  assert.equal(set.groups[0].relationship, "AGREE");
+  assert.equal(set.groups[0].relationship, "COMPLEMENT");
   assert.equal(set.groups[0].winnerDecisionReference, null);
   assert.equal(set.boundaries.winnerSelected, false);
   assert.equal(new Set(set.groups[0].sourceAuthorities).has("FIP_NASH_NEXT_BEST_ACTION"), true);
