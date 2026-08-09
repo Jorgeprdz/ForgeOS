@@ -1,0 +1,55 @@
+{
+  "person": {
+    "id": "10000000-0000-4000-8000-000000000016",
+    "person_reference": "person:synthetic:projection-016",
+    "display_name": "Alex Ejemplo",
+    "lifecycle_state": "CONFIRMED"
+  },
+  "prospect": {
+    "id": "20000000-0000-4000-8000-000000000016",
+    "status": "client",
+    "phone_normalized": "+525500001616",
+    "whatsapp_normalized": null,
+    "email_normalized": null,
+    "archived_at": null
+  },
+  "sourceLink": {
+    "source_identity_type": "PROSPECT",
+    "source_record_reference": "20000000-0000-4000-8000-000000000016",
+    "match_status": "LINK_CONFIRMED",
+    "effective_to": null
+  },
+  "policy": {
+    "id": "30000000-0000-4000-8000-000000000016",
+    "policy_reference": "policy:synthetic:projection-016",
+    "policy_number": "SYN-00006169",
+    "product_reference": "product:imagina-ser-65-15-pagos-udi",
+    "status_value": "ACTIVE"
+  },
+  "roles": [
+    {
+      "policy_id": "30000000-0000-4000-8000-000000000016",
+      "participant_person_id": "10000000-0000-4000-8000-000000000016",
+      "role_type": "POLICY_OWNER",
+      "confirmation_state": "CONFIRMED",
+      "effective_from": "2026-01-01T00:00:00.000Z",
+      "effective_to": "2053-01-01T00:00:00.000Z"
+    },
+    {
+      "policy_id": "30000000-0000-4000-8000-000000000016",
+      "participant_person_id": "10000000-0000-4000-8000-000000000016",
+      "role_type": "INSURED",
+      "confirmation_state": "CONFIRMED",
+      "effective_from": "2026-01-01T00:00:00.000Z",
+      "effective_to": "2053-01-01T00:00:00.000Z"
+    },
+    {
+      "policy_id": "40000000-0000-4000-8000-000000000016",
+      "participant_person_id": "90000000-0000-4000-8000-000000000016",
+      "role_type": "POLICY_OWNER",
+      "confirmation_state": "CONFIRMED",
+      "effective_from": "2026-01-01T00:00:00.000Z",
+      "effective_to": "2053-01-01T00:00:00.000Z"
+    }
+  ]
+}
