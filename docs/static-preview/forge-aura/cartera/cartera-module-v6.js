@@ -204,6 +204,9 @@ function buildPersonTabs(workspace, projection) {
   workspace.dataset.personProjection = '016';
 }
 
+export const applyCarteraDirectoryPresentation016 = humanizeDirectory;
+export const applyCarteraPersonWorkspacePresentation016 = buildPersonTabs;
+
 export function createCarteraModule(options = {}) {
   const root = options.root;
   if (!root || !options.client) throw new Error('AURA_CARTERA_ROOT_AND_CLIENT_REQUIRED');
