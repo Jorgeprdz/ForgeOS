@@ -10,15 +10,13 @@ Datos Fecha de
 Nombre Preferente Edad Género Fumador
 generales Nacimiento
 Titular VICTOR MENDEZ REYES No 25/10/1988 37 Masculino No
-Coberturas Plazo de Suma Prima Anualizada
-Cobertura Asegurada
-ORVI 99-20 PAGOS UDIS (ORVI 99-20 PAGOS UDIS) 64 años 135,000 3,042.20
-ADAPTA (ADAPTA) 5 REN Amparado 821.25
-Beneficio de Asistencia Médica (BAM UI) 1 REN Amparado SIN COSTO
-Beneficio de Pago de Suma Asegurada por Invalidez y Exención de pago de primas por 23 años 135,000 242.59
-Invalidez Total y Permanente (BITAE)
-Apoyo en Vida (AV UI S/D) 1 REN Amparado SIN COSTO
-Beneficio por Muerte Accidental (BMA) 28 años 135,000 189.00
+Coberturas  Plazo de Cobertura  Suma Asegurada  Prima Anualizada
+ORVI 99-20 PAGOS UDIS (ORVI 99-20 PAGOS UDIS)  64 años  135,000  3,042.20
+ADAPTA (ADAPTA)  5 REN  Amparado  821.25
+Beneficio de Asistencia Médica (BAM UI)  1 REN  Amparado  SIN COSTO
+Beneficio de Pago de Suma Asegurada por Invalidez y Exención de pago de primas por Invalidez Total y Permanente (BITAE)  23 años  135,000  242.59
+Apoyo en Vida (AV UI S/D)  1 REN  Amparado  SIN COSTO
+Beneficio por Muerte Accidental (BMA)  28 años  135,000  189.00
 Prima Total Anual 4,295.04
 Te presentamos el desglose de las coberturas ADAPTA y CLP cotizadas:
 ADAPTA CLP
@@ -27,8 +25,7 @@ Nacimiento r Cobertura Asegurada Anualizada Cobertura Asegurada Anualizada
 VICTOR MENDEZ REYES 25/10/1988 37 Masculino No 5 años 100,000 449.50
 ADRIANA PATRICIA ALVAREZ TETZPA 01/03/1990 36 Femenino No 5 años 100,000 371.75
 VALORES GARANTIZADOS
-Edad Real Año Póliza Prima Anual Prima AVE Valor de Rescate Valor en Efectivo Recuperación
-AVE Total
+Edad Real Año Póliza Prima Anual Prima AVE Valor de Rescate AVE Valor en Efectivo Recuperación Total
 37 1 4,295 500 493 0 493
 38 2 4,295 500 1,010 0 1,010
 39 3 4,295 500 1,554 3,777 5,332
