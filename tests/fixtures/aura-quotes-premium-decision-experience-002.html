@@ -21,6 +21,8 @@
     const query = new URLSearchParams(location.search);
     const partial = query.get("partial") === "1";
     const economic = query.get("economic") !== "0";
+    const mode = query.get("mode") || "ready";
+    const delay = Number(query.get("delay") || 30);
     const model = {
       product: "Imagina Ser",
       family: "imagina_ser",
@@ -66,7 +68,9 @@
       const state = { packet: null, calculation: null, viewModel: null, accepted: false, lifecycleReceipt: null };
       return {
         async loadFile(file) {
-          await new Promise(resolve => setTimeout(resolve, 30));
+          await new Promise(resolve => setTimeout(resolve, delay));
+          if (mode === "error") throw new Error("Archivo de prueba inválido");
+          if (mode === "unavailable") throw new Error("Cotización no disponible: runtime unavailable");
           state.packet = { sourceFile: file.name };
           state.calculation = { fixture: true };
           state.viewModel = { ...model, sourceFile: file.name };
