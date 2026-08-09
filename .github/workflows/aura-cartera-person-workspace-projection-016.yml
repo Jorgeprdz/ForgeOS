@@ -10,7 +10,10 @@ on:
       - 'tests/cartera-020c-durable-attach-015.test.mjs'
       - 'tests/aura-cartera-pdf-review-date-ui-008.test.mjs'
       - 'tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs'
-      - 'tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json'
+      - 'tests/cartera-person-016-playwright.config.mjs'
+      - 'tests/e2e/aura-cartera-person-workspace-016.spec.mjs'
+      - 'tests/fixtures/aura-cartera-person-workspace-directory-projection-016.synthetic.json'
+      - 'tests/fixtures/aura-cartera-person-workspace-016.html'
       - '.github/workflows/aura-cartera-person-workspace-projection-016.yml'
 
 permissions:
@@ -48,7 +51,7 @@ jobs:
           printf '%s\n' "${changed[@]}"
           for file in "${changed[@]}"; do
             case "$file" in
-              docs/static-preview/forge-aura/cartera/*|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/cartera-pdf-ingress-legacy-refresh.test.mjs|tests/cartera-020c-durable-attach-015.test.mjs|tests/aura-cartera-pdf-review-date-ui-008.test.mjs|tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs|tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
+              docs/static-preview/forge-aura/cartera/*|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/cartera-pdf-ingress-legacy-refresh.test.mjs|tests/cartera-020c-durable-attach-015.test.mjs|tests/aura-cartera-pdf-review-date-ui-008.test.mjs|tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs|tests/cartera-person-016-playwright.config.mjs|tests/e2e/aura-cartera-person-workspace-016.spec.mjs|tests/fixtures/aura-cartera-person-workspace-directory-projection-016.synthetic.json|tests/fixtures/aura-cartera-person-workspace-016.html|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
               *) echo "CARTERA016_SCOPE_VIOLATION=$file" >&2; exit 1 ;;
             esac
           done
@@ -66,6 +69,8 @@ jobs:
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v6.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v5.js
+          node --check tests/e2e/aura-cartera-person-workspace-016.spec.mjs
+          node --check tests/cartera-person-016-playwright.config.mjs
       - name: Cartera 016 targeted contract
         run: node --test tests/cartera-person-workspace-directory-projection-016.test.mjs
       - name: Cartera inherited productive regressions
@@ -86,3 +91,47 @@ jobs:
           tests/crs-03-pipeline-person-convergence-service-test.mjs
       - name: Explicit Pages governance remains locked
         run: node --test tests/pages-explicit-deployment-governance.test.mjs
+
+  mobile-browser-acceptance:
+    name: Galaxy S25 directory and Person Workspace acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: projection-contract
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run Galaxy-size 016 browser acceptance
+        run: npx playwright test --config tests/cartera-person-016-playwright.config.mjs
+      - name: Verify 016 screenshot evidence exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in \
+            01-directory-galaxy-s25 \
+            02-person-summary-galaxy-s25 \
+            03-person-policies-galaxy-s25 \
+            04-person-relationship-galaxy-s25; do
+            test -s "test-results/aura-cartera-person-016/${name}.png"
+          done
+          echo 'CARTERA016_GALAXY_SCREENSHOT_SET=PASS'
+      - name: Upload 016 mobile evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-cartera-person-016-${{ github.event.pull_request.head.sha }}
+          path: |
+            test-results/aura-cartera-person-016
+            test-results/aura-cartera-person-016-traces
+          if-no-files-found: warn
+          retention-days: 30
