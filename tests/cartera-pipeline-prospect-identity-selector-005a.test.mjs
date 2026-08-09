@@ -22,7 +22,7 @@ test('005A canonical Aura mount resolves Cartera through module-v5 and adapter-v
 });
 
 test('005A directory read surfaces unresolved Pipeline prospects without invoking identity mutation', () => {
-  const pipelineRead = block(adapterV10, 'async function loadPipelinePeople', 'async function loadDurableIdentityPerson');
+  const pipelineRead = block(adapterV10, 'async function loadPipelinePeople', 'async function ownedProspect');
   const directoryRead = block(adapterV10, 'async loadDirectory()', 'async confirmPdfReview');
 
   assert.match(pipelineRead, /client\.from\('prospects'\)/);
@@ -36,7 +36,7 @@ test('005A directory read surfaces unresolved Pipeline prospects without invokin
 
 test('005A convergence begins only from an explicitly selected Pipeline prospect reference', () => {
   const confirmation = block(adapterV10, 'async confirmPdfReview(review, input = {})');
-  const resolution = block(adapterV10, 'async function resolvePipelineProspect', 'export function createCarteraAdapter');
+  const resolution = block(adapterV10, 'async function resolvePipelineProspect', 'export async function createCarteraAdapter');
 
   assert.match(confirmation, /pipelineProspectReference\(input\.existingPersonReference\)/);
   assert.match(confirmation, /if \(prospectReference\)/);
