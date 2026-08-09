@@ -176,9 +176,7 @@ async function invokeCurrentExtraction(client, file, buffer) {
 
 function refreshWarnings(candidate) {
   const warnings = ['LEGACY_PENDING_PACKET_SEMANTIC_REFRESH'];
-  if (!candidate.coverageCandidates.length && candidate.coverageSectionDetected === true) {
-    warnings.push('COVERAGE_EXTRACTION_INCOMPLETE_REVIEW_REQUIRED');
-  }
+  if (!candidate.coverageCandidates.length && candidate.coverageSectionDetected === true) warnings.push('COVERAGE_EXTRACTION_INCOMPLETE_REVIEW_REQUIRED');
   return warnings;
 }
 
@@ -237,6 +235,22 @@ async function refreshLegacyPacket(client, review, file) {
   });
 }
 
+function pendingReviewKey(review) {
+  return String(review?.packetReference || '').split(':').filter(Boolean).at(-1) || String(review?.packetReference || '');
+}
+
+function dedupePendingReviews(reviews = []) {
+  const byDocument = new Map();
+  for (const review of reviews) {
+    const key = pendingReviewKey(review);
+    const current = byDocument.get(key);
+    const refreshed = String(review?.packetReference || '').includes(':SEMANTIC_REFRESH:');
+    const currentRefreshed = String(current?.packetReference || '').includes(':SEMANTIC_REFRESH:');
+    if (!current || (refreshed && !currentRefreshed)) byDocument.set(key, review);
+  }
+  return [...byDocument.values()];
+}
+
 export async function createCarteraAdapter({ client, windowRef = window } = {}) {
   if (!client) throw new Error('CARTERA_PRODUCTIVE_CLIENT_REQUIRED');
   const adapter = await createSemanticAdapter({ client, windowRef });
@@ -247,7 +261,12 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
       ...(adapter.capabilities || {}),
       pdfLegacyPendingSemanticRefresh: true,
       pdfIngressParity: true,
+      pendingReviewRefreshDeduplication: true,
     }),
+    async listPendingEvidenceReviews() {
+      const reviews = await adapter.listPendingEvidenceReviews();
+      return freeze(dedupePendingReviews(reviews));
+    },
     async processPdf(file, options = {}) {
       const review = await adapter.processPdf(file, options);
       if (!review?.resumedExistingReview) return review;
