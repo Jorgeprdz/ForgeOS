@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const migration = await readFile(new URL('../supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql', import.meta.url), 'utf8');
-const adapter = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', import.meta.url), 'utf8');
+const adapterEntry = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', import.meta.url), 'utf8');
+const adapter = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10-base-015.js', import.meta.url), 'utf8');
 const adapterV11 = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js', import.meta.url), 'utf8');
+const moduleEntry = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-module-v5.js', import.meta.url), 'utf8');
 const index = await readFile(new URL('../docs/static-preview/forge-aura/index.html', import.meta.url), 'utf8');
 
 test('020C durable attach rebuilds identity from succeeded durable receipts and server-binds authorization digest', () => {
@@ -27,7 +29,7 @@ test('020C canonical identity wrapper preserves explicit authorization while eli
   assert.match(migration, /forge_cartera020c_prepare_identity_orchestration\(bound_request\)/);
 });
 
-test('v10 never name-matches Pipeline automatically and uses governed Identity Resolution only after explicit selection', () => {
+test('durable 015 base never name-matches Pipeline automatically and uses governed Identity Resolution only after explicit selection', () => {
   assert.match(adapter, /PIPELINE_PREFIX = 'pipeline-prospect:'/);
   assert.match(adapter, /Pipeline · requiere vinculación explícita/);
   assert.match(adapter, /forge_cartera010b_confirm_identity_resolution/);
@@ -37,18 +39,19 @@ test('v10 never name-matches Pipeline automatically and uses governed Identity R
   assert.doesNotMatch(adapter, /includes\(normalizedName|normalizedName\([^)]*\)\s*===\s*normalizedName/);
 });
 
-test('v10 resumes an already IDENTITY_CONFIRMED review instead of replaying identity and routes attach through durable server boundary', () => {
+test('durable 015 base resumes an already IDENTITY_CONFIRMED review and routes attach through durable server boundary', () => {
   assert.match(adapter, /\['IDENTITY_CONFIRMED','POLICY_READY','POLICY_EXECUTING','CONFIRMED'\]/);
   assert.match(adapter, /return statusResult/);
   assert.match(adapter, /ATTACH_DURABLE_RPC/);
   assert.match(adapter, /target\.rpc\(ATTACH_DURABLE_RPC/);
 });
 
-test('Aura productive import map may advance beyond v10 only through a descendant that preserves v10 durable authority', () => {
-  assert.match(index, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
-  assert.match(index, /cartera-adapter-pages-v11\.js\?v=cartera-person-workspace-directory-projection-016/);
-  assert.match(index, /cartera-module-v6\.js\?v=cartera-person-workspace-directory-projection-016/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-person-workspace-directory-projection-016-auth-premium-entry-001/);
-  assert.match(adapterV11, /cartera-adapter-pages-v10\.js\?base=cartera-person-workspace-directory-projection-016/);
+test('published v10/v5 import-map targets advance through 016 descendants while preserving 015 byte-for-byte bases', () => {
+  assert.match(index, /cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
+  assert.match(index, /cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
+  assert.match(adapterEntry, /cartera-adapter-pages-v11\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(moduleEntry, /cartera-module-v6\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(adapterV11, /cartera-adapter-pages-v10-base-015\.js\?base=cartera-person-workspace-directory-projection-016/);
   assert.match(adapter, /cartera-adapter-pages-v9\.js\?base=cartera-020c-policy-attach-pipeline-person-015/);
 });
