@@ -111,7 +111,12 @@ function missingInformation(viewModel) {
     .filter(block => block?.type === "missing_information")
     .flatMap(block => (block.lines || []).map(line => line.label || line.id).filter(Boolean));
   const fromIntelligence = viewModel?.intelligence?.missing || [];
-  return [...new Set([...fromBlocks, ...fromIntelligence].map(String).filter(Boolean))];
+  const fromDecisionModel = viewModel?.productDecision?.missingInformation || [];
+  return [...new Set([
+    ...fromBlocks,
+    ...fromIntelligence,
+    ...fromDecisionModel,
+  ].map(String).filter(Boolean))];
 }
 
 function productMismatch(expected, actualFamily) {
@@ -120,6 +125,19 @@ function productMismatch(expected, actualFamily) {
 }
 
 function primaryFact(viewModel) {
+  const hero = viewModel?.productDecision?.hero;
+  const heroValue = compactValue(hero?.value);
+  if (hero && heroValue) {
+    const secondary = compactValue(hero.secondaryValue ?? hero.secondary);
+    const secondaryLabel = hero.secondaryLabel ? `${hero.secondaryLabel}: ` : "";
+    return {
+      id: "product_specific_hero",
+      label: hero.label || "Valor principal del producto",
+      value: hero.value,
+      display: secondary ? `${heroValue} · ${secondaryLabel}${secondary}` : heroValue,
+      truth: "product_specific_presentation",
+    };
+  }
   const facts = viewModel?.contractual || [];
   return facts.find(fact => fact.id === "annual_premium")
     || facts.find(fact => fact.id === "sum_assured")
@@ -183,7 +201,68 @@ function intelligenceMarkup(model) {
   return `<dl class="aura-quotes__facts">${rows.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 }
 
+function decisionSectionFacts(section) {
+  return (section?.items || []).flatMap((item, index) => {
+    const rows = [];
+    const value = compactValue(item?.value);
+    const secondary = compactValue(item?.secondary);
+    if (value) rows.push({
+      id: item.id || `${section?.key || "section"}_${index + 1}`,
+      label: item.label || "Detalle",
+      value,
+    });
+    if (secondary) rows.push({
+      id: `${item.id || index}_secondary`,
+      label: item.secondaryLabel || `${item.label || "Detalle"} — referencia`,
+      value: secondary,
+    });
+    for (const field of item?.fields || []) {
+      const fieldValue = compactValue(field?.value);
+      if (fieldValue) rows.push({
+        id: `${item.id || index}_${normalized(field.label)}`,
+        label: field.label || "Detalle",
+        value: fieldValue,
+      });
+    }
+    return rows;
+  });
+}
+
+function decisionSectionsMarkup(sections, emptyCopy) {
+  const visible = (sections || []).filter(section => decisionSectionFacts(section).length);
+  if (!visible.length) return `<p class="aura-quotes__empty-copy">${esc(emptyCopy)}</p>`;
+  return `<div class="aura-quotes__benefit-list" data-product-specific-sections="true">${visible.map(section => `
+    <section class="aura-quotes__benefit-group" data-product-section="${esc(section.kind || section.key || "detail")}">
+      <h3>${esc(section.title || "Detalle del producto")}</h3>
+      ${factsMarkup(decisionSectionFacts(section), "Esta sección no publicó valores presentables.")}
+    </section>`).join("")}</div>`;
+}
+
+function productSpecificSummaryMarkup(viewModel) {
+  const decision = viewModel?.productDecision;
+  if (!decision?.supported) {
+    return factsMarkup(viewModel?.contractual, "No hay campos contractuales publicables en esta cotización.");
+  }
+  const orviContribution = decision.productType === "orvi"
+    ? (viewModel?.contractual || []).filter(fact => fact.id === "annual_premium")
+    : [];
+  const contribution = orviContribution.length
+    ? `<section><h3>Lo que aportas</h3>${factsMarkup(orviContribution)}</section>`
+    : "";
+  return `<div class="aura-quotes__stack" data-product-specific-summary="${esc(decision.productType)}">
+    ${contribution}
+    ${decisionSectionsMarkup(decision.buckets?.summary, "El producto no publicó secciones adicionales de resumen.")}
+  </div>`;
+}
+
 function benefitsMarkup(viewModel) {
+  const decision = viewModel?.productDecision;
+  if (decision?.supported) {
+    return decisionSectionsMarkup(
+      decision.buckets?.benefits,
+      "Esta cotización no publicó beneficios adicionales o recomendados para este producto.",
+    );
+  }
   const blocks = (viewModel?.benefitBlocks || []).filter(block => block?.type !== "missing_information");
   const intelligence = intelligenceMarkup(viewModel?.intelligence);
   const blockMarkup = blocks.length
@@ -198,6 +277,16 @@ function benefitsMarkup(viewModel) {
 }
 
 function projectionMarkup(viewModel) {
+  const decision = viewModel?.productDecision;
+  if (decision?.supported && decision.buckets?.projection?.length) {
+    return `<div class="aura-quotes__stack" data-product-specific-time-values="${esc(decision.productType)}">
+      <div class="aura-quotes__projection-note" role="note">
+        <strong>Evolución y valores en el tiempo.</strong>
+        <span>Cada sección conserva la clasificación publicada por su autoridad product-specific; un escenario no se presenta como garantía contractual.</span>
+      </div>
+      ${decisionSectionsMarkup(decision.buckets.projection, "Este producto no publicó valores en el tiempo para esta cotización.")}
+    </div>`;
+  }
   const projected = viewModel?.projected || [];
   const scenarioBlocks = (viewModel?.benefitBlocks || []).filter(block => Array.isArray(block?.scenarios) && block.scenarios.length);
   const hasProjection = projected.length || scenarioBlocks.length;
@@ -234,12 +323,14 @@ function economicEvidenceMarkup(evidence) {
 
 function evidenceMarkup(viewModel, accepted, lifecycleReceipt) {
   const missing = missingInformation(viewModel);
+  const decision = viewModel?.productDecision;
   return `<div class="aura-quotes__stack">
     <section>
       <h3>Provenance</h3>
       <dl class="aura-quotes__evidence-meta">
         <div><dt>Archivo fuente</dt><dd>${esc(viewModel?.sourceFile || "No publicado por el runtime")}</dd></div>
         <div><dt>Fuente del paquete</dt><dd>${esc(compactValue(viewModel?.source) || "No publicada")}</dd></div>
+        ${decision?.supported ? `<div><dt>Read model product-specific</dt><dd>${esc(decision.readModelId)} · ${esc(decision.productType)}</dd></div><div><dt>Owner semántico</dt><dd>${esc(decision.canonicalOwner)}</dd></div>` : ""}
         <div><dt>Revisión humana</dt><dd>${accepted ? "Confirmada" : "Pendiente"}</dd></div>
         ${accepted ? `<div><dt>Persistencia / lifecycle</dt><dd>${esc(persistenceMessage(lifecycleReceipt))}</dd></div>` : ""}
       </dl>
@@ -357,7 +448,7 @@ export function createQuotesModule({ root, client, globalState, adapterFactory =
 
   function tabsMarkup(viewModel, accepted, lifecycleReceipt) {
     const panel = selectedTab === "summary"
-      ? factsMarkup(viewModel.contractual, "No hay campos contractuales publicables en esta cotización.")
+      ? productSpecificSummaryMarkup(viewModel)
       : selectedTab === "benefits"
         ? benefitsMarkup(viewModel)
         : selectedTab === "projection"
@@ -615,4 +706,6 @@ export const __quotesPremiumDecisionTest = Object.freeze({
   productMismatch,
   attentionItems,
   primaryFact,
+  decisionSectionFacts,
+  productSpecificSummaryMarkup,
 });
