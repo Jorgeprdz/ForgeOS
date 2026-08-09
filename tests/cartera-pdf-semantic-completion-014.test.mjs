@@ -185,7 +185,7 @@ test('Edge source uses semantic-gap recovery rather than candidates-length-only 
   assert.match(source, /if \(recoveryReasons\.length > 0\)/);
   assert.match(source, /mergeSemanticCandidateLists\(primaryCandidates, recoveryCandidates\)/);
   assert.match(source, /coverageSectionDetected/);
-  assert.match(source, /MONEDA UDI/);
+  assert.match(source, /declara UDI, currency=UDI/);
   assert.match(source, /FORMA DE PAGO/);
   assert.match(source, /PRIMA BÁSICA TOTAL/);
   assert.match(source, /recorre TODAS las filas/);
