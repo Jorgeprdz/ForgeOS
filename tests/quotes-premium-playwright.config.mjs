@@ -15,7 +15,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "npx vite --host 127.0.0.1 --port 4182 --strictPort",
+    command: "python3 -m http.server 4182 --bind 127.0.0.1",
     url: "http://127.0.0.1:4182/tests/fixtures/aura-quotes-premium-decision-experience-002.html",
     reuseExistingServer: false,
     timeout: 30_000,
