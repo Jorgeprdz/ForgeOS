@@ -131,7 +131,7 @@ jobs:
     secrets: inherit
 
   writable-synthetic-005c:
-    if: github.event_name == 'workflow_dispatch' && inputs.acceptance_phase == 'WRITABLE_SYNTHETIC_005C' && github.ref_name == 'feature/governed-writable-synthetic-acceptance-005c' && github.actor == 'Jorgeprdz'
+    if: github.event_name == 'workflow_dispatch' && inputs.acceptance_phase == 'WRITABLE_SYNTHETIC_005C' && github.ref_name == 'feature/governed-writable-synthetic-acceptance-005c' && github.actor == 'Jorgeprdz' && inputs.validated_sha == github.sha
     uses: ./.github/workflows/writable-synthetic-acceptance-005c.yml
     with:
       run_id: ${{ inputs.run_id }}
