@@ -36,6 +36,7 @@ const cartera015CompatibilityAllowed = new Set([
   "tests/e2e/aura-cartera-020c-durable-confirmation-015.spec.mjs",
   "tests/fixtures/aura-cartera-020c-durable-confirmation-015.html",
   "tests/forge-aura-direct-route.test.mjs",
+  "tests/income-pages-import-graph.test.mjs",
   "tests/income-scope-guard.test.mjs",
 ]);
 
