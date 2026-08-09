@@ -38,7 +38,11 @@ test('005B-R1 fixture preflight uses only dedicated 05C identities and productiv
   assert.match(fixturePrep, /forge_demo_current_session/);
   assert.match(fixturePrep, /isAcceptance/);
   assert.match(fixturePrep, /AUTOMATED_ACCEPTANCE_ONLY/);
-  assert.match(fixturePrep, /phone_normalized:\s*SYNTHETIC_PHONE/);
+  assert.match(fixturePrep, /PRIMARY_SYNTHETIC_PHONE = '\+000000000057'/);
+  assert.match(fixturePrep, /AMBIG_SYNTHETIC_PHONE = '\+000000000058'/);
+  assert.match(fixturePrep, /phone_normalized:\s*syntheticPhone/);
+  assert.match(fixturePrep, /ensureFixture\(clientA, a\.id, PRIMARY_CONTEXT, PRIMARY_SYNTHETIC_PHONE\)/);
+  assert.match(fixturePrep, /ensureFixture\(clientA, a\.id, AMBIG_CONTEXT, AMBIG_SYNTHETIC_PHONE\)/);
   assert.match(fixturePrep, /\.from\('prospects'\)\.insert/);
   assert.doesNotMatch(fixturePrep, /SUPABASE_SERVICE_ROLE_KEY|SUPABASE_ACCESS_TOKEN|database\/query|auth\.admin/i);
 });
@@ -55,6 +59,8 @@ test('005B-R1 runner preserves the exact PA-01 through PA-07 contract', () => {
   assert.match(runner, /PA06_CROSS_ADVISOR_POLICY_ATTACH_MUST_FAIL/);
   assert.match(runner, /PA07_AMBIGUOUS_PROSPECT_AUTO_LINKED_BEFORE_SELECTION/);
   assert.match(runner, /PA07_SAME_NAME_EMAIL_PHONE_AUTO_LINK/);
+  assert.match(runner, /SHARED_EMAIL/);
+  assert.match(runner, /SHARED_PHONE/);
   assert.match(runner, /TEMPORARY_AMBIGUITY_FIXTURES_ARCHIVED/);
   assert.doesNotMatch(runner, /SERVICE_ROLE|SUPABASE_ACCESS_TOKEN|database\/query|auth\.admin/i);
 });
