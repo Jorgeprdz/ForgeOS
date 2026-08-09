@@ -277,7 +277,6 @@ export function createQuotesModule({ root, client, globalState, adapterFactory =
   let busyAction = "";
   let expectedProduct = "";
   let printablePreview = null;
-  let lastFocused = null;
   let selectedTab = "summary";
 
   const current = () => adapter.state();
@@ -305,16 +304,18 @@ export function createQuotesModule({ root, client, globalState, adapterFactory =
   }
 
   function intakeMarkup() {
+    const failed = status === "ERROR" || status === "UNAVAILABLE";
+    const copy = STATE_COPY[status] || STATE_COPY.EMPTY;
     return `<section class="aura-quotes__empty" aria-labelledby="quotes-empty-title">
       <div class="aura-quotes__empty-copy-block">
-        <span class="aura-quotes__eyebrow">Nueva cotización</span>
-        <h2 id="quotes-empty-title">Convierte una cotización en una propuesta lista para presentar.</h2>
-        <p>Sube el PDF. Forge reutiliza la detección, extracción, cálculo y evidencia existentes para construir una propuesta revisable.</p>
+        <span class="aura-quotes__eyebrow">${failed ? "Estado de cotización" : "Nueva cotización"}</span>
+        <h2 id="quotes-empty-title">${failed ? esc(copy[0]) : "Convierte una cotización en una propuesta lista para presentar."}</h2>
+        <p>${failed ? esc(errorMessage || copy[1]) : "Sube el PDF. Forge reutiliza la detección, extracción, cálculo y evidencia existentes para construir una propuesta revisable."}</p>
       </div>
       <label class="aura-quotes__dropzone" data-quotes-dropzone>
         <input type="file" accept=".pdf,application/pdf,.json,application/json" data-quotes-file ${busyAction ? "disabled" : ""}>
         <span aria-hidden="true" class="aura-quotes__upload-mark">↑</span>
-        <strong>Arrastra el PDF aquí</strong>
+        <strong>${failed ? "Prueba con otro archivo" : "Arrastra el PDF aquí"}</strong>
         <span>o</span>
         <b>${busyAction === "load" ? "Procesando…" : "Seleccionar archivo"}</b>
         <small>PDF productivo. JSON se admite únicamente como paquete técnico compatible para pruebas gobernadas.</small>
@@ -496,7 +497,6 @@ export function createQuotesModule({ root, client, globalState, adapterFactory =
     printablePreview = null;
     render();
     queueMicrotask(() => root.querySelector('[data-quotes-action="preview"]')?.focus({ preventScroll: true }));
-    lastFocused = null;
   }
 
   function bindModalKeyboard() {
@@ -583,7 +583,6 @@ export function createQuotesModule({ root, client, globalState, adapterFactory =
           return;
         }
         if (action === "preview") {
-          lastFocused = button;
           await run("preview", async () => { printablePreview = await adapter.previewPrintable("A4"); }).catch(() => {});
           return;
         }
