@@ -2,7 +2,10 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: "aura-quotes-premium-decision-experience-002.spec.mjs",
+  testMatch: [
+    "aura-quotes-premium-decision-experience-002.spec.mjs",
+    "aura-quotes-mobile-result-geometry-004.spec.mjs",
+  ],
   timeout: 45_000,
   expect: { timeout: 8_000 },
   fullyParallel: false,
