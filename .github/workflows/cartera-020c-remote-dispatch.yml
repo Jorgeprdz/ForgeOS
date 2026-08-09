@@ -7,12 +7,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: cartera-020c-closed-remote-verifier-${{ github.ref }}
-  cancel-in-progress: false
+  group: cartera-020c-closed-remote-verifier
+  cancel-in-progress: true
 
 jobs:
   verify-accepted-closure:
-    if: github.ref_name != 'accept/cartera-pipeline-identity-productive-005b'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -44,107 +43,3 @@ jobs:
           echo 'REMOTE_MUTATION=NONE'
           echo 'ACCOUNT_MUTATION=NOT_AUTHORIZED'
           echo 'CARTERA_020C_COMPLETE=YES'
-
-  productive-005b:
-    if: github.ref_name == 'accept/cartera-pipeline-identity-productive-005b' && github.actor == 'Jorgeprdz'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 30
-    environment: 067g17a1-remote-acceptance
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
-      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
-      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
-      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
-      FORGE_005B_REMOTE_ACCEPTANCE_AUTHORIZATION: YES:CARTERA_PIPELINE_IDENTITY_005B_REMOTE_MUTATION
-      FORGE_005B_REMOTE_WRITE_CONFIRMATION: YES
-      FORGE_005B_EVIDENCE_DIR: artifacts/cartera-pipeline-identity-005b
-
-    steps:
-      - name: Checkout exact selected 005B branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.sha }}
-          fetch-depth: 0
-
-      - name: Use Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-
-      - name: Human checkpoint and bounded-source gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          test '${{ github.event_name }}' = 'workflow_dispatch'
-          test '${{ github.ref_name }}' = 'accept/cartera-pipeline-identity-productive-005b'
-          test '${{ github.actor }}' = 'Jorgeprdz'
-          test "$(git rev-parse HEAD)" = '${{ github.sha }}'
-          git merge-base --is-ancestor 9289197780efd23d70be7528a1191e0509cdae40 HEAD
-          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|\.github/workflows/cartera-020c-remote-dispatch\.yml)$'
-          mapfile -t changed < <(git diff --name-only 9289197780efd23d70be7528a1191e0509cdae40 HEAD)
-          for path in "${changed[@]}"; do
-            [[ "$path" =~ $allowed ]] || { echo "005B_UNAUTHORIZED_PATH=$path" >&2; exit 1; }
-          done
-          test -n "$SUPABASE_URL"
-          test -n "$SUPABASE_ANON_KEY"
-          test -n "$ADVISOR_A_EMAIL"
-          test -n "$ADVISOR_A_PASSWORD"
-          test -n "$ADVISOR_B_EMAIL"
-          test -n "$ADVISOR_B_PASSWORD"
-          echo '005B_HUMAN_WORKFLOW_DISPATCH=PASS'
-          echo '005B_EXACT_BRANCH=PASS'
-          echo '005B_BOUNDED_SOURCE=PASS'
-          echo 'SERVICE_ROLE=ABSENT'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Preflight exact 005B runner
-        run: |
-          node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
-          node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
-
-      - name: Execute authenticated productive 005B acceptance
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --experimental-default-type=module scripts/forge-cartera-pipeline-identity-productive-005b.mjs \
-            | tee artifacts-005b-output.log
-
-      - name: Verify PA-01 through PA-07
-        shell: bash
-        run: |
-          set -euo pipefail
-          log=artifacts-005b-output.log
-          for marker in \
-            AUTHENTICATED_ADVISOR_A=PASS \
-            AUTHENTICATED_ADVISOR_B=PASS \
-            PA01=PASS \
-            PA02=PASS \
-            PA03=PASS \
-            PA04=PASS \
-            PA05=PASS \
-            PA06=PASS \
-            PA07=PASS \
-            PRODUCTIVE_READ_AFTER_WRITE=PASS \
-            NO_AUTOMATIC_IDENTITY=PASS \
-            NO_DUPLICATE_PERSON=PASS \
-            NO_DUPLICATE_ACTIVE_LINK=PASS \
-            FORGE_CARTERA_PIPELINE_IDENTITY_PRODUCTIVE_ACCEPTANCE_005B=PASS; do
-            grep -q "$marker" "$log"
-          done
-          echo '005B_PRODUCTIVE_ACCEPTANCE=PASS'
-
-      - name: Upload sanitized 005B evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cartera-pipeline-identity-005b-${{ github.sha }}
-          path: |
-            artifacts/cartera-pipeline-identity-005b/report.json
-            artifacts-005b-output.log
-          if-no-files-found: warn
-          retention-days: 30
