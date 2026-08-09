@@ -9,7 +9,8 @@ const SOURCE = 'acceptance_test';
 const PRIMARY_NAME = 'FORGE 005B ACCEPTANCE PERSON';
 const PRIMARY_CONTEXT = '[SYNTHETIC][FORGE_005B_ACCEPTANCE][PRIMARY]';
 const AMBIG_CONTEXT = '[SYNTHETIC][FORGE_005B_ACCEPTANCE][AMBIGUOUS]';
-const SYNTHETIC_PHONE = '+000000000057';
+const PRIMARY_SYNTHETIC_PHONE = '+000000000057';
+const AMBIG_SYNTHETIC_PHONE = '+000000000058';
 const OUT = process.env.FORGE_005B_R1_FIXTURE_EVIDENCE || 'artifacts/cartera-pipeline-identity-005b-r1/fixture-preflight.json';
 
 const required = ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'FORGE_ACCEPTANCE_A_PASSWORD', 'FORGE_ACCEPTANCE_B_PASSWORD'];
@@ -37,7 +38,7 @@ async function authenticate(api, email, password, key) {
   return data.user;
 }
 
-async function ensureFixture(api, advisorId, context) {
+async function ensureFixture(api, advisorId, context, syntheticPhone) {
   const existing = await api
     .from('prospects')
     .select('id,advisor_id,source,initial_context,archived_at')
@@ -52,7 +53,7 @@ async function ensureFixture(api, advisorId, context) {
     const reopened = await api.from('prospects').update({
       display_name: PRIMARY_NAME,
       full_name: PRIMARY_NAME,
-      phone_normalized: SYNTHETIC_PHONE,
+      phone_normalized: syntheticPhone,
       status: 'referred_new',
       updated_by: advisorId,
     }).eq('advisor_id', advisorId).eq('id', existing.data[0].id)
@@ -65,7 +66,7 @@ async function ensureFixture(api, advisorId, context) {
     advisor_id: advisorId,
     display_name: PRIMARY_NAME,
     full_name: PRIMARY_NAME,
-    phone_normalized: SYNTHETIC_PHONE,
+    phone_normalized: syntheticPhone,
     source: SOURCE,
     initial_context: context,
     status: 'referred_new',
@@ -85,8 +86,8 @@ try {
   ]);
   assert.notEqual(a.id, b.id, 'ACCEPTANCE_IDENTITIES_MUST_DIFFER');
 
-  const primary = await ensureFixture(clientA, a.id, PRIMARY_CONTEXT);
-  const ambiguous = await ensureFixture(clientA, a.id, AMBIG_CONTEXT);
+  const primary = await ensureFixture(clientA, a.id, PRIMARY_CONTEXT, PRIMARY_SYNTHETIC_PHONE);
+  const ambiguous = await ensureFixture(clientA, a.id, AMBIG_CONTEXT, AMBIG_SYNTHETIC_PHONE);
   assert.notEqual(primary.id, ambiguous.id, '005B_R1_FIXTURES_MUST_DIFFER');
 
   const hiddenFromB = await clientB.from('prospects').select('id').in('id', [primary.id, ambiguous.id]);
