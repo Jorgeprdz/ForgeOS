@@ -46,7 +46,7 @@ function resolveSecretKey() {
 }
 
 function randomSealedPassword() {
-  return `${crypto.randomUUID()}-${crypto.randomUUID()}-Aa1!`;
+  return `${crypto.randomUUID()}-Aa1!`;
 }
 
 async function findUserByEmail(admin: ReturnType<typeof createClient>, email: string) {
