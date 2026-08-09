@@ -7,7 +7,7 @@
   <meta name="description" content="Forge Aura Light 2026: sistema operativo comercial para asesores.">
   <title>Forge · Aura</title>
   <link rel="stylesheet" href="./aura-tokens.css">
-  <link rel="stylesheet" href="./aura-shell.css?v=aura-home-command-center-mobile-nav-001">
+  <link rel="stylesheet" href="./aura-shell.css?v=aura-quotes-pdf-input-nav-003">
   <link rel="stylesheet" href="./aura-auth.css">
   <link rel="stylesheet" href="./pipeline/pipeline.css">
   <script src="./env.js?v=cartera-pdf-ingress-legacy-refresh"></script>
@@ -32,6 +32,21 @@
 <body>
   <a class="aura-skip" href="#aura-main">Saltar al contenido</a>
   <div id="aura-app" data-aura-app aria-busy="true"></div>
+  <script data-aura-quotes-input-ownership="AURA_QUOTES_PDF_INPUT_OWNERSHIP_003">
+    (() => {
+      const auraRoot = document.querySelector("[data-aura-app]");
+      if (!auraRoot) return;
+      auraRoot.addEventListener("change", event => {
+        const input = event.target;
+        if (!(input instanceof HTMLInputElement)) return;
+        if (!input.matches("[data-quotes-file]")) return;
+        // The Aura Quotes input is owned by quotes-module.js. Stop the event at
+        // the Aura root only after target listeners have run so the legacy
+        // document-level PDF interceptor cannot hijack the same selection.
+        event.stopPropagation();
+      });
+    })();
+  </script>
   <noscript>Forge necesita JavaScript.</noscript>
 </body>
 </html>
