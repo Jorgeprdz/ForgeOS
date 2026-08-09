@@ -5,10 +5,11 @@ on:
     branches: [main]
     paths:
       - 'docs/static-preview/forge-aura/cartera/**'
-      - 'docs/static-preview/forge-aura/index.html'
       - 'tests/cartera-person-workspace-directory-projection-016.test.mjs'
       - 'tests/cartera-pdf-ingress-legacy-refresh.test.mjs'
       - 'tests/cartera-020c-durable-attach-015.test.mjs'
+      - 'tests/aura-cartera-pdf-review-date-ui-008.test.mjs'
+      - 'tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs'
       - 'tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json'
       - '.github/workflows/aura-cartera-person-workspace-projection-016.yml'
 
@@ -47,20 +48,24 @@ jobs:
           printf '%s\n' "${changed[@]}"
           for file in "${changed[@]}"; do
             case "$file" in
-              docs/static-preview/forge-aura/cartera/*|docs/static-preview/forge-aura/index.html|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/cartera-pdf-ingress-legacy-refresh.test.mjs|tests/cartera-020c-durable-attach-015.test.mjs|tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
+              docs/static-preview/forge-aura/cartera/*|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/cartera-pdf-ingress-legacy-refresh.test.mjs|tests/cartera-020c-durable-attach-015.test.mjs|tests/aura-cartera-pdf-review-date-ui-008.test.mjs|tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs|tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
               *) echo "CARTERA016_SCOPE_VIOLATION=$file" >&2; exit 1 ;;
             esac
           done
           ! printf '%s\n' "${changed[@]}" | grep -Eq '^supabase/(migrations|functions)/'
           ! printf '%s\n' "${changed[@]}" | grep -Eq '^\.github/workflows/pages\.yml$'
+          ! printf '%s\n' "${changed[@]}" | grep -Eq '^docs/static-preview/forge-aura/index\.html$'
           echo 'CARTERA016_SCHEMA_MUTATION=0'
           echo 'CARTERA016_IDENTITY_WRITE_MUTATION=0'
+          echo 'CARTERA016_GLOBAL_ENTRYPOINT_MUTATION=0'
           echo 'CARTERA016_PAGES_GATE_MUTATION=0'
-      - name: Syntax check 016 runtime
+      - name: Syntax check 016 runtime and contained entries
         run: |
           node --check docs/static-preview/forge-aura/cartera/cartera-person-projection-016.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v6.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v5.js
       - name: Cartera 016 targeted contract
         run: node --test tests/cartera-person-workspace-directory-projection-016.test.mjs
       - name: Cartera inherited productive regressions
@@ -69,6 +74,8 @@ jobs:
           tests/aura-cartera-productive-reconciliation.test.mjs
           tests/cartera-pdf-ingress-legacy-refresh.test.mjs
           tests/cartera-020c-durable-attach-015.test.mjs
+          tests/aura-cartera-pdf-review-date-ui-008.test.mjs
+          tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs
           tests/cartera-010b-contract-foundation-test.mjs
           tests/cartera-010b-general-role-read-authority-test.mjs
           tests/cartera-010d-unified-directory-read-model-service-test.mjs
