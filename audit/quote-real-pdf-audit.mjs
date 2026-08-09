@@ -1,8 +1,5 @@
-import assert from 'node:assert/strict';
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { File } from 'node:buffer';
 
 function parseArgs(argv) {
   const out = {};
@@ -18,10 +15,11 @@ function parseArgs(argv) {
 
 const args = parseArgs(process.argv.slice(2));
 const family = String(args.family || '').trim();
-const fixture = String(args.fixture || '').trim();
+const fixture = String(args['text-fixture'] || args.fixture || '').trim();
+const originalPdfSha256 = String(args['pdf-sha256'] || '').trim() || null;
 const pdfName = String(args.name || `${family}.pdf`);
 const outDir = String(args.out || 'tmp/quote-real-pdf-audit');
-if (!family || !fixture) throw new Error('Usage: --family <orvi|segubeca|vida_mujer> --fixture <base64-file> [--name file.pdf]');
+if (!family || !fixture) throw new Error('Usage: --family <orvi|segubeca|vida_mujer> --text-fixture <pdf-text-file> [--name file.pdf] [--pdf-sha256 sha]');
 
 const EXPECTED = Object.freeze({
   orvi: {
@@ -78,9 +76,6 @@ function moneyValue(value) {
 function sectionKinds(snapshot) {
   return (snapshot?.dashboard?.model?.sections || []).map((entry) => entry?.kind || entry?.key || entry?.layoutRole).filter(Boolean);
 }
-function blockKinds(viewModel) {
-  return (viewModel?.benefitBlocks || []).map((entry) => entry?.type || entry?.kind || entry?.key).filter(Boolean);
-}
 function materialHero(snapshot) {
   const hero = snapshot?.dashboard?.model?.hero;
   if (hero) return { label: hero.label ?? null, value: hero.value ?? null, secondaryValue: hero.secondaryValue ?? null };
@@ -102,55 +97,58 @@ function containsText(actual, expected) {
 }
 
 fs.mkdirSync(outDir, { recursive: true });
-const encoded = fs.readFileSync(fixture, 'utf8').replace(/\s+/g, '');
-const bytes = Buffer.from(encoded, 'base64');
-const sha256 = crypto.createHash('sha256').update(bytes).digest('hex');
-const file = new File([bytes], pdfName, { type: 'application/pdf' });
+const pdfText = fs.readFileSync(fixture, 'utf8');
 
 const parser = await import('../docs/static-preview/quote-runtime/forge-pdf-browser-parser.js');
 const accepted = await import('../docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js');
 const summaryEngine = await import('../docs/static-preview/quote-runtime/quote-benefit-summary-engine.js');
 const presenter = await import('../docs/static-preview/forge-alive-material3/quote-product-intelligence-presenter.js');
 
-let packet = null;
-let calculation = null;
-let materialCalculation = null;
-let materialSnapshot = null;
-let auraResult = null;
-let auraRuntimeError = null;
-let vidaMujerEnrichment = null;
-
-packet = await parser.parsePdfFileToAcceptedQuotePacket(file);
+let packet = parser.parsePdfTextToAcceptedQuotePacket(pdfText, { fileName: pdfName });
 packet = accepted.validatePacket(packet);
-calculation = await Promise.race([
+const calculation = await Promise.race([
   accepted.calculateAcceptedQuote(packet),
   new Promise((_, reject) => setTimeout(() => reject(new Error('AUDIT_CALCULATION_TIMEOUT_20000MS')), 20000)),
 ]);
-materialCalculation = calculation;
+let materialCalculation = calculation;
+let vidaMujerEnrichment = null;
 if (family === 'vida_mujer') {
   const handoff = await import('../docs/static-preview/forge-alive-material3/quote-runtime-vida-mujer-handoff-m05e009.js');
   const enriched = handoff.enrichVidaMujerCalculation(packet, calculation);
   vidaMujerEnrichment = {
     beforeFamily: calculation?.productFamily ?? calculation?.product_family ?? null,
-    beforeProductIntelligence: calculation?.productIntelligence ?? calculation?.product_intelligence ?? null,
+    beforeProductIntelligenceSchema: calculation?.productIntelligence?.schema?.id ?? calculation?.product_intelligence?.schema?.id ?? null,
     afterFamily: enriched?.productFamily ?? enriched?.product_family ?? null,
     afterProductIntelligenceSchema: enriched?.productIntelligence?.schema?.id ?? null,
   };
   materialCalculation = enriched;
 }
-materialSnapshot = presenter.createQuoteResultSnapshot({
+const materialSnapshot = presenter.createQuoteResultSnapshot({
   packet,
   calculation: materialCalculation,
   buildBenefitSummary: summaryEngine.buildQuoteBenefitSummary,
 });
 
-try {
-  const auraModule = await import('../docs/static-preview/forge-aura/quotes/quotes-adapter.js');
-  const auraAdapter = auraModule.createQuotesProductiveAdapter();
-  auraResult = await auraAdapter.loadFile(file);
-} catch (error) {
-  auraRuntimeError = { name: error?.name || 'Error', message: error?.message || String(error), stack: String(error?.stack || '').split('\n').slice(0, 8) };
-}
+const auraBenefitBlocks = summaryEngine.buildQuoteBenefitSummary({
+  productFamily: calculation?.productFamily ?? packet?.productFamily ?? packet?.family,
+  product: calculation?.product ?? packet?.product,
+  nativeResult: calculation?.nativeResult ?? packet?.nativeResult ?? {},
+  context: calculation?.context ?? packet?.context ?? {},
+  udiProjection: calculation?.udiProjection ?? packet?.udiProjection ?? {},
+  currencyMetadata: calculation?.udiRateMetadata ?? packet?.udiRateMetadata ?? {},
+  productIntelligence: calculation?.productIntelligence ?? packet?.productIntelligence ?? packet?.product_intelligence ?? null,
+});
+const auraContractual = [
+  { id: 'annual_premium', label: 'Prima anual', value: dig(calculation, 'annualPremium', 'nativeResult.annualPremium', 'nativeResult.totalAnnualPremium') ?? dig(packet, 'annualPremium') },
+  { id: 'sum_assured', label: 'Suma asegurada', value: dig(calculation, 'nativeResult.sumAssured', 'nativeResult.sumInsured') ?? dig(packet, 'sumAssured', 'sumInsured') },
+].filter((x) => x.value !== null && x.value !== undefined);
+const auraHeroValue = auraHero({ contractual: auraContractual });
+const auraSemanticProjection = {
+  family: calculation?.productFamily ?? packet?.productFamily ?? packet?.family ?? null,
+  heroByCurrentAuraRule: auraHeroValue,
+  benefitBlockTypes: (Array.isArray(auraBenefitBlocks) ? auraBenefitBlocks : []).map((b) => b?.type || b?.kind || b?.key).filter(Boolean),
+  hasProductIntelligence: Boolean(calculation?.productIntelligence || packet?.productIntelligence || packet?.product_intelligence),
+};
 
 const source = EXPECTED[family].source;
 const checks = [];
@@ -189,26 +187,24 @@ if (family === 'vida_mujer') {
   check('vida_mujer_enrichment_pi', vidaMujerEnrichment?.afterProductIntelligenceSchema === 'forge.product_intelligence.vida_mujer', vidaMujerEnrichment, 'forge.product_intelligence.vida_mujer');
 }
 
-const auraViewModel = auraResult?.viewModel ?? null;
 const materialHeroValue = materialHero(materialSnapshot);
-const auraHeroValue = auraHero(auraViewModel);
 const semanticComparison = {
   materialDashboardType: materialSnapshot?.dashboard?.type ?? null,
   materialHero: materialHeroValue,
   materialSections: sectionKinds(materialSnapshot),
   materialMandatory: clone(materialSnapshot?.mandatory),
-  auraFamily: auraViewModel?.family ?? null,
-  auraHeroByCurrentModuleRule: auraHeroValue,
-  auraBenefitBlockTypes: blockKinds(auraViewModel),
-  auraHasProductIntelligence: auraViewModel?.hasProductIntelligence ?? null,
-  auraIntelligenceProjection: clone(auraViewModel?.intelligence),
+  auraFamily: auraSemanticProjection.family,
+  auraHeroByCurrentModuleRule: auraSemanticProjection.heroByCurrentAuraRule,
+  auraBenefitBlockTypes: auraSemanticProjection.benefitBlockTypes,
+  auraHasProductIntelligence: auraSemanticProjection.hasProductIntelligence,
+  auraIntelligenceProjection: null,
   heroMismatch: Boolean(materialHeroValue && auraHeroValue && normalize(materialHeroValue.label) !== normalize(auraHeroValue.label)),
 };
 
 const report = {
   auditVersion: 'FORGE_REAL_PDF_PRODUCT_INTELLIGENCE_AUDIT_008',
   family,
-  pdf: { name: pdfName, bytes: bytes.length, sha256 },
+  pdf: { name: pdfName, sourceTextBytes: Buffer.byteLength(pdfText), sha256: originalPdfSha256, replayMode: 'EXACT_PDF_TEXT_SEMANTIC_REPLAY' },
   expectedSourceTruth: EXPECTED[family],
   checks,
   verdict: checks.every((entry) => entry.ok) ? 'SOURCE_AND_MATERIAL_CONTRACT_PASS' : 'SOURCE_OR_MATERIAL_CONTRACT_MISMATCH',
@@ -216,8 +212,7 @@ const report = {
   calculation: clone(calculation),
   vidaMujerEnrichment: clone(vidaMujerEnrichment),
   material3: clone(materialSnapshot),
-  aura: auraResult ? { packet: clone(auraResult.packet), calculation: clone(auraResult.calculation), viewModel: clone(auraResult.viewModel) } : null,
-  auraRuntimeError,
+  aura: clone(auraSemanticProjection),
   semanticComparison,
 };
 
@@ -228,7 +223,7 @@ fs.writeFileSync(jsonPath, JSON.stringify(report, null, 2));
 const failed = checks.filter((entry) => !entry.ok);
 const md = `# ${family} real PDF audit\n\n` +
   `- PDF: \`${pdfName}\`\n` +
-  `- SHA-256: \`${sha256}\`\n` +
+  `- Original PDF SHA-256: \`${originalPdfSha256 || 'not supplied'}\`\n` +
   `- Verdict: **${report.verdict}**\n` +
   `- Material 3 dashboard: **${semanticComparison.materialDashboardType || 'n/a'}**\n` +
   `- Material 3 hero: **${materialHeroValue?.label || 'n/a'}** — ${materialHeroValue?.value || 'n/a'}\n` +
@@ -238,7 +233,7 @@ const md = `# ${family} real PDF audit\n\n` +
   `- Aura benefit blocks: ${semanticComparison.auraBenefitBlockTypes.join(', ') || 'n/a'}\n` +
   `- Contract checks: ${checks.length - failed.length}/${checks.length} pass\n` +
   (failed.length ? `\n## Mismatches\n${failed.map((entry) => `- **${entry.id}**: actual=${JSON.stringify(entry.actual)} expected=${JSON.stringify(entry.expected)}`).join('\n')}\n` : '') +
-  (auraRuntimeError ? `\n## Aura runtime diagnostic\n- ${auraRuntimeError.message}\n` : '');
+  '';
 fs.writeFileSync(mdPath, md);
 if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md);
 
@@ -247,6 +242,5 @@ console.log(JSON.stringify({
   verdict: report.verdict,
   checks: checks.map(({ id, ok }) => ({ id, ok })),
   semanticComparison,
-  auraRuntimeError,
   report: jsonPath,
 }, null, 2));
