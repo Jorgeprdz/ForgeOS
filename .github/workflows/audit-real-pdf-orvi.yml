@@ -6,6 +6,7 @@ on:
       - audit/quotes-real-pdf-product-intelligence-008
     paths:
       - "audit/quote-real-pdf-audit.mjs"
+      - "audit/orvi-real-pdf-audit-bootstrap.mjs"
       - "audit/fixtures/orvi-real-pdf.txt"
       - ".github/workflows/audit-real-pdf-orvi.yml"
 
@@ -22,10 +23,12 @@ jobs:
         with:
           node-version: "22.12.0"
       - name: Syntax gate
-        run: node --check audit/quote-real-pdf-audit.mjs
+        run: |
+          node --check audit/quote-real-pdf-audit.mjs
+          node --check audit/orvi-real-pdf-audit-bootstrap.mjs
       - name: Replay ORVI PDF evidence through Product Intelligence and Material 3
         run: |
-          node audit/quote-real-pdf-audit.mjs \
+          node audit/orvi-real-pdf-audit-bootstrap.mjs \
             --family orvi \
             --text-fixture audit/fixtures/orvi-real-pdf.txt \
             --name Solucionline_20260714_09_06PDF_260714_090644.pdf \
