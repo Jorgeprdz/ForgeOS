@@ -16,11 +16,15 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '..');
 const read = relative => readFile(path.join(repo, relative), 'utf8');
 const fixture = JSON.parse(await read('tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json'));
-const [adapterSource, moduleSource, cssSource, indexSource] = await Promise.all([
+const [adapterSource, moduleSource, cssSource, indexSource, adapterEntry, moduleEntry, durable015, semantic015] = await Promise.all([
   read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js'),
   read('docs/static-preview/forge-aura/cartera/cartera-module-v6.js'),
   read('docs/static-preview/forge-aura/cartera/cartera-projection-016.css'),
   read('docs/static-preview/forge-aura/index.html'),
+  read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js'),
+  read('docs/static-preview/forge-aura/cartera/cartera-module-v5.js'),
+  read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10-base-015.js'),
+  read('docs/static-preview/forge-aura/cartera/cartera-module-v5-base-015.js'),
 ]);
 
 test('T016-01 directory buttons explicitly reset browser-native appearance', () => {
@@ -97,6 +101,7 @@ test('T016-08 Galaxy-size mobile contract preserves touch targets, reflow and bo
   assert.match(cssSource, /padding-bottom:\s*calc\(104px\s*\+\s*env\(safe-area-inset-bottom/);
   assert.match(cssSource, /grid-template-columns:\s*minmax\(0,\s*1fr\)/);
   assert.match(cssSource, /overflow-wrap:\s*anywhere/);
+  assert.match(moduleSource, /cartera-projection-016\.css\?v=cartera-person-workspace-directory-projection-016/);
 });
 
 test('T016-09 Person Workspace tabs are real accessible tabs and decorative Historial is removed', () => {
@@ -122,25 +127,39 @@ test('T016-10 synthetic 6169 relationship resolves one policy without production
   assert.equal(fixture.person.display_name, 'Alex Ejemplo');
 });
 
-test('D016-07 eliminates the old all-policies -> role-RPC N+1 path', () => {
+test('D016-07 eliminates the old all-policies -> role-RPC N+1 path at the active adapter boundary', () => {
   assert.match(adapterSource, /from\('policy_roles'\)/);
   assert.match(adapterSource, /\.in\('id',\s*policyIds\)/);
   assert.doesNotMatch(adapterSource, /for\s*\(const\s+policy\s+of\s+policies\)/);
   assert.doesNotMatch(adapterSource, /forge_cartera010b_list_general_policy_roles/);
+  assert.match(adapterEntry, /cartera-adapter-pages-v11\.js\?v=cartera-person-workspace-directory-projection-016/);
 });
 
-test('016 remains a read-only projection and does not alter identity, Policy or contact truth', () => {
+test('016 remains a read-only projection and preserves durable 015 and semantic v5 byte-for-byte bases', () => {
   assert.doesNotMatch(adapterSource, /\.(insert|update|delete|upsert)\s*\(/);
   assert.doesNotMatch(adapterSource, /forge_cartera010b_confirm_identity_resolution/);
   assert.doesNotMatch(adapterSource, /forge_cartera020c_attach_policy_confirmation/);
   assert.match(adapterSource, /createDurableAdapter/);
   assert.match(adapterSource, /personPolicyNPlusOne016:\s*false/);
+  assert.match(adapterSource, /cartera-adapter-pages-v10-base-015\.js/);
+  assert.match(durable015, /forge_cartera020c_attach_policy_confirmation_durable/);
+  assert.match(moduleSource, /cartera-module-v5-base-015\.js/);
+  assert.match(semantic015, /data-semantic-review=\"014\"/);
 });
 
-test('runtime publication points Aura to v11/v6 plus the 016 CSS boundary', () => {
-  assert.match(indexSource, /cartera-adapter-pages-v11\.js\?v=cartera-person-workspace-directory-projection-016/);
-  assert.match(indexSource, /cartera-module-v6\.js\?v=cartera-person-workspace-directory-projection-016/);
-  assert.match(indexSource, /cartera-projection-016\.css\?v=cartera-person-workspace-directory-projection-016/);
+test('runtime publication stays inside existing v10/v5 import-map targets and bridges to v11/v6', () => {
+  assert.match(indexSource, /cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
+  assert.match(indexSource, /cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
+  assert.match(adapterEntry, /cartera-adapter-pages-v11\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(moduleEntry, /cartera-module-v6\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.doesNotMatch(indexSource, /cartera-person-workspace-directory-projection-016/);
+});
+
+test('active person presentation reuses projection cached by the adapter instead of repeating the read', () => {
+  assert.match(adapterSource, /personProjectionCache\.set/);
+  assert.match(adapterSource, /getCachedCarteraPersonProjection/);
+  assert.match(moduleSource, /const cached = getCachedCarteraPersonProjection\(personReference\)/);
+  assert.match(moduleSource, /cached \|\| await loadCarteraPersonProjection/);
 });
 
 test('runtime code contains no production Adrián or policy-number hardcode', () => {
