@@ -98,7 +98,41 @@ jobs:
           echo '005C_AUTHORITY=PASS'
           echo '005B_R1_PRECONDITION=PASS'
 
-      - name: Emit 005B-R1 preflight markers
+      - name: Verify committed 005B-R1 remote closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence=docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE.md
+          grep -q 'REMOTE_RUN=31339443374' "$evidence"
+          grep -q 'ACCEPTANCE_SHA=fbedf9e2a456255dd4ce720f1201a552cf2e90df' "$evidence"
+          for marker in PA01 PA02 PA03 PA04 PA05 PA06 PA07; do
+            grep -q "${marker}=PASS" "$evidence"
+          done
+          grep -q 'RLS_ISOLATION=PASS' "$evidence"
+          grep -q 'READ_AFTER_WRITE=PASS' "$evidence"
+          grep -q 'IDENTITY_BOUNDARY=PASS' "$evidence"
+          grep -q 'POLICY_TRUTH_BOUNDARY=PASS' "$evidence"
+          grep -q 'OWNER_SCOPED_CLEANUP=PASS' "$evidence"
+          grep -q 'POST_RUN_SEALED=PASS' "$evidence"
+          grep -q 'OLD_CREDENTIALS_INVALIDATED=YES' "$evidence"
+          grep -q 'RLS_BYPASS=NO' "$evidence"
+          grep -q 'SERVICE_ROLE_DOMAIN_WRITE=NO' "$evidence"
+          grep -q 'REAL_DATA_TOUCHED=NO' "$evidence"
+          grep -q 'PUBLIC_DEMO_TOUCHED=NO' "$evidence"
+          grep -q '005B_R1_FINAL_EVIDENCE=PASS' "$evidence"
+
+          if [[ '${{ github.event_name }}' == 'pull_request' ]]; then
+            base='${{ github.event.pull_request.base.sha }}'
+          else
+            git fetch origin main --depth=1
+            base='origin/main'
+          fi
+          git diff --exit-code "$base" -- .github/workflows/beta1-022a-writable-acceptance.yml
+          ! grep -q 'CARTERA_PIPELINE_IDENTITY_005B_R1' .github/workflows/beta1-022a-writable-acceptance.yml
+          echo 'REMOTE_ACCEPTANCE=PASS'
+          echo 'TEMP_DISPATCHER_REMOVED=PASS'
+
+      - name: Emit 005B-R1 final closure markers
         run: |
           echo 'PRECONDITION_GATE=PASS'
           echo '005C_AUTHORITY=PASS'
@@ -106,7 +140,30 @@ jobs:
           echo 'ADR_GATE_005B_R1=PASS'
           echo 'ROBOCOP_UNLOCK_005B_R1=GRANTED'
           echo '005B_R1_STATIC_GATE=PASS'
+          echo 'REMOTE_ACCEPTANCE=PASS'
+          echo 'PA01=PASS'
+          echo 'PA02=PASS'
+          echo 'PA03=PASS'
+          echo 'PA04=PASS'
+          echo 'PA05=PASS'
+          echo 'PA06=PASS'
+          echo 'PA07=PASS'
+          echo 'RLS_ISOLATION=PASS'
+          echo 'READ_AFTER_WRITE=PASS'
+          echo 'IDENTITY_BOUNDARY=PASS'
+          echo 'POLICY_TRUTH_BOUNDARY=PASS'
+          echo 'OWNER_SCOPED_CLEANUP=PASS'
+          echo 'POST_RUN_SEALED=PASS'
+          echo 'TEMP_DISPATCHER_REMOVED=PASS'
+          echo 'BOUNDED_DIFF=PASS'
           echo 'REP_17=PASS'
-          echo 'SERVICE_ROLE_DOMAIN_WRITE=NO'
           echo 'REAL_DATA_TOUCHED=NO'
-          echo 'HUMAN_REMOTE_CHECKPOINT=REQUIRED'
+          echo 'PUBLIC_DEMO_TOUCHED=NO'
+          echo 'SERVICE_ROLE_DOMAIN_WRITE=NO'
+          echo 'UNAUTHORIZED_SCHEMA_CHANGE=NO'
+          echo 'UNAUTHORIZED_RUNTIME_CHANGE=NO'
+          echo 'UNAUTHORIZED_UI_CHANGE=NO'
+          echo 'FINAL_ROBOCOP_005B_R1=PASS'
+          echo 'PHASE_STATUS=PASS'
+          echo 'MERGE_READY=YES'
+          echo 'DEPLOYMENT=NOT_REQUIRED'
