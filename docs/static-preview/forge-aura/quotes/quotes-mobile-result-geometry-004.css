@@ -1,0 +1,152 @@
+/*
+ * FORGE_AURA_QUOTES_MOBILE_RESULT_GEOMETRY_004
+ * Presentation-only containment for calculated quote results.
+ * No calculation, Product Intelligence, Accepted Quote, persistence, or economic truth lives here.
+ */
+
+.aura-quotes,
+.aura-quotes__result,
+.aura-quotes__hero,
+.aura-quotes__hero-copy,
+.aura-quotes__hero-metric,
+.aura-quotes__hero-status,
+.aura-quotes__attention,
+.aura-quotes__attention article,
+.aura-quotes__workspace,
+.aura-quotes__tabpanel,
+.aura-quotes__stack,
+.aura-quotes__benefit-list,
+.aura-quotes__benefit-group,
+.aura-quotes__scenario-list,
+.aura-quotes__scenario,
+.aura-quotes__contextual-cta,
+.aura-quotes__cta-actions {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.aura-quotes__result {
+  inline-size: 100%;
+}
+
+.aura-quotes__hero-copy,
+.aura-quotes__hero-metric > *,
+.aura-quotes__hero-status > div,
+.aura-quotes__attention article > *,
+.aura-quotes__scenario dl > div > *,
+.aura-quotes__contextual-cta > *,
+.aura-quotes__cta-actions > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.aura-quotes__hero h2,
+.aura-quotes__hero-copy > p,
+.aura-quotes__hero-metric strong,
+.aura-quotes__hero-metric span,
+.aura-quotes__hero-status strong,
+.aura-quotes__hero-status small,
+.aura-quotes__attention strong,
+.aura-quotes__attention p,
+.aura-quotes__facts dt,
+.aura-quotes__facts dd,
+.aura-quotes__evidence-meta dt,
+.aura-quotes__evidence-meta dd,
+.aura-quotes__scenario span,
+.aura-quotes__scenario strong,
+.aura-quotes__scenario dt,
+.aura-quotes__scenario dd,
+.aura-quotes__projection-note,
+.aura-quotes__evidence-state,
+.aura-quotes__contextual-cta span,
+.aura-quotes__contextual-cta small {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.aura-quotes__button,
+.aura-quotes__text-action {
+  max-inline-size: 100%;
+  white-space: normal;
+}
+
+.aura-quotes__tabs {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overscroll-behavior-inline: contain;
+}
+
+.aura-quotes__tabs button {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 760px) {
+  .aura-quotes {
+    inline-size: 100%;
+    max-inline-size: 100%;
+    overflow-x: clip;
+  }
+
+  .aura-quotes__result,
+  .aura-quotes__hero,
+  .aura-quotes__attention,
+  .aura-quotes__workspace,
+  .aura-quotes__tabpanel,
+  .aura-quotes__contextual-cta {
+    inline-size: 100%;
+  }
+
+  .aura-quotes__hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aura-quotes__hero-metric {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--aura-space-1);
+  }
+
+  .aura-quotes__hero-metric strong {
+    max-inline-size: 100%;
+    font-size: clamp(24px, 7.2vw, 28px);
+    line-height: 1.15;
+  }
+
+  .aura-quotes__hero-status {
+    inline-size: 100%;
+    min-inline-size: 0;
+    align-items: flex-start;
+    border-radius: var(--forge-radius-card);
+  }
+
+  .aura-quotes__facts > div,
+  .aura-quotes__evidence-meta > div {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  .aura-quotes__scenario dl > div {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  .aura-quotes__cta-actions,
+  .aura-quotes__cta-actions .aura-quotes__button,
+  .aura-quotes__cta-actions .aura-quotes__text-action {
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+}
+
+@media (max-width: 430px) {
+  .aura-quotes__scenario dl > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--aura-space-1);
+  }
+
+  .aura-quotes__scenario dd {
+    text-align: left;
+  }
+}
