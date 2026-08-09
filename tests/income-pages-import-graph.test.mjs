@@ -34,7 +34,7 @@ test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () =>
   assert.match(index, /income-adapter-pages-v1\.mjs[^\n]+income-adapter-pages-v1\.js/);
 });
 
-test("canonical Pages artifact preserves Cartera semantic root 012 and v8 to v1 chain", () => {
+test("canonical Pages artifact preserves Cartera semantic completion 014 and inherited v8 to v1 chain", () => {
   for (const relative of [
     "static-preview/forge-aura/cartera/cartera-module-v4.js",
     "static-preview/forge-aura/cartera/cartera-semantic-v1.js",
@@ -50,9 +50,9 @@ test("canonical Pages artifact preserves Cartera semantic root 012 and v8 to v1 
   ]) {
     assert.equal(exists(relative), true, `Missing current Cartera asset: ${relative}`);
   }
-  const app = read("static-preview/forge-aura/app-v4.js");
+  const app = read("static-preview/forge-aura/app-v4-r1.js");
   const index = read("static-preview/forge-aura/index.html");
-  const bootstrap = read("static-preview/forge-aura/aura-bootstrap-v4.js");
+  const bootstrap = read("static-preview/forge-aura/aura-bootstrap-v4-r1.js");
   const moduleV4 = read("static-preview/forge-aura/cartera/cartera-module-v4.js");
   const semantic = read("static-preview/forge-aura/cartera/cartera-semantic-v1.js");
   const dateV1 = read("static-preview/forge-aura/cartera/cartera-date-v1.js");
@@ -63,20 +63,26 @@ test("canonical Pages artifact preserves Cartera semantic root 012 and v8 to v1 
   const v6 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v6.js");
   const v7 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js");
   const v8 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js");
+
+  // app-v4-r1 keeps the inherited 012 specifier; the import map deliberately
+  // upgrades that exact specifier to the cache-busted 014 module.
   assert.match(app, /cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-adapter-pages-v8\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(bootstrap, /app-v4\.js\?v=cartera-pdf-semantic-reconciliation-012-income-aura-ux-reconciliation-001/);
+  assert.match(index, /cartera-adapter-pages-v8\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-completion-014"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
   assert.match(moduleV4, /createSemanticCarteraAdapter/);
-  assert.match(moduleV4, /data-semantic-review/);
-  assert.match(v8, /cartera-adapter-pages-v7\.js\?base=cartera-pdf-semantic-reconciliation-012/);
+  assert.match(moduleV4, /data-semantic-review="014"/);
+  assert.match(v8, /cartera-adapter-pages-v7\.js\?base=cartera-pdf-semantic-completion-014/);
   assert.match(v8, /forge_cartera020b_record_processing_result/);
-  assert.match(v7, /cartera-adapter-pages-v6\.js\?base=aura-cartera-pdf-already-admitted-reopen-011/);
+  assert.match(v8, /pdfSemanticCompletion014:\s*true/);
+  assert.match(v7, /cartera-adapter-pages-v6\.js\?base=cartera-pdf-already-admitted-reopen-011/);
   assert.match(v7, /cartera020b_policy_evidence_packets/);
   assert.match(v7, /PENDING_CONFIRMATION/);
   assert.match(v7, /resumedExistingReview:\s*true/);
   assert.match(semantic, /normalizeCivilDate/);
-  assert.match(semantic, /coverageCandidates/);
+  assert.match(semantic, /coverageSectionDetected/);
+  assert.match(semantic, /reviewCompleteness/);
   assert.match(dateV1, /AGO:\s*8/);
   assert.match(dateV1, /normalizePolicyDate/);
   assert.match(v6, /data:\s*sanitizePdfPayload\(result\.data\)/);
