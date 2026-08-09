@@ -25,7 +25,11 @@ for (const key of ['ACCEPTANCE_A', 'ACCEPTANCE_B']) {
   assert.equal(o[key]?.isAcceptance, true, `${key}_ACCEPTANCE_CLASSIFICATION`);
   assert.equal(o[key]?.acceptancePurpose, 'AUTOMATED_ACCEPTANCE_ONLY', `${key}_PURPOSE`);
   assert.equal(o[key]?.readOnly, false, `${key}_NOT_WRITABLE_DURING_WINDOW`);
-  assert.ok(Date.parse(o[key]?.expiresAt || '') > Date.parse(opened.checkedAt || new Date(0).toISOString()), `${key}_EXPIRY_INVALID`);
+  const expiry = Date.parse(o[key]?.expiresAt || '');
+  const now = Date.now();
+  assert.ok(Number.isFinite(expiry), `${key}_EXPIRY_INVALID`);
+  assert.ok(expiry > now, `${key}_EXPIRY_NOT_FUTURE`);
+  assert.ok(expiry <= now + 21 * 60_000, `${key}_EXPIRY_TOO_LONG`);
   assert.equal(a[key]?.readOnly, true, `${key}_NOT_SEALED_AFTER`);
 }
 for (const marker of ['aa01', 'aa02', 'aa03', 'aa04', 'aa05', 'aa06', 'aa07', 'aa10']) {
