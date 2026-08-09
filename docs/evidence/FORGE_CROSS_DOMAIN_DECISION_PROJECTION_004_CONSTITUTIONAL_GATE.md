@@ -1,0 +1,119 @@
+# Forge Cross-Domain Decision Projection 004 — Constitutional Gate
+
+```text
+PHASE=FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004
+BRANCH=feature/forge-cross-domain-decision-projection-004
+
+PREVIOUS_PHASE_001=PASS
+PREVIOUS_PHASE_002=PASS
+PREVIOUS_PHASE_003=PASS
+
+MAIN_HEAD=9289197780efd23d70be7528a1191e0509cdae40
+PHASE_002_HEAD=a49c4abe3872853c47aa8a70e820c2bc4cb1af93
+PHASE_003_HEAD=95755f7680fe235d515c02ec4ec06fa6c49eab17
+PHASE_BASE_SHA=95755f7680fe235d515c02ec4ec06fa6c49eab17
+MERGE_BASE_WITH_MAIN=9289197780efd23d70be7528a1191e0509cdae40
+MAIN_DRIFT=PHASE_BASE_AHEAD_16_BEHIND_0
+
+ASSEMBLY_BLUEPRINT_002=READ
+INTELLIGENCE_GRAPH_002=READ
+DECISION_SURFACE_MATRIX_002=READ
+CONVERGENCE_MATRIX_002=READ
+DORMANT_ACTIVATION_MAP_002=READ
+MODULE_MISSION_MAP_002=READ
+ASSEMBLY_SEQUENCE_002=READ
+SHARED_AUTHORITY_IDENTITY_003=READ
+SHARED_AUTHORITY_IDENTITY_003_ACCEPTANCE=READ
+
+NEW_BUSINESS_INTELLIGENCE_ENGINE=PROHIBITED
+NEW_RECOMMENDATION_ENGINE=PROHIBITED
+NEW_SCORING_MODEL=PROHIBITED
+NEW_FORECAST_ENGINE=PROHIBITED
+NEW_NBA_ENGINE=PROHIBITED
+
+NEW_SOURCE_OF_TRUTH=PROHIBITED
+NEW_DECISION_TRUTH=PROHIBITED
+NEW_PERSON_AUTHORITY=PROHIBITED
+
+NEW_DATABASE_TABLE=PROHIBITED
+NEW_PERSISTENCE=PROHIBITED_BY_DEFAULT
+NEW_RPC=PROHIBITED_BY_DEFAULT
+NEW_EDGE_FUNCTION=PROHIBITED_BY_DEFAULT
+
+FRONTEND_BUSINESS_HEURISTICS=PROHIBITED
+FRONTEND_PRIORITY_CALCULATION=PROHIBITED
+FRONTEND_CONFIDENCE_CALCULATION=PROHIBITED
+
+AUTO_COMMERCIAL_ACTION=PROHIBITED
+AUTO_CONTACT=PROHIBITED
+AUTO_MESSAGE_SEND=PROHIBITED
+AUTO_CLOSE=PROHIBITED
+
+HUMAN_DECISION_BOUNDARY=PRESERVED
+AUTHORITY_PROVENANCE=MANDATORY
+EXPLAINABILITY=MANDATORY
+
+UNKNOWN_IS_NOT_ZERO=YES
+ESTIMATE_IS_NOT_CONFIRMED=YES
+PROJECTION_IS_NOT_FACT=YES
+RECOMMENDATION_IS_NOT_DECISION_AUTHORITY=YES
+
+HOME_REDESIGN=NOT_IN_SCOPE
+AURA_REDESIGN=NOT_IN_SCOPE
+MODULE_REWRITE=NOT_IN_SCOPE
+
+DECISION_PROJECTION_PERSISTENCE=NO_BY_DEFAULT
+SUPABASE_SCHEMA_MUTATION=PROHIBITED
+RLS_MUTATION=PROHIBITED
+PAGES_DEPLOY_WORKFLOW_MUTATION=PROHIBITED
+PRODUCTION_DEPLOYMENT=NO
+AUTO_MERGE=NO
+MERGE_TO_MAIN=NO
+```
+
+## Verified prerequisite evidence
+
+- Phase 001 main closure: `9289197780efd23d70be7528a1191e0509cdae40`.
+- Blueprint 002 head: `a49c4abe3872853c47aa8a70e820c2bc4cb1af93`.
+- Phase 003 head: `95755f7680fe235d515c02ec4ec06fa6c49eab17`.
+- Phase 003 Acceptance declares `PHASE_STATUS=PASS` and `NEXT_RECOMMENDED_PHASE=FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004`.
+- Final Phase 003 head has successful identity/Cartera authority, Pages import-graph and browser acceptance checks.
+
+## Assembly laws carried forward
+
+1. Domain truth stays upstream of decision projection.
+2. Alfred remains orchestration/composition and never becomes a universal truth owner.
+3. Opportunity/Nash/Relationship recommendations remain recommendations and require human action boundaries.
+4. Forecast/scenario semantics can never be promoted to observed or confirmed truth by this projection.
+5. Economic semantics remain distinct: scenario, expected, generated, earned and paid must not collapse.
+6. Unknown remains unknown; no projection may synthesize zero or confidence.
+7. Cross-domain composition must preserve authority, evidence, confidence/limitations where owned, human approval requirements and action ownership.
+8. No global ranking or scoring may be invented in this phase.
+
+## Stop conditions
+
+If implementation requires any of the following, this phase must stop and document the gap instead of implementing it:
+
+```text
+NEW_BUSINESS_RULE
+NEW_SCORE
+NEW_FORECAST_FORMULA
+NEW_RECOMMENDATION_MODEL
+NEW_IDENTITY_LOGIC
+NEW_TABLE
+NEW_RPC
+NEW_EDGE_FUNCTION
+RLS_BYPASS
+DOMAIN_TRUTH_REWRITE
+FRONTEND_SEMANTIC_HEURISTIC
+```
+
+## Forecast special gate
+
+Forecast cannot be integrated until the repository dependency trace identifies the actual current runtime/composition path across the known forecast engine/manager/composer generations. If authority remains ambiguous, the forecast projection must be explicitly `DEFERRED` rather than guessed.
+
+```text
+CONSTITUTIONAL_GATE=PASS
+PRODUCTIVE_MUTATION_BEFORE_GATE=0
+NEXT_STEP=DISCOVER_EXISTING_DECISION_CONTRACTS_AND_FORECAST_RUNTIME_PATH
+```
