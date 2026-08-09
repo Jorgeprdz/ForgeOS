@@ -4,8 +4,11 @@ import fs from 'node:fs';
 
 const read = path => fs.readFileSync(path, 'utf8');
 const adapter = read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js');
-const adapterV10 = read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js');
-const module = read('docs/static-preview/forge-aura/cartera/cartera-module-v5.js');
+const adapterEntry = read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js');
+const adapterV10 = read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10-base-015.js');
+const adapterV11 = read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js');
+const moduleEntry = read('docs/static-preview/forge-aura/cartera/cartera-module-v5.js');
+const module = read('docs/static-preview/forge-aura/cartera/cartera-module-v5-base-015.js');
 const migration = read('supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql');
 const index = read('docs/static-preview/forge-aura/index.html');
 const fixture = read('tests/fixtures/aura-cartera-pdf-ingress-parity.html');
@@ -66,11 +69,13 @@ test('drag and drop is normalized into the exact hidden input change pipeline', 
   assert.match(module, /stopImmediatePropagation/);
 });
 
-test('canonical Aura import graph preserves the v9 ingress key while routing execution to v10 durable confirmation', () => {
+test('canonical Aura keeps existing v10/v5 targets while 016 contained bridges preserve v9 ingress and 015 durable confirmation', () => {
   assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
   assert.match(index, /cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
-  assert.match(index, /cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
   assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
+  assert.match(adapterEntry, /cartera-adapter-pages-v11\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(moduleEntry, /cartera-module-v6\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(adapterV11, /cartera-adapter-pages-v10-base-015\.js\?base=cartera-person-workspace-directory-projection-016/);
   assert.match(adapterV10, /cartera-adapter-pages-v9\.js\?base=cartera-020c-policy-attach-pipeline-person-015/);
 });
 

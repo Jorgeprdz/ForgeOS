@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Cartera 016 mobile person projection fixture</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-projection-016.css">
+  <style>
+    html,body{margin:0;min-height:100%;background:#f5f6fa;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+    .fixture-bottom-nav{position:fixed;left:12px;right:12px;bottom:8px;z-index:80;min-height:72px;border:1px solid #e4e7ec;border-radius:24px;background:rgba(255,255,255,.96);display:grid;grid-template-columns:repeat(5,1fr);place-items:center;box-shadow:0 14px 35px rgba(16,24,40,.12);font-size:12px;font-weight:700;color:#667085}
+    .fixture-bottom-nav strong{color:#6941c6}
+  </style>
+</head>
+<body>
+  <main id="fixture-main" class="aura-cartera" data-fixture-state="loading"></main>
+  <nav class="fixture-bottom-nav" aria-label="Navegación sintética"><span>Inicio</span><span>Pipeline</span><span>Alfred</span><strong>Cartera</strong><span>Más</span></nav>
+  <script type="module">
+    import {
+      applyCarteraDirectoryPresentation016,
+      applyCarteraPersonWorkspacePresentation016,
+    } from '/docs/static-preview/forge-aura/cartera/cartera-module-v6.js';
+
+    const root = document.querySelector('#fixture-main');
+    const projection = Object.freeze({
+      relationshipLabel: 'Cliente',
+      contacts: {
+        sourceState: 'AVAILABLE',
+        phone: { value: '+525500001616', state: 'AVAILABLE', source: 'PIPELINE_PROSPECT', consentStatus: 'NOT_ASSERTED' },
+        whatsapp: { value: null, state: 'NOT_INFORMED', source: null, consentStatus: null },
+        email: { value: null, state: 'NOT_INFORMED', source: null, consentStatus: null },
+      },
+      policies: [
+        {
+          policy_reference: 'policy:synthetic:projection-016',
+          policy_number: 'SYN-00006169',
+          product_reference: 'product:imagina-ser-65-15-pagos-udi',
+          status_value: 'ACTIVE',
+        },
+      ],
+      policyProjection: { sourceState: 'AVAILABLE', count: 1 },
+    });
+
+    function renderDirectory() {
+      root.innerHTML = `
+        <section class="cartera-panel cartera-directory" aria-labelledby="fixture-directory-title">
+          <header><div><p class="cartera-eyebrow">DIRECTORIO</p><h2 id="fixture-directory-title">Personas, cuentas y pólizas</h2><p>Proyección sintética 016.</p></div><span>2 resultados</span></header>
+          <div class="cartera-directory-list" role="list">
+            <button type="button" class="cartera-directory-row" role="listitem" data-directory-reference="person:synthetic:projection-016" data-directory-kind="PERSON">
+              <span class="cartera-directory-icon" aria-hidden="true">P</span>
+              <span><strong>Alex Ejemplo</strong><small>Cliente</small></span>
+              <span class="cartera-kind">PERSON</span>
+            </button>
+            <button type="button" class="cartera-directory-row" role="listitem" data-directory-reference="policy:synthetic:projection-016" data-directory-kind="POLICY">
+              <span class="cartera-directory-icon" aria-hidden="true">PÓL</span>
+              <span><strong>••••••6169</strong><small>product:imagina-ser-65-15-pagos-udi</small></span>
+              <span class="cartera-kind">POLICY</span>
+            </button>
+          </div>
+        </section>`;
+      applyCarteraDirectoryPresentation016(root);
+      root.querySelector('[data-directory-kind="PERSON"]').addEventListener('click', renderPerson);
+      root.dataset.fixtureState = 'directory-ready';
+    }
+
+    function renderPerson() {
+      root.innerHTML = `
+        <div class="cartera-workspace">
+          <div class="cartera-workspace__top"><button type="button" class="cartera-back" data-back>← Cartera</button></div>
+          <section class="cartera-workspace__hero">
+            <div><p class="cartera-eyebrow">PERSON WORKSPACE</p><h1>Alex Ejemplo</h1><p>Una relación, varios contextos. Nada aquí crea oportunidades o mensajes automáticamente.</p></div>
+          </section>
+          <div class="cartera-tabs" role="tablist">
+            <button role="tab" aria-selected="true">Resumen</button><button role="tab">Pólizas</button><button role="tab">Relación</button><button role="tab">Historial</button>
+          </div>
+          <section class="cartera-section"><h2>Pólizas relacionadas</h2><button type="button" class="cartera-directory-row" data-open-policy="policy:synthetic:projection-016"><span class="cartera-directory-icon">PÓL</span><span><strong>••••••6169</strong><small>product:imagina-ser-65-15-pagos-udi · Activa</small></span></button></section>
+          <section class="cartera-section"><h2>Relación</h2><p>Memoria y contexto confirmados, respetando sensibilidad y consentimiento.</p><div class="cartera-directory-row"><span class="cartera-directory-icon">R</span><span><strong>Contexto</strong><small>Relación confirmada para revisión.</small></span></div></section>
+          <section class="cartera-section"><h2>Contexto para revisión</h2><p>Candidatos de relación no equivalen a oportunidad, prioridad, probabilidad ni acción automática.</p></section>
+        </div>`;
+      const workspace = root.querySelector('.cartera-workspace');
+      applyCarteraPersonWorkspacePresentation016(workspace, projection);
+      root.querySelector('[data-back]').addEventListener('click', renderDirectory);
+      root.dataset.fixtureState = 'person-ready';
+    }
+
+    renderDirectory();
+    window.__CARTERA_PERSON_016_FIXTURE__ = { renderDirectory, renderPerson, projection };
+  </script>
+</body>
+</html>

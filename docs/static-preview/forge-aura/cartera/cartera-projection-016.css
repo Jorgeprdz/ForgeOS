@@ -1,0 +1,243 @@
+.aura-cartera button.cartera-directory-row[data-directory-reference],
+.aura-cartera button.cartera-directory-row[data-open-policy] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--aura-border, #e7e9ee);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.aura-cartera .cartera-directory-list > .cartera-directory-row:first-child,
+.aura-cartera .cartera-section > .cartera-directory-row:first-of-type {
+  border-top-color: transparent;
+}
+
+.aura-cartera .cartera-directory-row[data-entity-presentation="016"] {
+  min-height: 64px;
+  padding: 12px 8px;
+  border-radius: 14px;
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+
+.aura-cartera .cartera-directory-row[data-entity-presentation="016"] + .cartera-directory-row[data-entity-presentation="016"] {
+  border-top-color: var(--aura-border, #e7e9ee);
+}
+
+.aura-cartera .cartera-directory-row[data-entity-presentation="016"] .cartera-directory-icon {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.aura-cartera .cartera-directory-row[data-entity-presentation="016"] strong,
+.aura-cartera .cartera-directory-row[data-policy-presentation="016"] strong {
+  font-size: max(14px, .95rem);
+  letter-spacing: -.01em;
+  overflow-wrap: anywhere;
+}
+
+.aura-cartera .cartera-directory-row[data-entity-presentation="016"] small,
+.aura-cartera .cartera-directory-row[data-policy-presentation="016"] small {
+  font-size: max(12px, .82rem);
+  line-height: 1.4;
+}
+
+.aura-cartera .cartera-directory-row[data-entity-presentation="016"] .cartera-kind {
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 650;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .aura-cartera button.cartera-directory-row[data-directory-reference]:hover,
+  .aura-cartera button.cartera-directory-row[data-open-policy]:hover {
+    background: color-mix(in srgb, var(--aura-accent, #6d5dfc) 5%, transparent);
+  }
+}
+
+.aura-cartera button.cartera-directory-row[data-directory-reference]:active,
+.aura-cartera button.cartera-directory-row[data-open-policy]:active {
+  transform: translateY(1px);
+  background: color-mix(in srgb, var(--aura-accent, #6d5dfc) 7%, transparent);
+}
+
+.cartera-person-summary-016 {
+  display: grid;
+  gap: 18px;
+}
+
+.cartera-person-summary-016__heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
+}
+
+.cartera-person-summary-016__heading h2 {
+  margin: 0 0 5px;
+  font-size: clamp(20px, 2.3vw, 28px);
+  letter-spacing: -.025em;
+}
+
+.cartera-person-summary-016__heading > div > p:not(.cartera-eyebrow) {
+  margin: 0;
+  color: var(--aura-muted, #667085);
+  font-size: max(13px, .85rem);
+  line-height: 1.5;
+}
+
+.cartera-person-policy-count-016 {
+  min-width: 118px;
+  padding: 12px 14px;
+  border: 1px solid var(--aura-border, #e7e9ee);
+  border-radius: 16px;
+  background: var(--aura-surface, #fff);
+}
+
+.cartera-person-policy-count-016 strong,
+.cartera-person-policy-count-016 span {
+  display: block;
+}
+
+.cartera-person-policy-count-016 strong {
+  font-size: 18px;
+  letter-spacing: -.02em;
+}
+
+.cartera-person-policy-count-016 span {
+  margin-top: 3px;
+  color: var(--aura-muted, #667085);
+  font-size: 12px;
+}
+
+.cartera-person-contact-grid-016 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cartera-person-contact-grid-016 article {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--aura-border, #e7e9ee);
+  border-radius: 16px;
+  background: var(--aura-surface, #fff);
+}
+
+.cartera-person-contact-grid-016 small,
+.cartera-person-contact-grid-016 strong,
+.cartera-person-contact-grid-016 span {
+  display: block;
+}
+
+.cartera-person-contact-grid-016 small {
+  color: var(--aura-muted, #667085);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cartera-person-contact-grid-016 strong {
+  margin-top: 5px;
+  font-size: max(14px, .95rem);
+  overflow-wrap: anywhere;
+}
+
+.cartera-person-contact-grid-016 span {
+  margin-top: 5px;
+  color: var(--aura-muted, #667085);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.cartera-person-source-note-016 {
+  margin: 0;
+  color: var(--aura-muted, #667085);
+  font-size: max(13px, .85rem);
+  line-height: 1.5;
+}
+
+.cartera-person-relation-panel-016 {
+  display: grid;
+  gap: 18px;
+}
+
+.cartera-person-relation-panel-016[hidden],
+.aura-cartera [role="tabpanel"][hidden] {
+  display: none;
+}
+
+.aura-cartera .cartera-tabs[role="tablist"] button[role="tab"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.aura-cartera .cartera-tabs[role="tablist"] button[role="tab"]:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--aura-accent, #6d5dfc) 35%, transparent);
+  outline-offset: -3px;
+}
+
+.aura-cartera .cartera-workspace__hero h1 {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .aura-cartera .cartera-workspace[data-person-projection="016"] {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .aura-cartera .cartera-directory-row[data-entity-presentation="016"] {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px 6px;
+  }
+
+  .aura-cartera .cartera-directory-row[data-entity-presentation="016"] .cartera-kind {
+    display: none;
+  }
+
+  .aura-cartera .cartera-workspace__hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .aura-cartera .cartera-workspace__hero h1 {
+    font-size: clamp(26px, 10vw, 38px);
+    line-height: 1.05;
+  }
+
+  .cartera-person-summary-016__heading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cartera-person-policy-count-016 {
+    min-width: 0;
+  }
+
+  .cartera-person-contact-grid-016 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aura-cartera .cartera-tabs[role="tablist"] {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--aura-bg, #f4f5fb);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-cartera .cartera-directory-row[data-entity-presentation="016"] {
+    transition: none;
+  }
+}

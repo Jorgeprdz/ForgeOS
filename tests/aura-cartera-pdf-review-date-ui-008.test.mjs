@@ -5,23 +5,31 @@ import fs from 'node:fs';
 const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4-r1.js', 'utf8');
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 const bootstrap = fs.readFileSync('docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js', 'utf8');
-const moduleV5 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5.js', 'utf8');
-const v10 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', 'utf8');
+const moduleEntry = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5.js', 'utf8');
+const moduleV5 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5-base-015.js', 'utf8');
+const moduleV6 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v6.js', 'utf8');
+const v10Entry = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', 'utf8');
+const v10 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10-base-015.js', 'utf8');
+const v11 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js', 'utf8');
 const v9 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js', 'utf8');
 const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js', 'utf8');
 const v7 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js', 'utf8');
 const semantic = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js', 'utf8');
 
-test('canonical Aura r1 maps inherited Cartera specifier to current durable confirmation boundary', () => {
+test('canonical Aura r1 keeps existing import-map targets while contained Cartera entries advance to 016', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
   assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
   assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
   assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
   assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
+  assert.match(v10Entry, /cartera-adapter-pages-v11\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(moduleEntry, /cartera-module-v6\.js\?v=cartera-person-workspace-directory-projection-016/);
+  assert.match(v11, /cartera-adapter-pages-v10-base-015\.js\?base=cartera-person-workspace-directory-projection-016/);
+  assert.match(moduleV6, /cartera-module-v5-base-015\.js\?base=cartera-person-workspace-directory-projection-016/);
   assert.match(v10, /cartera-adapter-pages-v9\.js\?base=cartera-020c-policy-attach-pipeline-person-015/);
 });
 
-test('current module keeps semantic review while unifying drop through the hidden input', () => {
+test('preserved v5 semantic module keeps review behavior while unifying drop through the hidden input', () => {
   assert.match(moduleV5, /createBaseCarteraModule/);
   assert.match(moduleV5, /createSemanticCarteraAdapter/);
   assert.match(moduleV5, /cartera-adapter-pages-v9/);
@@ -31,7 +39,7 @@ test('current module keeps semantic review while unifying drop through the hidde
   assert.match(moduleV5, /input\.dispatchEvent\(new windowRef\.Event\('change'/);
 });
 
-test('v10 preserves v9 refresh and accepted v8 to v1 semantic chain', () => {
+test('preserved durable 015 base keeps v9 refresh and accepted v8 to v1 semantic chain', () => {
   assert.match(v10, /cartera-adapter-pages-v9\.js/);
   assert.match(v9, /cartera-adapter-pages-v8\.js/);
   assert.match(v9, /forge_cartera020b_refresh_pending_packet_semantics/);
