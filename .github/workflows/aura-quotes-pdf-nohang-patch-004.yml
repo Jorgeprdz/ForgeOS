@@ -1,0 +1,251 @@
+name: Aura Quotes PDF No-Hang Patch 004
+
+on:
+  push:
+    branches:
+      - hotfix/aura-quotes-pdf-nohang-004
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: hotfix/aura-quotes-pdf-nohang-004
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply bounded no-hang repair
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          calc_path = Path('docs/static-preview/quote-runtime/forge-quote-calculators.js')
+          calc = calc_path.read_text()
+          old = '''const DEFAULT_RETIREMENT_UDI_GROWTH_RATE = 0.045;
+
+async function browserUnavailableRateProvider() {
+  return null;
+}
+'''
+          new = '''const DEFAULT_RETIREMENT_UDI_GROWTH_RATE = 0.045;
+const UDI_RATE_PROVIDER_TIMEOUT_MS = 5000;
+
+async function awaitRateProviderWithTimeout(rateProvider, timeoutMs = UDI_RATE_PROVIDER_TIMEOUT_MS) {
+  const boundedTimeout = Number.isFinite(Number(timeoutMs))
+    ? Math.max(1, Number(timeoutMs))
+    : UDI_RATE_PROVIDER_TIMEOUT_MS;
+  let timer = null;
+  try {
+    return await Promise.race([
+      Promise.resolve().then(() => rateProvider()),
+      new Promise((resolve) => {
+        timer = globalThis.setTimeout(() => resolve(null), boundedTimeout);
+      })
+    ]);
+  } finally {
+    if (timer !== null) globalThis.clearTimeout(timer);
+  }
+}
+
+async function browserUnavailableRateProvider() {
+  return null;
+}
+'''
+          if old not in calc:
+              raise SystemExit('CALCULATOR_TIMEOUT_INSERT_ANCHOR_NOT_FOUND')
+          calc = calc.replace(old, new, 1)
+
+          old = '''export async function getVerifiedUdiRateMetadata({
+  rateProvider = browserUnavailableRateProvider
+} = {}) {
+  try {
+    const cache = await rateProvider();
+'''
+          new = '''export async function getVerifiedUdiRateMetadata({
+  rateProvider = browserUnavailableRateProvider,
+  timeoutMs = UDI_RATE_PROVIDER_TIMEOUT_MS
+} = {}) {
+  try {
+    const cache = await awaitRateProviderWithTimeout(rateProvider, timeoutMs);
+'''
+          if old not in calc:
+              raise SystemExit('CALCULATOR_RATE_PROVIDER_ANCHOR_NOT_FOUND')
+          calc = calc.replace(old, new, 1)
+          calc_path.write_text(calc)
+
+          adapter_path = Path('docs/static-preview/forge-aura/quotes/quotes-adapter.js')
+          adapter = adapter_path.read_text()
+          old = '''const PRODUCT_LABELS = Object.freeze({
+  imagina_ser: "Imagina Ser",
+  vida_mujer: "Vida Mujer",
+  segubeca: "SeguBeca",
+  orvi: "ORVI",
+  alfa_medical_flex: "Alfa Medical Flex",
+});
+'''
+          new = '''const PRODUCT_LABELS = Object.freeze({
+  imagina_ser: "Imagina Ser",
+  vida_mujer: "Vida Mujer",
+  segubeca: "SeguBeca",
+  orvi: "ORVI",
+  alfa_medical_flex: "Alfa Medical Flex",
+});
+
+const QUOTE_PARSE_TIMEOUT_MS = 62000;
+const QUOTE_CALCULATION_TIMEOUT_MS = 15000;
+
+async function withQuoteTimeout(promise, timeoutMs, message) {
+  let timer = null;
+  try {
+    return await Promise.race([
+      Promise.resolve(promise),
+      new Promise((_, reject) => {
+        timer = globalThis.setTimeout(() => reject(new Error(message)), timeoutMs);
+      })
+    ]);
+  } finally {
+    if (timer !== null) globalThis.clearTimeout(timer);
+  }
+}
+
+function actionableQuoteLoadError(error) {
+  const message = error?.message || String(error);
+  if (/prima anual no está disponible|plazo de pagos no está disponible|paquete no contiene nativeResult|paquete no contiene context/i.test(message)) {
+    return new Error("Este PDF no contiene una cotización calculable. Si es una póliza emitida o un documento de Cartera, cárgalo en Cartera.");
+  }
+  return error instanceof Error ? error : new Error(message);
+}
+'''
+          if old not in adapter:
+              raise SystemExit('QUOTES_ADAPTER_HELPER_ANCHOR_NOT_FOUND')
+          adapter = adapter.replace(old, new, 1)
+
+          old = '''  async function loadFile(file) {
+    clear();
+    if (!file) throw new Error("Selecciona una cotización para continuar.");
+    let candidate;
+    if (file.type === "application/pdf" || /\\.pdf$/i.test(file.name || "")) {
+      candidate = await parsePdfFileToAcceptedQuotePacket(file);
+    } else {
+      const raw = await file.text();
+      candidate = JSON.parse(raw);
+    }
+    packet = validatePacket(candidate);
+    calculation = await calculateAcceptedQuote(packet);
+    viewModel = buildViewModel(packet, calculation);
+    return Object.freeze({ packet, calculation, viewModel });
+  }
+'''
+          new = '''  async function loadFile(file) {
+    clear();
+    if (!file) throw new Error("Selecciona una cotización para continuar.");
+    try {
+      let candidate;
+      if (file.type === "application/pdf" || /\\.pdf$/i.test(file.name || "")) {
+        candidate = await withQuoteTimeout(
+          parsePdfFileToAcceptedQuotePacket(file),
+          QUOTE_PARSE_TIMEOUT_MS,
+          "El PDF tardó demasiado en procesarse. Intenta nuevamente con el archivo original."
+        );
+      } else {
+        const raw = await file.text();
+        candidate = JSON.parse(raw);
+      }
+      packet = validatePacket(candidate);
+      calculation = await withQuoteTimeout(
+        calculateAcceptedQuote(packet),
+        QUOTE_CALCULATION_TIMEOUT_MS,
+        "El cálculo de la cotización tardó demasiado. Forge detuvo la espera para no dejar la pantalla cargando indefinidamente."
+      );
+      viewModel = buildViewModel(packet, calculation);
+      return Object.freeze({ packet, calculation, viewModel });
+    } catch (error) {
+      throw actionableQuoteLoadError(error);
+    }
+  }
+'''
+          if old not in adapter:
+              raise SystemExit('QUOTES_ADAPTER_LOADFILE_ANCHOR_NOT_FOUND')
+          adapter = adapter.replace(old, new, 1)
+          adapter_path.write_text(adapter)
+
+          test_path = Path('tests/aura-quotes-pdf-nohang-hotfix-004.test.mjs')
+          test_path.write_text(r'''import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { test } from "node:test";
+import { getVerifiedUdiRateMetadata } from "../docs/static-preview/quote-runtime/forge-quote-calculators.js";
+
+const adapter = await readFile(
+  new URL("../docs/static-preview/forge-aura/quotes/quotes-adapter.js", import.meta.url),
+  "utf8",
+);
+const calculators = await readFile(
+  new URL("../docs/static-preview/quote-runtime/forge-quote-calculators.js", import.meta.url),
+  "utf8",
+);
+
+test("UDI rate provider cannot keep Quotes loading forever", async () => {
+  const startedAt = Date.now();
+  const metadata = await getVerifiedUdiRateMetadata({
+    rateProvider: () => new Promise(() => {}),
+    timeoutMs: 25,
+  });
+  const elapsed = Date.now() - startedAt;
+  assert.equal(metadata.status, "BLOCKED_NO_VERIFIED_UDI_RATE");
+  assert.equal(metadata.currentUdiValue, null);
+  assert.ok(elapsed < 500, `provider timeout took ${elapsed}ms`);
+});
+
+test("Aura Quotes bounds parser and calculation waits", () => {
+  assert.match(adapter, /QUOTE_PARSE_TIMEOUT_MS = 62000/);
+  assert.match(adapter, /QUOTE_CALCULATION_TIMEOUT_MS = 15000/);
+  assert.match(adapter, /withQuoteTimeout\([\s\S]*parsePdfFileToAcceptedQuotePacket\(file\)/);
+  assert.match(adapter, /withQuoteTimeout\([\s\S]*calculateAcceptedQuote\(packet\)/);
+  assert.match(adapter, /no dejar la pantalla cargando indefinidamente/);
+});
+
+test("non-calculable policy-shaped documents get an actionable exit", () => {
+  assert.match(adapter, /Este PDF no contiene una cotización calculable/);
+  assert.match(adapter, /póliza emitida o un documento de Cartera/);
+});
+
+test("verified UDI lookup is itself bounded", () => {
+  assert.match(calculators, /UDI_RATE_PROVIDER_TIMEOUT_MS = 5000/);
+  assert.match(calculators, /awaitRateProviderWithTimeout\(rateProvider, timeoutMs\)/);
+});
+''')
+          PY
+      - name: Verify no-hang contract and preserved quote authorities
+        run: |
+          node --check docs/static-preview/forge-aura/quotes/quotes-adapter.js
+          node --check docs/static-preview/quote-runtime/forge-quote-calculators.js
+          node --test tests/aura-quotes-pdf-nohang-hotfix-004.test.mjs
+          node tests/forge-aura-quotes-reconciliation-test.mjs
+          node manager-os/tests/accepted-quote-review-snapshot-boundary-master-test.js
+          node --test tests/imagina-ser-product-dashboard-adapter-test.mjs tests/orvi-product-dashboard-adapter-test.mjs
+          node advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+          node advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
+          node manager-os/tests/sales-presentation-review-packet-engine-master-test.js
+          node manager-os/tests/sales-presentation-existing-assembly-contract-e2e-master-test.js
+          node --test tests/pages-explicit-deployment-governance.test.mjs
+      - name: Remove one-shot patch workflow and commit verified repair
+        shell: bash
+        run: |
+          rm .github/workflows/aura-quotes-pdf-nohang-patch-004.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/static-preview/forge-aura/quotes/quotes-adapter.js \
+                  docs/static-preview/quote-runtime/forge-quote-calculators.js \
+                  tests/aura-quotes-pdf-nohang-hotfix-004.test.mjs \
+                  .github/workflows/aura-quotes-pdf-nohang-patch-004.yml
+          git commit -m "fix(quotes): bound PDF and UDI waits"
+          git push origin HEAD:hotfix/aura-quotes-pdf-nohang-004
