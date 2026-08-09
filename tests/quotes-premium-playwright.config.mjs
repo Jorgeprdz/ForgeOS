@@ -16,6 +16,7 @@ export default defineConfig({
   },
   webServer: {
     command: "python3 -m http.server 4182 --bind 127.0.0.1",
+    cwd: "..",
     url: "http://127.0.0.1:4182/tests/fixtures/aura-quotes-premium-decision-experience-002.html",
     reuseExistingServer: false,
     timeout: 30_000,
