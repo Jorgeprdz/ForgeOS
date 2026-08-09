@@ -1,6 +1,6 @@
 import { createCarteraModule as createBaseCarteraModule } from './cartera-module-v5.js?base=cartera-person-workspace-directory-projection-016';
 import { loadCarteraPersonProjection } from './cartera-adapter-pages-v11.js?v=cartera-person-workspace-directory-projection-016';
-import { maskPolicyNumber, truthLabel } from './cartera-core.js';
+import { escapeHtml as e } from './cartera-core.js';
 import { presentProductReference } from './cartera-person-projection-016.js?v=cartera-person-workspace-directory-projection-016';
 
 const ENTITY_LABEL = Object.freeze({ PERSON: 'Persona', ACCOUNT: 'Cuenta', POLICY: 'Póliza' });
@@ -40,29 +40,29 @@ function summaryMarkup(projection) {
       <div class="cartera-person-summary-016__heading">
         <div>
           <p class="cartera-eyebrow">RESUMEN</p>
-          <h2>${projection?.relationshipLabel || 'Persona'}</h2>
+          <h2>${e(projection?.relationshipLabel || 'Persona')}</h2>
           <p>Identidad confirmada y contexto disponible desde sus autoridades de origen.</p>
         </div>
-        <div class="cartera-person-policy-count-016" data-source-state="${policyState}">
-          <strong>${policyStateSummary(projection)}</strong>
+        <div class="cartera-person-policy-count-016" data-source-state="${e(policyState)}">
+          <strong>${e(policyStateSummary(projection))}</strong>
           <span>Pólizas</span>
         </div>
       </div>
-      <div class="cartera-person-contact-grid-016" data-source-state="${contactState}">
+      <div class="cartera-person-contact-grid-016" data-source-state="${e(contactState)}">
         <article>
           <small>Teléfono</small>
-          <strong>${contactLabel(contacts.phone)}</strong>
-          <span>${contactMeta(contacts.phone)}</span>
+          <strong>${e(contactLabel(contacts.phone))}</strong>
+          <span>${e(contactMeta(contacts.phone))}</span>
         </article>
         <article>
           <small>WhatsApp</small>
-          <strong>${contactLabel(contacts.whatsapp)}</strong>
-          <span>${contactMeta(contacts.whatsapp)}</span>
+          <strong>${e(contactLabel(contacts.whatsapp))}</strong>
+          <span>${e(contactMeta(contacts.whatsapp))}</span>
         </article>
         <article>
           <small>Correo</small>
-          <strong>${contactLabel(contacts.email)}</strong>
-          <span>${contactMeta(contacts.email)}</span>
+          <strong>${e(contactLabel(contacts.email))}</strong>
+          <span>${e(contactMeta(contacts.email))}</span>
         </article>
       </div>
       ${contactState === 'UNAVAILABLE' ? '<p class="cartera-person-source-note-016">No pudimos consultar los datos de contacto. Esto no significa que la persona no tenga información registrada.</p>' : ''}
