@@ -20,6 +20,7 @@ test('legacy pending packet refresh is append-only and governed', () => {
   assert.doesNotMatch(migration, /delete\s+from\s+public\.cartera020b_policy_evidence_packets/i);
   assert.match(migration, /PENDING_CONFIRMATION/);
   assert.match(migration, /creates_truth[\s\S]*false/i);
+  assert.match(migration, /forge_cartera020b_has_forbidden_payload_keys\(extracted_fields, 0\)/);
   assert.match(migration, /revoke all on function[\s\S]*from public, anon, authenticated/i);
   assert.match(migration, /grant execute on function[\s\S]*to authenticated/i);
 });
@@ -39,6 +40,18 @@ test('same-PDF refresh prefers an existing semantic refresh packet before invoki
   assert.ok(firstRefreshRead >= 0 && refreshCall > firstRefreshRead);
   assert.match(adapter, /POLICY_PACKET:AURA:SEMANTIC_REFRESH:/);
   assert.match(adapter, /forge_cartera020b_refresh_pending_packet_semantics/);
+});
+
+test('pending review list deduplicates stale and refreshed packets by document and prefers semantic refresh', () => {
+  assert.match(adapter, /pendingReviewRefreshDeduplication:\s*true/);
+  assert.match(adapter, /function pendingReviewKey\(review\)/);
+  assert.match(adapter, /split\(':'\)\.filter\(Boolean\)\.at\(-1\)/);
+  assert.match(adapter, /function dedupePendingReviews\(reviews = \[\]\)/);
+  assert.match(adapter, /includes\(':SEMANTIC_REFRESH:'\)/);
+  assert.match(adapter, /if \(!current \|\| \(refreshed && !currentRefreshed\)\) byDocument\.set\(key, review\)/);
+  const listBlock = adapter.slice(adapter.indexOf('async listPendingEvidenceReviews()'));
+  assert.match(listBlock, /adapter\.listPendingEvidenceReviews\(\)/);
+  assert.match(listBlock, /dedupePendingReviews\(reviews\)/);
 });
 
 test('drag and drop is normalized into the exact hidden input change pipeline', () => {
