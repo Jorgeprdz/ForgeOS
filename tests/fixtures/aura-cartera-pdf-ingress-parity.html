@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Aura Cartera PDF ingress parity</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-semantic-012.css">
+  <style>html,body{margin:0;min-height:100%;background:#f5f6fa}body{font-family:Inter,system-ui,sans-serif}#fixture-main{min-height:100vh}</style>
+</head>
+<body>
+  <main id="fixture-main" tabindex="-1"></main>
+  <script type="module">
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v5.js?v=cartera-pdf-ingress-legacy-refresh';
+
+    window.__ENV__ = { SUPABASE_ANON_KEY: 'TEST_ONLY' };
+    const USER_ID = '00000000-0000-4000-8000-000000000015';
+    const trace = window.__PDF_INGRESS_PARITY_TRACE__ = {
+      functionInvocations: [], refreshCommands: [], packetReads: [],
+      legacyPacketReads: 0, refreshPacketReads: 0,
+    };
+
+    const field = value => ({
+      value, confidence: 1, state: value === null ? 'UNKNOWN' : 'EXTRACTED',
+      parserId: 'cartera-pdf-intake', parserVersion: 'legacy-parser',
+      extractionMethod: 'EDGE_FUNCTION_REVIEW', sourceLocation: null, createsTruth: false,
+    });
+
+    const DIGEST_TOKEN = 'ca56a36d094f05260e830fe36a2c5efdd10d3624';
+    const LEGACY_PACKET_REF = `POLICY_PACKET:AURA:${DIGEST_TOKEN}`;
+    const REFRESH_PACKET_REF = `POLICY_PACKET:AURA:SEMANTIC_REFRESH:${DIGEST_TOKEN}`;
+    const identityCandidates = [{
+      candidateReference: `IDENTITY_CANDIDATE:AURA:${DIGEST_TOKEN.slice(0,36)}`,
+      candidateType: 'EXISTING_PERSON_OR_NEW_PERSON', state: 'UNRESOLVED', required: true,
+      displayName: 'Persona Sintética Uno', createsTruth: false,
+    }];
+    const legacyPacket = {
+      packet_reference: LEGACY_PACKET_REF,
+      extraction_confidence: 1,
+      confirmation_state: 'PENDING_CONFIRMATION',
+      identity_candidates: identityCandidates,
+      policy_role_candidates: [], existing_policy_candidates: [],
+      warnings: ['POLICY_COVERAGE_EXTRACTION_NOT_SUPPORTED'],
+      extracted_fields: {
+        status: field('NORMAL'),
+        holderName: field('Persona Sintética Uno'),
+        insuredName: field('Persona Sintética Uno'),
+        contractorName: field('Persona Sintética Uno'),
+        policyNumber: field('VI0003006169'),
+        productName: field('IMAGINA SER 65 - 15 PAGOS UDI'),
+        effectiveFrom: field('05/AGO/2026'),
+        effectiveTo: field('05/AGO/2053'),
+        premiumAmount: field('6,816.96'),
+      },
+    };
+    let refreshPacket = null;
+
+    const coverageCandidates = Array.from({ length: 10 }, (_, index) => ({
+      candidateReference: `PDF_COVERAGE_CANDIDATE:${index + 1}`,
+      coverageLabel: `Cobertura sintética ${index + 1}`,
+      coverageCode: `COV-${String(index + 1).padStart(2, '0')}`,
+      annexReference: `ANEXO-${String(index + 1).padStart(2, '0')}`,
+      sumInsured: 100000 + index * 10000,
+      currency: 'UDI', effectiveFrom: '2026-08-05',
+      coveragePeriod: { value: 27, unit: 'YEAR' },
+      paymentPeriod: { value: 15, unit: 'YEAR' },
+      premiumAmount: 100 + index * 10,
+      evidenceReference: `page:1:coverage:${index + 1}`,
+      source: 'PDF_DOCUMENT', sourceSection: 'COBERTURAS', confidence: .95,
+      createsTruth: false, requiresHumanReview: true,
+    }));
+
+    const currentEdgeCandidate = {
+      person: 'Persona Sintética Uno', insured: 'Persona Sintética Uno', contractor: 'Persona Sintética Uno',
+      policyNumber: 'VI0003006169', product: 'IMAGINA SER 65 - 15 PAGOS UDI',
+      policyType: 'NORMAL', status: null,
+      issueDate: '2026-08-05', effectiveDate: '2026-08-05', expirationDate: '2053-08-05',
+      currency: 'UDI', paymentFrequency: 'MONTHLY',
+      basicPremiumTotal: 3976.96, plannedPremium: 2840, annualTotal: 6816.96,
+      beneficiariesDetected: true, coverageSectionDetected: true, coverageCandidates,
+      confidence: .98, createsTruth: false, requiresHumanReview: true,
+    };
+
+    function emptyQuery(data = []) {
+      const result = { data, error: null };
+      let proxy;
+      proxy = new Proxy({}, {
+        get(_target, property) {
+          if (property === 'then') return (resolve, reject) => Promise.resolve(result).then(resolve, reject);
+          if (property === 'single' || property === 'maybeSingle') return async () => ({ data: null, error: null });
+          return () => proxy;
+        },
+      });
+      return proxy;
+    }
+
+    function packetQuery() {
+      const filters = {};
+      let proxy;
+      const resultForFilters = () => {
+        const reference = filters.packet_reference;
+        trace.packetReads.push(reference || 'LIST');
+        if (reference === REFRESH_PACKET_REF) {
+          trace.refreshPacketReads += 1;
+          return refreshPacket;
+        }
+        if (reference === LEGACY_PACKET_REF) {
+          trace.legacyPacketReads += 1;
+          return legacyPacket;
+        }
+        return null;
+      };
+      proxy = new Proxy({}, {
+        get(_target, property) {
+          if (property === 'then') {
+            const rows = [refreshPacket, legacyPacket].filter(Boolean);
+            return (resolve, reject) => Promise.resolve({ data: rows, error: null }).then(resolve, reject);
+          }
+          if (property === 'eq') return (column, value) => { filters[column] = value; return proxy; };
+          if (property === 'single' || property === 'maybeSingle') return async () => ({ data: resultForFilters(), error: null });
+          return () => proxy;
+        },
+      });
+      return proxy;
+    }
+
+    const fakeClient = {
+      auth: {
+        async getUser() { return { data: { user: { id: USER_ID } }, error: null }; },
+        async getSession() { return { data: { session: { access_token: 'TEST_ONLY' } }, error: null }; },
+      },
+      from(table) {
+        if (table === 'cartera020b_policy_evidence_packets') return packetQuery();
+        return emptyQuery([]);
+      },
+      functions: {
+        async invoke(name, { body } = {}) {
+          trace.functionInvocations.push({
+            name, fileName: body?.fileName || null, mimeType: body?.mimeType || null,
+            base64Length: String(body?.base64 || '').length,
+          });
+          if (name !== 'cartera-pdf-intake') return { data: null, error: new Error('UNEXPECTED_FUNCTION') };
+          return { data: {
+            ok: true, intakeId: 'INTAKE:INGRESS:PARITY',
+            functionVersion: 'current-semantic-refresh', modelVersion: 'fixture-current-edge',
+            candidates: [structuredClone(currentEdgeCandidate)],
+          }, error: null };
+        },
+      },
+      async rpc(name, args = {}) {
+        if (name === 'forge_cartera020b_refresh_pending_packet_semantics') {
+          trace.refreshCommands.push(structuredClone(args.p_command));
+          const command = args.p_command;
+          refreshPacket = {
+            packet_reference: command.refreshPacketReference,
+            extracted_fields: structuredClone(command.extractedFields),
+            extraction_confidence: command.extractionConfidence,
+            confirmation_state: 'PENDING_CONFIRMATION',
+            identity_candidates: identityCandidates,
+            policy_role_candidates: [], existing_policy_candidates: [],
+            warnings: structuredClone(command.warnings || []),
+          };
+          return { data: {
+            status: 'REFRESHED', packetReference: refreshPacket.packet_reference,
+            extractedFields: refreshPacket.extracted_fields,
+            extractionConfidence: refreshPacket.extraction_confidence,
+            confirmationState: 'PENDING_CONFIRMATION', createsPolicy: false,
+          }, error: null };
+        }
+        if (name === 'forge_cartera030d_list_policy_payment_calendar') return { data: { summary: {}, items: [] }, error: null };
+        if (name === 'forge_cartera050_list_future_radar') return { data: { items: [] }, error: null };
+        return { data: [], error: null };
+      },
+    };
+
+    const module = createCarteraModule({ root: document.querySelector('#fixture-main'), client: fakeClient, windowRef: window, globalState: () => {} });
+    await module.mount();
+    document.documentElement.dataset.ingressParityHarness = 'READY';
+    window.__LEGACY_PACKET_REF__ = LEGACY_PACKET_REF;
+    window.__REFRESH_PACKET_REF__ = REFRESH_PACKET_REF;
+  </script>
+</body>
+</html>
