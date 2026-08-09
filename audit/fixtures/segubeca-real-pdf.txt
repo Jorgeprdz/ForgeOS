@@ -1,0 +1,70 @@
+ESTUDIO DE VIDA INDIVIDUAL
+GENERAR ESTUDIO SeguBeca 18
+Asesor profesional de seguros UDI
+Nombre: ANA KAREN GARZA LOPERENA
+Teléfono: 55525 e-mail: anakarengarza99@gmail.com
+Gracias por permitirnos presentarte este estudio, esperamos que sea de tu interés:
+Datos Nombre Preferente Fecha de Edad Edad de Sexo Fumado
+generales Nacimiento Cálculo r
+Titular hijoo hijoo No 25/06/2022 4 4 Masculino No
+Contratante Juan Perez No 29/09/1992 33 31 Masculino No
+Coberturas Plazo de Suma Prima Anualizada
+Cobertura Asegurada
+SeguBeca 18 (SeguBeca 18) 14 años 30,000 2,284.33
+Protección por Fallecimiento e Invalidez del Contratante (PIM 18 CT UI) 14 años Amparado 73.06
+Cobertura de Protección Absoluta (CPA UI) 14 años 60,000 72.60
+Beneficio de Asistencia Médica (BAM UI) 1 REN Amparado SIN COSTO
+Beneficio de Pago de Suma Asegurada por Invalidez Total y Permanente (BAIT SB 18) 14 años 60,000 94.20
+Apoyo en Vida (AV UI) 1 REN Amparado SIN COSTO
+Prima Total Anual 2,524.19
+Además te Plazo de Suma Prima
+recomendamos Cobertura Asegurada Anualizada
+adquirir
+ADAPTA (ADAPTA) 5 REN 100,000 418.73
+Beneficio por Muerte Accidental (BMA) 14 años 60,000 78.00
+Certificado de Garantía de Contratación (CGC) 26 años 2,500 59.18
+Prima total con beneficios recomendados 3,080.09
+VALORES GARANTIZADOS
+Porcentaje de Edad Real Prima Anual Prima Anual Valor de Rescate Valor en Efectivo Recuperación Suma Asegurada
+Recuperación Acumulada con AVE Total Básico
+Total AVE
+0.00 % 4 2,524 2,524 0 0 0 2,284
+0.00 % 5 2,524 5,048 0 0 0 4,568
+20.02 % 6 2,524 7,573 0 1,516 1,516 6,852
+24.98 % 7 2,524 10,097 0 2,522 2,522 9,137
+30.53 % 8 2,524 12,621 0 3,853 3,853 11,421
+36.55 % 9 2,524 15,145 0 5,536 5,536 13,705
+42.92 % 10 2,524 17,669 0 7,584 7,584 15,990
+49.47 % 11 2,524 20,194 0 9,990 9,990 18,274
+56.02 % 12 2,524 22,718 0 12,727 12,727 30,000
+62.39 % 13 2,524 25,242 0 15,749 15,749 30,000
+68.42 % 14 2,524 27,766 0 18,997 18,997 30,000
+73.96 % 15 2,524 30,290 0 22,404 22,404 30,000
+78.93 % 16 2,524 32,814 0 25,900 25,900 30,000
+84.89 % 17 2,524 35,339 0 30,000 30,000 30,000
+ADMINISTRACIÓN DEL AHORRO
+La administración del ahorro será a través del producto llamado Aumento al Valor en Efectivo (AVE).
+La tasa de interes para entrega mensual es estimada a 1.0% anual vigente al momento de la cotización. Esta tasa es la que se otorgaría durante los 4 años de la administración del ahorro.
+Edad del Beneficio por
+Año póliza Suma asegurada a administrar Entrega mensual Entrega acumulada fallecimiento Valor en efectivo
+Asegurado
+1 18 30,000 637 7,647 22,819 24,979
+2 19 22,612 637 15,294 15,288 19,353
+3 20 15,149 637 22,941 7,682 13,362
+4 21 7,612 637 30,588 - 6,702
+GLOSARIO DE TÉRMINOS LEER DETALLADAMENTE
+Porcentaje de Recuperación Total Representa lo que el cliente obtendría en caso de que decida no continuar con su seguro en relación con todas las aportaciones que ha efectuado.
+Prima Anual Es el costo del seguro que paga el cliente anualmente por las coberturas contratadas (excepto AVE).
+Prima Anual Acumulada con AVE Es el acumulado del costo anual del seguro por las coberturas contratadas.
+Recuperación Total Es el monto que el cliente puede disponer en caso de que decida no continuar con su seguro por concepto de la cobertura básica y de la(s) cobertura(s) adicional(es) AVE contratada(s).
+Suma Asegurada Básico Es la cantidad contratada en la cobertura básica que se le paga a los beneficiarios designados en la póliza en caso de fallecimiento del (los) asegurado(s).
+Valor de Rescate AVE Es el monto que el cliente puede disponer por la(s) cobertura(s) AVE contratada(s).
+Valor en Efectivo Es el monto que el cliente puede disponer en caso de que decida no continuar con su seguro.
+NOTAS
+La entrega mensual estimada fue calculada con una tasa de interés real de: 1.0% anual. Esta tasa es hipotética y no es garantizada.
+Todas las cantidades están expresadas en Unidades de Inversión (UDI).
+En caso de supervivencia del asegurado a la edad de 18, la compañía pagará al mismo 30,000 Unidades de Inversión (UDI).
+El plan básico y sus coberturas terminan al transcurrir los años de cobertura indicados en este estudio.
+Este estudio es ilustrativo y no forma parte del contrato del seguro.
+La presente cotización tendrá una vigencia de 30 días naturales contados a partir de la fecha de su elaboración.
+Este estudio se realizó con Solucionline versión 2.18.5.0 del día domingo, 12 de julio de 2026.
