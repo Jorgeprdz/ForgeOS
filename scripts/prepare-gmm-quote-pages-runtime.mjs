@@ -90,24 +90,41 @@ await transform(browserParser, (source) => {
 });
 
 await transform(auraQuotesAdapter, (source) => {
-  const oldImport = [
+  const acceptedImport = [
     'import {',
     '  calculateAcceptedQuote,',
     '  validatePacket,',
     '} from "../../quote-runtime/forge-accepted-quote-adapter.js";',
   ].join("\n");
-  const newImport = oldImport.replace(
+  const acceptedImport006 = acceptedImport.replace(
     "forge-accepted-quote-adapter.js",
     "forge-accepted-quote-adapter-006.js",
   );
-  if (source.includes(newImport)) return source;
-  if (!source.includes(oldImport)) {
-    throw new Error("Aura Quotes accepted-quote adapter import boundary is missing");
+  const decisionImport =
+    'import { buildProductSpecificDecisionReadModel } from "../../quote-runtime/forge-product-specific-decision-read-model.js";';
+  const decisionImport006 = decisionImport.replace(
+    "forge-product-specific-decision-read-model.js",
+    "forge-product-specific-decision-read-model-006.js",
+  );
+
+  let next = source;
+  if (!next.includes(acceptedImport006)) {
+    if (!next.includes(acceptedImport)) {
+      throw new Error("Aura Quotes accepted-quote adapter import boundary is missing");
+    }
+    next = next.replace(acceptedImport, acceptedImport006);
   }
-  return source.replace(oldImport, newImport);
+  if (!next.includes(decisionImport006)) {
+    if (!next.includes(decisionImport)) {
+      throw new Error("Aura Quotes product decision read-model import boundary is missing");
+    }
+    next = next.replace(decisionImport, decisionImport006);
+  }
+  return next;
 });
 
 console.log("PHASE_006_GMM_PAGES_RUNTIME_PREPARED=PASS");
 console.log("GMM_CANONICAL_PARSER_MIRRORED_FOR_PAGES=PASS");
 console.log("GMM_PDF_ROUTE_WIRED=PASS");
 console.log("GMM_RETIREMENT_FALLTHROUGH_BLOCKED=PASS");
+console.log("GMM_AURA_DECISION_PROJECTION_WIRED=PASS");
