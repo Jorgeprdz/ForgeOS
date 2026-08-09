@@ -1,0 +1,105 @@
+name: Forge Product and Economic Decision Completion 006
+
+on:
+  push:
+    branches:
+      - feature/forge-product-economic-decision-completion-006
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/quote-runtime/**'
+      - 'docs/static-preview/forge-aura/quotes/**'
+      - 'docs/static-preview/forge-aura/income/**'
+      - 'product-intelligence/evidence/gmm-quote-parser.js'
+      - 'scripts/prepare-gmm-quote-pages-runtime.mjs'
+      - 'scripts/build-advisor-presentation-pages-runtime.mjs'
+      - 'tests/forge-product-economic-decision-completion-006.test.mjs'
+      - 'docs/evidence/FORGE_PRODUCT_AND_ECONOMIC_DECISION_COMPLETION_006_EVIDENCE.md'
+      - '.github/workflows/forge-product-economic-decision-completion-006.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-product-economic-decision-completion-006-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phase-006:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Syntax gate
+        run: |
+          node --check docs/static-preview/quote-runtime/forge-gmm-product-decision-adapter.js
+          node --check docs/static-preview/quote-runtime/forge-accepted-quote-adapter-006.js
+          node --check docs/static-preview/quote-runtime/forge-product-specific-decision-read-model-006.js
+          node --check scripts/prepare-gmm-quote-pages-runtime.mjs
+          node --check scripts/build-advisor-presentation-pages-runtime.mjs
+          node --check tests/forge-product-economic-decision-completion-006.test.mjs
+
+      - name: PHASE_006_IMPLEMENTATION_ACCEPTANCE
+        run: node --test tests/forge-product-economic-decision-completion-006.test.mjs
+
+      - name: Existing four-product Quotes regressions
+        run: |
+          node tests/aura-quotes-product-specific-decision-experience-003.test.mjs
+          node tests/aura-quotes-premium-decision-experience-002.test.mjs
+          node tests/imagina-ser-product-dashboard-adapter-test.mjs
+          node tests/segubeca-product-dashboard-adapter-test.mjs
+          node tests/orvi-accepted-quote-end-to-end-dashboard-test.mjs
+          node tests/quote-benefit-summary-engine-test.mjs
+
+      - name: GMM and quote-printable authority regressions
+        run: |
+          node advisor-os/quotes/tests/quote-printable-product-profile-master-test.js
+          node tests/pdf-browser-parser-smoke-test.mjs
+          node tests/quote-preview-pdf-engine-parser-ownership-registry-adapter-083b-test.js
+
+      - name: Economic truth and forecast regressions
+        run: |
+          node --test tests/income-aura-ux-reconciliation.test.mjs
+          node manager-os/tests/manager-advisor-forecast-engine-master-test.js
+          node compensation/advisor/tests/advisor-compensation-stage-040-master-test.js
+
+      - name: 005B-R1 and 005C authority regressions
+        run: |
+          node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
+          node --test tests/writable-synthetic-acceptance-005c.test.mjs
+
+      - name: Authenticated session and REP-17 contracts
+        run: |
+          node --test tests/authenticated-session-controls-test.mjs
+          node --test tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Generate productive Pages runtime
+        env:
+          FORGE_PAGES_RUNTIME: "true"
+        run: |
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          test -f docs/static-preview/quote-runtime/gmm-quote-parser-authority.js
+          grep -q 'parseGmmQuoteTextToAcceptedQuotePacket' docs/static-preview/quote-runtime/forge-pdf-browser-parser.js
+          grep -q 'forge-accepted-quote-adapter-006.js' docs/static-preview/forge-aura/quotes/quotes-adapter.js
+          grep -q 'forge-product-specific-decision-read-model-006.js' docs/static-preview/forge-aura/quotes/quotes-adapter.js
+          node --check docs/static-preview/quote-runtime/gmm-quote-parser-authority.js
+          node --check docs/static-preview/quote-runtime/forge-pdf-browser-parser.js
+          node --check docs/static-preview/forge-aura/quotes/quotes-adapter.js
+
+      - name: Pages/import graph regression
+        run: node --test tests/rep-16f-pages-runtime-generator-test.mjs
+
+      - name: Bounded diff and whitespace
+        run: |
+          git diff --check origin/main...HEAD
+          git diff --name-only origin/main...HEAD
