@@ -5,28 +5,33 @@ import fs from 'node:fs';
 const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4-r1.js', 'utf8');
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 const bootstrap = fs.readFileSync('docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js', 'utf8');
-const moduleV4 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v4.js', 'utf8');
+const moduleV5 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5.js', 'utf8');
+const v9 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js', 'utf8');
 const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js', 'utf8');
 const v7 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js', 'utf8');
 const semantic = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js', 'utf8');
 
-test('canonical Aura r1 maps the inherited Cartera specifier to semantic completion 014', () => {
+test('canonical Aura r1 maps inherited Cartera specifier to current selector/drop parity boundary', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-adapter-pages-v8\.js\?v=cartera-pdf-semantic-completion-014/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-completion-014"/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(index, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-pdf-ingress-legacy-refresh"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-ingress-legacy-refresh/);
   assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
 });
 
-test('module v4 injects semantic v8 without replacing unrelated Cartera surfaces', () => {
-  assert.match(moduleV4, /createBaseCarteraModule/);
-  assert.match(moduleV4, /createSemanticCarteraAdapter/);
-  assert.match(moduleV4, /MutationObserver/);
-  assert.match(moduleV4, /data-semantic-review="014"/);
-  assert.match(moduleV4, /semanticReviewCompleteness/);
+test('current module keeps semantic review while unifying drop through the hidden input', () => {
+  assert.match(moduleV5, /createBaseCarteraModule/);
+  assert.match(moduleV5, /createSemanticCarteraAdapter/);
+  assert.match(moduleV5, /cartera-adapter-pages-v9/);
+  assert.match(moduleV5, /MutationObserver/);
+  assert.match(moduleV5, /data-semantic-review="014"/);
+  assert.match(moduleV5, /semanticReviewCompleteness/);
+  assert.match(moduleV5, /input\.dispatchEvent\(new windowRef\.Event\('change'/);
 });
 
-test('v8 still wraps the accepted v7 to v1 chain', () => {
+test('v9 preserves accepted v8 to v1 chain and adds bounded legacy refresh', () => {
+  assert.match(v9, /cartera-adapter-pages-v8\.js/);
+  assert.match(v9, /forge_cartera020b_refresh_pending_packet_semantics/);
   assert.match(v8, /cartera-adapter-pages-v7\.js\?base=cartera-pdf-semantic-completion-014/);
   assert.match(v8, /pdfSemanticCompletion014:\s*true/);
   assert.match(v7, /cartera-adapter-pages-v6\.js\?base=cartera-pdf-already-admitted-reopen-011/);
