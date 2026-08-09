@@ -38,7 +38,22 @@ async function authenticate(api, email, password, key) {
   return data.user;
 }
 
-async function ensureFixture(api, advisorId, context, syntheticPhone) {
+async function archivePriorActiveFixture(api, advisorId, row) {
+  if (!row?.id) return false;
+  const now = new Date().toISOString();
+  const archived = await api.from('prospects').update({
+    archived_at: now,
+    archived_by: advisorId,
+    archive_reason: 'FORGE_005B_R1_RETRY_RESET',
+    updated_by: advisorId,
+  }).eq('advisor_id', advisorId).eq('id', row.id).is('archived_at', null)
+    .select('id,archived_at');
+  assert.ifError(archived.error);
+  assert.equal((archived.data || []).length, 1, `005B_R1_PRIOR_FIXTURE_ARCHIVE_FAILED:${row.id}`);
+  return true;
+}
+
+async function createFreshFixture(api, advisorId, context, syntheticPhone) {
   const existing = await api
     .from('prospects')
     .select('id,advisor_id,source,initial_context,archived_at')
@@ -49,19 +64,7 @@ async function ensureFixture(api, advisorId, context, syntheticPhone) {
   assert.ifError(existing.error);
   assert.ok((existing.data || []).length <= 1, `005B_R1_DUPLICATE_FIXTURE:${context}`);
 
-  if (existing.data?.[0]?.id) {
-    const reopened = await api.from('prospects').update({
-      display_name: PRIMARY_NAME,
-      full_name: PRIMARY_NAME,
-      phone_normalized: syntheticPhone,
-      status: 'referred_new',
-      updated_by: advisorId,
-    }).eq('advisor_id', advisorId).eq('id', existing.data[0].id)
-      .select('id,advisor_id,source,initial_context,archived_at').single();
-    assert.ifError(reopened.error);
-    return reopened.data;
-  }
-
+  const priorArchived = await archivePriorActiveFixture(api, advisorId, existing.data?.[0]);
   const inserted = await api.from('prospects').insert({
     advisor_id: advisorId,
     display_name: PRIMARY_NAME,
@@ -74,7 +77,7 @@ async function ensureFixture(api, advisorId, context, syntheticPhone) {
     updated_by: advisorId,
   }).select('id,advisor_id,source,initial_context,archived_at').single();
   assert.ifError(inserted.error);
-  return inserted.data;
+  return { row: inserted.data, priorArchived };
 }
 
 let a;
@@ -86,8 +89,10 @@ try {
   ]);
   assert.notEqual(a.id, b.id, 'ACCEPTANCE_IDENTITIES_MUST_DIFFER');
 
-  const primary = await ensureFixture(clientA, a.id, PRIMARY_CONTEXT, PRIMARY_SYNTHETIC_PHONE);
-  const ambiguous = await ensureFixture(clientA, a.id, AMBIG_CONTEXT, AMBIG_SYNTHETIC_PHONE);
+  const primaryResult = await createFreshFixture(clientA, a.id, PRIMARY_CONTEXT, PRIMARY_SYNTHETIC_PHONE);
+  const ambiguousResult = await createFreshFixture(clientA, a.id, AMBIG_CONTEXT, AMBIG_SYNTHETIC_PHONE);
+  const primary = primaryResult.row;
+  const ambiguous = ambiguousResult.row;
   assert.notEqual(primary.id, ambiguous.id, '005B_R1_FIXTURES_MUST_DIFFER');
 
   const hiddenFromB = await clientB.from('prospects').select('id').in('id', [primary.id, ambiguous.id]);
@@ -101,6 +106,7 @@ try {
     acceptanceB: 'ACCEPTANCE_B',
     primaryProspectId: primary.id,
     ambiguousProspectId: ambiguous.id,
+    priorFixturesArchivedOwnerScoped: Number(primaryResult.priorArchived) + Number(ambiguousResult.priorArchived),
     fixtureRlsIsolation: true,
     privilegedDomainWrite: false,
     realDataTouched: false,
@@ -115,6 +121,7 @@ try {
   console.log('005B_R1_FIXTURE_PRECONDITION=PASS');
   console.log('005B_R1_ACCEPTANCE_IDENTITIES=PASS');
   console.log('005B_R1_FIXTURE_RLS_ISOLATION=PASS');
+  console.log('005B_R1_PRIOR_FIXTURE_RESET=OWNER_SCOPED');
   console.log('SERVICE_ROLE_DOMAIN_WRITE=NO');
   console.log('REAL_DATA_TOUCHED=NO');
 } finally {
