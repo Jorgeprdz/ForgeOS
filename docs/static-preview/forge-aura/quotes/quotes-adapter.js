@@ -40,6 +40,31 @@ const PRODUCT_LABELS = Object.freeze({
   alfa_medical_flex: "Alfa Medical Flex",
 });
 
+const QUOTE_PARSE_TIMEOUT_MS = 62000;
+const QUOTE_CALCULATION_TIMEOUT_MS = 15000;
+
+async function withQuoteTimeout(promise, timeoutMs, message) {
+  let timer = null;
+  try {
+    return await Promise.race([
+      Promise.resolve(promise),
+      new Promise((_, reject) => {
+        timer = globalThis.setTimeout(() => reject(new Error(message)), timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timer !== null) globalThis.clearTimeout(timer);
+  }
+}
+
+function actionableQuoteLoadError(error) {
+  const message = error?.message || String(error);
+  if (/prima anual no está disponible|plazo de pagos no está disponible|paquete no contiene nativeResult|paquete no contiene context/i.test(message)) {
+    return new Error("Este PDF no contiene una cotización calculable. Si es una póliza emitida o un documento de Cartera, cárgalo en Cartera.");
+  }
+  return error instanceof Error ? error : new Error(message);
+}
+
 function text(value) {
   return value == null ? "" : String(value).trim();
 }
@@ -261,17 +286,29 @@ export function createQuotesProductiveAdapter({ client = null } = {}) {
   async function loadFile(file) {
     clear();
     if (!file) throw new Error("Selecciona una cotización para continuar.");
-    let candidate;
-    if (file.type === "application/pdf" || /\.pdf$/i.test(file.name || "")) {
-      candidate = await parsePdfFileToAcceptedQuotePacket(file);
-    } else {
-      const raw = await file.text();
-      candidate = JSON.parse(raw);
+    try {
+      let candidate;
+      if (file.type === "application/pdf" || /\.pdf$/i.test(file.name || "")) {
+        candidate = await withQuoteTimeout(
+          parsePdfFileToAcceptedQuotePacket(file),
+          QUOTE_PARSE_TIMEOUT_MS,
+          "El PDF tardó demasiado en procesarse. Intenta nuevamente con el archivo original.",
+        );
+      } else {
+        const raw = await file.text();
+        candidate = JSON.parse(raw);
+      }
+      packet = validatePacket(candidate);
+      calculation = await withQuoteTimeout(
+        calculateAcceptedQuote(packet),
+        QUOTE_CALCULATION_TIMEOUT_MS,
+        "El cálculo de la cotización tardó demasiado. Forge detuvo la espera para no dejar la pantalla cargando indefinidamente.",
+      );
+      viewModel = buildViewModel(packet, calculation);
+      return Object.freeze({ packet, calculation, viewModel });
+    } catch (error) {
+      throw actionableQuoteLoadError(error);
     }
-    packet = validatePacket(candidate);
-    calculation = await calculateAcceptedQuote(packet);
-    viewModel = buildViewModel(packet, calculation);
-    return Object.freeze({ packet, calculation, viewModel });
   }
 
   async function accept() {
@@ -399,4 +436,6 @@ export const __quotesAuraTest = Object.freeze({
   normalizeCommercialProductLabel: commercialProduct,
   productFamily,
   buildViewModel,
+  withQuoteTimeout,
+  timeoutMs: Object.freeze({ parse: QUOTE_PARSE_TIMEOUT_MS, calculation: QUOTE_CALCULATION_TIMEOUT_MS }),
 });
