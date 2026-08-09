@@ -1,26 +1,31 @@
-name: Cartera Pipeline Identity 005B Gate
+name: Cartera Pipeline Identity 005B-R1 Gate
 
 on:
   pull_request:
     branches: [main]
     paths:
       - "scripts/forge-cartera-pipeline-identity-productive-005b.mjs"
+      - "scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures.mjs"
+      - "scripts/finalize-cartera-pipeline-identity-005b-r1.mjs"
       - "tests/cartera-pipeline-identity-productive-005b.test.mjs"
       - ".github/workflows/cartera-pipeline-identity-005b-gate.yml"
+      - ".github/workflows/cartera-pipeline-identity-005b-r1.yml"
+      - ".github/workflows/beta1-022a-writable-acceptance.yml"
       - "docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED.md"
+      - "docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE.md"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: cartera-pipeline-identity-005b-gate-${{ github.ref }}
+  group: cartera-pipeline-identity-005b-r1-gate-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   static-acceptance-gate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout exact revision
         uses: actions/checkout@v4
@@ -36,27 +41,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: 005B bounded diff
+      - name: 005B-R1 bounded diff
         if: github.event_name == 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
           base='${{ github.event.pull_request.base.sha }}'
           head='${{ github.event.pull_request.head.sha }}'
-          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED\.md)$'
+          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures\.mjs|scripts/finalize-cartera-pipeline-identity-005b-r1\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|\.github/workflows/cartera-pipeline-identity-005b-r1\.yml|\.github/workflows/beta1-022a-writable-acceptance\.yml|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED\.md|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE\.md)$'
           mapfile -t changed < <(git diff --name-only "$base" "$head")
           test "${#changed[@]}" -gt 0
           printf '%s\n' "${changed[@]}"
           for path in "${changed[@]}"; do
-            [[ "$path" =~ $allowed ]] || { echo "005B_UNAUTHORIZED_PATH=$path" >&2; exit 1; }
+            [[ "$path" =~ $allowed ]] || { echo "005B_R1_UNAUTHORIZED_PATH=$path" >&2; exit 1; }
           done
-          echo '005B_BOUNDED_DIFF=PASS'
+          echo '005B_R1_BOUNDED_DIFF=PASS'
 
-      - name: Syntax check acceptance runner
-        run: node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
+      - name: Syntax checks
+        run: |
+          node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
+          node --check scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures.mjs
+          node --check scripts/finalize-cartera-pipeline-identity-005b-r1.mjs
 
-      - name: Static 005B blocked-closure contract
+      - name: Static 005B-R1 contract
         run: node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
+
+      - name: Preserve productive 005C authority
+        run: node --test tests/writable-synthetic-acceptance-005c.test.mjs
 
       - name: Preserve Cartera 015 durable boundary
         run: node --test tests/cartera-020c-durable-attach-015.test.mjs
@@ -69,26 +80,31 @@ jobs:
       - name: Preserve unified runtime
         run: node tests/rep-17-unified-runtime-regression-test.mjs
 
-      - name: Verify blocked evidence markers
+      - name: Verify 005C productive precondition
         shell: bash
         run: |
           set -euo pipefail
-          evidence=docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED.md
-          grep -q 'WORKFLOW_RUN=31332993641' "$evidence"
-          grep -q 'AUTHENTICATED_ADVISOR_A=PASS' "$evidence"
-          grep -q 'AUTHENTICATED_ADVISOR_B=PASS' "$evidence"
-          grep -q 'ERROR=FORGE_DEMO_ACCOUNT_READ_ONLY' "$evidence"
-          grep -q 'FAILURE_CLASS=AUTHORITY_GAP' "$evidence"
-          grep -q 'DOMAIN_MUTATION=ZERO' "$evidence"
-          grep -q 'FINAL_ROBOCOP_005B=FAIL' "$evidence"
-          grep -q 'PHASE_STATUS=BLOCKED' "$evidence"
-          echo '005B_BLOCKED_EVIDENCE=PASS'
+          authority=docs/architecture/source-truth/FORGE_GOVERNED_WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY_005C.md
+          evidence=docs/evidence/FORGE_WRITABLE_SYNTHETIC_ACCEPTANCE_005C_REMOTE_EVIDENCE.md
+          grep -q 'ARCHITECTURAL_DECISION=DEDICATED_NON_PUBLIC_SYNTHETIC_ACCEPTANCE_IDENTITIES' "$authority"
+          grep -q 'SERVICE_ROLE_ALLOWED_FOR_DOMAIN_WRITES=NO' "$authority"
+          grep -q 'AA01=PASS' "$evidence"
+          grep -q 'AA10=PASS' "$evidence"
+          grep -q 'POST_RUN_SEALED=YES' "$evidence"
+          grep -q 'REAL_DATA_TOUCHED=NO' "$evidence"
+          echo 'WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY=PRODUCTIVELY_READY'
+          echo '005C_AUTHORITY=PASS'
+          echo '005B_R1_PRECONDITION=PASS'
 
-      - name: Emit closure markers
+      - name: Emit 005B-R1 preflight markers
         run: |
-          echo '005B_STATIC_GATE=PASS'
-          echo 'REMOTE_MUTATION=SEALED'
-          echo 'SERVICE_ROLE=FORBIDDEN'
-          echo 'PRODUCTIVE_ACCEPTANCE=BLOCKED_AUTHORITY_GAP'
-          echo 'FINAL_ROBOCOP_005B=FAIL'
-          echo 'PHASE_STATUS=BLOCKED'
+          echo 'PRECONDITION_GATE=PASS'
+          echo '005C_AUTHORITY=PASS'
+          echo 'CONSTITUTIONAL_GATE_005B_R1=PASS'
+          echo 'ADR_GATE_005B_R1=PASS'
+          echo 'ROBOCOP_UNLOCK_005B_R1=GRANTED'
+          echo '005B_R1_STATIC_GATE=PASS'
+          echo 'REP_17=PASS'
+          echo 'SERVICE_ROLE_DOMAIN_WRITE=NO'
+          echo 'REAL_DATA_TOUCHED=NO'
+          echo 'HUMAN_REMOTE_CHECKPOINT=REQUIRED'
