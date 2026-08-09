@@ -63,6 +63,7 @@ jobs:
           node --test
           tests/aura-quotes-premium-decision-experience-002.test.mjs
           tests/aura-quotes-premium-decision-experience-002-scope-guard.test.mjs
+          tests/aura-quotes-pdf-nohang-hotfix-005.test.mjs
       - name: Existing Aura Quotes reconciliation regression
         run: node tests/forge-aura-quotes-reconciliation-test.mjs
       - name: Accepted Quote review regression
