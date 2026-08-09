@@ -1,0 +1,128 @@
+name: Cartera Pipeline Identity 005B Remote Acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      authorization:
+        description: Type YES:CARTERA_PIPELINE_IDENTITY_005B_REMOTE_MUTATION
+        required: true
+        type: string
+      write_confirmation:
+        description: Type YES to authorize synthetic acceptance writes
+        required: true
+        type: string
+      expected_head:
+        description: Exact 005B commit SHA to execute
+        required: true
+        type: string
+      project_ref:
+        description: Exact governed Supabase project ref
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-pipeline-identity-005b-remote
+  cancel-in-progress: false
+
+jobs:
+  productive-acceptance:
+    if: github.repository == 'Jorgeprdz/ForgeOS' && github.actor == 'Jorgeprdz'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: 067g17a1-remote-acceptance
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      ADVISOR_A_EMAIL: ${{ secrets.ADVISOR_A_EMAIL }}
+      ADVISOR_A_PASSWORD: ${{ secrets.ADVISOR_A_PASSWORD }}
+      ADVISOR_B_EMAIL: ${{ secrets.ADVISOR_B_EMAIL }}
+      ADVISOR_B_PASSWORD: ${{ secrets.ADVISOR_B_PASSWORD }}
+      FORGE_005B_REMOTE_ACCEPTANCE_AUTHORIZATION: ${{ inputs.authorization }}
+      FORGE_005B_REMOTE_WRITE_CONFIRMATION: ${{ inputs.write_confirmation }}
+      FORGE_005B_EVIDENCE_DIR: artifacts/cartera-pipeline-identity-005b
+
+    steps:
+      - name: Checkout exact authorized head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.expected_head }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Authorization and source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ inputs.authorization }}' = 'YES:CARTERA_PIPELINE_IDENTITY_005B_REMOTE_MUTATION'
+          test '${{ inputs.write_confirmation }}' = 'YES'
+          test '${{ inputs.project_ref }}' = 'rmlxigxysujsuwzgoimv'
+          test "$(git rev-parse HEAD)" = '${{ inputs.expected_head }}'
+          git merge-base --is-ancestor 9289197780efd23d70be7528a1191e0509cdae40 HEAD
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_ANON_KEY"
+          test -n "$ADVISOR_A_EMAIL"
+          test -n "$ADVISOR_A_PASSWORD"
+          test -n "$ADVISOR_B_EMAIL"
+          test -n "$ADVISOR_B_PASSWORD"
+          echo '005B_REMOTE_AUTHORIZATION=PASS'
+          echo '005B_EXACT_HEAD=PASS'
+          echo '005B_PROJECT_REF=PASS'
+          echo 'SERVICE_ROLE=ABSENT'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Preflight exact runner
+        run: |
+          node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
+          node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
+
+      - name: Execute authenticated productive acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module scripts/forge-cartera-pipeline-identity-productive-005b.mjs \
+            | tee artifacts-005b-output.log
+
+      - name: Verify acceptance markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=artifacts-005b-output.log
+          for marker in \
+            AUTHENTICATED_ADVISOR_A=PASS \
+            AUTHENTICATED_ADVISOR_B=PASS \
+            PA01=PASS \
+            PA02=PASS \
+            PA03=PASS \
+            PA04=PASS \
+            PA05=PASS \
+            PA06=PASS \
+            PA07=PASS \
+            PRODUCTIVE_READ_AFTER_WRITE=PASS \
+            NO_AUTOMATIC_IDENTITY=PASS \
+            NO_DUPLICATE_PERSON=PASS \
+            NO_DUPLICATE_ACTIVE_LINK=PASS \
+            FORGE_CARTERA_PIPELINE_IDENTITY_PRODUCTIVE_ACCEPTANCE_005B=PASS; do
+            grep -q "$marker" "$log"
+          done
+          echo '005B_PRODUCTIVE_ACCEPTANCE=PASS'
+
+      - name: Upload sanitized acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-pipeline-identity-005b-${{ inputs.expected_head }}
+          path: |
+            artifacts/cartera-pipeline-identity-005b/report.json
+            artifacts-005b-output.log
+          if-no-files-found: warn
+          retention-days: 30
