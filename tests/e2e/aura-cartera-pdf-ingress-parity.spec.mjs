@@ -46,9 +46,15 @@ function buildPdf() {
 const PDF = buildPdf();
 const EXPECTED_DIGEST = createHash('sha256').update(PDF).digest('hex');
 
+async function assertV10Loaded(page) {
+  const resources = await page.evaluate(() => performance.getEntriesByType('resource').map(entry => entry.name));
+  expect(resources.some(name => name.includes('/cartera/cartera-adapter-pages-v10.js'))).toBeTruthy();
+}
+
 async function openChooser(page) {
   await page.goto(FIXTURE, { waitUntil: 'networkidle' });
   await expect(page.locator('html')).toHaveAttribute('data-ingress-parity-harness', 'READY');
+  await assertV10Loaded(page);
   await page.locator('[data-add-policy]').first().click();
   await expect(page.locator('[data-pdf-input]')).toBeAttached();
   await expect(page.locator('[data-pdf-drop]')).toBeVisible();
@@ -121,7 +127,6 @@ async function expectSemanticCompletion(page) {
   await expect(page.getByText('Beneficiarios detectados', { exact: true })).toBeVisible();
 }
 
-// MEDIA SELECTOR — CHECK 1/3: the real input path hashes the uploaded bytes and invokes current Edge once.
 test('selector check 1/3 — transport reaches current Edge from legacy pending packet', async ({ page }) => {
   await openChooser(page);
   await selectPdf(page);
@@ -136,7 +141,6 @@ test('selector check 1/3 — transport reaches current Edge from legacy pending 
   expect(value.legacyPacketReads).toBeGreaterThanOrEqual(1);
 });
 
-// MEDIA SELECTOR — CHECK 2/3: legacy semantics are replaced only by an append-only refresh review.
 test('selector check 2/3 — append-only semantic refresh renders complete human review', async ({ page }) => {
   await openChooser(page);
   await selectPdf(page);
@@ -156,7 +160,6 @@ test('selector check 2/3 — append-only semantic refresh renders complete human
   await page.screenshot({ path: 'test-results/aura-cartera-pdf-ingress-parity/selector-semantic.png', fullPage: true });
 });
 
-// MEDIA SELECTOR — CHECK 3/3: reopening the same PDF uses the refreshed packet and does not re-extract.
 test('selector check 3/3 — same PDF reopens refreshed packet without second Edge call', async ({ page }) => {
   await openChooser(page);
   await selectPdf(page);
@@ -174,7 +177,6 @@ test('selector check 3/3 — same PDF reopens refreshed packet without second Ed
   expect(second.refreshPacketReads).toBeGreaterThan(first.refreshPacketReads);
 });
 
-// DRAG & DROP — CHECK 1/3: item-only / octet-stream drops are normalized into the same hidden input pipeline.
 test('drag drop check 1/3 — items-only octet-stream PDF reaches selector-equivalent transport', async ({ page }) => {
   await openChooser(page);
   await dropPdf(page, { itemsOnly: true });
@@ -189,7 +191,6 @@ test('drag drop check 1/3 — items-only octet-stream PDF reaches selector-equiv
   await expect(page.locator('[data-pdf-drop-error]')).toHaveCount(0);
 });
 
-// DRAG & DROP — CHECK 2/3: semantic result must be complete and identical in meaning to selector ingestion.
 test('drag drop check 2/3 — semantic refresh survives drag and drop', async ({ page }) => {
   await openChooser(page);
   await dropPdf(page, { itemsOnly: false });
@@ -200,7 +201,6 @@ test('drag drop check 2/3 — semantic refresh survives drag and drop', async ({
   await page.screenshot({ path: 'test-results/aura-cartera-pdf-ingress-parity/drop-semantic.png', fullPage: true });
 });
 
-// DRAG & DROP — CHECK 3/3: repeated drops reopen the refreshed packet without duplicate extraction/refresh.
 test('drag drop check 3/3 — repeated drop reopens refreshed packet without duplicate work', async ({ page }) => {
   await openChooser(page);
   await dropPdf(page, { itemsOnly: true });
@@ -217,7 +217,6 @@ test('drag drop check 3/3 — repeated drop reopens refreshed packet without dup
   expect(second.refreshPacketReads).toBeGreaterThan(first.refreshPacketReads);
 });
 
-// PARITY CHECK: both ingress methods must produce the same digest and visible semantics.
 test('selector and drag drop produce identical digest and semantic snapshot', async ({ browser }) => {
   const selectorPage = await browser.newPage();
   const dropPage = await browser.newPage();
