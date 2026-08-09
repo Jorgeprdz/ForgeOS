@@ -27,16 +27,12 @@
       extractionMethod: 'EDGE_FUNCTION_REVIEW', sourceLocation: null, createsTruth: false,
     });
 
-    const DIGEST_TOKEN = 'ca56a36d094f05260e830fe36a2c5efdd10d3624';
-    const LEGACY_PACKET_REF = `POLICY_PACKET:AURA:${DIGEST_TOKEN}`;
-    const REFRESH_PACKET_REF = `POLICY_PACKET:AURA:SEMANTIC_REFRESH:${DIGEST_TOKEN}`;
     const identityCandidates = [{
-      candidateReference: `IDENTITY_CANDIDATE:AURA:${DIGEST_TOKEN.slice(0,36)}`,
+      candidateReference: 'IDENTITY_CANDIDATE:AURA:SYNTHETIC_LEGACY',
       candidateType: 'EXISTING_PERSON_OR_NEW_PERSON', state: 'UNRESOLVED', required: true,
       displayName: 'Persona Sintética Uno', createsTruth: false,
     }];
-    const legacyPacket = {
-      packet_reference: LEGACY_PACKET_REF,
+    const legacyPacketTemplate = {
       extraction_confidence: 1,
       confirmation_state: 'PENDING_CONFIRMATION',
       identity_candidates: identityCandidates,
@@ -95,26 +91,30 @@
       return proxy;
     }
 
+    function legacyPacket(reference) {
+      return { ...structuredClone(legacyPacketTemplate), packet_reference: reference };
+    }
+
     function packetQuery() {
       const filters = {};
       let proxy;
       const resultForFilters = () => {
-        const reference = filters.packet_reference;
+        const reference = String(filters.packet_reference || '');
         trace.packetReads.push(reference || 'LIST');
-        if (reference === REFRESH_PACKET_REF) {
+        if (reference.startsWith('POLICY_PACKET:AURA:SEMANTIC_REFRESH:')) {
           trace.refreshPacketReads += 1;
-          return refreshPacket;
+          return refreshPacket?.packet_reference === reference ? refreshPacket : null;
         }
-        if (reference === LEGACY_PACKET_REF) {
+        if (reference.startsWith('POLICY_PACKET:AURA:')) {
           trace.legacyPacketReads += 1;
-          return legacyPacket;
+          return legacyPacket(reference);
         }
         return null;
       };
       proxy = new Proxy({}, {
         get(_target, property) {
           if (property === 'then') {
-            const rows = [refreshPacket, legacyPacket].filter(Boolean);
+            const rows = [refreshPacket].filter(Boolean);
             return (resolve, reject) => Promise.resolve({ data: rows, error: null }).then(resolve, reject);
           }
           if (property === 'eq') return (column, value) => { filters[column] = value; return proxy; };
@@ -177,8 +177,6 @@
     const module = createCarteraModule({ root: document.querySelector('#fixture-main'), client: fakeClient, windowRef: window, globalState: () => {} });
     await module.mount();
     document.documentElement.dataset.ingressParityHarness = 'READY';
-    window.__LEGACY_PACKET_REF__ = LEGACY_PACKET_REF;
-    window.__REFRESH_PACKET_REF__ = REFRESH_PACKET_REF;
   </script>
 </body>
 </html>
