@@ -79,6 +79,19 @@ function batchExpectedPeople(batch) {
     .filter(Boolean);
 }
 
+function identityStageReplayResult(statusResult) {
+  const state = statusResult?.data?.state;
+  if (!['POLICY_READY','POLICY_EXECUTING','CONFIRMED'].includes(state)) return statusResult;
+  return {
+    ...statusResult,
+    data: {
+      ...statusResult.data,
+      state: 'IDENTITY_CONFIRMED',
+      replayed: true,
+    },
+  };
+}
+
 function clientWithDurable020c(client) {
   return new Proxy(client, {
     get(target, property) {
@@ -95,7 +108,7 @@ function clientWithDurable020c(client) {
               if (durable && expected.length && expected.some(person => person !== durable)) {
                 return { data: null, error: fail('CARTERA020C_DURABLE_IDENTITY_SELECTION_MISMATCH') };
               }
-              return statusResult;
+              return identityStageReplayResult(statusResult);
             }
           }
           return target.rpc(PREPARE_CANONICAL_RPC, args, options);
