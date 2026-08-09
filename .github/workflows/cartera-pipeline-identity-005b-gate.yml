@@ -8,6 +8,7 @@ on:
       - "scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures.mjs"
       - "scripts/finalize-cartera-pipeline-identity-005b-r1.mjs"
       - "tests/cartera-pipeline-identity-productive-005b.test.mjs"
+      - "docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js"
       - ".github/workflows/cartera-pipeline-identity-005b-gate.yml"
       - ".github/workflows/cartera-pipeline-identity-005b-r1.yml"
       - ".github/workflows/beta1-022a-writable-acceptance.yml"
@@ -48,7 +49,7 @@ jobs:
           set -euo pipefail
           base='${{ github.event.pull_request.base.sha }}'
           head='${{ github.event.pull_request.head.sha }}'
-          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures\.mjs|scripts/finalize-cartera-pipeline-identity-005b-r1\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|\.github/workflows/cartera-pipeline-identity-005b-r1\.yml|\.github/workflows/beta1-022a-writable-acceptance\.yml|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED\.md|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE\.md)$'
+          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures\.mjs|scripts/finalize-cartera-pipeline-identity-005b-r1\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10\.js|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|\.github/workflows/cartera-pipeline-identity-005b-r1\.yml|\.github/workflows/beta1-022a-writable-acceptance\.yml|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED\.md|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE\.md)$'
           mapfile -t changed < <(git diff --name-only "$base" "$head")
           test "${#changed[@]}" -gt 0
           printf '%s\n' "${changed[@]}"
@@ -62,6 +63,7 @@ jobs:
           node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
           node --check scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures.mjs
           node --check scripts/finalize-cartera-pipeline-identity-005b-r1.mjs
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
 
       - name: Static 005B-R1 contract
         run: node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
