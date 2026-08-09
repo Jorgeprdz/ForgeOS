@@ -30,7 +30,7 @@ test('Edge extraction contract preserves the golden document semantics', () => {
   assert.match(edge, /PRIMA B[ÁA]SICA TOTAL|PRIMA BASICA TOTAL/i);
   assert.match(edge, /PRIMA PLANEADA/i);
   assert.match(edge, /TOTAL ANUAL/i);
-  assert.match(edge, /MONEDA UDI/);
+  assert.match(edge, /declara UDI, currency=UDI/);
   assert.match(edge, /NORMAL es policyType/);
   assert.match(edge, /automaticCoverageCreation:\s*false/);
   assert.match(edge, /semanticRecoveryReasons/);
