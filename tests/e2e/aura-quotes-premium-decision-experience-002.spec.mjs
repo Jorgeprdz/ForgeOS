@@ -11,12 +11,16 @@ async function openFixture(page, viewport, query = "") {
   await expect(page.getByRole("heading", { name: "Cotizaciones", exact: true })).toBeVisible();
 }
 
-async function loadQuote(page) {
-  await page.locator("[data-quotes-file]").setInputFiles({
+function filePayload() {
+  return {
     name: "cotizacion-fixture.json",
     mimeType: "application/json",
     buffer: Buffer.from("{}"),
-  });
+  };
+}
+
+async function loadQuote(page) {
+  await page.locator("[data-quotes-file]").setInputFiles(filePayload());
   await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", /READY|PARTIAL/);
   await expect(page.getByRole("button", { name: "Revisar y confirmar" })).toBeVisible();
 }
@@ -32,6 +36,7 @@ for (const [label, viewport] of [
 ]) {
   test(`empty-${label} preserves Aura hierarchy`, async ({ page }) => {
     await openFixture(page, viewport);
+    await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "EMPTY");
     await expect(page.getByText("Convierte una cotización en una propuesta lista para presentar.")).toBeVisible();
     await expect(page.getByRole("button", { name: "+ Nueva cotización" })).toBeVisible();
     await screenshot(page, `empty-${label}`);
@@ -46,6 +51,17 @@ for (const [label, viewport] of [
     await screenshot(page, `calculated-${label}`);
   });
 }
+
+test("LOADING exposes honest progress before the productive result exists", async ({ page }) => {
+  await openFixture(page, { width: 430, height: 932 }, "?delay=450");
+  const upload = page.locator("[data-quotes-file]").setInputFiles(filePayload());
+  await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "LOADING");
+  await expect(page.getByRole("heading", { name: "Calculando cotización" })).toBeVisible();
+  await expect(page.getByText("Archivo recibido", { exact: true })).toBeVisible();
+  await expect(page.getByText("Procesando evidencia y motores productivos", { exact: true })).toBeVisible();
+  await upload;
+  await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "READY");
+});
 
 test("confirmed-mobile prioritizes Presentation Maker after human review", async ({ page }) => {
   await openFixture(page, { width: 390, height: 844 });
@@ -71,11 +87,25 @@ test("PARTIAL keeps pending evidence visible without turning unknown into zero",
   await openFixture(page, { width: 430, height: 932 }, "?partial=1&economic=0");
   await loadQuote(page);
   await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "PARTIAL");
-  await expect(page.getByText("Cotización calculada con información pendiente", { exact: true }).filter({ visible: true })).toBeVisible();
+  await expect(page.locator(".aura-quotes__hero-status").getByText("Cotización calculada con información pendiente", { exact: true })).toBeVisible();
   await expect(page.locator(".aura-quotes__contextual-cta").getByText("Información pendiente", { exact: true })).toBeVisible();
   await page.getByRole("tab", { name: "Evidencia" }).click();
   await expect(page.getByText("UNAVAILABLE", { exact: true })).toBeVisible();
   await expect(page.getByText(/No se creó un valor sustituto/)).toBeVisible();
+});
+
+test("ERROR is explicit when the quote cannot be calculated", async ({ page }) => {
+  await openFixture(page, { width: 430, height: 932 }, "?mode=error");
+  await page.locator("[data-quotes-file]").setInputFiles(filePayload());
+  await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "ERROR");
+  await expect(page.locator(".aura-quotes__state").getByText("No se pudo calcular la cotización", { exact: true })).toBeVisible();
+});
+
+test("UNAVAILABLE is explicit when the productive authority is unavailable", async ({ page }) => {
+  await openFixture(page, { width: 834, height: 1194 }, "?mode=unavailable");
+  await page.locator("[data-quotes-file]").setInputFiles(filePayload());
+  await expect(page.locator("[data-aura-quotes]")).toHaveAttribute("data-state", "UNAVAILABLE");
+  await expect(page.locator(".aura-quotes__state").getByText("Cotización no disponible", { exact: true })).toBeVisible();
 });
 
 test("keyboard tabs, visible focus and modal focus trap remain usable", async ({ page }) => {
