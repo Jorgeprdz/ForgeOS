@@ -1,10 +1,11 @@
 .cartera-semantic-review{display:grid;gap:16px}
 .cartera-semantic-hero,.cartera-semantic-section{border:1px solid var(--aura-border,#e7e9ee);border-radius:20px;background:var(--aura-surface,#fff)}
-.cartera-semantic-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;padding:18px}
-.cartera-semantic-hero h3,.cartera-semantic-section h3{margin:2px 0 5px;font-size:18px}
-.cartera-semantic-hero p,.cartera-semantic-section header p{margin:0;color:var(--aura-muted,#667085);font-size:13px;line-height:1.45}
-.cartera-semantic-rail{min-width:170px;display:grid;align-content:start;gap:4px;padding:12px 14px;border-radius:14px;background:var(--aura-subtle,#f6f7fb)}
+.cartera-semantic-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,280px);gap:18px;padding:18px}
+.cartera-semantic-hero>div{min-width:0}.cartera-semantic-hero h3,.cartera-semantic-section h3{margin:2px 0 5px;font-size:18px}
+.cartera-semantic-hero h3{overflow-wrap:anywhere}.cartera-semantic-hero p,.cartera-semantic-section header p{margin:0;color:var(--aura-muted,#667085);font-size:13px;line-height:1.45}
+.cartera-semantic-rail{min-width:0;width:100%;display:grid;align-content:start;gap:4px;padding:12px 14px;border-radius:14px;background:var(--aura-subtle,#f6f7fb)}
 .cartera-semantic-rail strong{font-size:15px}.cartera-semantic-rail span,.cartera-semantic-rail small{font-size:12px;color:var(--aura-muted,#667085)}
+.cartera-semantic-rail strong,.cartera-semantic-rail span,.cartera-semantic-rail small{min-width:0;overflow-wrap:anywhere;white-space:normal}
 .cartera-semantic-section{padding:18px}.cartera-semantic-section>header{display:flex;justify-content:space-between;gap:16px;align-items:start;margin-bottom:12px}
 .cartera-semantic-section>header>span{font-size:12px;font-weight:800;color:var(--aura-muted,#667085)}
 .cartera-semantic-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
@@ -35,5 +36,5 @@
 .cartera-semantic-confirm{position:sticky;bottom:0;grid-column:1/-1;display:flex;justify-content:space-between;gap:14px;align-items:center;margin:6px -18px 0;padding:14px 18px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--aura-border,#e7e9ee);background:color-mix(in srgb,var(--aura-surface,#fff) 94%,transparent);backdrop-filter:blur(12px);z-index:3}
 .cartera-semantic-confirm strong,.cartera-semantic-confirm small{display:block}.cartera-semantic-confirm small{margin-top:2px;color:var(--aura-muted,#667085);font-size:11px}
 .cartera-semantic-confirm button{min-height:48px;flex:0 0 auto}.cartera-semantic-confirm .cartera-primary{background:var(--cartera-violet,#6d5dfc);color:#fff}.cartera-semantic-confirm button:disabled{opacity:.5;cursor:not-allowed}
-@media(max-width:820px){.cartera-semantic-facts{grid-template-columns:repeat(2,minmax(0,1fr))}.cartera-semantic-premiums{grid-template-columns:1fr}.cartera-semantic-coverage{grid-template-columns:auto 1fr 1fr}.cartera-semantic-coverage__main{grid-column:2/-1}}
+@media(max-width:820px){.cartera-semantic-hero{grid-template-columns:minmax(0,1fr) minmax(190px,240px)}.cartera-semantic-facts{grid-template-columns:repeat(2,minmax(0,1fr))}.cartera-semantic-premiums{grid-template-columns:1fr}.cartera-semantic-coverage{grid-template-columns:auto 1fr 1fr}.cartera-semantic-coverage__main{grid-column:2/-1}}
 @media(max-width:640px){.cartera-semantic-hero{grid-template-columns:1fr}.cartera-semantic-rail{min-width:0}.cartera-semantic-facts,.cartera-semantic-parties,.cartera-semantic-decisions{grid-template-columns:1fr}.cartera-semantic-choice,.cartera-semantic-role-confirm,.cartera-semantic-pending,.cartera-semantic-confirm{grid-column:1}.cartera-semantic-choice label{display:flex;margin:8px 0}.cartera-semantic-coverage{grid-template-columns:auto minmax(0,1fr);align-items:start}.cartera-semantic-coverage>span{grid-column:2}.cartera-semantic-confirm{position:relative;bottom:auto;margin:6px -18px 0;padding:14px 18px calc(16px + env(safe-area-inset-bottom));align-items:stretch;flex-direction:column}.cartera-semantic-confirm button{display:block;width:100%;min-height:48px;flex:0 0 auto}}
