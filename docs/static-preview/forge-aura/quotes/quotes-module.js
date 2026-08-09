@@ -313,7 +313,7 @@ export function createQuotesModule({ root, client, globalState, adapterFactory =
         <p>${failed ? esc(errorMessage || copy[1]) : "Sube el PDF. Forge reutiliza la detección, extracción, cálculo y evidencia existentes para construir una propuesta revisable."}</p>
       </div>
       <label class="aura-quotes__dropzone" data-quotes-dropzone>
-        <input type="file" accept=".pdf,application/pdf,.json,application/json" data-quotes-file ${busyAction ? "disabled" : ""}>
+        <input type="file" accept=".pdf,application/pdf,.json,application/json" data-quotes-file data-forge-pdf-owner="native" ${busyAction ? "disabled" : ""}>
         <span aria-hidden="true" class="aura-quotes__upload-mark">↑</span>
         <strong>${failed ? "Prueba con otro archivo" : "Arrastra el PDF aquí"}</strong>
         <span>o</span>

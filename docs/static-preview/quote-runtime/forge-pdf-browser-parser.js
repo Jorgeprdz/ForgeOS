@@ -1346,6 +1346,9 @@ function installPdfInputInterceptor107z15p2R11E() {
     const input = event.target;
     if (!(input instanceof HTMLInputElement)) return;
     if (input.type !== "file") return;
+    // Native owners process their own file input. This guard must run before
+    // the legacy capture interceptor calls preventDefault/stopImmediatePropagation.
+    if (input.dataset.forgePdfOwner === "native") return;
     const file = input.files?.[0];
     if (!isPdfFile107z15p2R11E(file)) return;
 
