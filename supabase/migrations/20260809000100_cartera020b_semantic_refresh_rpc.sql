@@ -86,7 +86,7 @@ begin
      or parser_version !~ '^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,119}$'
      or refreshed_at is null or refreshed_at > now() + interval '5 minutes'
      or jsonb_typeof(extracted_fields) <> 'object'
-     or public.forge_cartera020b_has_forbidden_payload_keys(extracted_fields)
+     or public.forge_cartera020b_has_forbidden_payload_keys(extracted_fields, 0)
      or not public.forge_cartera020b_string_array_valid(warnings, 0, 100)
      or not public.forge_cartera020b_string_array_valid(missing_fields, 0, 100)
      or (extraction_confidence is not null and (extraction_confidence < 0 or extraction_confidence > 1)) then
