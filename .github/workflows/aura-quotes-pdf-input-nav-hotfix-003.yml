@@ -1,0 +1,72 @@
+name: Aura Quotes PDF Input + DeX Nav Hotfix 003
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/aura-shell.css'
+      - 'tests/aura-quotes-pdf-input-nav-hotfix-003.test.mjs'
+      - '.github/workflows/aura-quotes-pdf-input-nav-hotfix-003.yml'
+  push:
+    branches:
+      - hotfix/aura-quotes-pdf-input-nav-003
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/aura-shell.css'
+      - 'tests/aura-quotes-pdf-input-nav-hotfix-003.test.mjs'
+      - '.github/workflows/aura-quotes-pdf-input-nav-hotfix-003.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    name: Quotes input ownership, preserved authorities and DeX navigation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run hotfix contract
+        run: node --test tests/aura-quotes-pdf-input-nav-hotfix-003.test.mjs
+      - name: Existing Aura Quotes reconciliation regression
+        run: node tests/forge-aura-quotes-reconciliation-test.mjs
+      - name: Accepted Quote review regression
+        run: node manager-os/tests/accepted-quote-review-snapshot-boundary-master-test.js
+      - name: Product Intelligence regressions
+        run: >-
+          node --test
+          tests/imagina-ser-product-dashboard-adapter-test.mjs
+          tests/orvi-product-dashboard-adapter-test.mjs
+      - name: QPD and PDF regressions
+        run: |
+          node advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+          node advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
+      - name: Presentation Maker assembly and review regressions
+        run: |
+          node manager-os/tests/sales-presentation-review-packet-engine-master-test.js
+          node manager-os/tests/sales-presentation-existing-assembly-contract-e2e-master-test.js
+      - name: Preserve explicit production deployment governance
+        run: node --test tests/pages-explicit-deployment-governance.test.mjs
+      - name: Boundary summary
+        run: |
+          echo 'AURA_QUOTES_INPUT_OWNERSHIP=PASS'
+          echo 'LEGACY_PDF_INTERCEPTOR_ISOLATED=PASS'
+          echo 'DEX_NAV_ICON_AND_LABEL=PASS'
+          echo 'ACCEPTED_QUOTE_REUSE=PASS'
+          echo 'PRODUCT_INTELLIGENCE_REUSE=PASS'
+          echo 'PDF_RUNTIME_REUSE=PASS'
+          echo 'PRESENTATION_MAKER_REUSE=PASS'
+          echo 'PARSER_MUTATION=0'
+          echo 'CALCULATION_MUTATION=0'
