@@ -69,7 +69,6 @@ async function ensureAcceptanceUser(
   if (existing?.id) {
     const { data, error } = await admin.auth.admin.updateUserById(existing.id, {
       password,
-      email_confirm: true,
       user_metadata: {
         forgeDataClass: "SYNTHETIC",
         forgePurpose: ACCEPTANCE_PURPOSE,
