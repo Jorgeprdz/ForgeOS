@@ -7,7 +7,7 @@ on:
       - "scripts/forge-cartera-pipeline-identity-productive-005b.mjs"
       - "tests/cartera-pipeline-identity-productive-005b.test.mjs"
       - ".github/workflows/cartera-pipeline-identity-005b-gate.yml"
-      - ".github/workflows/cartera-020c-remote-dispatch.yml"
+      - "docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED.md"
   workflow_dispatch:
 
 permissions:
@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           base='${{ github.event.pull_request.base.sha }}'
           head='${{ github.event.pull_request.head.sha }}'
-          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|\.github/workflows/cartera-020c-remote-dispatch\.yml)$'
+          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED\.md)$'
           mapfile -t changed < <(git diff --name-only "$base" "$head")
           test "${#changed[@]}" -gt 0
           printf '%s\n' "${changed[@]}"
@@ -55,7 +55,7 @@ jobs:
       - name: Syntax check acceptance runner
         run: node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
 
-      - name: Static 005B acceptance contract
+      - name: Static 005B blocked-closure contract
         run: node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
 
       - name: Preserve Cartera 015 durable boundary
@@ -69,9 +69,26 @@ jobs:
       - name: Preserve unified runtime
         run: node tests/rep-17-unified-runtime-regression-test.mjs
 
-      - name: Emit preflight markers
+      - name: Verify blocked evidence markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence=docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED.md
+          grep -q 'WORKFLOW_RUN=31332993641' "$evidence"
+          grep -q 'AUTHENTICATED_ADVISOR_A=PASS' "$evidence"
+          grep -q 'AUTHENTICATED_ADVISOR_B=PASS' "$evidence"
+          grep -q 'ERROR=FORGE_DEMO_ACCOUNT_READ_ONLY' "$evidence"
+          grep -q 'FAILURE_CLASS=AUTHORITY_GAP' "$evidence"
+          grep -q 'DOMAIN_MUTATION=ZERO' "$evidence"
+          grep -q 'FINAL_ROBOCOP_005B=FAIL' "$evidence"
+          grep -q 'PHASE_STATUS=BLOCKED' "$evidence"
+          echo '005B_BLOCKED_EVIDENCE=PASS'
+
+      - name: Emit closure markers
         run: |
           echo '005B_STATIC_GATE=PASS'
-          echo 'REMOTE_MUTATION=NONE'
+          echo 'REMOTE_MUTATION=SEALED'
           echo 'SERVICE_ROLE=FORBIDDEN'
-          echo 'HUMAN_REMOTE_CHECKPOINT=REQUIRED'
+          echo 'PRODUCTIVE_ACCEPTANCE=BLOCKED_AUTHORITY_GAP'
+          echo 'FINAL_ROBOCOP_005B=FAIL'
+          echo 'PHASE_STATUS=BLOCKED'
