@@ -41,6 +41,7 @@ const carteraCompatibilityAllowed = [
   carteraSemanticEdge,
   carteraSemanticRefreshMigration,
   carteraDurableAttachMigration,
+  /^scripts\/aura-auth-premium-entry-scope-guard-001\.mjs$/,
   /^tests\/aura-cartera-/,
   /^tests\/cartera-/,
   /^tests\/e2e\/aura-cartera-pdf-spanish-date-regression\.spec\.mjs$/,
