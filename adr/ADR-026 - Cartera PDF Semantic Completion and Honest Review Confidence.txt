@@ -1,0 +1,127 @@
+ADR-026 — Cartera PDF Semantic Completion and Honest Review Confidence
+
+Status: ACCEPTED FOR CARTERA_PDF_SEMANTIC_COMPLETION_014
+Program: FORGE_CARTERA_RELATIONSHIP_INTELLIGENCE
+Phase: CARTERA_PDF_SEMANTIC_COMPLETION_014
+Base main: 4985d4a47989c7adae8c884b48b1dd71310c04ee
+Branch: fix/cartera-pdf-semantic-completion-014
+
+Context
+
+Phase 012 established a safe semantic review boundary and preserved policy type, status, UDI, payment frequency, premium concepts and Coverage candidates when those semantics reached the frontend adapter. A productive Imagina Ser PDF later proved a remaining gap: the Edge extraction could return a non-empty candidate with product, policy number and effective period while omitting issue date, currency, payment frequency and Coverage rows. Because recovery only ran when no candidate existed, the partial result reached human review. The UI then displayed "0 coberturas" and "Confianza alta", which could falsely imply completeness.
+
+This ADR completes, but does not replace, ADR-025. It creates no new truth owner.
+
+Higher-order authority preserved
+
+- Article 0: Forge strengthens human judgment and keeps uncertainty visible.
+- ADR-001: evidence remains source-bound; unknown remains unknown.
+- ADR-003: human authority remains final.
+- ADR-004: missing evidence cannot become a confident invented conclusion.
+- ADR-005: Product Truth remains owned by Product Intelligence.
+- ADR-006: Policy Truth remains owned by Policy Intelligence.
+- ADR-008: economic values preserve evidence, currency and meaning.
+- ADR-023: productive Cartera recovery reuses canonical writers and boundaries.
+- ADR-024: Aura Light 2026 remains the visual authority.
+- ADR-025: PDF evidence, semantic interpretation, human review and canonical truth remain separate.
+
+Decision 1 — Partial candidates trigger semantic recovery.
+
+The presence of a candidate is not evidence that extraction is complete. After the primary model pass, Cartera evaluates critical semantic gaps. Missing issue/effective/expiration dates, currency, payment frequency, distinct premium concepts or Coverage candidates can trigger one focused semantic recovery pass even when product and policy number were already extracted.
+
+Decision 2 — Recovery is fill-only.
+
+The focused recovery pass may fill missing semantics but may not silently overwrite an already extracted primary fact with a conflicting value. Primary and recovery evidence remain traceable through semantic provenance. Conflicts remain reviewable rather than being resolved by last-write-wins behavior.
+
+Decision 3 — Policy type and policy status remain separate domains.
+
+NORMAL is policyType. It never implies ACTIVE, ISSUED, VIGENTE or any other Policy status. Missing status remains null/UNKNOWN until human review or stronger evidence resolves it.
+
+Decision 4 — Policy dates are civil dates.
+
+Issue date, effective date and expiration date are independent calendar facts. YYYY-MM-DD evidence is never normalized through UTC timestamp conversion that can change the calendar day.
+
+Decision 5 — UDI is first-class evidenced currency.
+
+When the document explicitly states UDI, currency remains UDI. It is never silently converted or defaulted to MXN. A future conversion requires rate, source, date and economic-state provenance under ADR-008.
+
+Decision 6 — Premium evidence remains semantically independent.
+
+basicPremiumTotal, plannedPremium and annualTotal are three separate document facts. None is promoted automatically to Policy.premiumAmount and none is calculated from another merely to complete the review.
+
+Decision 7 — Coverage presence and Coverage extraction are different facts.
+
+The extraction contract records whether a Coverage section/table/list was detected. The review distinguishes:
+
+- CANDIDATES_REVIEW_REQUIRED: one or more structured Coverage candidates exist;
+- INCOMPLETE_REVIEW_REQUIRED: a Coverage section was detected but structured rows are missing;
+- NO_COVERAGE_SECTION_DETECTED: the extraction found no Coverage section;
+- COVERAGE_PRESENCE_UNKNOWN: the extraction could not determine section presence.
+
+A detected Coverage section with zero structured rows must never be presented as "0 coberturas" or as proof that the policy contains no coverages.
+
+Decision 8 — Coverage candidates are evidence, not truth.
+
+Every extracted coverage candidate remains createsTruth=false and requiresHumanReview=true. Candidate evidence may include label, code, annex, sum insured, currency, civil effective date, coverage period, payment period, premium and evidence reference. Canonical Coverage can only be created through the existing governed Policy Coverage writer after explicit human confirmation.
+
+Decision 9 — Extraction confidence and review completeness are independent.
+
+Model/extraction confidence describes the quality of a particular extraction result. Review completeness describes whether critical semantic facts needed for an honest human review are present. High extraction confidence cannot erase missing critical fields. The UI must show these concepts separately and must never use a global "Confianza alta" label to imply a complete review when critical facts are missing.
+
+Decision 10 — Same-document reopen must be semantically lossless.
+
+020B persists the recovered semantic fields, including Coverage-section presence. A second upload of the same digest reopens the PENDING_CONFIRMATION packet without invoking Edge again, without a new claim or packet, and reconstructs the same visible semantics and Coverage state.
+
+Decision 11 — Identity and beneficiary safety remain unchanged.
+
+Name equality never performs automatic CommercialPerson merge. Contractor and insured remain separate roles unless explicitly confirmed. General review can reveal only that beneficiary information was detected and restricted; names, percentages, relationship data and beneficiary PII remain excluded from UI, logs, fixtures and screenshots.
+
+Decision 12 — Tests must reproduce the productive failure mode.
+
+A browser fixture that returns a perfect semantic candidate cannot prove recovery. Acceptance must include a primary candidate shaped like the productive failure — non-empty but missing issue date, currency, payment frequency, premium semantics and Coverage rows — followed by the same fill-only recovery merger used by the Edge boundary. The flow must still enter through the real PDF file input and proceed through productive adapters, 020B packet construction, reopen and the review renderer.
+
+Consequences
+
+Positive:
+- partial model success no longer suppresses recovery;
+- UDI, payment frequency, issue date, premium semantics and Coverage candidates can be recovered without overwriting stronger primary facts;
+- "0 coberturas" no longer represents an extraction failure as policy truth;
+- high model confidence cannot mask incomplete review evidence;
+- same-document reopen retains the same semantic meaning;
+- human confirmation remains the truth boundary.
+
+Tradeoffs:
+- some PDFs may require a second model pass;
+- partial documents can produce more explicit review gaps rather than a falsely complete screen;
+- recovery can increase latency, but only when semantic gaps justify it.
+
+Acceptance
+
+CARTERA_PDF_SEMANTIC_COMPLETION_014 may pass only when the exact tested head proves:
+
+- a non-empty partial candidate triggers focused recovery;
+- recovery is fill-only;
+- NORMAL remains policyType and status remains null/UNKNOWN without evidence;
+- issueDate/effectiveDate/expirationDate preserve 2026-08-05 / 2026-08-05 / 2053-08-05 for the golden document;
+- currency=UDI;
+- paymentFrequency=MONTHLY;
+- basicPremiumTotal=3976.96, plannedPremium=2840 and annualTotal=6816.96 remain independent;
+- at least 10 Coverage candidates are available for the golden document and all remain non-truth human-reviewed candidates;
+- Coverage-section presence is preserved through 020B and same-PDF reopen;
+- the UI does not show "0 coberturas" as a confirmed fact for incomplete extraction;
+- extraction confidence is visually separated from review completeness;
+- desktop and 390x844, 412x915 and 430x932 browser acceptance remain usable with no destructive overflow or hidden CTA;
+- inherited Cartera, Income, Quotes, Auth, Home, Direct Route, REP-17 and applicable Command OS gates remain green;
+- merge uses the exact tested PR head;
+- Edge deployment and governed Pages deployment both target the exact merge SHA;
+- final productive real-PDF visual acceptance verifies issue date, UDI, Mensual, separated premiums and Coverage candidates.
+
+Final boundary
+
+DOCUMENT EVIDENCE
+!= MODEL EXTRACTION
+!= FORGE SEMANTIC INTERPRETATION
+!= HUMAN CONFIRMATION
+!= CANONICAL POLICY TRUTH
+
+Semantic completeness improves human review. It does not create truth automatically.

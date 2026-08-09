@@ -31,7 +31,7 @@ const incomeAllowed = [
   /^docs\/evidence\/FORGE_AURA_INCOME_UX_RECONCILIATION_ACCEPTANCE_001\.md$/,
 ];
 
-const carteraSemanticEdge = /^supabase\/functions\/cartera-pdf-intake\/index\.ts$/;
+const carteraSemanticEdge = /^supabase\/functions\/cartera-pdf-intake\/(?:index\.ts|semantic-recovery\.js)$/;
 const carteraCompatibilityAllowed = [
   /^docs\/static-preview\/forge-aura\/cartera\//,
   ...sharedAuraRuntime,
@@ -45,6 +45,8 @@ const carteraCompatibilityAllowed = [
   /^\.github\/workflows\/aura-cartera-productive-reconciliation-001\.yml$/,
   /^\.github\/workflows\/income-aura-ux-reconciliation-001\.yml$/,
   /^adr\/ADR-025 .*Cartera PDF Semantic Review Boundary\.txt$/,
+  /^adr\/ADR-026 - Cartera PDF Semantic Completion and Honest Review Confidence\.txt$/,
+  /^docs\/evidence\/FORGE_CARTERA_PDF_SEMANTIC_COMPLETION_014_PROGRESS\.md$/,
   /^tests\/income-(?:pages-import-graph|cartera-cross-module|scope-guard)\.test\.mjs$/,
 ];
 
@@ -152,5 +154,6 @@ test("scope guard explicitly blocks engine, rule pack, database, unrelated Edge 
     assert.equal(forbidden.some(pattern => pattern.test(sample)), true, sample);
   }
   assert.equal(carteraSemanticEdge.test('supabase/functions/cartera-pdf-intake/index.ts'), true);
+  assert.equal(carteraSemanticEdge.test('supabase/functions/cartera-pdf-intake/semantic-recovery.js'), true);
   assert.equal(carteraSemanticEdge.test('supabase/functions/unrelated-edge/index.ts'), false);
 });

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Aura Cartera PDF semantic regression 012</title>
+  <title>Aura Cartera PDF semantic completion 014</title>
   <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
   <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
   <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-semantic-012.css">
@@ -16,12 +16,14 @@
 <body>
   <main id="fixture-main" tabindex="-1"></main>
   <script type="module">
-    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v4.js?v=cartera-pdf-semantic-reconciliation-012';
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v4.js?v=cartera-pdf-semantic-completion-014';
+    import { mergeSemanticCandidateLists, semanticRecoveryReasons } from '/supabase/functions/cartera-pdf-intake/semantic-recovery.js';
 
     window.__ENV__ = { SUPABASE_ANON_KEY: 'TEST_ONLY' };
     const trace = window.__PDF_FULL_CHAIN_TRACE__ = {
       functionInvocations: [], rpcNames: [], resultStages: [], resultSemanticSnapshots: [],
       admitted: false, claims: 0, pendingReviewReads: 0, storedPendingReview: false,
+      edgePrimary: null, edgeRecovery: null, edgeMerged: null, semanticRecoveryReasons: [],
     };
 
     function emptyQuery(data = []) {
@@ -65,25 +67,48 @@
       annexReference: `ANEXO-${String(index + 1).padStart(2, '0')}`,
       sumInsured: 100000 + index * 10000,
       currency: 'UDI',
-      effectiveFrom: '05/AGO/2026',
+      effectiveFrom: '2026-08-05',
       coveragePeriod: { value: 27, unit: 'YEAR' },
       paymentPeriod: { value: index < 5 ? 15 : 10, unit: 'YEAR' },
       premiumAmount: 100 + index * 10,
+      evidenceReference: `page:1:coverage:${index + 1}`,
       source: 'PDF_DOCUMENT', sourceSection: 'COBERTURAS', sourceLocation: `page:1:coverage:${index + 1}`,
       confidence: .98 - index * .01,
+      createsTruth: false,
+      requiresHumanReview: true,
     }));
 
-    const semanticCandidate = {
+    // Mirrors the real productive failure observed after phase 012: the model found
+    // the policy/product/effective period, but omitted issue date, currency,
+    // payment frequency, premium semantics and coverage rows while still reporting
+    // high extraction confidence.
+    const primaryCandidate = {
       person: 'Persona Sintetica Uno', insured: 'Persona Sintetica Uno', contractor: 'Persona Sintetica Uno',
-      policyNumber: 'SYN-IMAGINA-012', product: 'IMAGINA SER 65 - 15 PAGOS UDI', policyType: 'NORMAL', status: '',
-      issueDate: '05/AGO/2026', effectiveDate: '05/AGO/2026', expirationDate: '05/AGO/2053',
-      currency: 'UDI', paymentFrequency: 'MENSUAL', basicPremiumTotal: '3,976.96', plannedPremium: '2,840.00', annualTotal: '6,816.96',
-      beneficiariesDetected: true, coverageCandidates, confidence: .99,
+      policyNumber: 'VI0003006169', product: 'IMAGINA SER 65 - 15 PAGOS UDI', policyType: 'NORMAL', status: null,
+      issueDate: null, effectiveDate: '2026-08-05', expirationDate: '2053-08-05',
+      currency: null, paymentFrequency: null, basicPremiumTotal: null, plannedPremium: null, annualTotal: null,
+      beneficiariesDetected: true, coverageSectionDetected: true, coverageCandidates: [], confidence: .99,
+      requiresHumanReview: true, createsTruth: false,
     };
+
+    const focusedRecoveryCandidate = {
+      policyNumber: 'VI0003006169', product: 'IMAGINA SER 65 - 15 PAGOS UDI', policyType: 'NORMAL', status: null,
+      issueDate: '2026-08-05', effectiveDate: '2026-08-05', expirationDate: '2053-08-05',
+      currency: 'UDI', paymentFrequency: 'MONTHLY', basicPremiumTotal: 3976.96, plannedPremium: 2840, annualTotal: 6816.96,
+      beneficiariesDetected: true, coverageSectionDetected: true, coverageCandidates, confidence: .98,
+      requiresHumanReview: true, createsTruth: false,
+    };
+
+    const recoveryReasons = semanticRecoveryReasons(primaryCandidate);
+    const semanticCandidate = mergeSemanticCandidateLists([primaryCandidate], [focusedRecoveryCandidate])[0];
+    trace.edgePrimary = structuredClone(primaryCandidate);
+    trace.edgeRecovery = structuredClone(focusedRecoveryCandidate);
+    trace.edgeMerged = structuredClone(semanticCandidate);
+    trace.semanticRecoveryReasons = [...recoveryReasons];
 
     const fakeClient = {
       auth: {
-        async getUser() { return { data: { user: { id: 'advisor:test:cartera-pdf-012' } }, error: null }; },
+        async getUser() { return { data: { user: { id: 'advisor:test:cartera-pdf-014' } }, error: null }; },
         async getSession() { return { data: { session: { access_token: 'TEST_ONLY' } }, error: null }; },
       },
       from(table) { if (table === 'cartera020b_policy_evidence_packets') return packetQuery(); return emptyQuery([]); },
@@ -91,7 +116,16 @@
         async invoke(name, { body } = {}) {
           trace.functionInvocations.push({ name, fileName: body?.fileName || null, mimeType: body?.mimeType || null, hasBase64: typeof body?.base64 === 'string' && body.base64.length > 0 });
           if (name !== 'cartera-pdf-intake') return { data: null, error: new Error('UNEXPECTED_FUNCTION') };
-          return { data: { ok: true, intakeId: 'INTAKE:AURA:SEMANTIC_012', modelVersion: 'fixture-semantic-012', candidates: [structuredClone(semanticCandidate)] }, error: null };
+          return { data: {
+            ok: true,
+            intakeId: 'INTAKE:AURA:SEMANTIC_014',
+            functionVersion: 'cartera-pdf-intake-v4-semantic-completion-014',
+            modelVersion: 'fixture-semantic-014',
+            recoveryUsed: true,
+            semanticRecoveryReasons: recoveryReasons,
+            reviewCompleteness: semanticCandidate.reviewCompleteness,
+            candidates: [structuredClone(semanticCandidate)],
+          }, error: null };
         },
       },
       async rpc(name, args = {}) {
@@ -114,10 +148,11 @@
             currency: fields.currency?.value ?? null, paymentFrequency: fields.paymentFrequency?.value ?? null,
             issueDate: fields.issueDate?.value ?? null, effectiveFrom: fields.effectiveFrom?.value ?? null, effectiveTo: fields.effectiveTo?.value ?? null,
             basicPremiumTotal: fields.basicPremiumTotal?.value ?? null, plannedPremium: fields.plannedPremium?.value ?? null, annualTotal: fields.annualTotal?.value ?? null,
+            coverageSectionDetected: fields.coverageSectionDetected?.value ?? null,
             coverageCount: fields.coverageCandidates?.value?.length ?? 0,
           });
           if (stage === 'confirmation_required' && result.packet) {
-            storedPacket = { packet_reference: result.packet.packetReference, extracted_fields: result.packet.extractedFields, extraction_confidence: result.packet.extractionConfidence, identity_candidates: result.packet.identityCandidates, policy_role_candidates: result.packet.policyRoleCandidates, confirmation_state: result.packet.confirmationState };
+            storedPacket = { packet_reference: result.packet.packetReference, extracted_fields: structuredClone(result.packet.extractedFields), extraction_confidence: result.packet.extractionConfidence, identity_candidates: result.packet.identityCandidates, policy_role_candidates: result.packet.policyRoleCandidates, confirmation_state: result.packet.confirmationState };
             trace.storedPendingReview = true;
           }
           return { data: { status: stage || 'RECORDED' }, error: null };
@@ -130,7 +165,7 @@
 
     const module = createCarteraModule({ root: document.querySelector('#fixture-main'), client: fakeClient, windowRef: window, globalState: () => {} });
     await module.mount();
-    document.documentElement.dataset.regressionHarness = 'READY_SEMANTIC_012';
+    document.documentElement.dataset.regressionHarness = 'READY_SEMANTIC_014';
   </script>
 </body>
 </html>

@@ -1,12 +1,14 @@
-import { createCarteraModule as createBaseCarteraModule } from './cartera-module.js?base=cartera-pdf-semantic-reconciliation-012';
-import { createCarteraAdapter as createSemanticCarteraAdapter } from './cartera-adapter-pages-v8.js?v=cartera-pdf-semantic-reconciliation-012';
+import { createCarteraModule as createBaseCarteraModule } from './cartera-module.js?base=cartera-pdf-semantic-completion-014';
+import { createCarteraAdapter as createSemanticCarteraAdapter } from './cartera-adapter-pages-v8.js?v=cartera-pdf-semantic-completion-014';
 import {
+  coverageExtractionState,
   formatCivilDateEs,
   normalizeCoverageCandidates,
   normalizeMoneyValue,
   paymentFrequencyLabel,
   policyStatusLabel,
-} from './cartera-semantic-v1.js?v=cartera-pdf-semantic-reconciliation-012';
+  semanticReviewCompleteness,
+} from './cartera-semantic-v1.js?v=cartera-pdf-semantic-completion-014';
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -20,7 +22,7 @@ function normalizedName(value) {
 
 function amountLabel(value, currency) {
   const number = normalizeMoneyValue(value);
-  if (number === null) return 'Por confirmar';
+  if (number === null) return 'No identificado';
   const formatted = new Intl.NumberFormat('es-MX', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -34,12 +36,20 @@ function policyTypeLabel(value) {
   return text.toUpperCase() === 'NORMAL' ? 'Normal' : text;
 }
 
-function confidenceLabel(value) {
+function extractionQualityLabel(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return 'Lectura: confianza no informada';
+  if (number >= .9) return 'Lectura del documento: alta';
+  if (number >= .7) return 'Lectura del documento: media';
+  return 'Lectura del documento: revisar con cuidado';
+}
+
+function coverageConfidenceLabel(value) {
   const number = Number(value);
   if (!Number.isFinite(number)) return 'Confianza no informada';
-  if (number >= .9) return 'Confianza alta';
-  if (number >= .7) return 'Confianza media';
-  return 'Revisar con cuidado';
+  if (number >= .9) return 'Alta';
+  if (number >= .7) return 'Media';
+  return 'Baja';
 }
 
 function statusValue(value) {
@@ -60,9 +70,43 @@ function coverageRows(review) {
   return normalizeCoverageCandidates(review?.coverageCandidates || review?.edgeCandidate?.coverageCandidates || []);
 }
 
+const GAP_LABELS = Object.freeze({
+  policyNumber: 'Número de póliza',
+  product: 'Producto',
+  policyTypeOrStatus: 'Tipo o estado de póliza',
+  issueDate: 'Fecha de emisión',
+  effectiveDate: 'Fecha de inicio',
+  expirationDate: 'Fecha de fin',
+  currency: 'Moneda',
+  paymentFrequency: 'Forma de pago',
+  basicPremiumTotal: 'Prima básica total',
+  plannedPremium: 'Prima planeada',
+  annualTotal: 'Total anual',
+  coverageCandidates: 'Coberturas',
+});
+
+function coverageSummary(state, count) {
+  if (count > 0) return `${count} coberturas candidatas`;
+  if (state === 'INCOMPLETE_REVIEW_REQUIRED') return 'Coberturas requieren revisión';
+  if (state === 'NO_COVERAGE_SECTION_DETECTED') return 'Sin sección de coberturas detectada';
+  return 'Coberturas por identificar';
+}
+
+function coverageEmptyMessage(state) {
+  if (state === 'INCOMPLETE_REVIEW_REQUIRED') {
+    return '<div class="cartera-warning"><strong>Coberturas requieren revisión.</strong><br>Forge detectó una sección de coberturas, pero no obtuvo filas estructuradas suficientes. No se interpreta como ausencia de coberturas.</div>';
+  }
+  if (state === 'NO_COVERAGE_SECTION_DETECTED') {
+    return '<div class="cartera-info"><strong>No se identificó una sección de coberturas.</strong><br>Revisa el documento antes de confirmar. Forge no convierte esta ausencia de extracción en un hecho de póliza.</div>';
+  }
+  return '<div class="cartera-warning"><strong>Coberturas por identificar.</strong><br>La extracción no pudo determinar con suficiente claridad si el documento contiene una sección de coberturas. Forge no inventará beneficios ni sumas aseguradas.</div>';
+}
+
 function semanticReviewHtml(review, people) {
   const candidate = review?.edgeCandidate || {};
   const coverages = coverageRows(review);
+  const coverageState = candidate.coverageExtractionState || review?.pdfCoverageExtraction || coverageExtractionState(candidate);
+  const completeness = candidate.reviewCompleteness || review?.reviewCompleteness || semanticReviewCompleteness(candidate);
   const currency = candidate.currency || null;
   const holder = candidate.person || candidate.contractor || '';
   const contractor = candidate.contractor || candidate.person || '';
@@ -70,15 +114,14 @@ function semanticReviewHtml(review, people) {
   const sameDocumentPerson = Boolean(contractor && insured && normalizedName(contractor) === normalizedName(insured));
   const distinctInsured = Boolean(contractor && insured && !sameDocumentPerson);
   const beneficiaryDetected = candidate.beneficiariesDetected === true || review?.fields?.beneficiariesDetected?.value === true;
-  const unresolved = [
-    !candidate.status ? 'Estado de póliza' : null,
-    !candidate.currency ? 'Moneda' : null,
-    !candidate.paymentFrequency ? 'Forma de pago' : null,
-    !candidate.policyType ? 'Tipo de póliza' : null,
-    !coverages.length ? 'Coberturas' : null,
-  ].filter(Boolean);
   const status = statusValue(candidate.status);
+  const semanticGaps = [...new Set(completeness.gaps || [])];
+  if (!candidate.status) semanticGaps.push('policyStatusHumanDecision');
+  const unresolved = semanticGaps.map(key => key === 'policyStatusHumanDecision' ? 'Estado de póliza' : (GAP_LABELS[key] || key));
   const pendingCount = unresolved.length + 1 + (insured ? 1 : 0) + coverages.length;
+  const reviewSummary = completeness.criticalGapCount > 0
+    ? `Revisión: ${completeness.criticalGapCount} datos críticos pendientes`
+    : 'Revisión: hechos principales extraídos; confirma antes de incorporar';
 
   const coverageHtml = coverages.length
     ? `<div class="cartera-semantic-coverages" role="list">
@@ -93,17 +136,17 @@ function semanticReviewHtml(review, people) {
             <span><strong>${escapeHtml(amountLabel(coverage.premiumAmount, coverage.currency))}</strong><small>Prima documental</small></span>
             <span><strong>${escapeHtml(coverage.annexReference || '—')}</strong><small>Anexo</small></span>
             <span><strong>${escapeHtml(formatCivilDateEs(coverage.effectiveFrom))}</strong><small>Inicio</small></span>
-            <span><strong>${escapeHtml(confidenceLabel(coverage.confidence))}</strong><small>Requiere confirmación</small></span>
+            <span><strong>${escapeHtml(coverageConfidenceLabel(coverage.confidence))}</strong><small>Confianza de extracción · requiere confirmación</small></span>
           </label>`).join('')}
        </div>`
-    : `<div class="cartera-warning"><strong>Coberturas por confirmar.</strong><br>Este documento no produjo candidatos estructurados suficientes. Forge no inventará beneficios ni sumas aseguradas.</div>`;
+    : coverageEmptyMessage(coverageState);
 
   const unresolvedHtml = unresolved.length
     ? unresolved.map(item => `<li>${escapeHtml(item)}</li>`).join('')
-    : '<li>La extracción tiene los hechos documentales principales; todavía falta tu confirmación humana.</li>';
+    : '<li>La extracción conserva los hechos documentales principales; todavía falta tu confirmación humana.</li>';
 
   return `
-    <div class="cartera-semantic-review" data-semantic-review="012">
+    <div class="cartera-semantic-review" data-semantic-review="014">
       <div class="cartera-progress" aria-label="Progreso de incorporación">
         <span>1 Documento</span><span>2 Evidencia</span><span>3 Extracción</span>
         <span data-active="true">4 Revisión humana</span><span>5 Confirmación</span>
@@ -116,9 +159,9 @@ function semanticReviewHtml(review, people) {
           <p>${escapeHtml(candidate.policyNumber || 'Número de póliza por confirmar')} · La extracción sigue siendo evidencia, no verdad canónica.</p>
         </div>
         <aside class="cartera-semantic-rail" aria-label="Calidad de revisión">
-          <strong>${coverages.length} coberturas</strong>
+          <strong>${escapeHtml(coverageSummary(coverageState, coverages.length))}</strong>
           <span>${pendingCount} decisiones por revisar</span>
-          <small>${escapeHtml(confidenceLabel(candidate.confidence))}</small>
+          <small>${escapeHtml(reviewSummary)} · ${escapeHtml(extractionQualityLabel(candidate.confidence))}</small>
         </aside>
       </section>
 
@@ -162,7 +205,7 @@ function semanticReviewHtml(review, people) {
       </section>
 
       <section class="cartera-semantic-section" aria-labelledby="semantic-coverage-title">
-        <header><div><p class="cartera-eyebrow">COBERTURAS</p><h3 id="semantic-coverage-title">Coberturas detectadas</h3><p>Marca cada cobertura después de comprobarla contra el documento.</p></div><span>${coverages.length} candidatas</span></header>
+        <header><div><p class="cartera-eyebrow">COBERTURAS</p><h3 id="semantic-coverage-title">Coberturas detectadas</h3><p>Marca cada cobertura después de comprobarla contra el documento.</p></div><span>${coverages.length ? `${coverages.length} candidatas` : 'Revisión requerida'}</span></header>
         ${coverageHtml}
       </section>
 
@@ -280,6 +323,8 @@ export function createCarteraModule(options = {}) {
     const holder = String(form.elements.holderName?.value || '').trim();
     const coverageInputs = [...form.querySelectorAll('[data-coverage-confirm]')];
     const allCoveragesConfirmed = coverageInputs.length === 0 || coverageInputs.every(input => input.checked);
+    const coverageState = review?.edgeCandidate?.coverageExtractionState || review?.pdfCoverageExtraction;
+    const coverageReady = allCoveragesConfirmed && coverageState !== 'INCOMPLETE_REVIEW_REQUIRED' && coverageState !== 'COVERAGE_PRESENCE_UNKNOWN';
     const insuredRequired = Boolean(review?.edgeCandidate?.insured);
     const samePersonConfirmed = !insuredRequired || Boolean(form.elements.confirmSamePersonInsured?.checked);
     const distinctInsured = Boolean(form.elements.confirmSamePersonInsured?.disabled);
@@ -288,7 +333,7 @@ export function createCarteraModule(options = {}) {
       : personMode === 'existing' && Boolean(existing);
 
     const button = form.querySelector('[type="submit"]');
-    if (button) button.disabled = !(identityReady && allCoveragesConfirmed && samePersonConfirmed && !distinctInsured);
+    if (button) button.disabled = !(identityReady && coverageReady && samePersonConfirmed && !distinctInsured);
   }
 
   function bindSemanticForm(form, review) {
@@ -329,9 +374,9 @@ export function createCarteraModule(options = {}) {
 
   async function upgradeReview() {
     const revision = ++upgradeRevision;
-    const oldForm = doc.querySelector('.cartera-dialog [data-pdf-review]:not([data-semantic-boundary="012"])');
+    const oldForm = doc.querySelector('.cartera-dialog [data-pdf-review]:not([data-semantic-boundary="014"])');
     if (!oldForm || !lastReview || !activeAdapter) return;
-    oldForm.dataset.semanticBoundary = '012-pending';
+    oldForm.dataset.semanticBoundary = '014-pending';
     const body = oldForm.closest('.cartera-dialog__body');
     if (!body) return;
 
@@ -340,7 +385,7 @@ export function createCarteraModule(options = {}) {
     body.innerHTML = semanticReviewHtml(lastReview, directoryPeople);
     const form = body.querySelector('[data-pdf-review]');
     if (!form) return;
-    form.dataset.semanticBoundary = '012';
+    form.dataset.semanticBoundary = '014';
     bindSemanticForm(form, lastReview);
   }
 

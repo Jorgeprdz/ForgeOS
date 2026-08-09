@@ -1,12 +1,12 @@
-import { createCarteraAdapter as createReopenSafeAdapter } from './cartera-adapter-pages-v7.js?base=cartera-pdf-semantic-reconciliation-012';
-import { confirmNewPolicyCoverage } from './cartera-coverage-adapter.js?v=cartera-pdf-semantic-reconciliation-012';
+import { createCarteraAdapter as createReopenSafeAdapter } from './cartera-adapter-pages-v7.js?base=cartera-pdf-semantic-completion-014';
+import { confirmNewPolicyCoverage } from './cartera-coverage-adapter.js?v=cartera-pdf-semantic-completion-014';
 import {
   civilDateToTransportInstant,
   enrichSemanticFields,
   normalizeCoverageCandidates,
   normalizeSemanticCandidate,
   semanticReviewCandidate,
-} from './cartera-semantic-v1.js?v=cartera-pdf-semantic-reconciliation-012';
+} from './cartera-semantic-v1.js?v=cartera-pdf-semantic-completion-014';
 
 const PDF_FUNCTION = 'cartera-pdf-intake';
 const RESULT_RPC = 'forge_cartera020b_record_processing_result';
@@ -107,7 +107,9 @@ function reviewFromSemanticFields(review, latestCandidate) {
     fields,
     edgeCandidate: { ...edgeCandidate, coverageCandidates, premium: null },
     coverageCandidates,
-    pdfCoverageExtraction: coverageCandidates.length ? 'CANDIDATES_REVIEW_REQUIRED' : 'NO_CANDIDATES',
+    coverageSectionDetected: edgeCandidate.coverageSectionDetected,
+    pdfCoverageExtraction: edgeCandidate.coverageExtractionState,
+    reviewCompleteness: edgeCandidate.reviewCompleteness,
     requiresHumanReview: true,
     createsPolicyTruth: false,
   });
@@ -180,6 +182,7 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
       ...(adapter.capabilities || {}),
       pdfMultiCoverageExtraction: true,
       pdfSemanticReview012: true,
+      pdfSemanticCompletion014: true,
     }),
     async processPdf(file, options = {}) {
       const review = await adapter.processPdf(file, options);

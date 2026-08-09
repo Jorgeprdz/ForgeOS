@@ -21,9 +21,10 @@ function createWindow(initialHref) {
 test("canonical Aura entrypoint loads the cache-isolated v4 runtime", () => {
   const html = readFileSync("docs/static-preview/forge-aura/index.html", "utf8");
   assert.match(html, /data-aura-runtime="FORGE_AURA_LIGHT_2026_V4"/);
-  assert.match(html, /aura-bootstrap-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
-  assert.match(html, /env\.js\?v=aura-boot-cache-isolation-013/);
+  assert.match(html, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(html, /env\.js\?v=cartera-pdf-semantic-completion-014/);
   assert.match(html, /pipeline-adapter-pages-v1\.js/);
+  assert.match(html, /cartera-module-v4\.js\?v=cartera-pdf-semantic-completion-014/);
   assert.doesNotMatch(html, /src="\.\/aura-bootstrap\.js/);
   assert.doesNotMatch(html, /src="\.\/aura-bootstrap-v4\.js/);
 });
