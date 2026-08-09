@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Forge Auth Acceptance Harness</title>
+  <link rel="stylesheet" href="../../docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="../../docs/static-preview/forge-aura/aura-auth.css">
+</head>
+<body>
+  <div id="auth-harness"></div>
+  <script type="module">
+    import { renderAuraLogin } from "../../docs/static-preview/forge-aura/aura-auth-v4.js";
+
+    const params = new URL(location.href).searchParams;
+    const mode = params.get("mode") || "default";
+    const root = document.querySelector("#auth-harness");
+
+    const auth = {
+      humanAuthError(error) {
+        if (/invalid/i.test(String(error?.message || ""))) return "El correo o la contraseña no son correctos.";
+        return "No pudimos iniciar sesión. Inténtalo de nuevo.";
+      },
+      async signInWithPassword({ form } = {}) {
+        document.documentElement.dataset.passwordAttempts = String(Number(document.documentElement.dataset.passwordAttempts || "0") + 1);
+        form?.querySelectorAll('input[type="password"]').forEach(input => { input.value = ""; });
+        if (mode === "password-error") throw new Error("Invalid login credentials");
+        return { user: { id: "fixture-user" } };
+      },
+      async signInWithGoogle() {
+        document.documentElement.dataset.googleAttempts = String(Number(document.documentElement.dataset.googleAttempts || "0") + 1);
+        if (mode === "google-loading") return new Promise(() => {});
+        if (mode === "google-error") throw new Error("network");
+        return {};
+      },
+    };
+
+    renderAuraLogin({
+      root,
+      auth,
+      onAuthenticated() {
+        document.documentElement.dataset.authenticated = "true";
+      },
+    });
+  </script>
+</body>
+</html>
