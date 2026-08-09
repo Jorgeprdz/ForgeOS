@@ -1,0 +1,79 @@
+name: Aura Cartera Person Workspace Projection 016
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/static-preview/forge-aura/cartera/**'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/cartera-person-workspace-directory-projection-016.test.mjs'
+      - 'tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json'
+      - '.github/workflows/aura-cartera-person-workspace-projection-016.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-cartera-person-workspace-016-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  projection-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Constitutional scope lock
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git -c core.quotepath=false diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          printf '%s\n' "${changed[@]}"
+          for file in "${changed[@]}"; do
+            case "$file" in
+              docs/static-preview/forge-aura/cartera/*|docs/static-preview/forge-aura/index.html|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
+              *) echo "CARTERA016_SCOPE_VIOLATION=$file" >&2; exit 1 ;;
+            esac
+          done
+          ! printf '%s\n' "${changed[@]}" | grep -Eq '^supabase/(migrations|functions)/'
+          ! printf '%s\n' "${changed[@]}" | grep -Eq '^\.github/workflows/pages\.yml$'
+          echo 'CARTERA016_SCHEMA_MUTATION=0'
+          echo 'CARTERA016_IDENTITY_WRITE_MUTATION=0'
+          echo 'CARTERA016_PAGES_GATE_MUTATION=0'
+      - name: Syntax check 016 runtime
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-person-projection-016.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v6.js
+      - name: Cartera 016 targeted contract
+        run: node --test tests/cartera-person-workspace-directory-projection-016.test.mjs
+      - name: Cartera inherited productive regressions
+        run: >-
+          node --test
+          tests/aura-cartera-productive-reconciliation.test.mjs
+          tests/cartera-pdf-ingress-legacy-refresh.test.mjs
+          tests/cartera-020c-durable-attach-015.test.mjs
+          tests/cartera-010b-contract-foundation-test.mjs
+          tests/cartera-010b-general-role-read-authority-test.mjs
+          tests/cartera-010d-unified-directory-read-model-service-test.mjs
+      - name: Pipeline identity convergence regressions
+        run: >-
+          node --test
+          tests/crs-03-pipeline-person-convergence-contract-test.mjs
+          tests/crs-03-pipeline-person-convergence-service-test.mjs
+      - name: Explicit Pages governance remains locked
+        run: node --test tests/pages-explicit-deployment-governance.test.mjs
