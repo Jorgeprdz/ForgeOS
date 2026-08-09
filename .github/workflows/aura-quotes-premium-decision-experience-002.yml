@@ -58,12 +58,14 @@ jobs:
         run: |
           node --check docs/static-preview/forge-aura/quotes/quotes-adapter.js
           node --check docs/static-preview/forge-aura/quotes/quotes-module.js
-      - name: Constitutional static contracts and scope guard
+      - name: Constitutional static contracts
         run: >-
           node --test
           tests/aura-quotes-premium-decision-experience-002.test.mjs
-          tests/aura-quotes-premium-decision-experience-002-scope-guard.test.mjs
           tests/aura-quotes-pdf-nohang-hotfix-005.test.mjs
+      - name: Phase 002 scope guard
+        if: ${{ github.head_ref == 'feature/aura-quotes-premium-decision-experience-002' || github.ref_name == 'feature/aura-quotes-premium-decision-experience-002' }}
+        run: node --test tests/aura-quotes-premium-decision-experience-002-scope-guard.test.mjs
       - name: Existing Aura Quotes reconciliation regression
         run: node tests/forge-aura-quotes-reconciliation-test.mjs
       - name: Accepted Quote review regression

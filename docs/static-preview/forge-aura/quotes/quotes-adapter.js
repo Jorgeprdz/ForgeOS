@@ -10,6 +10,7 @@ import {
   configureClientProvider,
 } from "../../quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js";
 import { buildQuoteBenefitSummary } from "../../quote-runtime/quote-benefit-summary-engine.js";
+import { buildProductSpecificDecisionReadModel } from "../../quote-runtime/forge-product-specific-decision-read-model.js";
 import { createQuotePrintableRouteController } from "../../quote-printable-runtime/forge-quote-printable-route-controller.js";
 import { buildSalesPresentationBrowserContext } from "../../advisor-presentation-runtime/forge-sales-presentation-browser-context-adapter.js";
 import { buildSalesPresentationPromptReviewPacket } from "../../advisor-presentation-runtime/forge-sales-presentation-prompt-builder.js";
@@ -152,11 +153,29 @@ function dateLabel(value) {
 }
 
 function economicEvidence(calculation) {
-  const metadata = calculation?.udiRateMetadata || calculation?.nativeResult?.udiRateMetadata || calculation?.nativeResult?.currencyMetadata || {};
-  const value = firstValue(metadata.currentUdiValue, metadata.udiValue, metadata.value, metadata.rate);
-  const asOf = firstValue(metadata.asOf, metadata.date, metadata.rateDate, metadata.updatedAt, metadata.timestamp);
+  const metadata = calculation?.orviDashboardViewModel?.rate_context
+    || calculation?.udiRateMetadata
+    || calculation?.currencyMetadata
+    || calculation?.nativeResult?.udiRateMetadata
+    || calculation?.nativeResult?.currencyMetadata
+    || {};
+  const value = firstValue(
+    metadata.currentUdiValue,
+    metadata.current_value,
+    metadata.udiValue,
+    metadata.value,
+    metadata.rate,
+  );
+  const asOf = firstValue(
+    metadata.asOf,
+    metadata.date,
+    metadata.source_date,
+    metadata.rateDate,
+    metadata.updatedAt,
+    metadata.timestamp,
+  );
   const source = firstValue(metadata.source, metadata.provider, metadata.authority, metadata.sourceName);
-  const status = firstValue(metadata.status, calculation?.retirementScenarioStatus);
+  const status = firstValue(metadata.status, metadata.mode, calculation?.retirementScenarioStatus);
   return {
     available: value !== null || source !== null || asOf !== null,
     value,
@@ -190,7 +209,20 @@ function projectionFacts(calculation) {
 
 function contractualFacts(packet, calculation) {
   const native = calculation?.nativeResult || packet?.nativeResult || {};
-  const currency = firstValue(calculation?.currency, native.currency, packet?.currency, "UDI");
+  const intelligence = calculation?.productIntelligence
+    || calculation?.product_intelligence
+    || packet?.productIntelligence
+    || packet?.product_intelligence
+    || {};
+  const premium = intelligence?.premium_structure || {};
+  const protection = intelligence?.protection_summary || {};
+  const currency = firstValue(
+    premium.currency,
+    calculation?.currency,
+    native.currency,
+    packet?.currency,
+    "UDI",
+  );
   const facts = [];
   const add = (id, label, value, formatter = (candidate) => text(candidate)) => {
     if (value !== null && value !== undefined && value !== "") {
@@ -198,9 +230,31 @@ function contractualFacts(packet, calculation) {
     }
   };
   add("client", "Persona asegurada", firstValue(calculation?.client, native.insured, native.prospect, packet?.insured, packet?.name));
-  add("annual_premium", "Prima anual", firstValue(calculation?.annualPremium, native.annualPremium, native.totalAnnualPremium, packet?.annualPremium), (value) => money(value, currency));
+  add(
+    "annual_premium",
+    "Prima anual",
+    firstValue(
+      premium.total_annual_premium,
+      native.totalAnnualPremium,
+      native.annualPremium,
+      packet?.annualPremium,
+      calculation?.annualPremium,
+    ),
+    (value) => money(value, currency),
+  );
   add("payment_years", "Plazo de pago", firstValue(calculation?.paymentYears, native.paymentYears, native.paymentTerm, packet?.paymentYears, packet?.paymentTerm), (value) => /año/i.test(text(value)) ? text(value) : `${text(value)} años`);
-  add("sum_assured", "Suma asegurada", firstValue(native.sumAssured, native.sumInsured, packet?.sumAssured, packet?.sumInsured), (value) => money(value, currency));
+  add(
+    "sum_assured",
+    "Suma asegurada",
+    firstValue(
+      protection.basic_sum_assured,
+      native.sumAssured,
+      native.sumInsured,
+      packet?.sumAssured,
+      packet?.sumInsured,
+    ),
+    (value) => money(value, currency),
+  );
   add("coverage_period", "Vigencia / cobertura", firstValue(calculation?.coveragePeriod, native.policyTerm, native.coveragePeriod, packet?.coveragePeriod));
   add("quote_date", "Fecha de cotización", firstValue(calculation?.quoteDate, native.quoteDate, packet?.quoteDate), dateLabel);
   return facts;
@@ -235,16 +289,22 @@ function intelligenceModel(packet, calculation) {
 }
 
 function buildViewModel(packet, calculation) {
-  const family = productFamily(packet, calculation);
+  const detectedFamily = productFamily(packet, calculation);
   const blocks = buildQuoteBenefitSummary({
-    productFamily: family,
+    productFamily: detectedFamily,
     product: commercialProduct(packet, calculation),
     nativeResult: calculation?.nativeResult || packet?.nativeResult || {},
     context: calculation?.context || packet?.context || {},
     udiProjection: calculation?.udiProjection || packet?.udiProjection || {},
-    currencyMetadata: calculation?.udiRateMetadata || packet?.udiRateMetadata || {},
+    currencyMetadata: calculation?.udiRateMetadata || calculation?.currencyMetadata || packet?.udiRateMetadata || packet?.currencyMetadata || {},
     productIntelligence: calculation?.productIntelligence || packet?.productIntelligence || null,
   });
+  const productDecision = buildProductSpecificDecisionReadModel({
+    packet,
+    calculation,
+    benefitSummary: blocks,
+  });
+  const family = productDecision?.productType || detectedFamily;
 
   return Object.freeze({
     product: commercialProduct(packet, calculation),
@@ -257,8 +317,9 @@ function buildViewModel(packet, calculation) {
     economicEvidence: economicEvidence(calculation),
     intelligence: intelligenceModel(packet, calculation),
     benefitBlocks: Array.isArray(blocks) ? blocks : [],
+    productDecision,
     hasProductIntelligence: Boolean(calculation?.productIntelligence || packet?.productIntelligence || packet?.product_intelligence),
-    humanConfirmationRequired: true,
+    humanConfirmationRequired: productDecision?.humanDecisionRequired !== false,
   });
 }
 
