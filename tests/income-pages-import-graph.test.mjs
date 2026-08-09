@@ -13,9 +13,7 @@ test("canonical Pages artifact publishes every Aura Income transitive asset", ()
     "static-preview/forge-aura/income/income-adapter-pages-v1.js",
     "static-preview/forge-aura/income/income-module.js",
     "static-preview/forge-aura/income/income.css",
-  ]) {
-    assert.equal(exists(relative), true, `Missing canonical Pages asset: ${relative}`);
-  }
+  ]) assert.equal(exists(relative), true, `Missing canonical Pages asset: ${relative}`);
 });
 
 test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () => {
@@ -34,9 +32,10 @@ test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () =>
   assert.match(index, /income-adapter-pages-v1\.mjs[^\n]+income-adapter-pages-v1\.js/);
 });
 
-test("canonical Pages artifact preserves Cartera semantic completion 014 and inherited v8 to v1 chain", () => {
+test("canonical Pages artifact preserves inherited Cartera chain behind current v9/v5 ingress boundary", () => {
   for (const relative of [
     "static-preview/forge-aura/cartera/cartera-module-v4.js",
+    "static-preview/forge-aura/cartera/cartera-module-v5.js",
     "static-preview/forge-aura/cartera/cartera-semantic-v1.js",
     "static-preview/forge-aura/cartera/cartera-semantic-012.css",
     "static-preview/forge-aura/cartera/cartera-date-v1.js",
@@ -47,13 +46,13 @@ test("canonical Pages artifact preserves Cartera semantic completion 014 and inh
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v6.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js",
-  ]) {
-    assert.equal(exists(relative), true, `Missing current Cartera asset: ${relative}`);
-  }
+    "static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js",
+  ]) assert.equal(exists(relative), true, `Missing current Cartera asset: ${relative}`);
+
   const app = read("static-preview/forge-aura/app-v4-r1.js");
   const index = read("static-preview/forge-aura/index.html");
   const bootstrap = read("static-preview/forge-aura/aura-bootstrap-v4-r1.js");
-  const moduleV4 = read("static-preview/forge-aura/cartera/cartera-module-v4.js");
+  const moduleV5 = read("static-preview/forge-aura/cartera/cartera-module-v5.js");
   const semantic = read("static-preview/forge-aura/cartera/cartera-semantic-v1.js");
   const dateV1 = read("static-preview/forge-aura/cartera/cartera-date-v1.js");
   const v2 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v2.js");
@@ -63,16 +62,19 @@ test("canonical Pages artifact preserves Cartera semantic completion 014 and inh
   const v6 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v6.js");
   const v7 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js");
   const v8 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js");
+  const v9 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js");
 
-  // app-v4-r1 keeps the inherited 012 specifier; the import map deliberately
-  // upgrades that exact specifier to the cache-busted 014 module.
   assert.match(app, /cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-adapter-pages-v8\.js\?v=cartera-pdf-semantic-completion-014/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-completion-014"/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(index, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-pdf-ingress-legacy-refresh"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-ingress-legacy-refresh/);
   assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
-  assert.match(moduleV4, /createSemanticCarteraAdapter/);
-  assert.match(moduleV4, /data-semantic-review="014"/);
+  assert.match(moduleV5, /createSemanticCarteraAdapter/);
+  assert.match(moduleV5, /cartera-adapter-pages-v9/);
+  assert.match(moduleV5, /addEventListener\('drop', onDropCapture, true\)/);
+  assert.match(v9, /cartera-adapter-pages-v8/);
+  assert.match(v9, /forge_cartera020b_refresh_pending_packet_semantics/);
+  assert.match(v9, /pdfLegacyPendingSemanticRefresh:\s*true/);
   assert.match(v8, /cartera-adapter-pages-v7\.js\?base=cartera-pdf-semantic-completion-014/);
   assert.match(v8, /forge_cartera020b_record_processing_result/);
   assert.match(v8, /pdfSemanticCompletion014:\s*true/);
@@ -101,9 +103,7 @@ test("Income Pages mirrors are byte-identical to governed source modules", () =>
     ["docs/static-preview/forge-aura/income/income-adapter-pages-v1.mjs", "static-preview/forge-aura/income/income-adapter-pages-v1.js"],
     ["docs/static-preview/forge-aura/income/income-module.mjs", "static-preview/forge-aura/income/income-module.js"],
   ];
-  for (const [source, mirror] of pairs) {
-    assert.equal(fs.readFileSync(path.resolve(source), "utf8"), read(mirror), `Pages mirror drift: ${mirror}`);
-  }
+  for (const [source, mirror] of pairs) assert.equal(fs.readFileSync(path.resolve(source), "utf8"), read(mirror), `Pages mirror drift: ${mirror}`);
 });
 
 test("Income artifact has no Material3 visual dependency, direct productive writer or invented money formula", () => {

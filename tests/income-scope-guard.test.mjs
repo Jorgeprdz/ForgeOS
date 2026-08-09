@@ -32,16 +32,21 @@ const incomeAllowed = [
 ];
 
 const carteraSemanticEdge = /^supabase\/functions\/cartera-pdf-intake\/(?:index\.ts|semantic-recovery\.js)$/;
+const carteraSemanticRefreshMigration = /^supabase\/migrations\/20260809000100_cartera020b_semantic_refresh_rpc\.sql$/;
 const carteraCompatibilityAllowed = [
   /^docs\/static-preview\/forge-aura\/cartera\//,
   ...sharedAuraRuntime,
   ...auraBootCompatibilityAllowed,
   carteraSemanticEdge,
+  carteraSemanticRefreshMigration,
   /^tests\/aura-cartera-/,
   /^tests\/cartera-/,
   /^tests\/e2e\/aura-cartera-pdf-spanish-date-regression\.spec\.mjs$/,
+  /^tests\/e2e\/aura-cartera-pdf-ingress-parity\.spec\.mjs$/,
   /^tests\/fixtures\/aura-cartera-pdf-spanish-date-regression\.html$/,
+  /^tests\/fixtures\/aura-cartera-pdf-ingress-parity\.html$/,
   /^\.github\/workflows\/aura-cartera-pdf-real-regression\.yml$/,
+  /^\.github\/workflows\/aura-cartera-pdf-ingress-parity\.yml$/,
   /^\.github\/workflows\/aura-cartera-productive-reconciliation-001\.yml$/,
   /^\.github\/workflows\/income-aura-ux-reconciliation-001\.yml$/,
   /^adr\/ADR-025 .*Cartera PDF Semantic Review Boundary\.txt$/,
@@ -109,7 +114,11 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
   if (!changed.length && !process.env.CI) return;
   assert.ok(changed.length > 0, "CI scope guard requires a non-empty diff");
 
-  const forbiddenHits = changed.filter(file => matchesAny(file, forbidden) && !carteraSemanticEdge.test(file));
+  const forbiddenHits = changed.filter(file =>
+    matchesAny(file, forbidden)
+      && !carteraSemanticEdge.test(file)
+      && !carteraSemanticRefreshMigration.test(file),
+  );
   assert.deepEqual(forbiddenHits, [], `Forbidden mutation detected: ${forbiddenHits.join(", ")}`);
 
   const incomeProductMutation = changed.some(file => /^docs\/static-preview\/forge-aura\/income\//.test(file));
@@ -142,7 +151,7 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
   assert.deepEqual(outOfScope, [], `${scopeName}: ${outOfScope.join(", ")}`);
 });
 
-test("scope guard explicitly blocks engine, rule pack, database, unrelated Edge and deployment mutations", () => {
+test("scope guard blocks arbitrary database/Edge changes while allowing only the named Cartera refresh boundary", () => {
   const samples = [
     "compensation/advisor/engine/new-engine.js",
     "compensation/new-professional/rule-data/new.rule-pack.json",
@@ -150,10 +159,10 @@ test("scope guard explicitly blocks engine, rule pack, database, unrelated Edge 
     "supabase/functions/unrelated-edge/index.ts",
     ".github/workflows/pages.yml",
   ];
-  for (const sample of samples) {
-    assert.equal(forbidden.some(pattern => pattern.test(sample)), true, sample);
-  }
+  for (const sample of samples) assert.equal(forbidden.some(pattern => pattern.test(sample)), true, sample);
   assert.equal(carteraSemanticEdge.test('supabase/functions/cartera-pdf-intake/index.ts'), true);
   assert.equal(carteraSemanticEdge.test('supabase/functions/cartera-pdf-intake/semantic-recovery.js'), true);
   assert.equal(carteraSemanticEdge.test('supabase/functions/unrelated-edge/index.ts'), false);
+  assert.equal(carteraSemanticRefreshMigration.test('supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql'), true);
+  assert.equal(carteraSemanticRefreshMigration.test('supabase/migrations/20260809000101_other.sql'), false);
 });

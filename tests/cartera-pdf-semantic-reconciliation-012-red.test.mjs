@@ -3,29 +3,20 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const edge = fs.readFileSync('supabase/functions/cartera-pdf-intake/index.ts', 'utf8');
+const v9 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js', 'utf8');
 const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js', 'utf8');
 const v7 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js', 'utf8');
 const semantic = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js', 'utf8');
-const ui = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v4.js', 'utf8');
+const ui = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5.js', 'utf8');
 const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4-r1.js', 'utf8');
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 
 const requiredSemanticKeys = [
-  'policyType',
-  'currency',
-  'paymentFrequency',
-  'issueDate',
-  'basicPremiumTotal',
-  'plannedPremium',
-  'annualTotal',
-  'beneficiariesDetected',
-  'coverageCandidates',
+  'policyType','currency','paymentFrequency','issueDate','basicPremiumTotal','plannedPremium','annualTotal','beneficiariesDetected','coverageCandidates',
 ];
 
 test('Edge extraction contract preserves the golden document semantics', () => {
-  for (const key of requiredSemanticKeys) {
-    assert.match(edge, new RegExp(`\\b${key}\\b`), `Edge contract is missing ${key}`);
-  }
+  for (const key of requiredSemanticKeys) assert.match(edge, new RegExp(`\\b${key}\\b`), `Edge contract is missing ${key}`);
   assert.match(edge, /TIPO DE P[ÓO]LIZA|TIPO DE POLIZA/i);
   assert.match(edge, /PRIMA B[ÁA]SICA TOTAL|PRIMA BASICA TOTAL/i);
   assert.match(edge, /PRIMA PLANEADA/i);
@@ -36,10 +27,8 @@ test('Edge extraction contract preserves the golden document semantics', () => {
   assert.match(edge, /semanticRecoveryReasons/);
 });
 
-test('v8 enriches the productive 020B result before persistence', () => {
-  for (const key of requiredSemanticKeys) {
-    assert.match(v8 + semantic, new RegExp(`\\b${key}\\b`), `semantic transport is missing ${key}`);
-  }
+test('v8 still enriches new-document 020B results before persistence', () => {
+  for (const key of requiredSemanticKeys) assert.match(v8 + semantic, new RegExp(`\\b${key}\\b`), `semantic transport is missing ${key}`);
   assert.match(v8, /RESULT_RPC\s*=\s*'forge_cartera020b_record_processing_result'/);
   assert.match(v8, /enrichProcessingArgs/);
   assert.match(v8, /extractedFields:\s*fields/);
@@ -47,13 +36,13 @@ test('v8 enriches the productive 020B result before persistence', () => {
   assert.match(semantic, /confirmationStatus:\s*previous\?\.confirmationStatus \|\| 'PENDING_CONFIRMATION'/);
 });
 
-test('same-PDF v7 rehydration preserves semantic fields and coverage state', () => {
-  for (const key of requiredSemanticKeys) {
-    assert.match(v7 + semantic, new RegExp(`\\b${key}\\b`), `v7 reopen mapping is missing ${key}`);
-  }
+test('same-PDF chain preserves semantic fields and current boundary repairs stale legacy packets append-only', () => {
+  for (const key of requiredSemanticKeys) assert.match(v7 + v9 + semantic, new RegExp(`\\b${key}\\b`), `same-PDF mapping is missing ${key}`);
   assert.match(v7, /semanticReviewCandidate/);
   assert.match(v7, /pdfCoverageExtraction:\s*edgeCandidate\.coverageExtractionState/);
   assert.match(v7, /reviewCompleteness:\s*edgeCandidate\.reviewCompleteness/);
+  assert.match(v9, /forge_cartera020b_refresh_pending_packet_semantics/);
+  assert.match(v9, /POLICY_PACKET:AURA:SEMANTIC_REFRESH:/);
   assert.doesNotMatch(v7, /pdfCoverageExtraction:\s*'NOT_SUPPORTED'/);
 });
 
@@ -73,9 +62,9 @@ test('review UI distinguishes type/status, protected beneficiaries and document 
   assert.doesNotMatch(ui, /Confianza alta/);
 });
 
-test('canonical Aura import graph maps Cartera at module v4 and adapter v8 completion 014', () => {
+test('canonical Aura keeps inherited app specifier but maps it to current v5/v9 ingress boundary', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-adapter-pages-v8\.js\?v=cartera-pdf-semantic-completion-014/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-completion-014"/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(index, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-pdf-ingress-legacy-refresh"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-ingress-legacy-refresh/);
 });

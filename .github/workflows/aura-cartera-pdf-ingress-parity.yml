@@ -1,0 +1,133 @@
+name: Aura Cartera PDF Ingress Triple Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v5.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql'
+      - 'tests/cartera-pdf-ingress-legacy-refresh.test.mjs'
+      - 'tests/cartera-pdf-ingress-parity-playwright.config.mjs'
+      - 'tests/fixtures/aura-cartera-pdf-ingress-parity.html'
+      - 'tests/e2e/aura-cartera-pdf-ingress-parity.spec.mjs'
+      - '.github/workflows/aura-cartera-pdf-ingress-parity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-cartera-pdf-ingress-triple-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: Ingress + append-only refresh contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Syntax check new runtime
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v5.js
+          node --check tests/e2e/aura-cartera-pdf-ingress-parity.spec.mjs
+      - name: Prove governed append-only refresh and ingress wiring
+        run: node --test tests/cartera-pdf-ingress-legacy-refresh.test.mjs
+
+  selector-triple-check:
+    name: Media selector — triple check 1/3 + 2/3 + 3/3
+    needs: contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run selector checks 1/3, 2/3 and 3/3
+        run: npx playwright test --config tests/cartera-pdf-ingress-parity-playwright.config.mjs --grep "selector check"
+      - name: Upload selector evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-pdf-selector-triple-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/aura-cartera-pdf-ingress-parity
+          if-no-files-found: warn
+          retention-days: 30
+
+  drag-drop-triple-check:
+    name: Drag and drop — triple check 1/3 + 2/3 + 3/3
+    needs: contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run drag-drop checks 1/3, 2/3 and 3/3
+        run: npx playwright test --config tests/cartera-pdf-ingress-parity-playwright.config.mjs --grep "drag drop check"
+      - name: Upload drag-drop evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-pdf-drag-drop-triple-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/aura-cartera-pdf-ingress-parity
+          if-no-files-found: warn
+          retention-days: 30
+
+  selector-drop-parity:
+    name: Selector ↔ drag-drop digest + semantic parity
+    needs:
+      - selector-triple-check
+      - drag-drop-triple-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact tested revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Prove identical digest and semantic snapshot
+        run: npx playwright test --config tests/cartera-pdf-ingress-parity-playwright.config.mjs --grep "selector and drag drop produce identical"

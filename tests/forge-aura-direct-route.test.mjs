@@ -18,13 +18,14 @@ function createWindow(initialHref) {
   };
 }
 
-test("canonical Aura entrypoint loads the cache-isolated v4 runtime", () => {
+test("canonical Aura entrypoint loads cache-isolated v4 with current Cartera ingress boundary", () => {
   const html = readFileSync("docs/static-preview/forge-aura/index.html", "utf8");
   assert.match(html, /data-aura-runtime="FORGE_AURA_LIGHT_2026_V4"/);
-  assert.match(html, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-semantic-completion-014/);
-  assert.match(html, /env\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(html, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(html, /env\.js\?v=cartera-pdf-ingress-legacy-refresh/);
   assert.match(html, /pipeline-adapter-pages-v1\.js/);
-  assert.match(html, /cartera-module-v4\.js\?v=cartera-pdf-semantic-completion-014/);
+  assert.match(html, /cartera-module-v5\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(html, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
   assert.doesNotMatch(html, /src="\.\/aura-bootstrap\.js/);
   assert.doesNotMatch(html, /src="\.\/aura-bootstrap-v4\.js/);
 });

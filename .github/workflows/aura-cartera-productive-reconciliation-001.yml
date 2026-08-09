@@ -11,8 +11,10 @@ on:
       - 'docs/static-preview/forge-aura/aura-shell.js'
       - 'docs/static-preview/forge-aura/index.html'
       - 'supabase/functions/cartera-pdf-intake/**'
+      - 'supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql'
       - 'tests/aura-cartera-productive-reconciliation.test.mjs'
       - 'tests/aura-cartera-pages-import-graph.test.mjs'
+      - 'tests/cartera-pdf-ingress-legacy-refresh.test.mjs'
       - 'tests/cartera-playwright.config.mjs'
       - 'tests/e2e/aura-cartera-productive-visual.spec.mjs'
       - 'tests/fixtures/aura-cartera-productive.synthetic.json'
@@ -65,9 +67,11 @@ jobs:
           set -euo pipefail
           mapfile -t changed < <(git -c core.quotepath=false diff --name-only "$BASE_SHA" "$HEAD_SHA")
           printf '%s\n' "${changed[@]}"
-          forbidden='^(supabase/migrations/|platform/policy-intelligence/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
+          forbidden='^(platform/policy-intelligence/|\.github/workflows/pages\.yml$|docs/static-preview/forge-alive-material3/)'
           allowed_edge='^supabase/functions/cartera-pdf-intake/(index\.ts|semantic-recovery\.js)$'
+          allowed_migration='^supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc\.sql$'
           edge_changed=0
+          migration_changed=0
           for file in "${changed[@]}"; do
             if [[ "$file" =~ ^supabase/functions/ ]]; then
               if [[ ! "$file" =~ $allowed_edge ]]; then
@@ -75,13 +79,23 @@ jobs:
                 exit 1
               fi
               edge_changed=1
+              continue
+            fi
+            if [[ "$file" =~ ^supabase/migrations/ ]]; then
+              if [[ ! "$file" =~ $allowed_migration ]]; then
+                echo "ROBOCOP_SCOPE_VIOLATION=$file" >&2
+                exit 1
+              fi
+              migration_changed=1
+              continue
             fi
             if [[ "$file" =~ $forbidden ]]; then
               echo "ROBOCOP_SCOPE_VIOLATION=$file" >&2
               exit 1
             fi
           done
-          echo 'SUPABASE_MIGRATIONS_CHANGED=0'
+          echo "SUPABASE_MIGRATIONS_CHANGED=$migration_changed"
+          if [[ "$migration_changed" = '1' ]]; then echo 'SUPABASE_MIGRATION_SCOPE=CARTERA020B_SEMANTIC_REFRESH_ONLY'; fi
           echo "EDGE_FUNCTIONS_CHANGED=$edge_changed"
           if [[ "$edge_changed" = '1' ]]; then echo 'EDGE_FUNCTION_SCOPE=CARTERA_PDF_INTAKE_ONLY'; fi
           echo 'POLICY_INTELLIGENCE_BACKEND_CHANGED=0'
@@ -94,13 +108,15 @@ jobs:
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v1.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js
           node --check docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js
           node --check docs/static-preview/forge-aura/cartera/cartera-coverage-adapter.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v4.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v5.js
           node --check docs/static-preview/forge-aura/app-v4.js
       - name: Aura Cartera productive contract
-        run: node --test tests/aura-cartera-productive-reconciliation.test.mjs
+        run: node --test tests/aura-cartera-productive-reconciliation.test.mjs tests/cartera-pdf-ingress-legacy-refresh.test.mjs
       - name: Policy Coverage authority and versioning
         run: >-
           node --test
