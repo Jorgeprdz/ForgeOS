@@ -35,7 +35,6 @@ test('Galaxy-size directory removes browser-native button chrome and preserves d
       webkitAppearance: computed.webkitAppearance,
       borderRightWidth: computed.borderRightWidth,
       borderBottomWidth: computed.borderBottomWidth,
-      backgroundColor: computed.backgroundColor,
       minHeight: element.getBoundingClientRect().height,
     };
   });
@@ -48,9 +47,11 @@ test('Galaxy-size directory removes browser-native button chrome and preserves d
   await shot(page, '01-directory-galaxy-s25');
 });
 
-test('Person Workspace shows authorized contact projection and honest missing fields', async ({ page }) => {
+test('Person Workspace shows authorized contact projection, honest missing fields and reachable content above bottom nav', async ({ page }) => {
   await page.locator('[data-directory-kind="PERSON"]').click();
   await expect(page.locator('#fixture-main')).toHaveAttribute('data-fixture-state', 'person-ready');
+  await expect(page.getByText('PERSONA', { exact: true })).toBeVisible();
+  await expect(page.locator('body')).not.toContainText('PERSON WORKSPACE');
   await expect(page.getByRole('heading', { name: 'Alex Ejemplo' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Cliente' })).toBeVisible();
   await expect(page.getByText('+525500001616')).toBeVisible();
@@ -62,6 +63,17 @@ test('Person Workspace shows authorized contact projection and honest missing fi
 
   const workspacePadding = await page.locator('.cartera-workspace').evaluate(element => parseFloat(getComputedStyle(element).paddingBottom));
   expect(workspacePadding).toBeGreaterThanOrEqual(104);
+  const lastContactClearsNav = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll('.cartera-person-contact-grid-016 article')];
+    const card = cards.find(item => item.querySelector('small')?.textContent?.trim() === 'Correo');
+    const nav = document.querySelector('.fixture-bottom-nav');
+    if (!card || !nav) return false;
+    card.scrollIntoView({ block: 'center' });
+    const cardRect = card.getBoundingClientRect();
+    const navRect = nav.getBoundingClientRect();
+    return cardRect.top >= 0 && cardRect.bottom <= navRect.top;
+  });
+  expect(lastContactClearsNav).toBeTruthy();
   expect(await noHorizontalOverflow(page)).toBeTruthy();
   await shot(page, '02-person-summary-galaxy-s25');
 });
@@ -79,6 +91,8 @@ test('Pólizas and Relación are real accessible tabs with keyboard navigation',
   await expect(page.locator('#cartera-person-panel-policies')).toBeVisible();
   await expect(page.getByText('Imagina Ser 65 15 Pagos UDI')).toBeVisible();
   await expect(page.getByText('••••••6169 · Activa')).toBeVisible();
+  await expect(page.getByText('PÓL', { exact: true })).toHaveCount(0);
+  await expect(page.locator('#cartera-person-panel-policies .cartera-directory-icon')).toHaveText('▤');
   await expect(page.locator('body')).not.toContainText('product:imagina-ser-65-15-pagos-udi');
   await shot(page, '03-person-policies-galaxy-s25');
 
