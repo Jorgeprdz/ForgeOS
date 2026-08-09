@@ -32,7 +32,6 @@ on:
         options:
           - CONTACT_BOOKS_001
           - BETA1_022B
-          - WRITABLE_SYNTHETIC_005C
 
 permissions:
   contents: read
@@ -43,7 +42,7 @@ concurrency:
 
 jobs:
   validate-seed-and-seal:
-    if: github.event_name == 'workflow_dispatch' && inputs.validated_sha == '' && inputs.acceptance_phase != 'WRITABLE_SYNTHETIC_005C'
+    if: github.event_name == 'workflow_dispatch' && inputs.validated_sha == ''
     runs-on: ubuntu-24.04
     environment: 067g17a1-remote-acceptance
     env:
@@ -115,7 +114,7 @@ jobs:
           if-no-files-found: error
 
   contact-books-remote-acceptance:
-    if: inputs.validated_sha != '' && inputs.acceptance_phase != 'BETA1_022B' && inputs.acceptance_phase != 'WRITABLE_SYNTHETIC_005C'
+    if: inputs.validated_sha != '' && inputs.acceptance_phase != 'BETA1_022B'
     uses: ./.github/workflows/contact-books-001-remote-acceptance.yml
     with:
       validated_sha: ${{ inputs.validated_sha }}
@@ -127,12 +126,5 @@ jobs:
     uses: ./.github/workflows/beta1-022b-compensation-remote-acceptance.yml
     with:
       validated_sha: ${{ inputs.validated_sha }}
-      run_id: ${{ inputs.run_id }}
-    secrets: inherit
-
-  writable-synthetic-005c:
-    if: github.event_name == 'workflow_dispatch' && inputs.acceptance_phase == 'WRITABLE_SYNTHETIC_005C' && github.ref_name == 'feature/governed-writable-synthetic-acceptance-005c' && github.actor == 'Jorgeprdz' && inputs.validated_sha == github.sha
-    uses: ./.github/workflows/writable-synthetic-acceptance-005c.yml
-    with:
       run_id: ${{ inputs.run_id }}
     secrets: inherit
