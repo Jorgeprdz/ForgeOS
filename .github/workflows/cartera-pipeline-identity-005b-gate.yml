@@ -1,0 +1,77 @@
+name: Cartera Pipeline Identity 005B Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "scripts/forge-cartera-pipeline-identity-productive-005b.mjs"
+      - "tests/cartera-pipeline-identity-productive-005b.test.mjs"
+      - ".github/workflows/cartera-pipeline-identity-005b-gate.yml"
+      - ".github/workflows/cartera-pipeline-identity-005b-remote.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-pipeline-identity-005b-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-acceptance-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: 005B bounded diff
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          head='${{ github.event.pull_request.head.sha }}'
+          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-(gate|remote)\.yml)$'
+          mapfile -t changed < <(git diff --name-only "$base" "$head")
+          test "${#changed[@]}" -gt 0
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            [[ "$path" =~ $allowed ]] || { echo "005B_UNAUTHORIZED_PATH=$path" >&2; exit 1; }
+          done
+          echo '005B_BOUNDED_DIFF=PASS'
+
+      - name: Syntax check acceptance runner
+        run: node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
+
+      - name: Static 005B acceptance contract
+        run: node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
+
+      - name: Preserve Cartera 015 durable boundary
+        run: node --test tests/cartera-020c-durable-attach-015.test.mjs
+
+      - name: Preserve CRS-03 identity boundaries
+        run: |
+          node --test tests/crs-03-pipeline-person-convergence-contract-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-service-test.mjs
+
+      - name: Preserve unified runtime
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Emit preflight markers
+        run: |
+          echo '005B_STATIC_GATE=PASS'
+          echo 'REMOTE_MUTATION=NONE'
+          echo 'SERVICE_ROLE=FORBIDDEN'
+          echo 'HUMAN_REMOTE_CHECKPOINT=REQUIRED'
