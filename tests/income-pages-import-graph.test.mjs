@@ -32,7 +32,7 @@ test("canonical Aura runtime mounts route=comisiones as visible Ingresos", () =>
   assert.match(index, /income-adapter-pages-v1\.mjs[^\n]+income-adapter-pages-v1\.js/);
 });
 
-test("canonical Pages artifact preserves inherited Cartera chain behind current v9/v5 ingress boundary", () => {
+test("canonical Pages artifact preserves inherited Cartera chain behind current v10/v5 durable boundary", () => {
   for (const relative of [
     "static-preview/forge-aura/cartera/cartera-module-v4.js",
     "static-preview/forge-aura/cartera/cartera-module-v5.js",
@@ -47,6 +47,7 @@ test("canonical Pages artifact preserves inherited Cartera chain behind current 
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js",
     "static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js",
+    "static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js",
   ]) assert.equal(exists(relative), true, `Missing current Cartera asset: ${relative}`);
 
   const app = read("static-preview/forge-aura/app-v4-r1.js");
@@ -63,15 +64,18 @@ test("canonical Pages artifact preserves inherited Cartera chain behind current 
   const v7 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js");
   const v8 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js");
   const v9 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js");
+  const v10 = read("static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js");
 
   assert.match(app, /cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-pdf-ingress-legacy-refresh"/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-pdf-ingress-legacy-refresh/);
+  assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
   assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
   assert.match(moduleV5, /createSemanticCarteraAdapter/);
   assert.match(moduleV5, /cartera-adapter-pages-v9/);
   assert.match(moduleV5, /addEventListener\('drop', onDropCapture, true\)/);
+  assert.match(v10, /cartera-adapter-pages-v9/);
+  assert.match(v10, /forge_cartera020c_attach_policy_confirmation_durable/);
   assert.match(v9, /cartera-adapter-pages-v8/);
   assert.match(v9, /forge_cartera020b_refresh_pending_packet_semantics/);
   assert.match(v9, /pdfLegacyPendingSemanticRefresh:\s*true/);
