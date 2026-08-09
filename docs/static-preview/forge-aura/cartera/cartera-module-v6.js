@@ -1,11 +1,24 @@
-import { createCarteraModule as createBaseCarteraModule } from './cartera-module-v5.js?base=cartera-person-workspace-directory-projection-016';
-import { loadCarteraPersonProjection } from './cartera-adapter-pages-v11.js?v=cartera-person-workspace-directory-projection-016';
+import { createCarteraModule as createBaseCarteraModule } from './cartera-module-v5-base-015.js?base=cartera-person-workspace-directory-projection-016';
+import {
+  getCachedCarteraPersonProjection,
+  loadCarteraPersonProjection,
+} from './cartera-adapter-pages-v11.js?v=cartera-person-workspace-directory-projection-016';
 import { escapeHtml as e } from './cartera-core.js';
 import { presentProductReference } from './cartera-person-projection-016.js?v=cartera-person-workspace-directory-projection-016';
 
 const ENTITY_LABEL = Object.freeze({ PERSON: 'Persona', ACCOUNT: 'Cuenta', POLICY: 'Póliza' });
 const ENTITY_GLYPH = Object.freeze({ PERSON: '○', ACCOUNT: '▦', POLICY: '▤' });
 const TAB_IDS = Object.freeze(['summary', 'policies', 'relationship']);
+const STYLE_MARKER = 'cartera-person-workspace-directory-projection-016';
+
+function ensureProjectionStyles(doc) {
+  if (doc.querySelector(`link[data-cartera-projection="${STYLE_MARKER}"]`)) return;
+  const link = doc.createElement('link');
+  link.rel = 'stylesheet';
+  link.dataset.carteraProjection = STYLE_MARKER;
+  link.href = new URL('./cartera-projection-016.css?v=cartera-person-workspace-directory-projection-016', import.meta.url).href;
+  doc.head.append(link);
+}
 
 function contactLabel(contact) {
   if (!contact || contact.state === 'NOT_INFORMED') return 'No informado';
@@ -194,6 +207,7 @@ function buildPersonTabs(workspace, projection) {
 export function createCarteraModule(options = {}) {
   const root = options.root;
   if (!root || !options.client) throw new Error('AURA_CARTERA_ROOT_AND_CLIENT_REQUIRED');
+  const doc = root.ownerDocument;
   const base = createBaseCarteraModule(options);
   let personReference = null;
   let observer = null;
@@ -213,7 +227,8 @@ export function createCarteraModule(options = {}) {
     workspace.dataset.personProjectionLoading = 'true';
     const generation = ++projectionGeneration;
     try {
-      const projection = await loadCarteraPersonProjection({ client: options.client, reference: personReference });
+      const cached = getCachedCarteraPersonProjection(personReference);
+      const projection = cached || await loadCarteraPersonProjection({ client: options.client, reference: personReference });
       if (disposed || generation !== projectionGeneration || !workspace.isConnected) return;
       buildPersonTabs(workspace, projection);
     } catch {
@@ -238,6 +253,7 @@ export function createCarteraModule(options = {}) {
 
   function start() {
     disposed = false;
+    ensureProjectionStyles(doc);
     root.addEventListener('click', capturePersonReference, true);
     observer ||= new MutationObserver(upgrade);
     observer.observe(root, { childList: true, subtree: true });
