@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Forge · Acceso</title>
+  <link rel="stylesheet" href="../../docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="../../docs/static-preview/forge-aura/aura-auth.css">
+</head>
+<body>
+  <main class="aura-auth-callback" data-oauth-callback data-aura-auth-state="AUTH_LOADING">
+    <section class="aura-auth-callback__panel" aria-live="polite" aria-labelledby="oauth-title">
+      <div class="aura-auth-brand aura-auth-brand--compact" aria-label="Forge">
+        <span class="aura-auth-brand__mark" aria-hidden="true">F</span>
+        <strong>Forge</strong>
+      </div>
+      <div class="aura-auth-callback__status" aria-hidden="true"><span></span></div>
+      <h1 id="oauth-title">Completando tu acceso…</h1>
+      <p data-oauth-status>Validando tu acceso seguro…</p>
+      <a class="aura-auth-return" href="#" data-oauth-return hidden>Volver a Forge</a>
+    </section>
+  </main>
+  <script>
+    const state = new URL(location.href).searchParams.get("state") || "success";
+    const root = document.querySelector("[data-oauth-callback]");
+    const status = document.querySelector("[data-oauth-status]");
+    const back = document.querySelector("[data-oauth-return]");
+    if (state === "success") {
+      root.dataset.auraAuthState = "AUTHENTICATED";
+      status.textContent = "Acceso confirmado. Abriendo tu Inicio…";
+    } else if (state === "error") {
+      root.dataset.auraAuthState = "AUTH_ERROR";
+      status.textContent = "No pudimos completar el acceso con Google.";
+      back.hidden = false;
+    }
+  </script>
+</body>
+</html>

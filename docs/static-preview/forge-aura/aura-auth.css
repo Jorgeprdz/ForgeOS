@@ -1,23 +1,558 @@
-.aura-login { min-height: 100vh; display: grid; place-items: center; align-content: center; gap: 24px; padding: 32px 16px; background: var(--aura-canvas); }
-.aura-login__brand { display: flex; align-items: center; gap: 10px; }
-.aura-login__brand > span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--aura-brand); color: white; font-size: 22px; font-weight: 850; box-shadow: var(--aura-shadow-sm); }
-.aura-login__brand strong { font-size: 22px; }
-.aura-login__brand small { color: var(--aura-text-muted); }
-.aura-login__panel { width: min(100%, 440px); padding: clamp(24px, 5vw, 40px); border: 1px solid var(--aura-border); border-radius: var(--aura-radius-lg); background: var(--aura-surface); box-shadow: var(--aura-shadow-md); }
-.aura-eyebrow { margin: 0 0 8px; color: var(--aura-brand-hover); font-size: 14px; font-weight: 850; letter-spacing: .12em; }
-.aura-login h1 { margin: 0; font-size: clamp(30px, 6vw, 44px); line-height: 1.05; letter-spacing: -.04em; }
-.aura-login__panel > p:not(.aura-eyebrow) { color: var(--aura-text-muted); line-height: 1.6; }
-.aura-login form, .aura-login label { display: grid; gap: 8px; }
-.aura-login form { gap: 16px; margin-top: 24px; }
-.aura-login label span { font-size: 14px; font-weight: 750; }
-.aura-login input { min-height: 48px; width: 100%; border: 1px solid var(--aura-border-strong); border-radius: 12px; padding: 0 14px; background: var(--aura-surface); color: var(--aura-text); }
-.aura-login input:focus { border-color: var(--aura-brand); }
-.aura-button { min-height: 48px; width: 100%; border-radius: 12px; padding: 0 18px; border: 1px solid transparent; font-weight: 800; cursor: pointer; }
-.aura-button--primary { background: var(--aura-brand); color: white; }
-.aura-button--primary:hover { background: var(--aura-brand-hover); }
-.aura-button--secondary { background: var(--aura-surface); color: var(--aura-text); border-color: var(--aura-border-strong); }
-.aura-login__divider { position: relative; margin: 20px 0; text-align: center; color: var(--aura-text-muted); }
-.aura-login__divider::before { content: ""; position: absolute; inset: 50% 0 auto; border-top: 1px solid var(--aura-border); }
-.aura-login__divider span { position: relative; padding: 0 12px; background: var(--aura-surface); }
-.aura-login__error { margin: 0; padding: 12px 14px; border-radius: 10px; background: var(--aura-danger-soft); color: var(--aura-danger); font-size: 14px; font-weight: 700; }
-.aura-login__privacy { margin: 0; max-width: 440px; color: var(--aura-text-muted); text-align: center; font-size: 14px; line-height: 1.5; }
+.aura-login,
+.aura-auth-callback {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--forge-space-unit) * 6);
+  background: var(--forge-canvas);
+  color: var(--forge-text-primary);
+}
+
+.aura-loading,
+.aura-auth-callback__panel {
+  width: min(100%, calc(var(--forge-space-unit) * 110));
+  padding: calc(var(--forge-space-unit) * 8);
+  border: 1px solid var(--forge-border-subtle);
+  border-radius: var(--forge-radius-floating);
+  background: var(--forge-surface);
+  box-shadow: var(--forge-shadow-card);
+  text-align: center;
+}
+
+.aura-loading h1,
+.aura-auth-callback h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.025em;
+}
+
+.aura-loading p,
+.aura-auth-callback p {
+  margin: calc(var(--forge-space-unit) * 3) 0 0;
+  color: var(--forge-text-secondary);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.aura-auth-entry {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  background: var(--forge-canvas);
+  color: var(--forge-text-primary);
+  overflow-x: hidden;
+}
+
+.aura-auth-context,
+.aura-auth-access {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.aura-auth-context {
+  position: relative;
+  isolation: isolate;
+  gap: calc(var(--forge-space-unit) * 10);
+  padding:
+    calc(var(--forge-space-unit) * 12)
+    clamp(var(--forge-page-padding-tablet), 6vw, calc(var(--forge-space-unit) * 20));
+  overflow: hidden;
+}
+
+.aura-auth-context::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 12% 10% auto auto;
+  width: min(54vw, calc(var(--forge-space-unit) * 116));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--forge-brand-soft);
+  opacity: 0.78;
+  filter: blur(calc(var(--forge-space-unit) * 12));
+}
+
+.aura-auth-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--forge-space-unit) * 3);
+  width: fit-content;
+}
+
+.aura-auth-brand__mark {
+  display: grid;
+  place-items: center;
+  width: calc(var(--forge-space-unit) * 11);
+  height: calc(var(--forge-space-unit) * 11);
+  border-radius: var(--forge-radius-input);
+  background: var(--forge-brand);
+  color: var(--forge-text-on-brand);
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  box-shadow: var(--forge-shadow-card);
+}
+
+.aura-auth-brand strong {
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.025em;
+}
+
+.aura-auth-brand--compact {
+  margin-inline: auto;
+}
+
+.aura-auth-value {
+  max-width: calc(var(--forge-space-unit) * 132);
+}
+
+.aura-auth-kicker {
+  margin: 0 0 calc(var(--forge-space-unit) * 2);
+  color: var(--forge-brand);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.aura-auth-value h1 {
+  max-width: calc(var(--forge-space-unit) * 120);
+  margin: 0;
+  font-size: 32px;
+  line-height: 38px;
+  letter-spacing: -0.025em;
+}
+
+.aura-auth-value > p:not(.aura-auth-kicker) {
+  max-width: calc(var(--forge-space-unit) * 118);
+  margin: calc(var(--forge-space-unit) * 5) 0 0;
+  color: var(--forge-text-secondary);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.aura-auth-capabilities {
+  display: grid;
+  gap: calc(var(--forge-space-unit) * 3);
+  margin: calc(var(--forge-space-unit) * 8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aura-auth-capabilities li {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--forge-space-unit) * 3);
+  color: var(--forge-text-secondary);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.aura-auth-capabilities li span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: calc(var(--forge-space-unit) * 8);
+  height: calc(var(--forge-space-unit) * 8);
+  border-radius: var(--forge-radius-pill);
+  background: var(--forge-brand-soft);
+  color: var(--forge-brand);
+  font-weight: 700;
+}
+
+.aura-auth-visual {
+  position: relative;
+  width: min(100%, calc(var(--forge-space-unit) * 122));
+  height: calc(var(--forge-space-unit) * 31);
+  border: 1px solid var(--forge-border-subtle);
+  border-radius: var(--forge-radius-widget);
+  background: var(--forge-surface);
+  box-shadow: var(--forge-shadow-card);
+  overflow: hidden;
+}
+
+.aura-auth-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 42%;
+  background: var(--forge-brand-gradient);
+  opacity: 0.08;
+}
+
+.aura-auth-visual__rail {
+  position: absolute;
+  left: calc(var(--forge-space-unit) * 7);
+  right: calc(var(--forge-space-unit) * 7);
+  top: 50%;
+  height: 1px;
+  background: var(--forge-border-default);
+}
+
+.aura-auth-visual__node {
+  position: absolute;
+  top: 50%;
+  width: calc(var(--forge-space-unit) * 4);
+  height: calc(var(--forge-space-unit) * 4);
+  border: calc(var(--forge-space-unit) / 2) solid var(--forge-surface);
+  border-radius: var(--forge-radius-pill);
+  background: var(--forge-brand);
+  box-shadow: 0 0 0 calc(var(--forge-space-unit) * 2) var(--forge-brand-soft);
+  transform: translate(-50%, -50%);
+}
+
+.aura-auth-visual__node--one { left: 16%; }
+.aura-auth-visual__node--two { left: 48%; }
+.aura-auth-visual__node--three { left: 82%; }
+
+.aura-auth-access {
+  padding:
+    calc(var(--forge-space-unit) * 8)
+    clamp(var(--forge-page-padding-mobile), 4.5vw, calc(var(--forge-space-unit) * 16));
+}
+
+.aura-auth-panel {
+  width: min(100%, calc(var(--forge-space-unit) * 116));
+  margin-inline: auto;
+  padding: calc(var(--forge-space-unit) * 8);
+  border: 1px solid var(--forge-border-subtle);
+  border-radius: var(--forge-radius-floating);
+  background: var(--forge-surface);
+  box-shadow: var(--forge-shadow-card);
+}
+
+.aura-auth-panel__intro {
+  margin-bottom: calc(var(--forge-space-unit) * 7);
+}
+
+.aura-auth-panel__intro h2 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.025em;
+}
+
+.aura-auth-panel__intro > p:last-child {
+  margin: calc(var(--forge-space-unit) * 2) 0 0;
+  color: var(--forge-text-secondary);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.aura-auth-google,
+.aura-auth-submit,
+.aura-auth-return {
+  min-height: 44px;
+  border-radius: var(--forge-radius-input);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.aura-auth-google,
+.aura-auth-submit {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--forge-space-unit) * 3);
+  padding: 0 calc(var(--forge-space-unit) * 4);
+  cursor: pointer;
+  transition:
+    transform var(--forge-duration-fast) var(--forge-easing),
+    box-shadow var(--forge-duration-standard) var(--forge-easing),
+    background var(--forge-duration-standard) var(--forge-easing);
+}
+
+.aura-auth-google {
+  min-height: calc(var(--forge-space-unit) * 12);
+  border: 1px solid var(--forge-border-default);
+  background: var(--forge-surface);
+  color: var(--forge-text-primary);
+  box-shadow: var(--forge-shadow-card);
+}
+
+.aura-auth-google:hover:not(:disabled) {
+  border-color: var(--forge-border-focus);
+  background: var(--forge-surface-subtle);
+  transform: translateY(calc(var(--forge-space-unit) / -2));
+}
+
+.aura-auth-google__icon {
+  width: calc(var(--forge-space-unit) * 5);
+  height: calc(var(--forge-space-unit) * 5);
+  flex: 0 0 auto;
+  padding: calc(var(--forge-space-unit) / 2);
+  border-radius: var(--forge-radius-pill);
+  background: var(--forge-surface);
+}
+
+.aura-auth-divider {
+  position: relative;
+  margin: calc(var(--forge-space-unit) * 6) 0;
+  text-align: center;
+  color: var(--forge-text-tertiary);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.aura-auth-divider::before {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto;
+  border-top: 1px solid var(--forge-border-subtle);
+}
+
+.aura-auth-divider span {
+  position: relative;
+  padding-inline: calc(var(--forge-space-unit) * 3);
+  background: var(--forge-surface);
+}
+
+.aura-auth-form {
+  display: grid;
+  gap: calc(var(--forge-space-unit) * 4);
+}
+
+.aura-auth-form label {
+  display: grid;
+  gap: calc(var(--forge-space-unit) * 2);
+  color: var(--forge-text-primary);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.aura-auth-form input {
+  min-height: 44px;
+  width: 100%;
+  border: 1px solid var(--forge-border-default);
+  border-radius: var(--forge-radius-input);
+  padding: 0 calc(var(--forge-space-unit) * 4);
+  background: var(--forge-surface);
+  color: var(--forge-text-primary);
+  font-size: 14px;
+  line-height: 20px;
+  transition: border-color var(--forge-duration-fast) var(--forge-easing);
+}
+
+.aura-auth-form input::placeholder {
+  color: var(--forge-text-tertiary);
+}
+
+.aura-auth-form input:focus {
+  border-color: var(--forge-border-focus);
+}
+
+.aura-auth-submit {
+  border: 1px solid var(--forge-border-default);
+  background: var(--forge-surface-subtle);
+  color: var(--forge-text-primary);
+}
+
+.aura-auth-submit:hover:not(:disabled) {
+  border-color: var(--forge-border-focus);
+  background: var(--forge-brand-soft);
+}
+
+.aura-auth-google:active:not(:disabled),
+.aura-auth-submit:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.aura-auth-google:disabled,
+.aura-auth-submit:disabled,
+.aura-auth-form input:disabled {
+  cursor: wait;
+  opacity: 0.56;
+}
+
+.aura-auth-google:focus-visible,
+.aura-auth-submit:focus-visible,
+.aura-auth-return:focus-visible,
+.aura-auth-form input:focus-visible {
+  outline: calc(var(--forge-space-unit) * 0.75) solid var(--forge-border-focus);
+  outline-offset: calc(var(--forge-space-unit) * 0.75);
+}
+
+.aura-auth-error {
+  margin: 0;
+  padding: calc(var(--forge-space-unit) * 3) calc(var(--forge-space-unit) * 4);
+  border: 1px solid color-mix(in srgb, var(--forge-danger) 24%, var(--forge-surface));
+  border-radius: var(--forge-radius-input);
+  background: color-mix(in srgb, var(--forge-danger) 8%, var(--forge-surface));
+  color: var(--forge-danger);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.aura-auth-privacy {
+  margin: calc(var(--forge-space-unit) * 6) 0 0;
+  color: var(--forge-text-secondary);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.aura-auth-callback__status {
+  display: grid;
+  place-items: center;
+  width: calc(var(--forge-space-unit) * 12);
+  height: calc(var(--forge-space-unit) * 12);
+  margin: calc(var(--forge-space-unit) * 7) auto calc(var(--forge-space-unit) * 5);
+  border-radius: var(--forge-radius-pill);
+  background: var(--forge-brand-soft);
+}
+
+.aura-auth-callback__status span {
+  width: calc(var(--forge-space-unit) * 5);
+  height: calc(var(--forge-space-unit) * 5);
+  border: calc(var(--forge-space-unit) / 2) solid var(--forge-brand);
+  border-right-color: transparent;
+  border-radius: var(--forge-radius-pill);
+  animation: aura-auth-spin var(--forge-duration-emphasized) linear infinite;
+}
+
+.aura-auth-callback[data-aura-auth-state="AUTHENTICATED"] .aura-auth-callback__status {
+  background: color-mix(in srgb, var(--forge-success) 12%, var(--forge-surface));
+}
+
+.aura-auth-callback[data-aura-auth-state="AUTHENTICATED"] .aura-auth-callback__status span {
+  width: calc(var(--forge-space-unit) * 3);
+  height: calc(var(--forge-space-unit) * 5);
+  border: 0;
+  border-right: calc(var(--forge-space-unit) / 1.5) solid var(--forge-success);
+  border-bottom: calc(var(--forge-space-unit) / 1.5) solid var(--forge-success);
+  border-radius: 0;
+  animation: none;
+  transform: rotate(45deg) translateY(calc(var(--forge-space-unit) * -0.5));
+}
+
+.aura-auth-callback[data-aura-auth-state="AUTH_ERROR"] .aura-auth-callback__status {
+  background: color-mix(in srgb, var(--forge-danger) 10%, var(--forge-surface));
+}
+
+.aura-auth-callback[data-aura-auth-state="AUTH_ERROR"] .aura-auth-callback__status span {
+  width: calc(var(--forge-space-unit) * 5);
+  height: 2px;
+  border: 0;
+  border-radius: var(--forge-radius-pill);
+  background: var(--forge-danger);
+  animation: none;
+}
+
+.aura-auth-return {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: calc(var(--forge-space-unit) * 6);
+  padding: 0 calc(var(--forge-space-unit) * 5);
+  border: 1px solid var(--forge-border-default);
+  background: var(--forge-surface);
+  color: var(--forge-brand);
+  text-decoration: none;
+}
+
+@keyframes aura-auth-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1100px) {
+  .aura-auth-entry {
+    grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
+  }
+
+  .aura-auth-context {
+    padding-inline: var(--forge-page-padding-tablet);
+  }
+
+  .aura-auth-visual {
+    height: calc(var(--forge-space-unit) * 26);
+  }
+}
+
+@media (max-width: 720px) {
+  .aura-auth-entry {
+    display: block;
+  }
+
+  .aura-auth-context {
+    min-height: auto;
+    gap: calc(var(--forge-space-unit) * 5);
+    padding:
+      calc(var(--forge-space-unit) * 6)
+      var(--forge-page-padding-mobile)
+      calc(var(--forge-space-unit) * 4);
+  }
+
+  .aura-auth-context::before {
+    inset: -18% -26% auto auto;
+    width: 84vw;
+  }
+
+  .aura-auth-brand__mark {
+    width: calc(var(--forge-space-unit) * 10);
+    height: calc(var(--forge-space-unit) * 10);
+  }
+
+  .aura-auth-value h1 {
+    font-size: 26px;
+    line-height: 32px;
+  }
+
+  .aura-auth-value > p:not(.aura-auth-kicker) {
+    margin-top: calc(var(--forge-space-unit) * 3);
+  }
+
+  .aura-auth-capabilities,
+  .aura-auth-visual {
+    display: none;
+  }
+
+  .aura-auth-access {
+    padding:
+      calc(var(--forge-space-unit) * 2)
+      var(--forge-page-padding-mobile)
+      calc(var(--forge-space-unit) * 8);
+  }
+
+  .aura-auth-panel {
+    padding: calc(var(--forge-space-unit) * 6);
+  }
+
+  .aura-auth-panel__intro {
+    margin-bottom: calc(var(--forge-space-unit) * 5);
+  }
+}
+
+@media (max-width: 430px) {
+  .aura-login,
+  .aura-auth-callback {
+    padding: var(--forge-page-padding-mobile);
+  }
+
+  .aura-auth-panel {
+    padding: calc(var(--forge-space-unit) * 5);
+  }
+
+  .aura-auth-divider {
+    margin-block: calc(var(--forge-space-unit) * 5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-auth-google,
+  .aura-auth-submit,
+  .aura-auth-form input {
+    transition: none;
+  }
+
+  .aura-auth-callback__status span {
+    animation: none;
+  }
+}
