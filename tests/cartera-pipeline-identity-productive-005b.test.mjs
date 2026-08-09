@@ -32,7 +32,7 @@ test('005B blocked attempt remains immutable historical evidence, not the R1 aut
   assert.match(blockedEvidence, /PRODUCT_DEFECT=NO/);
 });
 
-test('005B-R1 fixture preflight uses only dedicated 05C identities and productive RLS', () => {
+test('005B-R1 fixture preflight uses only dedicated 05C identities, productive RLS and owner-scoped retry reset', () => {
   assert.match(fixturePrep, /forge\.acceptance\.a@forge\.invalid/);
   assert.match(fixturePrep, /forge\.acceptance\.b@forge\.invalid/);
   assert.match(fixturePrep, /forge_demo_current_session/);
@@ -41,8 +41,11 @@ test('005B-R1 fixture preflight uses only dedicated 05C identities and productiv
   assert.match(fixturePrep, /PRIMARY_SYNTHETIC_PHONE = '\+000000000057'/);
   assert.match(fixturePrep, /AMBIG_SYNTHETIC_PHONE = '\+000000000058'/);
   assert.match(fixturePrep, /phone_normalized:\s*syntheticPhone/);
-  assert.match(fixturePrep, /ensureFixture\(clientA, a\.id, PRIMARY_CONTEXT, PRIMARY_SYNTHETIC_PHONE\)/);
-  assert.match(fixturePrep, /ensureFixture\(clientA, a\.id, AMBIG_CONTEXT, AMBIG_SYNTHETIC_PHONE\)/);
+  assert.match(fixturePrep, /createFreshFixture\(clientA, a\.id, PRIMARY_CONTEXT, PRIMARY_SYNTHETIC_PHONE\)/);
+  assert.match(fixturePrep, /createFreshFixture\(clientA, a\.id, AMBIG_CONTEXT, AMBIG_SYNTHETIC_PHONE\)/);
+  assert.match(fixturePrep, /FORGE_005B_R1_RETRY_RESET/);
+  assert.match(fixturePrep, /archived_by:\s*advisorId/);
+  assert.match(fixturePrep, /005B_R1_PRIOR_FIXTURE_RESET=OWNER_SCOPED/);
   assert.match(fixturePrep, /\.from\('prospects'\)\.insert/);
   assert.doesNotMatch(fixturePrep, /SUPABASE_SERVICE_ROLE_KEY|SUPABASE_ACCESS_TOKEN|database\/query|auth\.admin/i);
 });
@@ -73,6 +76,24 @@ test('005B-R1 product runtime keeps human selection as Pipeline convergence trig
   assert.doesNotMatch(directoryBlock, /client\.rpc\(IDENTITY_RPC/);
   assert.match(identitySql, /CARTERA010B_PROSPECT_NOT_OWNED/);
   assert.match(durableSql, /actor_id uuid := auth\.uid\(\)/);
+});
+
+test('005B-R1 person workspace projects policies through canonical participant_person_id', () => {
+  assert.match(adapter, /GENERAL_ROLE_RPC = 'forge_cartera010b_list_general_policy_roles'/);
+  assert.match(adapter, /loadPersonPoliciesByCanonicalParticipantId/);
+  const helperBlock = adapter.slice(
+    adapter.indexOf('async function loadPersonPoliciesByCanonicalParticipantId'),
+    adapter.indexOf('async function loadPipelinePeople'),
+  );
+  assert.match(helperBlock, /\.select\('id,person_reference,archived_at'\)/);
+  assert.match(helperBlock, /participant_person_id/);
+  assert.match(helperBlock, /String\(role\?\.participant_person_id \|\| ''\) === personId/);
+  assert.doesNotMatch(helperBlock, /participant_person_reference/);
+  const workspaceBlock = adapter.slice(
+    adapter.indexOf('async loadPersonWorkspace\(reference\)'),
+    adapter.indexOf('async confirmPdfReview'),
+  );
+  assert.match(workspaceBlock, /loadPersonPoliciesByCanonicalParticipantId\(client, reference\)/);
 });
 
 test('005B-R1 remote workflow confines privilege to 05C control plane and always seals', () => {
@@ -120,5 +141,6 @@ test('005B-R1 gate remains acceptance-only and preserves REP-17', () => {
   assert.match(gate, /005B_R1_PRECONDITION=PASS/);
   assert.match(gate, /ROBOCOP_UNLOCK_005B_R1=GRANTED/);
   assert.match(gate, /rep-17-unified-runtime-regression-test\.mjs/);
+  assert.match(gate, /docs\/static-preview\/forge-aura\/cartera\/cartera-adapter-pages-v10\.js/);
   assert.doesNotMatch(gate, /pages\.yml|DEPLOY_FORGE_PAGES/);
 });
