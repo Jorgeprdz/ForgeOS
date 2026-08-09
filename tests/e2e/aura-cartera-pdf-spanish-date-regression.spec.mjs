@@ -66,6 +66,7 @@ async function visibleSemanticSnapshot(page) {
 }
 
 test('partial production-like extraction is recovered, persisted and reopened without semantic loss',async({page})=>{
+  await page.setViewportSize({width:1440,height:1000});
   const pageErrors=[]; page.on('pageerror',error=>pageErrors.push(error.message));
   await page.goto(FIXTURE,{waitUntil:'networkidle'});
   await expect(page.locator('html')).toHaveAttribute('data-regression-harness','READY_SEMANTIC_014');
@@ -94,7 +95,30 @@ test('partial production-like extraction is recovered, persisted and reopened wi
   await expect(page.locator('body')).not.toContainText('Coberturas detectadas: no disponibles en este parser');
   await expect(page.locator('body')).not.toContainText('04 ago 2026');
   await expect(page.locator('body')).not.toContainText('Invalid time value');
-  await page.screenshot({path:'test-results/aura-cartera-pdf-regression/01-cartera-pdf-semantic-desktop.png',fullPage:true});
+
+  const heroGeometry=await page.evaluate(()=>{
+    const hero=document.querySelector('.cartera-semantic-hero');
+    const summary=hero?.querySelector(':scope > div');
+    const rail=hero?.querySelector('.cartera-semantic-rail');
+    if(!hero||!summary||!rail)return null;
+    const h=hero.getBoundingClientRect(),s=summary.getBoundingClientRect(),r=rail.getBoundingClientRect();
+    return{heroWidth:h.width,summaryWidth:s.width,railWidth:r.width,gap:r.left-s.right,overlap:s.right>r.left+1,railInside:r.right<=h.right+1};
+  });
+  expect(heroGeometry).not.toBeNull();
+  expect(heroGeometry.summaryWidth).toBeGreaterThanOrEqual(300);
+  expect(heroGeometry.railWidth).toBeGreaterThanOrEqual(200);
+  expect(heroGeometry.railWidth).toBeLessThanOrEqual(300);
+  expect(heroGeometry.gap).toBeGreaterThanOrEqual(12);
+  expect(heroGeometry.overlap).toBe(false);
+  expect(heroGeometry.railInside).toBe(true);
+  await page.screenshot({path:'test-results/aura-cartera-pdf-regression/01-cartera-pdf-semantic-desktop.png',fullPage:false});
+
+  await page.locator('#semantic-premium-title').scrollIntoViewIfNeeded();
+  await expect(page.locator('.cartera-semantic-premiums')).toBeVisible();
+  await page.screenshot({path:'test-results/aura-cartera-pdf-regression/01b-cartera-pdf-premiums-desktop.png',fullPage:false});
+  await page.locator('#semantic-coverage-title').scrollIntoViewIfNeeded();
+  await expect(page.locator('[data-coverage-candidate]').first()).toBeVisible();
+  await page.screenshot({path:'test-results/aura-cartera-pdf-regression/01c-cartera-pdf-coverages-desktop.png',fullPage:false});
 
   const firstTrace=await page.evaluate(()=>window.__PDF_FULL_CHAIN_TRACE__);
   expect(firstTrace.edgePrimary).toMatchObject({
