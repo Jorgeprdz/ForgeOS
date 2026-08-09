@@ -77,10 +77,11 @@ test('005C workflow scopes privilege away from the authenticated data-plane step
   assert.match(workflow, /finalize-writable-synthetic-acceptance-005c\.mjs/);
 });
 
-test('005C pre-merge dispatcher is exact-branch and does not reroute legacy BETA acceptance', () => {
+test('005C pre-merge dispatcher is exact-branch, exact-SHA and does not reroute legacy BETA acceptance', () => {
   assert.match(dispatcher, /WRITABLE_SYNTHETIC_005C/);
   assert.match(dispatcher, /github\.ref_name == 'feature\/governed-writable-synthetic-acceptance-005c'/);
   assert.match(dispatcher, /github\.actor == 'Jorgeprdz'/);
+  assert.match(dispatcher, /inputs\.validated_sha == github\.sha/);
   assert.match(dispatcher, /uses: \.\/\.github\/workflows\/writable-synthetic-acceptance-005c\.yml/);
   assert.match(dispatcher, /validate-seed-and-seal:[\s\S]*acceptance_phase != 'WRITABLE_SYNTHETIC_005C'/);
   assert.match(dispatcher, /contact-books-remote-acceptance:[\s\S]*acceptance_phase != 'WRITABLE_SYNTHETIC_005C'/);
