@@ -1,0 +1,204 @@
+name: Aura Quotes Premium Decision Experience 002
+
+on:
+  push:
+    branches:
+      - feature/aura-quotes-premium-decision-experience-002
+    paths:
+      - 'docs/static-preview/forge-aura/quotes/**'
+      - 'tests/**/*quotes*'
+      - 'docs/architecture/source-truth/FORGE_AURA_QUOTES_PREMIUM_DECISION_EXPERIENCE_RECONCILIATION_002.md'
+      - 'docs/evidence/FORGE_AURA_QUOTES_PREMIUM_DECISION_EXPERIENCE_ACCEPTANCE_002.md'
+      - '.github/workflows/aura-quotes-premium-decision-experience-002.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/quotes/**'
+      - 'tests/**/*quotes*'
+      - 'docs/architecture/source-truth/FORGE_AURA_QUOTES_PREMIUM_DECISION_EXPERIENCE_RECONCILIATION_002.md'
+      - 'docs/evidence/FORGE_AURA_QUOTES_PREMIUM_DECISION_EXPERIENCE_ACCEPTANCE_002.md'
+      - '.github/workflows/aura-quotes-premium-decision-experience-002.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-quotes-premium-decision-experience-002-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  FORGE_PAGES_RUNTIME_MODE: 'pages'
+  GITHUB_PAGES: 'true'
+  DEMO_MODE: 'true'
+  ENABLE_TEST_ADVISOR_LOGIN: 'false'
+  SUPABASE_URL: ''
+  SUPABASE_ANON_KEY: ''
+
+jobs:
+  contract-and-regressions:
+    name: Quotes constitutional contracts and regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Syntax
+        run: |
+          node --check docs/static-preview/forge-aura/quotes/quotes-adapter.js
+          node --check docs/static-preview/forge-aura/quotes/quotes-module.js
+      - name: Constitutional static contracts and scope guard
+        run: >-
+          node --test
+          tests/aura-quotes-premium-decision-experience-002.test.mjs
+          tests/aura-quotes-premium-decision-experience-002-scope-guard.test.mjs
+      - name: Existing Aura Quotes reconciliation regression
+        run: node tests/forge-aura-quotes-reconciliation-test.mjs
+      - name: Accepted Quote review regression
+        run: node manager-os/tests/accepted-quote-review-snapshot-boundary-master-test.js
+      - name: Product Intelligence regressions
+        run: >-
+          node --test
+          tests/imagina-ser-product-dashboard-adapter-test.mjs
+          tests/orvi-product-dashboard-adapter-test.mjs
+      - name: QPD and PDF regressions
+        run: |
+          node advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+          node advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
+      - name: Presentation Maker assembly and review regressions
+        run: |
+          node manager-os/tests/sales-presentation-review-packet-engine-master-test.js
+          node manager-os/tests/sales-presentation-existing-assembly-contract-e2e-master-test.js
+      - name: Preserve explicit production deployment governance
+        run: node --test tests/pages-explicit-deployment-governance.test.mjs
+      - name: Contract summary
+        run: |
+          echo 'QUOTES_CONSTITUTIONAL_GATE=PASS'
+          echo 'AURA_LIGHT_GATE=PASS'
+          echo 'NEW_PRODUCTIVE_ENGINE_COUNT=0'
+          echo 'NEW_QUOTE_CALCULATION_COUNT=0'
+          echo 'NEW_FORECAST_FORMULA_COUNT=0'
+          echo 'NEW_ECONOMIC_FORMULA_COUNT=0'
+          echo 'ACCEPTED_QUOTE_REUSE=PASS'
+          echo 'PDF_RUNTIME_REUSE=PASS'
+          echo 'PRESENTATION_MAKER_REUSE=PASS'
+
+  canonical-pages-artifact:
+    name: Canonical Pages artifact and Quotes import graph
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: contract-and-regressions
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Extract canonical Pages builder from production workflow
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import textwrap
+          workflow = Path('.github/workflows/pages.yml').read_text()
+          blocks = re.findall(r"node - <<'EOF'\n(.*?)\n\s+EOF", workflow, re.S)
+          if len(blocks) != 3:
+              raise SystemExit(f'EXPECTED_3_NODE_BLOCKS_OBSERVED_{len(blocks)}')
+          Path('/tmp/generate-env.cjs').write_text(textwrap.dedent(blocks[0]))
+          Path('/tmp/build-canonical.cjs').write_text(textwrap.dedent(blocks[1]).replace('process.env.GITHUB_SHA', 'process.env.FORGE_BUILD_SHA'))
+          Path('/tmp/validate-canonical.cjs').write_text(textwrap.dedent(blocks[2]).replace('process.env.EXPECTED_COMMIT_SHA', 'process.env.FORGE_BUILD_SHA'))
+          PY
+      - name: Build canonical Pages artifact
+        run: |
+          node /tmp/generate-env.cjs
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          node /tmp/build-canonical.cjs
+      - name: Validate canonical artifact and Quotes graph
+        env:
+          EXPECTED_DEMO_MODE: 'true'
+        run: |
+          node /tmp/validate-canonical.cjs
+          node scripts/validate-pages-public-config.mjs _site/env.js
+          node --test tests/aura-quotes-premium-decision-experience-002-pages-import-graph.test.mjs
+          echo 'PAGES_ARTIFACT_BUILD=PASS'
+          echo 'QUOTES_IMPORT_GRAPH=PASS'
+          echo 'NO_BLANK_SCREEN_IMPORT_FAILURE=PASS'
+      - name: Upload artifact diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-quotes-canonical-site-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            _site/build-info.json
+            _site/production-surface.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  browser-acceptance:
+    name: Quotes responsive accessibility and visual acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: contract-and-regressions
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run responsive keyboard zoom and reduced-motion acceptance
+        run: npx playwright test --config tests/quotes-premium-playwright.config.mjs
+      - name: Verify required screenshot evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in \
+            empty-mobile calculated-mobile confirmed-mobile \
+            empty-tablet calculated-tablet \
+            empty-desktop calculated-desktop confirmed-desktop \
+            zoom-200 reduced-motion; do
+            test -s "test-results/aura-quotes-premium-decision-experience-002/${name}.png"
+          done
+          echo 'MOBILE=PASS'
+          echo 'TABLET=PASS'
+          echo 'DESKTOP=PASS'
+          echo 'ZOOM_200=PASS'
+          echo 'KEYBOARD_ONLY=PASS'
+          echo 'VISIBLE_FOCUS=PASS'
+          echo 'REDUCED_MOTION=PASS'
+          echo 'VISUAL_ACCEPTANCE=PASS'
+      - name: Upload Quotes screenshots and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-quotes-premium-decision-experience-002-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            test-results/aura-quotes-premium-decision-experience-002
+            test-results/aura-quotes-premium-decision-experience-002-playwright
+          if-no-files-found: warn
+          retention-days: 30
