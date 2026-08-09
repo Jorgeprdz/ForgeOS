@@ -1,0 +1,38 @@
+name: Audit real PDF - Vida Mujer
+
+on:
+  push:
+    branches:
+      - audit/quotes-real-pdf-product-intelligence-008
+    paths:
+      - "audit/quote-real-pdf-audit.mjs"
+      - "audit/fixtures/vida-mujer-real-pdf.txt"
+      - ".github/workflows/audit-real-pdf-vida-mujer.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-vida-mujer-real-pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+      - name: Syntax gate
+        run: node --check audit/quote-real-pdf-audit.mjs
+      - name: Replay Vida Mujer PDF evidence through Product Intelligence and Material 3
+        run: |
+          node audit/quote-real-pdf-audit.mjs \
+            --family vida_mujer \
+            --text-fixture audit/fixtures/vida-mujer-real-pdf.txt \
+            --name "VM solucionline.PDF" \
+            --pdf-sha256 16be81ab3d912c919bb60b504d711fa09f5534b3cf7db2874843a4c12ca66a2a
+      - name: Upload Vida Mujer audit evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-pdf-vida-mujer-product-intelligence-audit
+          path: tmp/quote-real-pdf-audit/vida_mujer.*
+          if-no-files-found: error
