@@ -7,7 +7,7 @@ on:
       - "scripts/forge-cartera-pipeline-identity-productive-005b.mjs"
       - "tests/cartera-pipeline-identity-productive-005b.test.mjs"
       - ".github/workflows/cartera-pipeline-identity-005b-gate.yml"
-      - ".github/workflows/cartera-pipeline-identity-005b-remote.yml"
+      - ".github/workflows/cartera-020c-remote-dispatch.yml"
   workflow_dispatch:
 
 permissions:
@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           base='${{ github.event.pull_request.base.sha }}'
           head='${{ github.event.pull_request.head.sha }}'
-          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-(gate|remote)\.yml)$'
+          allowed='^(scripts/forge-cartera-pipeline-identity-productive-005b\.mjs|tests/cartera-pipeline-identity-productive-005b\.test\.mjs|\.github/workflows/cartera-pipeline-identity-005b-gate\.yml|\.github/workflows/cartera-020c-remote-dispatch\.yml)$'
           mapfile -t changed < <(git diff --name-only "$base" "$head")
           test "${#changed[@]}" -gt 0
           printf '%s\n' "${changed[@]}"
