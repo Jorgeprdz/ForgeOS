@@ -6,14 +6,18 @@ on:
       - main
     paths:
       - 'docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v5.js'
       - 'docs/static-preview/forge-aura/index.html'
       - 'supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql'
+      - 'supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql'
       - 'tests/cartera-pdf-ingress-legacy-refresh.test.mjs'
       - 'tests/cartera-pdf-ingress-parity-playwright.config.mjs'
       - 'tests/fixtures/aura-cartera-pdf-ingress-parity.html'
       - 'tests/e2e/aura-cartera-pdf-ingress-parity.spec.mjs'
+      - 'tests/cartera-020c-durable-attach-pipeline-person-015.test.mjs'
       - '.github/workflows/aura-cartera-pdf-ingress-parity.yml'
+      - '.github/workflows/aura-cartera-020c-durable-confirmation-015.yml'
   workflow_dispatch:
 
 permissions:
@@ -43,10 +47,11 @@ jobs:
       - name: Syntax check new runtime
         run: |
           node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v5.js
           node --check tests/e2e/aura-cartera-pdf-ingress-parity.spec.mjs
       - name: Prove governed append-only refresh and ingress wiring
-        run: node --test tests/cartera-pdf-ingress-legacy-refresh.test.mjs
+        run: node --test tests/cartera-pdf-ingress-legacy-refresh.test.mjs tests/cartera-020c-durable-attach-pipeline-person-015.test.mjs
 
   selector-triple-check:
     name: Media selector — triple check 1/3 + 2/3 + 3/3
