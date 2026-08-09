@@ -7,6 +7,8 @@ on:
       - 'docs/static-preview/forge-aura/cartera/**'
       - 'docs/static-preview/forge-aura/index.html'
       - 'tests/cartera-person-workspace-directory-projection-016.test.mjs'
+      - 'tests/cartera-pdf-ingress-legacy-refresh.test.mjs'
+      - 'tests/cartera-020c-durable-attach-015.test.mjs'
       - 'tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json'
       - '.github/workflows/aura-cartera-person-workspace-projection-016.yml'
 
@@ -45,7 +47,7 @@ jobs:
           printf '%s\n' "${changed[@]}"
           for file in "${changed[@]}"; do
             case "$file" in
-              docs/static-preview/forge-aura/cartera/*|docs/static-preview/forge-aura/index.html|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
+              docs/static-preview/forge-aura/cartera/*|docs/static-preview/forge-aura/index.html|tests/cartera-person-workspace-directory-projection-016.test.mjs|tests/cartera-pdf-ingress-legacy-refresh.test.mjs|tests/cartera-020c-durable-attach-015.test.mjs|tests/fixtures/cartera-person-workspace-directory-projection-016.synthetic.json|.github/workflows/aura-cartera-person-workspace-projection-016.yml) ;;
               *) echo "CARTERA016_SCOPE_VIOLATION=$file" >&2; exit 1 ;;
             esac
           done
