@@ -29,7 +29,7 @@ test('module v4 injects semantic v8 without replacing unrelated Cartera surfaces
 test('v8 still wraps the accepted v7 to v1 chain', () => {
   assert.match(v8, /cartera-adapter-pages-v7\.js\?base=cartera-pdf-semantic-completion-014/);
   assert.match(v8, /pdfSemanticCompletion014:\s*true/);
-  assert.match(v7, /cartera-adapter-pages-v6\.js\?base=aura-cartera-pdf-already-admitted-reopen-011/);
+  assert.match(v7, /cartera-adapter-pages-v6\.js\?base=cartera-pdf-already-admitted-reopen-011/);
   assert.match(v7, /cartera020b_policy_evidence_packets/);
   assert.match(v7, /PENDING_CONFIRMATION/);
   assert.match(v7, /resumedExistingReview:\s*true/);
