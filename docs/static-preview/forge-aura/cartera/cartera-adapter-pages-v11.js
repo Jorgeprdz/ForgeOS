@@ -1,4 +1,4 @@
-import { createCarteraAdapter as createDurableAdapter } from './cartera-adapter-pages-v10.js?base=cartera-person-workspace-directory-projection-016';
+import { createCarteraAdapter as createDurableAdapter } from './cartera-adapter-pages-v10-base-015.js?base=cartera-person-workspace-directory-projection-016';
 import {
   buildContactProjection,
   humanPipelineState,
@@ -9,6 +9,7 @@ import {
 
 const REF = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,239}$/;
 const CONFIRMED_SOURCE_MATCHES = new Set(['CREATE_CONFIRMED', 'LINK_CONFIRMED']);
+const personProjectionCache = new Map();
 
 function freeze(value) {
   if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
@@ -163,7 +164,7 @@ export async function loadCarteraPersonProjection({ client, reference } = {}) {
     }, 'RELATIONSHIP_GROWTH_UNAVAILABLE'),
   ]);
 
-  return freeze({
+  const projection = freeze({
     person,
     contacts,
     policies: policyProjection.items,
@@ -180,6 +181,16 @@ export async function loadCarteraPersonProjection({ client, reference } = {}) {
       note: 'Contexto relacional para revisión; no score, probabilidad ni acción automática.',
     },
   });
+  personProjectionCache.set(String(reference), projection);
+  return projection;
+}
+
+export function getCachedCarteraPersonProjection(reference) {
+  return personProjectionCache.get(String(reference || '')) || null;
+}
+
+export function clearCarteraPersonProjectionCache() {
+  personProjectionCache.clear();
 }
 
 export async function createCarteraAdapter({ client, windowRef = window } = {}) {
