@@ -11,6 +11,7 @@ const dispatcher = await readFile(new URL('../.github/workflows/beta1-022a-writa
 const blockedEvidence = await readFile(new URL('../docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_BLOCKED.md', import.meta.url), 'utf8');
 const authority005c = await readFile(new URL('../docs/architecture/source-truth/FORGE_GOVERNED_WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY_005C.md', import.meta.url), 'utf8');
 const evidence005c = await readFile(new URL('../docs/evidence/FORGE_WRITABLE_SYNTHETIC_ACCEPTANCE_005C_REMOTE_EVIDENCE.md', import.meta.url), 'utf8');
+const evidenceR1 = await readFile(new URL('../docs/evidence/FORGE_CARTERA_PIPELINE_IDENTITY_005B_R1_REMOTE_EVIDENCE.md', import.meta.url), 'utf8');
 const adapter = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', import.meta.url), 'utf8');
 const identitySql = await readFile(new URL('../supabase/migrations/20260731000211_cartera010b_identity_resolution_rpc.sql', import.meta.url), 'utf8');
 const durableSql = await readFile(new URL('../supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql', import.meta.url), 'utf8');
@@ -134,12 +135,26 @@ test('005B-R1 remote workflow confines privilege to 05C control plane and always
   assert.match(remoteWorkflow, /finalize-cartera-pipeline-identity-005b-r1\.mjs/);
 });
 
-test('005B-R1 temporary dispatcher is exact branch, actor and SHA gated', () => {
-  assert.match(dispatcher, /CARTERA_PIPELINE_IDENTITY_005B_R1/);
-  assert.match(dispatcher, /github\.ref_name == 'accept\/cartera-pipeline-identity-productive-005b'/);
-  assert.match(dispatcher, /github\.actor == 'Jorgeprdz'/);
-  assert.match(dispatcher, /inputs\.validated_sha == github\.sha/);
-  assert.match(dispatcher, /uses: \.\/\.github\/workflows\/cartera-pipeline-identity-005b-r1\.yml/);
+test('005B-R1 committed remote evidence proves PA matrix and temporary dispatcher is removed', () => {
+  assert.match(evidenceR1, /REMOTE_RUN=31339443374/);
+  assert.match(evidenceR1, /ACCEPTANCE_SHA=fbedf9e2a456255dd4ce720f1201a552cf2e90df/);
+  for (let index = 1; index <= 7; index += 1) {
+    assert.match(evidenceR1, new RegExp(`PA0${index}=PASS`));
+  }
+  assert.match(evidenceR1, /RLS_ISOLATION=PASS/);
+  assert.match(evidenceR1, /READ_AFTER_WRITE=PASS/);
+  assert.match(evidenceR1, /IDENTITY_BOUNDARY=PASS/);
+  assert.match(evidenceR1, /POLICY_TRUTH_BOUNDARY=PASS/);
+  assert.match(evidenceR1, /OWNER_SCOPED_CLEANUP=PASS/);
+  assert.match(evidenceR1, /POST_RUN_SEALED=PASS/);
+  assert.match(evidenceR1, /OLD_CREDENTIALS_INVALIDATED=YES/);
+  assert.match(evidenceR1, /RLS_BYPASS=NO/);
+  assert.match(evidenceR1, /SERVICE_ROLE_DOMAIN_WRITE=NO/);
+  assert.match(evidenceR1, /REAL_DATA_TOUCHED=NO/);
+  assert.match(evidenceR1, /PUBLIC_DEMO_TOUCHED=NO/);
+  assert.doesNotMatch(dispatcher, /CARTERA_PIPELINE_IDENTITY_005B_R1/);
+  assert.match(dispatcher, /CONTACT_BOOKS_001/);
+  assert.match(dispatcher, /BETA1_022B/);
 });
 
 test('005B-R1 finalizer requires all productive acceptance boundaries', () => {
@@ -154,11 +169,17 @@ test('005B-R1 finalizer requires all productive acceptance boundaries', () => {
   assert.match(finalizer, /realDataTouched: false/);
 });
 
-test('005B-R1 gate remains acceptance-only and preserves REP-17', () => {
+test('005B-R1 gate seals final remote closure and preserves REP-17', () => {
   assert.match(gate, /pull_request:/);
   assert.match(gate, /005B_R1_PRECONDITION=PASS/);
-  assert.match(gate, /ROBOCOP_UNLOCK_005B_R1=GRANTED/);
+  assert.match(gate, /Verify committed 005B-R1 remote closure/);
+  assert.match(gate, /TEMP_DISPATCHER_REMOVED=PASS/);
+  assert.match(gate, /REMOTE_ACCEPTANCE=PASS/);
+  assert.match(gate, /FINAL_ROBOCOP_005B_R1=PASS/);
+  assert.match(gate, /PHASE_STATUS=PASS/);
+  assert.match(gate, /MERGE_READY=YES/);
   assert.match(gate, /rep-17-unified-runtime-regression-test\.mjs/);
   assert.match(gate, /docs\/static-preview\/forge-aura\/cartera\/cartera-adapter-pages-v10\.js/);
+  assert.doesNotMatch(gate, /HUMAN_REMOTE_CHECKPOINT=REQUIRED/);
   assert.doesNotMatch(gate, /pages\.yml|DEPLOY_FORGE_PAGES/);
 });
