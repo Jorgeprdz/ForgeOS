@@ -299,7 +299,7 @@
   .aura-quotes__facts > div, .aura-quotes__evidence-meta > div { grid-template-columns: 1fr; gap: var(--aura-space-1); }
   .aura-quotes__facts dd, .aura-quotes__evidence-meta dd { text-align: left; }
   .aura-quotes__scenario-list { grid-template-columns: 1fr; }
-  .aura-quotes__contextual-cta { position: static; bottom: auto; z-index: auto; border-radius: var(--forge-radius-widget); }
+  .aura-quotes__contextual-cta { position: static; bottom: auto; z-index: auto; margin-bottom: env(safe-area-inset-bottom); border-radius: var(--forge-radius-widget); }
   .aura-quotes__cta-actions { display: grid; grid-template-columns: 1fr; }
   .aura-quotes__modal { padding: 0; }
   .aura-quotes__modal-panel { width: 100%; height: 100%; max-height: none; border-radius: 0; }
