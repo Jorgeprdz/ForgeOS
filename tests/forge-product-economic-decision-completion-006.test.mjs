@@ -56,6 +56,7 @@ function earnedSnapshot() {
       earned: { gross: 1500, adjustments: 0, reversals: 0, net: 1500 },
       paid: { sourceState: "DISCONNECTED", value: null, knownZero: false },
     },
+    counts: { earnedAggregates: 1 },
     sourceHealth: {
       compensationEvents: "AVAILABLE",
       payoutTruth: "DISCONNECTED",
