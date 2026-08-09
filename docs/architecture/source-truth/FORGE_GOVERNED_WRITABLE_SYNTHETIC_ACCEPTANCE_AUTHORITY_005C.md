@@ -184,3 +184,31 @@ DIRECT_MAIN_MUTATION=NO
 ```
 
 05C can emit `FINAL_ROBOCOP_005C=PASS` only after AA-01 through AA-10 are proven remotely and the temporary pre-merge dispatcher extension has been removed.
+
+## Remote acceptance closure
+
+The governed remote checkpoint was executed from the exact accepted revision and is recorded in `docs/evidence/FORGE_WRITABLE_SYNTHETIC_ACCEPTANCE_005C_REMOTE_EVIDENCE.md`.
+
+```text
+ACCEPTANCE_SHA=8dd479edb31dffcca618dba03f217534c8653b39
+WORKFLOW_RUN_ID=31337249510
+REMOTE_ACCEPTANCE=PASS
+AA01=PASS
+AA02=PASS
+AA03=PASS
+AA04=PASS
+AA05=PASS
+AA06=PASS
+AA07=PASS
+AA08=PASS
+AA09=PASS
+AA10=PASS
+POST_RUN_SEALED=PASS
+REAL_DATA_TOUCHED=NO
+PUBLIC_DEMO_MUTATED=NO
+SERVICE_ROLE_DOMAIN_WRITE=NO
+RLS_BYPASS=NO
+TEMP_DISPATCHER_REMOVED=PASS
+```
+
+`FINAL_ROBOCOP_005C=PASS` and `PHASE_STATUS=PASS` are emitted only by the final PR gate after it independently verifies the committed evidence, exact restoration of the dispatcher to the base contract, bounded diff, preserved identity/session boundaries, and REP-17.
