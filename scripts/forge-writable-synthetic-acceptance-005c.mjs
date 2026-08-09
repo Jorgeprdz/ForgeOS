@@ -9,6 +9,7 @@ const EMAIL_B = 'forge.acceptance.b@forge.invalid';
 const SOURCE = 'FORGE_005C_ACCEPTANCE';
 const CONTEXT = '[NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA][005C][A]';
 const DISPLAY_NAME = 'FORGE 005C SYNTHETIC ACCEPTANCE PROSPECT';
+const SYNTHETIC_PHONE_A = '+000000000005';
 const OUT = process.env.FORGE_005C_DATA_EVIDENCE
   || 'artifacts/writable-synthetic-acceptance-005c/data-plane-report.json';
 
@@ -91,6 +92,7 @@ async function ensureOneDeterministicProspect(api, userId) {
       .update({
         display_name: DISPLAY_NAME,
         full_name: DISPLAY_NAME,
+        phone_normalized: SYNTHETIC_PHONE_A,
         status: 'referred_new',
         archived_at: null,
         archived_by: null,
@@ -111,6 +113,7 @@ async function ensureOneDeterministicProspect(api, userId) {
       advisor_id: userId,
       display_name: DISPLAY_NAME,
       full_name: DISPLAY_NAME,
+      phone_normalized: SYNTHETIC_PHONE_A,
       source: SOURCE,
       initial_context: CONTEXT,
       status: 'referred_new',
