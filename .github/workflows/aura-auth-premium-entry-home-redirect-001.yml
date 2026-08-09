@@ -1,0 +1,231 @@
+name: Aura Auth Premium Entry Home Redirect 001
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/aura-auth-v4.js'
+      - 'docs/static-preview/forge-aura/aura-auth.css'
+      - 'docs/static-preview/forge-aura/oauth-callback-v4.js'
+      - 'docs/static-preview/forge-aura/oauth-callback-v4.html'
+      - 'docs/static-preview/forge-aura/auth-v4.html'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/aura-auth-*'
+      - 'tests/e2e/aura-auth-premium-entry.spec.mjs'
+      - 'tests/fixtures/aura-auth-*'
+      - 'tests/fixtures/aura-oauth-callback-harness.html'
+      - 'scripts/aura-auth-premium-entry-scope-guard-001.mjs'
+      - 'docs/architecture/source-truth/FORGE_AURA_AUTH_PREMIUM_ENTRY_AND_GOOGLE_HOME_REDIRECT_RECONCILIATION_001.md'
+      - 'docs/evidence/FORGE_AURA_AUTH_PREMIUM_ENTRY_AND_GOOGLE_HOME_REDIRECT_ACCEPTANCE_001.md'
+      - '.github/workflows/aura-auth-premium-entry-home-redirect-001.yml'
+  push:
+    branches:
+      - feature/aura-auth-premium-entry-home-redirect-001
+    paths:
+      - 'docs/static-preview/forge-aura/aura-auth-v4.js'
+      - 'docs/static-preview/forge-aura/aura-auth.css'
+      - 'docs/static-preview/forge-aura/oauth-callback-v4.js'
+      - 'docs/static-preview/forge-aura/oauth-callback-v4.html'
+      - 'docs/static-preview/forge-aura/auth-v4.html'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/aura-auth-*'
+      - 'tests/e2e/aura-auth-premium-entry.spec.mjs'
+      - 'tests/fixtures/aura-auth-*'
+      - 'tests/fixtures/aura-oauth-callback-harness.html'
+      - 'scripts/aura-auth-premium-entry-scope-guard-001.mjs'
+      - 'docs/architecture/source-truth/FORGE_AURA_AUTH_PREMIUM_ENTRY_AND_GOOGLE_HOME_REDIRECT_RECONCILIATION_001.md'
+      - 'docs/evidence/FORGE_AURA_AUTH_PREMIUM_ENTRY_AND_GOOGLE_HOME_REDIRECT_ACCEPTANCE_001.md'
+      - '.github/workflows/aura-auth-premium-entry-home-redirect-001.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-auth-premium-entry-home-redirect-001-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  FORGE_PAGES_RUNTIME_MODE: 'pages'
+  GITHUB_PAGES: 'true'
+  DEMO_MODE: 'true'
+  ENABLE_TEST_ADVISOR_LOGIN: 'false'
+  SUPABASE_URL: ''
+  SUPABASE_ANON_KEY: ''
+
+jobs:
+  constitutional-auth-contract-scope:
+    name: Constitutional Auth contract and scope
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact reconciliation head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Declare constitutional and Aura gates
+        run: |
+          echo 'PHASE=FORGE_AURA_AUTH_PREMIUM_ENTRY_AND_GOOGLE_HOME_REDIRECT_RECONCILIATION_001'
+          echo 'ARTICLE_0=PASS'
+          echo 'AURA_LIGHT_AUTHORITY=docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_DESIGN_SYSTEM.md'
+          echo 'AURA_LIGHT_SOURCE_PDF_SHA256=0dbda2ae17d80602c7943bf139015177dbeb340a5edd5d9a5983bd24d5b6672e'
+          echo 'AURA_LIGHT_VERSION=1.0'
+          echo 'AURA_LIGHT_COMPLIANCE=REQUIRED'
+          echo 'LEGACY_VISUAL_IMPORTS=FORBIDDEN'
+          echo 'LOCAL_UNGOVERNED_TOKENS=FORBIDDEN'
+          echo 'BLOCKED_BY_ROBOCOP_LOCK_001=NO'
+
+      - name: Syntax check Auth runtime and acceptance
+        run: |
+          node --check docs/static-preview/forge-aura/aura-auth-v4.js
+          node --check docs/static-preview/forge-aura/aura-router-v4.js
+          node --check docs/static-preview/forge-aura/oauth-callback-v4.js
+          node --check docs/static-preview/forge-aura/app-v4-r1.js
+          node --check tests/aura-auth-premium-entry-home-redirect-001.test.mjs
+          node --check tests/aura-auth-pages-import-graph-001.test.mjs
+          node --check tests/e2e/aura-auth-premium-entry.spec.mjs
+
+      - name: Auth, route, security, Aura, and accessibility contracts
+        run: |
+          node --test \
+            tests/aura-auth-premium-entry-home-redirect-001.test.mjs \
+            tests/aura-boot-cache-isolation-013.test.mjs
+
+      - name: Scope guard against real merge base
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/aura-auth-premium-entry-scope-guard-001.mjs
+
+      - name: Explicit no-production-deploy governance
+        run: node --test tests/pages-explicit-deployment-governance.test.mjs
+
+  canonical-pages-artifact:
+    name: Canonical Pages artifact and Auth import graph
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: constitutional-auth-contract-scope
+    steps:
+      - name: Checkout exact reconciliation head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Extract canonical Pages build and validation programs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import textwrap
+
+          workflow = Path('.github/workflows/pages.yml').read_text()
+          blocks = re.findall(r"node - <<'EOF'\n(.*?)\n\s+EOF", workflow, re.S)
+          if len(blocks) != 3:
+              raise SystemExit(f'EXPECTED_3_NODE_BLOCKS_OBSERVED_{len(blocks)}')
+
+          Path('/tmp/generate-env.cjs').write_text(textwrap.dedent(blocks[0]))
+          Path('/tmp/build-canonical.cjs').write_text(
+              textwrap.dedent(blocks[1]).replace('process.env.GITHUB_SHA', 'process.env.FORGE_BUILD_SHA')
+          )
+          Path('/tmp/validate-canonical.cjs').write_text(
+              textwrap.dedent(blocks[2]).replace('process.env.EXPECTED_COMMIT_SHA', 'process.env.FORGE_BUILD_SHA')
+          )
+          PY
+
+      - name: Build canonical Pages artifact with production builder
+        run: |
+          node /tmp/generate-env.cjs
+          node scripts/build-advisor-presentation-pages-runtime.mjs
+          node /tmp/build-canonical.cjs
+
+      - name: Validate canonical artifact and Auth graph
+        run: |
+          EXPECTED_DEMO_MODE=true node scripts/validate-pages-public-config.mjs _site/env.js
+          node /tmp/validate-canonical.cjs
+          node --test tests/aura-auth-pages-import-graph-001.test.mjs
+
+      - name: Upload canonical Pages diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-auth-canonical-pages-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            _site/build-info.json
+            _site/production-surface.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+  responsive-accessibility:
+    name: Auth responsive accessibility and visual acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: constitutional-auth-contract-scope
+    steps:
+      - name: Checkout exact reconciliation head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Auth browser acceptance
+        run: npx playwright test --config=tests/aura-auth-premium-entry-playwright.config.mjs
+
+      - name: Verify required screenshot evidence
+        run: |
+          test -f test-results/aura-auth-premium-entry-001/login-mobile-390.png
+          test -f test-results/aura-auth-premium-entry-001/login-mobile-430.png
+          test -f test-results/aura-auth-premium-entry-001/login-tablet-834.png
+          test -f test-results/aura-auth-premium-entry-001/login-desktop-1440.png
+          test -f test-results/aura-auth-premium-entry-001/login-password-error.png
+          test -f test-results/aura-auth-premium-entry-001/login-google-loading.png
+          test -f test-results/aura-auth-premium-entry-001/oauth-callback-success.png
+          test -f test-results/aura-auth-premium-entry-001/oauth-callback-error.png
+          test -f test-results/aura-auth-premium-entry-001/login-zoom-200.png
+
+      - name: Upload Auth visual evidence and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-auth-premium-entry-visual-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            test-results/aura-auth-premium-entry-001
+            test-results/aura-auth-premium-entry-playwright
+          if-no-files-found: warn
+          retention-days: 30

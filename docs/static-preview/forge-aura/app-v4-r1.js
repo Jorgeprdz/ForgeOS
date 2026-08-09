@@ -26,7 +26,7 @@ function ensureStylesheet(href, key = "module") {
 }
 function renderBoot(message) {
   root.setAttribute("aria-busy", "true");
-  root.innerHTML = `<section class="aura-login" data-aura-auth-state="AUTH_LOADING"><div class="aura-loading"><div aria-hidden="true"></div><h1>${message}</h1><p>Forge verifica la sesión productiva.</p></div></section>`;
+  root.innerHTML = `<section class="aura-login" data-aura-auth-state="AUTH_LOADING"><div class="aura-loading"><div aria-hidden="true"></div><h1>${message}</h1><p>Forge verifica tu acceso seguro.</p></div></section>`;
 }
 async function destroyActiveModule() {
   const current = activeModule;
@@ -170,6 +170,7 @@ async function mountRoute(route, snapshot) {
   currentShell.setActiveRoute(route);
   currentShell.main.replaceChildren();
   const client = await auth.getClient();
+  if (route === "pipeline") ensureStylesheet("./pipeline/pipeline.css?v=aura-pipeline-ux-reconciliation-001", "pipeline");
   if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
   if (route === "cartera") {
     ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
@@ -228,8 +229,8 @@ async function boot() {
     if (snapshot.user?.id) router.restoreAfterAuth();
     else { router.navigate("login", { replace: true }); showLogin(); }
   } catch (error) {
-    const diagnostic = [error?.name, error?.message].filter(Boolean).join(" · ");
-    showLogin(`Error de sesión v4: ${diagnostic || "desconocido"}`);
+    console.error("AURA_AUTH_RESTORE_FAILED", String(error?.code || error?.name || "AUTH_RESTORE_FAILED"));
+    showLogin("No pudimos recuperar tu sesión. Vuelve a intentarlo.");
   }
 }
 

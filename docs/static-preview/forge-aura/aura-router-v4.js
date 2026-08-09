@@ -10,6 +10,15 @@ const ROUTES = Object.freeze({
 const ALIASES = Object.freeze({ home: "inicio", dashboard: "inicio", ingresos: "comisiones", quotes: "cotizaciones" });
 const AURA_MARKER = "/static-preview/forge-aura/";
 
+function explicitRouteValue(value) {
+  const input = String(value || "").trim().toLowerCase();
+  if (!input) return null;
+  const route = ALIASES[input] || input;
+  if (!Object.prototype.hasOwnProperty.call(ROUTES, route)) return null;
+  const normalized = ROUTES[route];
+  return normalized === ROUTES.login ? null : normalized;
+}
+
 export function resolveRuntimeBase(urlLike = globalThis.location?.href || "http://localhost/") {
   const url = new URL(urlLike, "http://localhost/");
   const markerIndex = url.pathname.indexOf(AURA_MARKER);
@@ -22,6 +31,14 @@ export function normalizeRoute(value) {
   const input = String(value || "").toLowerCase();
   const route = ALIASES[input] || input;
   return ROUTES[route] || ROUTES.inicio;
+}
+
+export function readExplicitRoute(urlLike = globalThis.location?.href || "http://localhost/") {
+  const url = new URL(urlLike, "http://localhost/");
+  const raw = url.searchParams.has("route")
+    ? url.searchParams.get("route")
+    : url.searchParams.get("nav");
+  return explicitRouteValue(raw);
 }
 
 export function readRoute(urlLike = globalThis.location?.href || "http://localhost/") {
@@ -37,13 +54,22 @@ export function routeUrl(route, current = globalThis.location?.href || "http://l
   return url;
 }
 
+export function authEntryUrl(route = "inicio", current = globalThis.location?.href || "http://localhost/") {
+  const target = normalizeRoute(route) === ROUTES.login ? ROUTES.inicio : normalizeRoute(route);
+  const url = new URL("index.html", resolveRuntimeBase(current));
+  url.searchParams.set("route", target);
+  return url;
+}
+
 export function oauthCallbackUrl(current = globalThis.location?.href || "http://localhost/") {
-  return new URL("oauth-callback-v4.html", resolveRuntimeBase(current)).href;
+  const callback = new URL("oauth-callback-v4.html", resolveRuntimeBase(current));
+  const returnRoute = readExplicitRoute(current);
+  if (returnRoute) callback.searchParams.set("return_route", returnRoute);
+  return callback.href;
 }
 
 export function createAuraRouter({ windowRef = window, onChange } = {}) {
-  let returnRoute = readRoute(windowRef.location.href);
-  if (returnRoute === ROUTES.login) returnRoute = ROUTES.inicio;
+  let returnRoute = readExplicitRoute(windowRef.location.href) || ROUTES.inicio;
 
   const remember = route => {
     if (route !== ROUTES.login) returnRoute = route;
