@@ -103,7 +103,7 @@ test("KEYBOARD_FOCUS_AND_MODAL: Escape, focus trap and return focus are preserve
   assert.match(moduleSource, /aria-modal="true"/);
   assert.match(moduleSource, /event\.key === "Escape"/);
   assert.match(moduleSource, /event\.key !== "Tab"/);
-  assert.match(moduleSource, /lastFocused\?\.focus/);
+  assert.match(moduleSource, /querySelector\('\[data-quotes-action="preview"\]'\)\?\.focus/);
   assert.match(moduleSource, /data-quotes-modal-panel/);
 });
 
