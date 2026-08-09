@@ -1,0 +1,92 @@
+name: Governed Writable Synthetic Acceptance 005C Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/20260809010000_governed_writable_synthetic_acceptance_005c.sql'
+      - 'supabase/functions/forge-acceptance-admin/index.ts'
+      - 'scripts/deploy-governed-writable-synthetic-acceptance-005c.mjs'
+      - 'scripts/forge-writable-synthetic-acceptance-005c.mjs'
+      - 'scripts/verify-writable-synthetic-acceptance-005c-sealed.mjs'
+      - 'scripts/finalize-writable-synthetic-acceptance-005c.mjs'
+      - 'tests/writable-synthetic-acceptance-005c.test.mjs'
+      - '.github/workflows/writable-synthetic-acceptance-005c.yml'
+      - '.github/workflows/writable-synthetic-acceptance-005c-gate.yml'
+      - '.github/workflows/beta1-022a-writable-acceptance.yml'
+      - 'docs/architecture/source-truth/FORGE_GOVERNED_WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY_005C.md'
+      - 'docs/evidence/FORGE_WRITABLE_SYNTHETIC_ACCEPTANCE_005C_REMOTE_EVIDENCE.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: writable-synthetic-acceptance-005c-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-005c-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Bounded 005C diff
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          head='${{ github.event.pull_request.head.sha }}'
+          allowed='^(supabase/migrations/20260809010000_governed_writable_synthetic_acceptance_005c\.sql|supabase/functions/forge-acceptance-admin/index\.ts|scripts/deploy-governed-writable-synthetic-acceptance-005c\.mjs|scripts/forge-writable-synthetic-acceptance-005c\.mjs|scripts/verify-writable-synthetic-acceptance-005c-sealed\.mjs|scripts/finalize-writable-synthetic-acceptance-005c\.mjs|tests/writable-synthetic-acceptance-005c\.test\.mjs|\.github/workflows/writable-synthetic-acceptance-005c\.yml|\.github/workflows/writable-synthetic-acceptance-005c-gate\.yml|\.github/workflows/beta1-022a-writable-acceptance\.yml|docs/architecture/source-truth/FORGE_GOVERNED_WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY_005C\.md|docs/evidence/FORGE_WRITABLE_SYNTHETIC_ACCEPTANCE_005C_REMOTE_EVIDENCE\.md)$'
+          mapfile -t changed < <(git diff --name-only "$base" "$head")
+          test "${#changed[@]}" -gt 0
+          printf '%s\n' "${changed[@]}"
+          for path in "${changed[@]}"; do
+            [[ "$path" =~ $allowed ]] || { echo "005C_UNAUTHORIZED_PATH=$path" >&2; exit 1; }
+          done
+          echo '005C_BOUNDED_DIFF=PASS'
+
+      - name: Syntax checks
+        run: |
+          node --check scripts/deploy-governed-writable-synthetic-acceptance-005c.mjs
+          node --check scripts/forge-writable-synthetic-acceptance-005c.mjs
+          node --check scripts/verify-writable-synthetic-acceptance-005c-sealed.mjs
+          node --check scripts/finalize-writable-synthetic-acceptance-005c.mjs
+
+      - name: 005C authority contracts
+        run: node --test tests/writable-synthetic-acceptance-005c.test.mjs
+
+      - name: Preserve integrated demo tenant authority
+        run: node --test tests/login-integrated-demo-tenants-test.mjs tests/beta1-022a-synthetic-dataset-contract-test.mjs
+
+      - name: Preserve authenticated session controls
+        run: node --test tests/authenticated-session-controls-test.mjs
+
+      - name: Preserve Cartera and identity boundaries
+        run: |
+          node --test tests/cartera-020c-durable-attach-015.test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-contract-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-service-test.mjs
+
+      - name: Preserve unified runtime
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Emit static authority markers
+        run: |
+          echo '005C_STATIC_GATE=PASS'
+          echo 'PUBLIC_DEMO_MUTATION=NONE'
+          echo 'SERVICE_ROLE_DOMAIN_WRITE=FORBIDDEN'
+          echo 'RLS_BYPASS=FORBIDDEN'
+          echo 'REMOTE_DEPLOY=NOT_EXECUTED_BY_PR_GATE'
+          echo 'HUMAN_REMOTE_CHECKPOINT=REQUIRED'
