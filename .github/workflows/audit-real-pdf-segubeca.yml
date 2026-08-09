@@ -1,0 +1,38 @@
+name: Audit real PDF - SeguBeca
+
+on:
+  push:
+    branches:
+      - audit/quotes-real-pdf-product-intelligence-008
+    paths:
+      - "audit/quote-real-pdf-audit.mjs"
+      - "audit/fixtures/segubeca-real-pdf.txt"
+      - ".github/workflows/audit-real-pdf-segubeca.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-segubeca-real-pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+      - name: Syntax gate
+        run: node --check audit/quote-real-pdf-audit.mjs
+      - name: Replay SeguBeca PDF evidence through Product Intelligence and Material 3
+        run: |
+          node audit/quote-real-pdf-audit.mjs \
+            --family segubeca \
+            --text-fixture audit/fixtures/segubeca-real-pdf.txt \
+            --name Solucionline_20260714_09_05PDF_260714_090549.pdf \
+            --pdf-sha256 403b65bda57f73e8f15b15820d28fca58fb0228faadb3ee26afaa4580551e8e5
+      - name: Upload SeguBeca audit evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-pdf-segubeca-product-intelligence-audit
+          path: tmp/quote-real-pdf-audit/segubeca.*
+          if-no-files-found: error
