@@ -1,0 +1,63 @@
+name: Aura Quotes Product-Specific Decision Experience 003
+
+on:
+  push:
+    branches:
+      - feature/aura-quotes-product-specific-decision-experience-003
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/quotes/**'
+      - 'docs/static-preview/quote-runtime/forge-product-specific-decision-read-model.js'
+      - 'tests/aura-quotes-product-specific-decision-experience-003.test.mjs'
+      - '.github/workflows/aura-quotes-product-specific-decision-experience-003.yml'
+      - 'docs/evidence/FORGE_AURA_QUOTES_PRODUCT_SPECIFIC_DECISION_EXPERIENCE_RECONCILIATION_003*'
+      - 'docs/architecture/source-truth/FORGE_AURA_QUOTES_PRODUCT_SPECIFIC_DECISION_EXPERIENCE_RECONCILIATION_003.md'
+
+permissions:
+  contents: read
+
+jobs:
+  product-specific-decision-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax gate
+        run: |
+          node --check docs/static-preview/quote-runtime/forge-product-specific-decision-read-model.js
+          node --check docs/static-preview/forge-aura/quotes/quotes-adapter.js
+          node --check docs/static-preview/forge-aura/quotes/quotes-module.js
+          node --check tests/aura-quotes-product-specific-decision-experience-003.test.mjs
+
+      - name: Phase 003 product-specific regressions
+        run: node tests/aura-quotes-product-specific-decision-experience-003.test.mjs
+
+      - name: Aura Quotes phase 002 non-regression
+        run: node tests/aura-quotes-premium-decision-experience-002.test.mjs
+
+      - name: Product dashboard authority regressions
+        run: |
+          node tests/imagina-ser-product-dashboard-adapter-test.mjs
+          node tests/segubeca-product-dashboard-adapter-test.mjs
+          node tests/orvi-accepted-quote-end-to-end-dashboard-test.mjs
+          node tests/quote-benefit-summary-engine-test.mjs
+
+      - name: PDF and parser ownership regressions
+        run: |
+          node tests/pdf-browser-parser-smoke-test.mjs
+          node tests/quote-preview-pdf-engine-parser-ownership-registry-adapter-083b-test.js
+
+      - name: Whitespace and scope evidence
+        run: |
+          git diff --check origin/main...HEAD
+          echo 'Changed files:'
+          git diff --name-only origin/main...HEAD
