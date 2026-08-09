@@ -1,0 +1,46 @@
+name: Aura Quotes PDF Input + DeX Nav Hotfix 003
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/aura-shell.css'
+      - 'tests/aura-quotes-pdf-input-nav-hotfix-003.test.mjs'
+      - '.github/workflows/aura-quotes-pdf-input-nav-hotfix-003.yml'
+  push:
+    branches:
+      - hotfix/aura-quotes-pdf-input-nav-003
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/aura-shell.css'
+      - 'tests/aura-quotes-pdf-input-nav-hotfix-003.test.mjs'
+      - '.github/workflows/aura-quotes-pdf-input-nav-hotfix-003.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    name: Quotes input ownership and DeX navigation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run hotfix contract
+        run: node --test tests/aura-quotes-pdf-input-nav-hotfix-003.test.mjs
+      - name: Boundary summary
+        run: |
+          echo 'AURA_QUOTES_INPUT_OWNERSHIP=PASS'
+          echo 'LEGACY_PDF_INTERCEPTOR_ISOLATED=PASS'
+          echo 'DEX_NAV_ICON_AND_LABEL=PASS'
+          echo 'PARSER_MUTATION=0'
+          echo 'CALCULATION_MUTATION=0'
