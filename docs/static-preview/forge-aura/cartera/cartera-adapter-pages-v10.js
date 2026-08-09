@@ -6,6 +6,7 @@ const PREPARE_CANONICAL_RPC = 'forge_cartera020c_prepare_identity_orchestration_
 const ATTACH_RPC = 'forge_cartera020c_attach_policy_confirmation';
 const ATTACH_DURABLE_RPC = 'forge_cartera020c_attach_policy_confirmation_durable';
 const IDENTITY_RPC = 'forge_cartera010b_confirm_identity_resolution';
+const GENERAL_ROLE_RPC = 'forge_cartera010b_list_general_policy_roles';
 const PIPELINE_PREFIX = 'pipeline-prospect:';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -112,6 +113,35 @@ async function queryRows(query, code) {
   const result = await query;
   if (result?.error) throw fail(code, result.error);
   return Array.isArray(result?.data) ? result.data : [];
+}
+
+async function loadPersonPoliciesByCanonicalParticipantId(client, personReference) {
+  const personResult = await client.from('commercial_people')
+    .select('id,person_reference,archived_at')
+    .eq('person_reference', personReference)
+    .is('archived_at', null)
+    .single();
+  if (personResult?.error || !personResult?.data?.id) {
+    throw fail('CARTERA_PERSON_READ_FAILED', personResult?.error || null);
+  }
+
+  const policies = await queryRows(
+    client.from('canonical_policies')
+      .select('policy_reference,policy_number,carrier_reference,product_reference,effective_from,effective_to,status_value,status_as_of,currency,premium_amount,payment_frequency,sum_insured,completeness_state,freshness_state,conflict_state,current_version,updated_at,archived_at')
+      .is('archived_at', null)
+      .order('status_as_of', { ascending: false }),
+    'CARTERA_POLICY_READ_FAILED',
+  );
+
+  const linked = [];
+  const personId = String(personResult.data.id);
+  for (const policy of policies) {
+    const roleResult = await client.rpc(GENERAL_ROLE_RPC, { p_policy_reference: policy.policy_reference });
+    if (roleResult?.error) throw fail('CARTERA_POLICY_ROLE_READ_FAILED', roleResult.error);
+    const roles = Array.isArray(roleResult?.data) ? roleResult.data : roleResult?.data?.items || [];
+    if (roles.some(role => String(role?.participant_person_id || '') === personId)) linked.push(policy);
+  }
+  return linked;
 }
 
 async function loadPipelinePeople(client, baseDirectory) {
@@ -281,6 +311,11 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
       const baseDirectory = await adapter.loadDirectory();
       const additions = await loadPipelinePeople(client, baseDirectory);
       return freeze([...(baseDirectory || []), ...additions]);
+    },
+    async loadPersonWorkspace(reference) {
+      const workspace = await adapter.loadPersonWorkspace(reference);
+      const policies = await loadPersonPoliciesByCanonicalParticipantId(client, reference);
+      return freeze({ ...workspace, policies });
     },
     async confirmPdfReview(review, input = {}) {
       try {
