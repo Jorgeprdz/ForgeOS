@@ -87,7 +87,7 @@ test('partial production-like extraction is recovered, persisted and reopened wi
   await expect(page.getByText('Información protegida.')).toBeVisible();
   await expect(page.locator('[data-coverage-candidate]')).toHaveCount(10);
   await expect(page.getByText('10 coberturas candidatas',{exact:true})).toBeVisible();
-  await expect(page.locator('body')).not.toContainText('0 coberturas');
+  await expect(page.getByText('0 coberturas',{exact:true})).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('Confianza alta');
   await expect(page.locator('input[name="existingPersonReference"]')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText('Referencia de persona existente');
