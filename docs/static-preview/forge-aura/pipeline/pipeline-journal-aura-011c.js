@@ -44,6 +44,26 @@ function timelineContent(event) {
   return text(event?.payload?.outcome || event?.payload?.decisionCode || event?.payload?.objectionCode || 'Evento productivo confirmado');
 }
 
+function journalErrorCode(error, fallback = 'PIPELINE_JOURNAL_UNAVAILABLE') {
+  return text(error?.code || error?.message || fallback);
+}
+
+function journalErrorMessage(error, { write = false } = {}) {
+  const code = journalErrorCode(error, write ? 'PROSPECT_JOURNAL_WRITE_FAILED' : 'PIPELINE_JOURNAL_UNAVAILABLE');
+  if (/AUTH|JWT|SESSION/i.test(code)) return 'Tu sesión ya no es válida. Vuelve a iniciar sesión y reintenta.';
+  if (/AUTHORIT|IMPORT|MODULE|FETCH|NETWORK|PGRST|TIMEOUT/i.test(code)) {
+    return write
+      ? 'No pudimos confirmar el guardado con la fuente productiva. La nota permanece en el formulario y no se mostrará como guardada.'
+      : 'No pudimos conectar con la fuente productiva de Bitácora. Puedes cerrar y seguir usando Pipeline o reintentar.';
+  }
+  if (/TIMELINE_LINK_MISSING/i.test(code)) {
+    return 'La nota no pudo confirmarse contra Timeline. Forge no la marcará como guardada hasta verificar el vínculo.';
+  }
+  return write
+    ? 'No pudimos confirmar el guardado. La nota permanece en el formulario para que puedas reintentar.'
+    : 'Bitácora está temporalmente no disponible. Puedes cerrar y seguir usando Pipeline o reintentar.';
+}
+
 function mergeHistory(entries, timeline) {
   const notes = (entries || []).map(entry => ({
     kind: 'note',
@@ -152,8 +172,29 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
     documentRef.body.append(layer);
     activeLayer = layer;
     documentRef.documentElement.dataset.auraJournalOpen = 'true';
-    layer.querySelectorAll('[data-aura-journal-close]').forEach(node => node.addEventListener('click', () => { close(); trigger?.focus?.({ preventScroll: true }); }));
-    layer.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); close(); trigger?.focus?.({ preventScroll: true }); } });
+
+    const closeAndRestore = () => {
+      close();
+      trigger?.focus?.({ preventScroll: true });
+    };
+
+    layer.addEventListener('click', event => {
+      if (event.target.closest?.('[data-aura-journal-close]')) {
+        event.preventDefault();
+        closeAndRestore();
+        return;
+      }
+      if (event.target.closest?.('[data-aura-journal-retry]')) {
+        event.preventDefault();
+        void open(trigger, prospectId);
+      }
+    });
+    layer.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeAndRestore();
+      }
+    });
     layer.querySelector('.aura-dialog')?.focus();
 
     const body = layer.querySelector('[data-aura-journal-body]');
@@ -218,6 +259,7 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
         const submit = event.submitter;
         submit.disabled = true;
         errorNode.hidden = true;
+        errorNode.textContent = '';
         status.textContent = 'Guardando y confirmando Timeline…';
         try {
           const entry = await authorities.journal.appendEntry(prospectId, { content, captureMethod });
@@ -234,8 +276,9 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
           documentRef.documentElement.dataset.auraJournalState = 'WRITE_CONFIRMED';
           globalThis.dispatchEvent(new CustomEvent('forge:aura-journal-confirmed', { detail: { prospectId, journalEntryId: entry.id, timelineLinked: true } }));
         } catch (error) {
+          const code = journalErrorCode(error, 'PROSPECT_JOURNAL_WRITE_FAILED');
           errorNode.hidden = false;
-          errorNode.textContent = text(error?.code || error?.message || 'PROSPECT_JOURNAL_WRITE_FAILED');
+          errorNode.innerHTML = `${escapeHtml(journalErrorMessage(error, { write: true }))}<br><small>${escapeHtml(code)}</small>`;
           status.textContent = '';
           documentRef.documentElement.dataset.auraJournalState = 'ERROR';
         } finally {
@@ -244,9 +287,23 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
       });
     } catch (error) {
       if (activeLayer !== layer) return;
+      const code = journalErrorCode(error);
       body.setAttribute('aria-busy', 'false');
-      body.innerHTML = `<section class="aura-inline-empty"><h3>La Bitácora no está disponible</h3><p>${escapeHtml(error?.code || error?.message || 'PIPELINE_JOURNAL_UNAVAILABLE')}</p><p>Forge no sustituyó la fuente por notas locales.</p></section>`;
+      body.innerHTML = `
+        <section class="aura-journal-recovery" role="alert">
+          <div>
+            <h3>Bitácora no disponible por ahora</h3>
+            <p>${escapeHtml(journalErrorMessage(error))}</p>
+          </div>
+          <small data-aura-journal-error-code>${escapeHtml(code)}</small>
+          <p>Forge no sustituyó la fuente por notas locales ni marcó nada como guardado.</p>
+          <div class="aura-journal-recovery__actions">
+            <button type="button" data-aura-journal-retry>Reintentar</button>
+            <button type="button" data-aura-journal-close>Cerrar</button>
+          </div>
+        </section>`;
       documentRef.documentElement.dataset.auraJournalState = 'ERROR';
+      body.querySelector('[data-aura-journal-retry]')?.focus();
     }
   }
 
