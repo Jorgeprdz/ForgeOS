@@ -17,7 +17,7 @@ const touchGate = readFileSync(
   "utf8",
 );
 
-test("second Google login cannot inherit a retired pathname", () => {
+test("shared Forge Alive auth runtime cannot inherit a retired pathname", () => {
   assert.match(
     guard,
     /const CANONICAL_ENTRY_PATH = "\/ForgeOS\/static-preview\/forge-alive\/"/,
@@ -36,7 +36,7 @@ test("second Google login cannot inherit a retired pathname", () => {
   );
 });
 
-test("canonical root preserves OAuth parameters, route and hash", async () => {
+test("canonical Aura root preserves OAuth parameters, route and hash", async () => {
   const script = entry.match(/<script>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(script, "CANONICAL_ENTRY_SCRIPT_MISSING");
 
@@ -73,7 +73,7 @@ test("canonical root preserves OAuth parameters, route and hash", async () => {
   await new Promise((resolve) => setImmediate(resolve));
 
   const target = new URL(replaced);
-  assert.equal(target.pathname, "/ForgeOS/static-preview/forge-alive/");
+  assert.equal(target.pathname, "/ForgeOS/static-preview/forge-aura/");
   assert.equal(target.searchParams.get("nav"), "cartera");
   assert.equal(target.searchParams.get("code"), "oauth-code");
   assert.equal(target.searchParams.get("state"), "oauth-state");
@@ -82,10 +82,11 @@ test("canonical root preserves OAuth parameters, route and hash", async () => {
   assert.equal(target.hash, "#access_token=token");
 });
 
-test("root entry exposes only current ForgeOS", () => {
+test("root entry exposes only current ForgeOS Aura presentation", () => {
   assert.match(entry, /<title>ForgeOS<\/title>/);
   assert.match(entry, /Abriendo ForgeOS/);
-  assert.match(entry, /static-preview\/forge-alive/);
+  assert.match(entry, /static-preview\/forge-aura/);
+  assert.doesNotMatch(entry, /static-preview\/forge-alive\/\?nav=inicio/);
   assert.doesNotMatch(entry, /forge-alive-material3/);
   assert.doesNotMatch(entry, /Forge Alive Vista Estática/i);
   assert.doesNotMatch(entry, /phone-shell|Muestra segura · solo lectura/);
@@ -103,7 +104,7 @@ test("retired pre-redesign authorities cannot republish over production", () => 
   }
 });
 
-test("productive authentication authorities live beside the canonical UI", () => {
+test("shared Forge Alive authentication authorities remain available for shared runtime compatibility", () => {
   for (const path of [
     "docs/static-preview/forge-alive-material3/forge-alive-public-config-067g17a1.js",
     "docs/static-preview/forge-alive-material3/forge-alive-auth-entry-067g17b1.js",
@@ -113,7 +114,7 @@ test("productive authentication authorities live beside the canonical UI", () =>
   }
 });
 
-test("every login path returns through the canonical public entry", () => {
+test("legacy Forge Alive auth paths remain self-contained inside the shared runtime", () => {
   assert.match(authEntry, /new URL\('\/ForgeOS\/static-preview\/forge-alive\/'/);
   assert.match(touchGate, /new URL\("\/ForgeOS\/static-preview\/forge-alive\/"/);
   assert.doesNotMatch(authEntry, /new URL\(url\.pathname/);

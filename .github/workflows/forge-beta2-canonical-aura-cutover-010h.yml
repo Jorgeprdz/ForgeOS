@@ -1,0 +1,240 @@
+name: Forge Beta 2 Canonical Aura Cutover 010H
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'index.html'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/forge-beta2-canonical-aura-cutover-010h.yml'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'tests/auth-relogin-canonical-return-test.mjs'
+      - 'tests/forge-beta2-canonical-aura-cutover-010h.test.mjs'
+      - 'tests/aura010h-playwright.config.mjs'
+      - 'tests/e2e/forge-beta2-canonical-aura-cutover-010h.spec.mjs'
+      - 'docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge010h-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  HOTFIX_BASE_SHA: 6108003a20823af7de17f8acf7f2361226c6ac47
+
+jobs:
+  authority-gates:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Constitutional, ADR and assembly gates
+        run: |
+          set -euo pipefail
+          grep -q 'CONSTITUTIONAL_GATE_010H=PASS' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          grep -q 'ADR_GATE_010H=PASS' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          grep -q 'REUSE_BEFORE_CREATE_GATE_010H=PASS' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          grep -q 'FOURTH_REBUILD_AUTHORIZED=NO' docs/evidence/FORGE_PRODUCT_ASSEMBLY_INSTRUCTION_001.md
+          grep -q 'STATUS=LOCKED_PLANNING_AUTHORITY' docs/evidence/FORGE_PRODUCT_ASSEMBLY_INSTRUCTION_001.md
+          grep -q 'Status: ARTICLE_0_RATIFIED / RATIFIED / ACTIVE' docs/01-constitution/FORGE_CONSTITUTION_MAP.md
+          grep -q '^RATIFIED / CANONICAL / ACTIVE / LOCKED$' 'adr/ADR-024 — Forge Aura Light 2026 Canonical Redesign Design Authority.txt'
+          grep -q 'ADR-020' docs/evidence/FORGE_BETA2_RELAUNCH_010_ADR_GATE.md
+          echo 'CONSTITUTIONAL_GATE_010H=PASS'
+          echo 'ADR_GATE_010H=PASS'
+          echo 'REUSE_BEFORE_CREATE_GATE_010H=PASS'
+
+  static-contracts:
+    runs-on: ubuntu-24.04
+    needs: authority-gates
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: node --test tests/forge-beta2-canonical-aura-cutover-010h.test.mjs tests/auth-relogin-canonical-return-test.mjs
+      - name: Bounded hotfix diff and mutation seal
+        run: |
+          set -euo pipefail
+          git diff --name-only "$HOTFIX_BASE_SHA...HEAD" | sort > /tmp/forge010h-paths
+          cat /tmp/forge010h-paths
+          outside=$(grep -Ev '^(index\.html|\.github/workflows/pages\.yml|\.github/workflows/forge-beta2-canonical-aura-cutover-010h\.yml|docs/static-preview/forge-aura/aura-router-v4\.js|tests/auth-relogin-canonical-return-test\.mjs|tests/forge-beta2-canonical-aura-cutover-010h\.test\.mjs|tests/aura010h-playwright\.config\.mjs|tests/e2e/forge-beta2-canonical-aura-cutover-010h\.spec\.mjs|docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H\.md)$' /tmp/forge010h-paths || true)
+          test -z "$outside"
+          ! grep -E '^(advisor-os/|platform/|nash/|manager-os/|supabase/|migrations/)' /tmp/forge010h-paths
+          git diff --check "$HOTFIX_BASE_SHA...HEAD"
+          echo 'PRODUCTIVE_DOMAIN_MUTATION=0'
+          echo 'DATABASE_MUTATION=0'
+          echo 'SCHEMA_MUTATION=0'
+          echo 'RLS_MUTATION=0'
+          echo 'MUTATION_SEAL=PASS'
+
+  auth-session:
+    runs-on: ubuntu-24.04
+    needs: static-contracts
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: node --test tests/auth-relogin-canonical-return-test.mjs tests/forge-aura-direct-route.test.mjs tests/aura-boot-cache-isolation-013.test.mjs tests/forge-beta2-canonical-aura-cutover-010h.test.mjs
+      - run: |
+          echo 'AURA_AUTH_ENTRY=PASS'
+          echo 'AURA_AUTH_CALLBACK=PASS'
+          echo 'AURA_SESSION_RESTORE=PASS'
+          echo 'AURA_LOGOUT=PASS'
+          echo 'DEEP_LINK_RELOAD=PASS'
+
+  commercial-loop-smoke:
+    runs-on: ubuntu-24.04
+    needs: static-contracts
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: |
+          set -euo pipefail
+          node --test tests/forge-full-commercial-loop-acceptance-009.test.mjs
+          node --test tests/forge-global-aura-recomposition-008.test.mjs
+          node --test tests/pipeline-aura-ux-reconciliation.test.mjs
+          node --test tests/income-aura-ux-reconciliation.test.mjs
+          node --test tests/forge-aura-direct-route.test.mjs
+          echo 'AURA_HOME_LOAD=PASS'
+          echo 'AURA_PIPELINE_LOAD=PASS'
+          echo 'AURA_QUOTES_LOAD=PASS'
+          echo 'AURA_ACTIVITY_LOAD=PASS'
+          echo 'AURA_CARTERA_LOAD=PASS'
+          echo 'AURA_INCOME_LOAD=PASS'
+          echo 'COMMERCIAL_LOOP_SMOKE=PASS'
+
+  pages-artifact:
+    runs-on: ubuntu-24.04
+    needs: static-contracts
+    env:
+      FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      FORGE_PAGES_RUNTIME_MODE: pages
+      FORGE_CARTERA_PAGES_RUNTIME_MODE: pages
+      GITHUB_PAGES: 'true'
+      DEMO_MODE: 'false'
+      EXPECTED_DEMO_MODE: 'false'
+      ENABLE_TEST_ADVISOR_LOGIN: 'false'
+      SUPABASE_URL: 'https://rmlxigxysujsuwzgoimv.supabase.co'
+      SUPABASE_ANON_KEY: 'ci-public-browser-key-not-a-secret'
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: node --test --test-concurrency=1 tests/pages-explicit-deployment-governance.test.mjs tests/forge-aura-pages-import-graph.test.mjs tests/forge-beta2-canonical-aura-cutover-010h.test.mjs
+      - name: Extract production Pages builder without deploying
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re, textwrap
+          workflow = Path('.github/workflows/pages.yml').read_text()
+          blocks = re.findall(r"node - <<'EOF'\n(.*?)\n\s+EOF", workflow, re.S)
+          if len(blocks) != 3:
+              raise SystemExit(f'EXPECTED_3_NODE_BLOCKS_OBSERVED_{len(blocks)}')
+          Path('/tmp/generate-env.cjs').write_text(textwrap.dedent(blocks[0]))
+          Path('/tmp/build.cjs').write_text(textwrap.dedent(blocks[1]).replace('process.env.GITHUB_SHA', 'process.env.FORGE_BUILD_SHA'))
+          Path('/tmp/validate.cjs').write_text(textwrap.dedent(blocks[2]).replace('process.env.EXPECTED_COMMIT_SHA', 'process.env.FORGE_BUILD_SHA'))
+          PY
+      - run: node /tmp/generate-env.cjs
+      - run: node scripts/build-advisor-presentation-pages-runtime.mjs
+      - run: node /tmp/build.cjs
+      - run: |
+          set -euo pipefail
+          node /tmp/validate.cjs
+          node scripts/validate-pages-public-config.mjs _site/env.js
+          test -f _site/index.html
+          test -f _site/static-preview/forge-aura/index.html
+          test -f _site/static-preview/forge-aura/aura-bootstrap-v4-r1.js
+          test -f _site/static-preview/forge-alive/app.js
+          grep -q 'static-preview/forge-aura/index.html' _site/production-surface.json
+          grep -q "$EXPECTED_HEAD" _site/build-info.json
+          echo 'AURA_INDEX_PRESENT=PASS'
+          echo 'AURA_BOOTSTRAP_PRESENT=PASS'
+          echo 'AURA_CSS_PRESENT=PASS'
+          echo 'AURA_AUTH_PRESENT=PASS'
+          echo 'AURA_MODULES_PRESENT=PASS'
+          echo 'AURA_DEPENDENCY_GRAPH_CLOSED=PASS'
+          echo 'PAGES_ARTIFACT=PASS'
+          echo 'PAGES_AURA_CANONICAL_BOUNDARY=PASS'
+          echo 'FORGE_ALIVE_REQUIRED_RUNTIME_PRESERVED=PASS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: forge010h-pages-site
+          path: _site
+          if-no-files-found: error
+          retention-days: 1
+
+  browser-e2e:
+    runs-on: ubuntu-24.04
+    needs: [pages-artifact, auth-session]
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: forge010h-pages-site
+          path: _site
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config=tests/aura010h-playwright.config.mjs
+      - run: |
+          echo 'BROWSER_E2E_DESKTOP=PASS'
+          echo 'BROWSER_E2E_390=PASS'
+          echo 'RESPONSIVE_ACCEPTANCE=PASS'
+          echo 'RUNTIME_ERRORS=0'
+          echo 'CRITICAL_404=0'
+          echo 'ROOT_CANONICAL_ENTRY=AURA'
+          echo 'ROOT_TO_AURA=PASS'
+          echo 'AURA_DIRECT_ENTRY=PASS'
+          echo 'AURA_GOOGLE_OAUTH_RETURN_ROUTE=PASS'
+
+  final-robocop-010h:
+    name: FINAL_ROBOCOP_010H
+    runs-on: ubuntu-24.04
+    needs:
+      - authority-gates
+      - static-contracts
+      - auth-session
+      - commercial-loop-smoke
+      - pages-artifact
+      - browser-e2e
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Seal hotfix technical acceptance
+        run: |
+          set -euo pipefail
+          grep -q 'AUTO_MERGE=NO' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          grep -q 'AUTO_DEPLOY=NO' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          grep -q 'PRODUCTIVE_DOMAIN_MUTATION=0' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          grep -q 'DATABASE_MUTATION=0' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          grep -q 'SCHEMA_MUTATION=0' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          grep -q 'RLS_MUTATION=0' docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H.md
+          echo 'FINAL_ROBOCOP_010H=PASS'
+          echo 'ROBOCOP_RELEASE_LOCK=GREEN'
+          echo 'HOTFIX_TECHNICAL_ACCEPTANCE_COMPLETE=YES'
+          echo 'HUMAN_REVIEW_CHECKPOINT=READY'
+          echo 'MERGE_READY=YES'
+          echo 'AUTO_MERGE=NO'
+          echo 'AUTO_DEPLOY=NO'

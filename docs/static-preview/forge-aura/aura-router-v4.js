@@ -86,6 +86,7 @@ export function routeUrl(route, current = globalThis.location?.href || "http://l
   const url = new URL(current, "http://localhost/");
   url.searchParams.delete("nav");
   url.searchParams.delete("auth");
+  url.searchParams.delete("return_route");
   url.searchParams.set("route", normalizeRoute(route));
   return applyContext(url, context);
 }
@@ -98,8 +99,10 @@ export function authEntryUrl(route = "inicio", current = globalThis.location?.hr
 }
 
 export function oauthCallbackUrl(current = globalThis.location?.href || "http://localhost/") {
-  const callback = new URL("oauth-callback-v4.html", resolveRuntimeBase(current));
-  const returnRoute = readExplicitRoute(current);
+  const currentUrl = new URL(current, "http://localhost/");
+  const callback = new URL("oauth-callback-v4.html", resolveRuntimeBase(currentUrl.href));
+  const returnRoute = readExplicitRoute(currentUrl.href)
+    || explicitRouteValue(currentUrl.searchParams.get("return_route"));
   if (returnRoute) callback.searchParams.set("return_route", returnRoute);
   return callback.href;
 }
@@ -122,6 +125,9 @@ export function createAuraRouter({ windowRef = window, onChange } = {}) {
     remember(normalized);
     const nextContext = preserveContext ? readRouteContext(windowRef.location.href) : context;
     const url = routeUrl(normalized, windowRef.location.href, nextContext);
+    if (normalized === ROUTES.login && returnRoute !== ROUTES.inicio) {
+      url.searchParams.set("return_route", returnRoute);
+    }
     windowRef.history[replace ? "replaceState" : "pushState"]({}, "", url);
     emit();
   };

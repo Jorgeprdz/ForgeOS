@@ -130,6 +130,8 @@ jobs:
           const { execFileSync } = require('child_process');
 
           const siteDir = '_site';
+          // Forge Alive remains a shared productive runtime namespace consumed by Aura.
+          // It is not the canonical presentation entrypoint after Beta 2 cutover 010H.
           const canonicalSource = 'docs/static-preview/forge-alive-material3';
           const canonicalTarget = path.join(siteDir, 'static-preview', 'forge-alive');
           const quoteEngineSource = 'docs/static-preview/quote-engine/nueva-cotizacion/index.html';
@@ -227,7 +229,7 @@ jobs:
           }
 
           if (!fs.existsSync(canonicalSource)) {
-            throw new Error('canonical ForgeOS source is missing');
+            throw new Error('shared ForgeOS runtime source is missing');
           }
           fs.rmSync(canonicalTarget, { recursive: true, force: true });
           fs.cpSync(canonicalSource, canonicalTarget, { recursive: true });
@@ -249,7 +251,7 @@ jobs:
           const standaloneGuard = [
             '<script data-forge-engine-standalone-guard>',
             'if (window.top === window.self) {',
-            '  window.location.replace("../../forge-alive/?nav=cotizaciones");',
+            '  window.location.replace("../../forge-aura/?route=cotizaciones");',
             '}',
             '</script>',
           ].join('\n');
@@ -325,7 +327,7 @@ jobs:
             `<script type="module" src="./app.js?v=${process.env.GITHUB_SHA}"></script>`,
           );
           if (versionedCanonicalIndex === canonicalIndex) {
-            throw new Error('canonical ForgeOS app entry was not versioned');
+            throw new Error('shared ForgeOS runtime app entry was not versioned');
           }
           fs.writeFileSync(canonicalIndexPath, versionedCanonicalIndex);
 
@@ -349,7 +351,8 @@ jobs:
           fs.writeFileSync(
             path.join(siteDir, 'production-surface.json'),
             `${JSON.stringify({
-              canonicalEntry: 'static-preview/forge-alive/index.html',
+              canonicalEntry: 'static-preview/forge-aura/index.html',
+              sharedRuntime: 'static-preview/forge-alive/',
               quoteEngine: 'static-preview/quote-engine/nueva-cotizacion/index.html',
               quoteRuntime: 'static-preview/quote-runtime/',
               retiredRoutes: [
@@ -362,7 +365,8 @@ jobs:
             }, null, 2)}\n`,
           );
 
-          console.log('PAGES_CANONICAL_UI_ONLY=PASS');
+          console.log('PAGES_AURA_CANONICAL_BOUNDARY=PASS');
+          console.log('PAGES_FORGE_ALIVE_SHARED_RUNTIME_PRESERVED=PASS');
           EOF
           du -sh _site
 
@@ -377,6 +381,7 @@ jobs:
           const path = require('path');
 
           const canonical = '_site/static-preview/forge-alive';
+          const aura = '_site/static-preview/forge-aura';
           const quoteEngine = '_site/static-preview/quote-engine/nueva-cotizacion/index.html';
           const forbiddenPaths = [
             '_site/static-preview/forge-alive-runtime',
@@ -400,6 +405,10 @@ jobs:
             '_site/env.js',
             '_site/build-info.json',
             '_site/production-surface.json',
+            path.join(aura, 'index.html'),
+            path.join(aura, 'aura-bootstrap-v4-r1.js'),
+            path.join(aura, 'aura-shell.css'),
+            path.join(aura, 'aura-auth.css'),
             path.join(canonical, 'index.html'),
             path.join(canonical, 'app.css'),
             path.join(canonical, 'app.js'),
@@ -423,18 +432,25 @@ jobs:
           );
 
           const rootIndex = fs.readFileSync('_site/index.html', 'utf8');
+          const auraIndex = fs.readFileSync(path.join(aura, 'index.html'), 'utf8');
           const canonicalIndex = fs.readFileSync(path.join(canonical, 'index.html'), 'utf8');
           const quotesModule = fs.readFileSync(path.join(canonical, 'quotes-module.js'), 'utf8');
           const engineSource = fs.readFileSync(quoteEngine, 'utf8');
           const serviceWorker = fs.readFileSync('_site/service-worker.js', 'utf8');
+          const productionSurface = JSON.parse(fs.readFileSync('_site/production-surface.json', 'utf8'));
 
-          assert.match(rootIndex, /static-preview\/forge-alive/);
+          assert.match(rootIndex, /static-preview\/forge-aura/);
+          assert.doesNotMatch(rootIndex, /static-preview\/forge-alive\/\?nav=inicio/);
+          assert.match(auraIndex, /FORGE_AURA_LIGHT_2026_V4/);
+          assert.match(auraIndex, /aura-bootstrap-v4-r1\.js/);
+          assert.equal(productionSurface.canonicalEntry, 'static-preview/forge-aura/index.html');
+          assert.equal(productionSurface.sharedRuntime, 'static-preview/forge-alive/');
           assert.match(serviceWorker, /FORGEOS_LEGACY_SERVICE_WORKER_RETIRED/);
           assert.match(serviceWorker, /self\.registration\.unregister\(\)/);
           assert.doesNotMatch(serviceWorker, /respondWith|importScripts|CACHE_CONFIG/);
           assert.ok(
             canonicalIndex.includes(`app.js?v=${process.env.EXPECTED_COMMIT_SHA}`),
-            'canonical app entry is not versioned with the deployed commit',
+            'shared runtime app entry is not versioned with the deployed commit',
           );
           assert.doesNotMatch(
             canonicalIndex,
@@ -445,6 +461,7 @@ jobs:
           assert.match(engineSource, /data-forge-engine-standalone-guard/);
           assert.match(engineSource, /data-forge-module="dedicated-new-quote-static-route"/);
           assert.match(engineSource, /Motor de cotización · ForgeOS/);
+          assert.match(engineSource, /\.\.\/\.\.\/forge-aura\/\?route=cotizaciones/);
           assert.doesNotMatch(
             engineSource,
             /data-forge-mobile-nav-r16c5j|forge-alive-mobile-nav-r16c5j\.js/,
@@ -475,8 +492,9 @@ jobs:
           assert.equal(buildInfo.commitSha, process.env.EXPECTED_COMMIT_SHA);
           assert.equal(buildInfo.artifact, 'forge-pages-canonical-only');
 
-          console.log('PAGES_CANONICAL_UI_ONLY=PASS');
-          console.log('PAGES_LEGACY_UI_NOT_PUBLISHED=PASS');
+          console.log('PAGES_AURA_CANONICAL_BOUNDARY=PASS');
+          console.log('PAGES_FORGE_ALIVE_SHARED_RUNTIME_PRESERVED=PASS');
+          console.log('PAGES_LEGACY_UI_NOT_CANONICAL=PASS');
           console.log('PAGES_QUOTE_ENGINE_ISOLATED=PASS');
           console.log('PAGES_QUOTE_RUNTIME_NEUTRAL_NAMESPACE=PASS');
           console.log('PAGES_LEGACY_SERVICE_WORKER_RETIRED=PASS');
