@@ -2,9 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.108.2";
 import handoffModule from "../../../compensation/advisor/orchestration/advisor-compensation-productive-handoff-011d.cjs";
 import { resolveOfficialAdvisorCareerClock } from "../../../advisor-lifecycle/advisor-career-clock.js";
 
-const {
-  createAdvisorCompensationProductiveHandoff011d,
-} = handoffModule as {
+const { createAdvisorCompensationProductiveHandoff011d } = handoffModule as {
   createAdvisorCompensationProductiveHandoff011d: (input: Record<string, unknown>) => {
     execute: (input: Record<string, unknown>) => Promise<Record<string, unknown>>;
   };
@@ -20,11 +18,7 @@ const corsHeaders = {
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "application/json",
-      "Cache-Control": "no-store",
-    },
+    headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 }
 
@@ -34,6 +28,7 @@ function publicGate(overrides: Record<string, unknown> = {}) {
     AUTH_STATE: "NOT_RUN",
     PAYMENT_AUTHORITY_STATE: "NOT_RUN",
     HANDOFF_STATE: "NOT_RUN",
+    STAGE_080_STATE: "NOT_RUN",
     STAGE_030_STATE: "NOT_RUN",
     STAGE_040_STATE: "NOT_RUN",
     STAGE_050_STATE: "NOT_RUN",
@@ -50,7 +45,6 @@ function publicGate(overrides: Record<string, unknown> = {}) {
 
 function safeLog(result: Record<string, any>) {
   const gate = result?.gate || {};
-  const buildSha = String(Deno.env.get("FORGE_BUILD_SHA") || "repository-source").slice(0, 12);
   console.info(JSON.stringify({
     event: "FORGE_COMPENSATION_HANDOFF",
     STATE: result?.state || "FAILED",
@@ -67,7 +61,7 @@ function safeLog(result: Record<string, any>) {
     UNKNOWN_ZERO: false,
     SYNTHETIC_WRITER_USED: false,
     DEMO_FALLBACK_USED: false,
-    BUILD_SHA: buildSha,
+    BUILD_SHA: String(Deno.env.get("FORGE_BUILD_SHA") || "repository-source").slice(0, 12),
   }));
 }
 
@@ -141,29 +135,17 @@ export default {
     }
 
     if (!context || context.state === "PAYMENT_NOT_FOUND") {
-      const response = {
-        state: "BLOCKED",
-        reason: "PAYMENT_NOT_FOUND",
-        gate: publicGate({ AUTH_STATE: "OK", PAYMENT_AUTHORITY_STATE: "NOT_FOUND", HANDOFF_STATE: "BLOCKED" }),
-      };
+      const response = { state: "BLOCKED", reason: "PAYMENT_NOT_FOUND", gate: publicGate({ AUTH_STATE: "OK", PAYMENT_AUTHORITY_STATE: "NOT_FOUND", HANDOFF_STATE: "BLOCKED" }) };
       safeLog(response);
       return json(response, 404);
     }
     if (context.advisorId !== userResult.data.user.id) {
-      const response = {
-        state: "FAILED",
-        reason: "OWNER_MISMATCH",
-        gate: publicGate({ AUTH_STATE: "OK", PAYMENT_AUTHORITY_STATE: "INVALID", HANDOFF_STATE: "FAILED" }),
-      };
+      const response = { state: "FAILED", reason: "OWNER_MISMATCH", gate: publicGate({ AUTH_STATE: "OK", PAYMENT_AUTHORITY_STATE: "INVALID", HANDOFF_STATE: "FAILED" }) };
       safeLog(response);
       return json(response, 403);
     }
     if (context.payment?.confirmationState !== "CONFIRMED") {
-      const response = {
-        state: "BLOCKED",
-        reason: "PAYMENT_NOT_CONFIRMED",
-        gate: publicGate({ AUTH_STATE: "OK", PAYMENT_AUTHORITY_STATE: "INVALID", HANDOFF_STATE: "BLOCKED" }),
-      };
+      const response = { state: "BLOCKED", reason: "PAYMENT_NOT_CONFIRMED", gate: publicGate({ AUTH_STATE: "OK", PAYMENT_AUTHORITY_STATE: "INVALID", HANDOFF_STATE: "BLOCKED" }) };
       safeLog(response);
       return json(response, 409);
     }
@@ -172,15 +154,10 @@ export default {
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const persistence = {
-      claimIntake: (advisorId: string, event: unknown) => invokeRpc(
+      commitCompensation: (advisorId: string, paymentEvent: unknown, compensationEvent: unknown) => invokeRpc(
         adminClient,
-        "forge_advisor_compensation_claim_intake_011d",
-        { p_advisor_id: advisorId, p_event: event },
-      ),
-      appendEvent: (advisorId: string, event: unknown) => invokeRpc(
-        adminClient,
-        "forge_advisor_compensation_append_event_011d",
-        { p_advisor_id: advisorId, p_event: event },
+        "forge_advisor_compensation_commit_event_011d",
+        { p_advisor_id: advisorId, p_payment_event: paymentEvent, p_compensation_event: compensationEvent },
       ),
       loadMaterializationInputs: (advisorId: string, periods: string[]) => invokeRpc(
         adminClient,
@@ -201,19 +178,12 @@ export default {
 
     let execution: any;
     try {
-      execution = await orchestrator.execute({
-        advisorId: userResult.data.user.id,
-        context,
-      });
+      execution = await orchestrator.execute({ advisorId: userResult.data.user.id, context });
     } catch (error) {
       execution = {
         state: "FAILED",
         reason: (error as any)?.code || "PRODUCTIVE_HANDOFF_FAILED",
-        gate: publicGate({
-          AUTH_STATE: "OK",
-          PAYMENT_AUTHORITY_STATE: "CONFIRMED",
-          HANDOFF_STATE: "FAILED",
-        }),
+        gate: publicGate({ AUTH_STATE: "OK", PAYMENT_AUTHORITY_STATE: "CONFIRMED", HANDOFF_STATE: "FAILED" }),
       };
     }
 
@@ -227,9 +197,7 @@ export default {
         });
         incomeReadState = incomeRead?.sourceHealth?.canonicalSnapshot === "NOT_MATERIALIZED"
           ? "NOT_MATERIALIZED"
-          : incomeRead?.sourceState === "BLOCKED"
-            ? "BLOCKED"
-            : "READY";
+          : incomeRead?.sourceState === "BLOCKED" ? "BLOCKED" : "READY";
       } catch {
         incomeReadState = "BLOCKED";
       }
@@ -237,11 +205,7 @@ export default {
 
     const response = {
       ...execution,
-      incomeRead: incomeRead ? {
-        sourceState: incomeRead.sourceState,
-        sourceHealth: incomeRead.sourceHealth,
-        metadata: incomeRead.metadata,
-      } : null,
+      incomeRead: incomeRead ? { sourceState: incomeRead.sourceState, sourceHealth: incomeRead.sourceHealth, metadata: incomeRead.metadata } : null,
       gate: {
         ...(execution?.gate || publicGate()),
         AUTH_STATE: "OK",
@@ -253,10 +217,6 @@ export default {
       },
     };
     safeLog(response);
-
-    const status = response.state === "FAILED" ? 500
-      : response.state === "BLOCKED" ? 409
-        : 200;
-    return json(response, status);
+    return json(response, response.state === "FAILED" ? 500 : response.state === "BLOCKED" ? 409 : 200);
   },
 };
