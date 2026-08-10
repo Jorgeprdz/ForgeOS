@@ -1,4 +1,4 @@
-import { createClient } from "npm:@supabase/supabase-js@2.108.2";
+import { createClient } from "supabase";
 // @ts-ignore governed local CommonJS domain runtime
 import compensationRuntime from "../../../compensation/advisor/server/advisor-compensation-productive-orchestrator.js";
 // @ts-ignore identity-only source; candidate rates are never passed to Stage 040
