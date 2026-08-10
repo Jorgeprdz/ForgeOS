@@ -64,7 +64,6 @@ function result(state, diagnostics, extra = {}) {
 
 function canonicalPayload(context) {
   const payment = context?.payment || {};
-  const reconciliation = context?.reconciliation || {};
   return {
     canonicalPaymentEvent: {
       advisorId: required(context?.advisorId, "ADVISOR_COMPENSATION_011D_ADVISOR_REQUIRED"),
@@ -83,16 +82,14 @@ function canonicalPayload(context) {
       confirmedBy: payment.confirmedBy,
       confirmedAt: payment.confirmedAt
     },
-    canonicalReconciliation: reconciliation,
+    canonicalReconciliation: context?.reconciliation,
     canonicalPersonReference: context?.personReference,
     policyContext: {
       policyReference: context?.policy?.policyReference,
       advisorReference: context?.advisorId,
       productId: context?.policy?.productReference,
       variant: context?.policy?.variant || null,
-      policyYear: Number.isInteger(context?.obligation?.policyYear)
-        ? context.obligation.policyYear
-        : null,
+      policyYear: Number.isInteger(context?.obligation?.policyYear) ? context.obligation.policyYear : null,
       sourceAuthority: "CARTERA_CANONICAL_POLICY_010B_030B",
       sourceSnapshotReference: context?.obligation?.policyTermsDigest || null
     }
@@ -109,6 +106,49 @@ async function safeIncomeState(readIncome) {
   }
 }
 
+async function persistBlockedIntake({ advisorReference, event, claimIntake, diagnostics }) {
+  if (typeof claimIntake !== "function") {
+    diagnostics.STAGE_030_STATE = "FAIL";
+    diagnostics.IDEMPOTENCY_STATE = "FAIL";
+    return { ok: false, reason: "PRODUCTIVE_INTAKE_PERSISTENCE_REQUIRED" };
+  }
+  try {
+    const claim = await claimIntake(advisorReference, event);
+    diagnostics.IDEMPOTENCY_STATE = claim?.state || "FAIL";
+    diagnostics.LEDGER_STATE = claim?.state || "FAIL";
+    if (claim?.state === "CONFLICT") return { ok: false, conflict: true, reason: "STAGE_030_IDEMPOTENCY_CONFLICT" };
+    if (!claim || !["CREATED", "REPLAYED"].includes(claim.state)) {
+      return { ok: false, reason: "STAGE_030_PERSISTENCE_FAILED" };
+    }
+    return { ok: true, claim };
+  } catch (error) {
+    diagnostics.IDEMPOTENCY_STATE = "FAIL";
+    diagnostics.LEDGER_STATE = "FAIL";
+    return { ok: false, reason: error?.code || "STAGE_030_PERSISTENCE_FAILED" };
+  }
+}
+
+async function blockAfterIntake({
+  reason,
+  diagnostics,
+  advisorReference,
+  event,
+  claimIntake,
+  readIncome,
+  extra = {}
+}) {
+  const persisted = await persistBlockedIntake({ advisorReference, event, claimIntake, diagnostics });
+  diagnostics.INCOME_READ_STATE = await safeIncomeState(readIncome);
+  if (!persisted.ok) {
+    return result(persisted.conflict ? "BLOCKED" : "FAILED", diagnostics, {
+      reason: persisted.reason,
+      amount: null,
+      ...extra
+    });
+  }
+  return result("BLOCKED", diagnostics, { reason, amount: null, ...extra });
+}
+
 async function orchestrateAdvisorCompensationHandoff({
   canonicalContext,
   productIdentities = [],
@@ -116,7 +156,7 @@ async function orchestrateAdvisorCompensationHandoff({
   advisorMonthResolution = null,
   calculationContext = {},
   claimIntake,
-  appendCompensationEvent,
+  commitEconomicEvent,
   loadMaterializationInputs,
   appendReadModel,
   readIncome,
@@ -130,12 +170,10 @@ async function orchestrateAdvisorCompensationHandoff({
   }
 
   const advisorReference = required(canonicalContext.advisorId, "ADVISOR_COMPENSATION_011D_ADVISOR_REQUIRED");
-  const payload = canonicalPayload(canonicalContext);
-
   let intake;
   try {
     const stage030 = createAdvisorCompensationPaymentIntakeService({ productIdentities });
-    intake = stage030.intakeConfirmedPayment(payload);
+    intake = stage030.intakeConfirmedPayment(canonicalPayload(canonicalContext));
     diagnostics.STAGE_080_STATE = "PASS";
     diagnostics.STAGE_030_STATE = intake.intakeStatus === "ACCEPTED" ? "PASS" : "BLOCKED";
   } catch (error) {
@@ -147,107 +185,116 @@ async function orchestrateAdvisorCompensationHandoff({
   if (!intake?.event) {
     return result("BLOCKED", diagnostics, { reason: intake?.reason || "STAGE_030_BLOCKED" });
   }
+  const paymentEvent = intake.event;
 
-  if (typeof claimIntake !== "function") {
-    diagnostics.STAGE_030_STATE = "FAIL";
-    return result("FAILED", diagnostics, { reason: "PRODUCTIVE_INTAKE_PERSISTENCE_REQUIRED" });
-  }
-  const claim = await claimIntake(advisorReference, intake.event);
-  diagnostics.IDEMPOTENCY_STATE = claim?.state || "FAIL";
-  if (claim?.state === "CONFLICT") {
-    diagnostics.STAGE_030_STATE = "BLOCKED";
-    return result("BLOCKED", diagnostics, { reason: "STAGE_030_IDEMPOTENCY_CONFLICT" });
-  }
-  if (!claim || !["CREATED", "REPLAYED"].includes(claim.state)) {
-    diagnostics.STAGE_030_STATE = "FAIL";
-    return result("FAILED", diagnostics, { reason: "STAGE_030_PERSISTENCE_FAILED" });
-  }
-
-  if (intake.event.interpretation?.readyForCalculation !== true) {
+  if (paymentEvent.interpretation?.readyForCalculation !== true) {
     diagnostics.STAGE_040_STATE = "BLOCKED";
-    diagnostics.INCOME_READ_STATE = await safeIncomeState(readIncome);
-    return result("BLOCKED", diagnostics, {
+    return blockAfterIntake({
       reason: "PAYMENT_CONTEXT_INCOMPLETE",
-      missingContext: intake.event.interpretation?.missingContext || [],
-      amount: null
+      diagnostics,
+      advisorReference,
+      event: paymentEvent,
+      claimIntake,
+      readIncome,
+      extra: { missingContext: paymentEvent.interpretation?.missingContext || [] }
     });
   }
 
   if (!advisorMonthResolution || advisorMonthResolution.state !== "resolved" ||
       !Number.isInteger(advisorMonthResolution.careerMonth)) {
     diagnostics.STAGE_040_STATE = "BLOCKED";
-    diagnostics.INCOME_READ_STATE = await safeIncomeState(readIncome);
-    return result("BLOCKED", diagnostics, {
+    return blockAfterIntake({
       reason: "ADVISOR_MONTH_AUTHORITY_UNAVAILABLE",
-      advisorMonthResolution: advisorMonthResolution || null,
-      amount: null
+      diagnostics,
+      advisorReference,
+      event: paymentEvent,
+      claimIntake,
+      readIncome,
+      extra: { advisorMonthResolution: advisorMonthResolution || null }
     });
   }
 
-  if (!officialRulePack || officialRulePack.governanceStatus !== "official") {
+  const governanceStatus = officialRulePack?.metadata?.governanceStatus || officialRulePack?.governanceStatus;
+  if (!officialRulePack || governanceStatus !== "official") {
     diagnostics.STAGE_040_STATE = "BLOCKED";
-    diagnostics.INCOME_READ_STATE = await safeIncomeState(readIncome);
-    return result("BLOCKED", diagnostics, {
+    return blockAfterIntake({
       reason: "OFFICIAL_RULE_SNAPSHOT_UNAVAILABLE",
-      amount: null
+      diagnostics,
+      advisorReference,
+      event: paymentEvent,
+      claimIntake,
+      readIncome,
+      extra: { ruleGovernanceStatus: governanceStatus || "unknown" }
     });
   }
 
-  const calculatedAt = clock();
   const calculation = calculateAdvisorCommission({
-    paymentEvent: intake.event,
+    paymentEvent,
     rulePack: officialRulePack,
     calculationContext: {
       ...calculationContext,
       advisorMonth: advisorMonthResolution.careerMonth,
       paymentFrequency: calculationContext.paymentFrequency || canonicalContext?.policy?.paymentFrequency || null
     },
-    calculatedAt
+    calculatedAt: clock()
   });
   if (calculation?.status !== "CALCULATED") {
     diagnostics.STAGE_040_STATE = "BLOCKED";
-    diagnostics.INCOME_READ_STATE = await safeIncomeState(readIncome);
-    return result("BLOCKED", diagnostics, {
+    return blockAfterIntake({
       reason: calculation?.reason || "STAGE_040_BLOCKED",
-      calculation,
-      amount: null
+      diagnostics,
+      advisorReference,
+      event: paymentEvent,
+      claimIntake,
+      readIncome,
+      extra: { calculation }
     });
   }
   diagnostics.STAGE_040_STATE = "PASS";
 
-  const stage050 = createAdvisorCompensationEventAuthority();
-  let recorded;
+  const calculatedAt = calculation.calculatedAt || clock();
+  let compensationEvent;
   try {
-    recorded = stage050.recordEstimated({
+    const stage050 = createAdvisorCompensationEventAuthority();
+    const recorded = stage050.recordEstimated({
       calculation,
       advisorReference,
-      periodKey: intake.event.payment.paymentDate.slice(0, 7),
-      idempotencyKey: `compensation:${intake.event.source.idempotencyKey}`,
-      correlationId: intake.event.source.correlationId,
+      periodKey: paymentEvent.payment.paymentDate.slice(0, 7),
+      idempotencyKey: `compensation:${paymentEvent.source.idempotencyKey}`,
+      correlationId: paymentEvent.source.correlationId,
       createdAt: calculatedAt,
-      evidenceReferences: intake.event.evidence.evidenceReferences,
+      evidenceReferences: paymentEvent.evidence.evidenceReferences,
       metadata: {
         phase: "FORGE_ADVISOR_COMPENSATION_PRODUCTIVE_HANDOFF_AND_MATERIALIZATION_011D",
         canonicalPaymentEventReference: canonicalContext.paymentEventReference,
         payoutTruth: false
       }
     });
+    compensationEvent = recorded?.event;
   } catch (error) {
     diagnostics.STAGE_050_STATE = "FAIL";
     return result("FAILED", diagnostics, { reason: error?.code || "STAGE_050_FAILED" });
   }
   diagnostics.STAGE_050_STATE = "PASS";
-  const compensationEvent = recorded?.event;
 
-  if (typeof appendCompensationEvent !== "function") {
+  if (typeof commitEconomicEvent !== "function") {
     diagnostics.LEDGER_STATE = "FAIL";
-    return result("FAILED", diagnostics, { reason: "PRODUCTIVE_EVENT_PERSISTENCE_REQUIRED" });
+    return result("FAILED", diagnostics, { reason: "ATOMIC_PRODUCTIVE_COMMIT_REQUIRED" });
   }
-  const ledgerWrite = await appendCompensationEvent(advisorReference, compensationEvent);
-  diagnostics.LEDGER_STATE = ledgerWrite?.state || "FAIL";
-  if (!ledgerWrite || !["CREATED", "REPLAYED"].includes(ledgerWrite.state)) {
-    return result(ledgerWrite?.state === "CONFLICT" ? "BLOCKED" : "FAILED", diagnostics, {
-      reason: ledgerWrite?.state === "CONFLICT" ? "COMPENSATION_EVENT_CONFLICT" : "COMPENSATION_EVENT_WRITE_FAILED"
+
+  let commit;
+  try {
+    commit = await commitEconomicEvent(advisorReference, paymentEvent, compensationEvent);
+  } catch (error) {
+    diagnostics.LEDGER_STATE = "FAIL";
+    diagnostics.IDEMPOTENCY_STATE = "FAIL";
+    return result("FAILED", diagnostics, { reason: error?.code || "ATOMIC_PRODUCTIVE_COMMIT_FAILED" });
+  }
+  diagnostics.LEDGER_STATE = commit?.state || "FAIL";
+  diagnostics.IDEMPOTENCY_STATE = commit?.state || "FAIL";
+  if (!commit || !["CREATED", "REPLAYED"].includes(commit.state)) {
+    return result(commit?.state === "CONFLICT" ? "BLOCKED" : "FAILED", diagnostics, {
+      reason: commit?.state === "CONFLICT" ? "COMPENSATION_EVENT_CONFLICT" : "ATOMIC_PRODUCTIVE_COMMIT_FAILED"
     });
   }
 
@@ -257,7 +304,7 @@ async function orchestrateAdvisorCompensationHandoff({
     diagnostics.MATERIALIZATION_STATE = "FAIL";
     return result("FAILED", diagnostics, {
       reason: "MATERIALIZATION_PERSISTENCE_REQUIRED",
-      compensationEventState: ledgerWrite.state
+      compensationEventState: commit.state
     });
   }
 
@@ -272,7 +319,7 @@ async function orchestrateAdvisorCompensationHandoff({
       payoutSourceState: inputs?.payoutSourceState || "DISCONNECTED",
       forwardSignals: inputs?.forwardSignals || [],
       forwardSignalSourceState: inputs?.forwardSignalSourceState || "DISCONNECTED",
-      currency: intake.event.payment.currency,
+      currency: paymentEvent.payment.currency,
       capturedAt: clock(),
       metadata: {
         phase: "FORGE_ADVISOR_COMPENSATION_PRODUCTIVE_HANDOFF_AND_MATERIALIZATION_011D",
@@ -285,7 +332,7 @@ async function orchestrateAdvisorCompensationHandoff({
       diagnostics.INCOME_READ_STATE = await safeIncomeState(readIncome);
       return result("FAILED", diagnostics, {
         reason: "READ_MODEL_MATERIALIZATION_FAILED",
-        compensationEventState: ledgerWrite.state
+        compensationEventState: commit.state
       });
     }
   } catch (error) {
@@ -293,15 +340,16 @@ async function orchestrateAdvisorCompensationHandoff({
     diagnostics.INCOME_READ_STATE = await safeIncomeState(readIncome);
     return result("FAILED", diagnostics, {
       reason: error?.code || "READ_MODEL_MATERIALIZATION_FAILED",
-      compensationEventState: ledgerWrite.state
+      compensationEventState: commit.state
     });
   }
 
   diagnostics.INCOME_READ_STATE = await safeIncomeState(readIncome);
-  return result(ledgerWrite.state === "REPLAYED" ? "REPLAYED" : "COMPLETED", diagnostics, {
+  return result(commit.state === "REPLAYED" ? "REPLAYED" : "COMPLETED", diagnostics, {
     paymentEventReference: canonicalContext.paymentEventReference,
     compensationEventId: compensationEvent.eventId,
     periodKey,
+    periodKeys: [...periodKeys],
     amount: null,
     payoutTruth: false
   });
@@ -311,5 +359,6 @@ module.exports = {
   PRODUCTIVE_GATE,
   baseDiagnostics,
   canonicalPayload,
+  persistBlockedIntake,
   orchestrateAdvisorCompensationHandoff
 };
