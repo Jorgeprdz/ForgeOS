@@ -87,6 +87,12 @@ test('011A Cartera composes canonical relationships without identity merge or na
   assert.match(carteraModule,/cartera-related-section/);
 });
 
+test('011A Cartera observer decoration is idempotent and cannot self-trigger on identical copy',()=>{
+  assert.match(carteraModule,/const desiredCopy =/);
+  assert.match(carteraModule,/headerCopy && headerCopy\.textContent !== desiredCopy/);
+  assert.match(carteraModule,/observer\.observe\(root, \{ childList: true, subtree: true \}\)/);
+});
+
 test('011A Cartera row resets native button geometry instead of leaving black browser borders',()=>{
   assert.match(carteraCss,/\.cartera-directory-row\{[^}]*border:1px solid/s);
   assert.match(carteraCss,/appearance:none/);
