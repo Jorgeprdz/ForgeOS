@@ -62,6 +62,9 @@ jobs:
       - name: 011C regression
         run: node tests/forge-aura-commercial-loop-011c.test.mjs
 
+      - name: Install locked npm graph
+        run: npm ci --ignore-scripts
+
       - name: Deno
         uses: denoland/setup-deno@v2
         with:
