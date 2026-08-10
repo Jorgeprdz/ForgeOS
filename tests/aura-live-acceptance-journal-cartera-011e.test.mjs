@@ -62,7 +62,12 @@ assert.ok(
 assert.match(loop, /pipeline-journal-aura-011e\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
 assert.match(index, /pipeline-journal-aura-011e\.css/);
 assert.match(index, /cartera-live-acceptance-011e\.css/);
-assert.match(index, /cartera-module-v9\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
+
+// 011G real-user recovery: production must request the fixed 011F Cartera asset under a fresh URL.
+assert.match(index, /cartera-module-v9\.js\?v=forge-aura-cartera-freeze-cache-cutover-011g/);
+assert.doesNotMatch(index, /cartera-module-v9\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
+assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-cartera-freeze-cache-cutover-011g/);
+
 assert.match(index, /commercial-loop-011c\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
 
 console.log('AURA_LIVE_ACCEPTANCE_011E=PASS');
@@ -72,3 +77,4 @@ console.log('JOURNAL_NETWORK_ERROR_ESCAPE_011F=PASS');
 console.log('CARTERA_POLICY_AFFORDANCE=PASS');
 console.log('CARTERA_SIGNAL_COUNT_COPY=PASS');
 console.log('CARTERA_MUTATION_OBSERVER_IDEMPOTENCE_011F=PASS');
+console.log('CARTERA_CACHE_CUTOVER_011G=PASS');
