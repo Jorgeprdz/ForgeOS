@@ -1,5 +1,8 @@
 import { createPipelineAdapter as createConversationAdapter } from './pipeline-adapter-pages-v4.js?v=forge-aura-conversation-workspace-011a';
 
+const rootUrl = new URL('../../../../', import.meta.url);
+let timelineAuthorityPromise;
+
 function freeze(value) {
   if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
   Object.freeze(value);
@@ -15,8 +18,27 @@ function cardProspect(card) {
   return card?.prospect || card;
 }
 
+async function ensureTimelineAuthority() {
+  if (timelineAuthorityPromise) return timelineAuthorityPromise;
+  timelineAuthorityPromise = (async () => {
+    await import(`${new URL('advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-contract.js', rootUrl).href}?v=forge-aura-conversation-workspace-011a`);
+    await import(`${new URL('advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-service.js', rootUrl).href}?v=forge-aura-conversation-workspace-011a`);
+    const authority = globalThis.ForgeProspectTimelineServiceNFAST08;
+    if (!authority?.create) throw new Error('NFAST_08_TIMELINE_AUTHORITY_UNAVAILABLE');
+    return authority;
+  })().catch(error => {
+    timelineAuthorityPromise = null;
+    throw error;
+  });
+  return timelineAuthorityPromise;
+}
+
 export async function createPipelineAdapter(options = {}) {
+  if (!options.client) throw new Error('PRODUCTIVE_CLIENT_REQUIRED');
   const adapter = await createConversationAdapter(options);
+  const timelineAuthority = await ensureTimelineAuthority();
+  const timelineService = timelineAuthority.create(options.client);
+
   return Object.freeze({
     ...adapter,
     async prepareMessage(card, request = {}) {
@@ -35,7 +57,7 @@ export async function createPipelineAdapter(options = {}) {
       const prospectId = text(prospect?.id || card?.id);
       if (!prospectId) throw new Error('PROSPECT_REFERENCE_REQUIRED');
       const occurredAt = new Date().toISOString();
-      const appended = await adapter.timelineService.appendProspectTimelineEvent(prospectId, {
+      const appended = await timelineService.appendProspectTimelineEvent(prospectId, {
         eventType: 'OBJECTION_RECORDED',
         occurredAt,
         sourceRecordReference: `PROSPECT:${prospectId}`,
