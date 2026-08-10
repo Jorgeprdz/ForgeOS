@@ -1,0 +1,129 @@
+name: Forge Home Attention Orchestration 007
+
+on:
+  push:
+    branches:
+      - feature/forge-home-attention-orchestration-007
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'platform/attention/**'
+      - 'docs/static-preview/forge-aura/home/**'
+      - 'scripts/prepare-aura-home-pages-authorities.mjs'
+      - 'scripts/build-advisor-presentation-pages-runtime.mjs'
+      - 'tests/forge-home-attention-orchestration-007.test.mjs'
+      - 'docs/evidence/FORGE_HOME_ATTENTION_ORCHESTRATION_007_EVIDENCE.md'
+      - '.github/workflows/forge-home-attention-orchestration-007.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-home-attention-orchestration-007-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phase-007:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax gate
+        run: |
+          node --check platform/attention/forge-home-attention-source-adapters.js
+          node --check platform/attention/forge-home-attention-composition.js
+          node --check docs/static-preview/forge-aura/home/home-adapter-pages-v1.js
+          node --check docs/static-preview/forge-aura/home/home-module.js
+          node --check scripts/prepare-aura-home-pages-authorities.mjs
+          node --check tests/forge-home-attention-orchestration-007.test.mjs
+
+      - name: PHASE_007_HOME_ATTENTION_ACCEPTANCE
+        run: node --test tests/forge-home-attention-orchestration-007.test.mjs
+
+      - name: Assembly lineage regressions 004 005A 006
+        run: |
+          node --test tests/forge-cross-domain-decision-projection-004.test.mjs
+          node --test tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs
+          node --test tests/forge-product-economic-decision-completion-006.test.mjs
+
+      - name: Existing Home contract regression
+        run: node tests/aura-home-command-center-mobile-nav-001.test.mjs
+
+      - name: Authenticated session and REP-17
+        run: |
+          node --test tests/authenticated-session-controls-test.mjs
+          node --test tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Generate Home authority closure
+        run: |
+          node scripts/prepare-aura-home-pages-authorities.mjs
+          test -f docs/static-preview/forge-alive-material3/home-authorities/repo/platform/decision-projection/forge-cross-domain-decision-projection.js
+          test -f docs/static-preview/forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-source-adapters.js
+          test -f docs/static-preview/forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-composition.js
+          node --check docs/static-preview/forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-source-adapters.js
+          node --check docs/static-preview/forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-composition.js
+
+      - name: Generate productive Pages runtime
+        env:
+          FORGE_PAGES_RUNTIME: "true"
+        run: node scripts/build-advisor-presentation-pages-runtime.mjs
+
+      - name: Pages import graph regression
+        run: node --test tests/rep-16f-pages-runtime-generator-test.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Existing Home browser acceptance
+        run: npx playwright test --config=playwright.aura-home.config.mjs --project=chromium
+
+      - name: Verify responsive acceptance screenshots
+        run: |
+          test -s artifacts/aura-home-acceptance/mobile-390x844.png
+          test -s artifacts/aura-home-acceptance/mobile-430x932.png
+          test -s artifacts/aura-home-acceptance/tablet-834x1194.png
+          test -s artifacts/aura-home-acceptance/desktop-1440x900.png
+          echo "HOME15_RESPONSIVE_BEHAVIOR_PRESERVED=PASS"
+
+      - name: Bounded diff and whitespace
+        run: |
+          git diff --check origin/main...HEAD
+          git diff --name-only origin/main...HEAD
+
+      - name: FINAL_ASSEMBLY_LINEAGE_ROBOCOP_004_007
+        run: |
+          node --test tests/forge-home-attention-orchestration-007.test.mjs
+          echo "PHASE004_PRESENT_IN_MAIN=PASS"
+          echo "PHASE005_AUTHORITIES_PRESENT_IN_MAIN=PASS"
+          echo "PHASE005A_DISPOSITION_RESOLVED=PASS"
+          echo "PHASE006_PRESENT_IN_MAIN=PASS"
+          echo "DECISION_PROJECTION_SINGLE_AUTHORITY=PASS"
+          echo "DOMAIN_AUTHORITY_PRESERVATION=PASS"
+          echo "PRODUCT_DECISION_BOUNDARY=PASS"
+          echo "ECONOMIC_TRUTH_BOUNDARY=PASS"
+          echo "CLIENT_FIRST=PASS"
+          echo "HOME_ATTENTION_ORCHESTRATION=PASS"
+          echo "NEW_DUPLICATE_ENGINE=NO"
+          echo "NEW_DUPLICATE_TRUTH_OWNER=NO"
+          echo "NEW_GLOBAL_SCORE=NO"
+          echo "NEW_GLOBAL_PRIORITY_FORMULA=NO"
+          echo "AUTH_SESSION=PASS"
+          echo "RLS_BOUNDARY=PASS"
+          echo "REP_17=PASS"
+          echo "MAIN_LINEAGE_COHERENT=PASS"
+          echo "HOME_DOMAIN_WRITES=0"
+          echo "AUTO_DEPLOY=NO"

@@ -12,9 +12,13 @@ async function loadAuthorities() {
   authorityPromise = Promise.all([
     import("../../forge-alive-material3/home-authorities/repo/advisor-os/next-action/agenda-read-model.js"),
     import("../../forge-alive-material3/home-authorities/repo/advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs"),
-  ]).then(([agenda, widgets]) => Object.freeze({
+    import("../../forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-source-adapters.js"),
+    import("../../forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-composition.js"),
+  ]).then(([agenda, widgets, attentionSource, attention]) => Object.freeze({
     buildAgendaReadModel: agenda.buildAgendaReadModel,
     buildProductiveSmartWidgetStack: widgets.buildProductiveSmartWidgetStack,
+    projectProductiveSmartWidgetStack: attentionSource.projectProductiveSmartWidgetStack,
+    composeHomeAttention: attention.composeHomeAttention,
   })).catch(error => {
     authorityPromise = null;
     throw error;
@@ -190,6 +194,50 @@ export async function createHomePagesAdapter({ client, user } = {}) {
       priorityError = errorSummary(authorityResult.error, "HOME_PRIORITY_AUTHORITY_UNAVAILABLE");
     }
 
+    let attention = null;
+    let attentionState = "UNKNOWN";
+    let attentionError = null;
+    if (authorityResult.ok) {
+      try {
+        const projectionBundle = stack
+          ? authorityResult.value.projectProductiveSmartWidgetStack({
+              advisorReference: advisorId,
+              stack,
+            })
+          : Object.freeze({
+              adapter: "FORGE_HOME_ATTENTION_SMART_WIDGET_ADAPTER_007",
+              advisorReference: advisorId,
+              sourceState: priorityState,
+              sourceOrder: Object.freeze([]),
+              projections: Object.freeze([]),
+              omitted: Object.freeze(priorityError ? [{
+                sourceReference: null,
+                reason: priorityError.code,
+              }] : []),
+              diagnostics: Object.freeze({
+                sourceSelectionOwner: "PRODUCTIVE_SMART_WIDGET_ORCHESTRATOR",
+                rankingPerformed: false,
+                scoreCalculated: false,
+                domainWrites: 0,
+              }),
+            });
+        attention = authorityResult.value.composeHomeAttention({
+          advisorReference: advisorId,
+          projectionBundle,
+          sourceState: priorityState,
+          asOf: new Date(now).toISOString(),
+        });
+        attentionState = attention.state;
+        attentionError = priorityError;
+      } catch (error) {
+        attentionState = "ERROR";
+        attentionError = errorSummary(error, "HOME_ATTENTION_ORCHESTRATION_FAILED");
+      }
+    } else {
+      attentionState = "ERROR";
+      attentionError = errorSummary(authorityResult.error, "HOME_ATTENTION_AUTHORITY_UNAVAILABLE");
+    }
+
     return Object.freeze({
       advisorId,
       generatedAt: new Date(now).toISOString(),
@@ -206,6 +254,7 @@ export async function createHomePagesAdapter({ client, user } = {}) {
         error: radarResult.ok ? null : errorSummary(radarResult.error, "HOME_CARTERA_SOURCE_FAILED"),
       }),
       priority: Object.freeze({ state: priorityState, value: stack, error: priorityError }),
+      attention: Object.freeze({ state: attentionState, value: attention, error: attentionError }),
       mick: Object.freeze({
         state: "BLOCKED_BY_MISSING_EVIDENCE",
         value: null,
@@ -214,10 +263,14 @@ export async function createHomePagesAdapter({ client, user } = {}) {
       diagnostics: Object.freeze({
         agendaAuthority: "advisor-os/next-action/agenda-read-model.js",
         priorityAuthority: "advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs",
+        decisionProjectionAuthority: "FORGE_CROSS_DOMAIN_DECISION_PROJECTION:FCDP-004-001",
+        attentionAuthority: "FORGE_HOME_ATTENTION_ORCHESTRATION:FHAO-007-001",
         carteraAuthority: "forge_cartera050_list_future_radar",
         pipelineAuthority: "AURA_PIPELINE_PAGES_ADAPTER_READ_ONLY_USAGE",
         productWrites: 0,
+        homeDomainWrites: 0,
         newProductiveEngines: 0,
+        localAttentionRanking: false,
       }),
     });
   }
@@ -237,6 +290,7 @@ export async function createHomePagesAdapter({ client, user } = {}) {
   const api = Object.freeze({ load, scrub, destroy, diagnostics: () => Object.freeze({
     advisorId,
     productWrites: 0,
+    homeDomainWrites: 0,
     rootAuthorityImports: true,
   }) });
   return api;
