@@ -7,6 +7,7 @@ const {
 } = require("./advisor-compensation-payment-event-contract");
 const {
   consumeCartera080ConfirmedPayment,
+  consumeCartera030cCanonicalPayment,
   stable
 } = require("./cartera-080-confirmed-payment-consumer");
 const {
@@ -93,13 +94,36 @@ function resolveInterpretationState({ policyContext, productResolution }) {
   };
 }
 
+function selectPayment(payload = {}) {
+  if (payload.canonicalPaymentEvent) {
+    return consumeCartera030cCanonicalPayment({
+      paymentEvent: payload.canonicalPaymentEvent,
+      reconciliation: payload.canonicalReconciliation,
+      personReference: payload.canonicalPersonReference
+    });
+  }
+  return consumeCartera080ConfirmedPayment({
+    command: payload.command,
+    handoffReceipt: payload.handoffReceipt
+  });
+}
+
 function adaptCartera080PaymentToAdvisorCompensationEvent({
   command,
   handoffReceipt,
+  canonicalPaymentEvent = null,
+  canonicalReconciliation = null,
+  canonicalPersonReference = null,
   policyContext = null,
   productIdentities = []
 } = {}) {
-  const payment = consumeCartera080ConfirmedPayment({ command, handoffReceipt });
+  const payment = selectPayment({
+    command,
+    handoffReceipt,
+    canonicalPaymentEvent,
+    canonicalReconciliation,
+    canonicalPersonReference
+  });
   const normalizedPolicyContext = normalizePolicyContext(policyContext, payment);
   const productResolution = resolveProductIdentity(
     productIdentities,
@@ -180,5 +204,6 @@ module.exports = {
   sha256,
   normalizePolicyContext,
   resolveInterpretationState,
+  selectPayment,
   adaptCartera080PaymentToAdvisorCompensationEvent
 };
