@@ -7,12 +7,12 @@ function freeze(value) {
   return value;
 }
 
-function subjectKey(item = {}) {
+function subjectKey(item = {}, index = 0) {
   return item.personReference
     ? `PERSON:${item.personReference}`
     : item.policyReference
       ? `POLICY:${item.policyReference}`
-      : `SIGNAL:${item.signalReference || Math.random()}`;
+      : `SIGNAL:${item.signalReference || index}`;
 }
 
 function signalPriority(item = {}) {
@@ -27,15 +27,15 @@ function compareSignals(left, right) {
   return a[0] - b[0] || a[1] - b[1] || String(left.signalReference || '').localeCompare(String(right.signalReference || ''));
 }
 
-function groupedFocusItems(radar = {}) {
+export function groupHomeCarteraFocusItems010j(radar = {}) {
   const source = Array.isArray(radar.focusItems)
     ? radar.focusItems
     : Array.isArray(radar.items) ? radar.items : [];
   const groups = new Map();
-  for (const item of source) {
-    const key = subjectKey(item);
+  source.forEach((item, index) => {
+    const key = subjectKey(item, index);
     groups.set(key, [...(groups.get(key) || []), item]);
-  }
+  });
   const merged = [];
   for (const group of groups.values()) {
     const ordered = [...group].sort(compareSignals);
@@ -69,7 +69,7 @@ export async function createHomePagesAdapter(options = {}) {
       const snapshot = await adapter.load(input);
       if (snapshot?.radar?.state !== 'READY' || !snapshot.radar.value) return snapshot;
       const radar = snapshot.radar.value;
-      const value = freeze({ ...radar, focusItems: groupedFocusItems(radar) });
+      const value = freeze({ ...radar, focusItems: groupHomeCarteraFocusItems010j(radar) });
       return freeze({
         ...snapshot,
         radar: { ...snapshot.radar, value },
