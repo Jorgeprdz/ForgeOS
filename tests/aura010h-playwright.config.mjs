@@ -15,7 +15,9 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'python3 -m http.server 4174 --directory _site',
+    // Playwright resolves webServer.command from this config directory (tests/).
+    // The Pages artifact is downloaded at repository-root/_site.
+    command: 'python3 -m http.server 4174 --directory ../_site',
     url: 'http://127.0.0.1:4174/index.html',
     reuseExistingServer: false,
     timeout: 30_000,
