@@ -7,7 +7,8 @@ const CONTRACT = 'FORGE_GOVERNED_WRITABLE_SYNTHETIC_ACCEPTANCE_AUTHORITY_005C';
 const EMAIL_A = 'forge.acceptance.a@forge.invalid';
 const EMAIL_B = 'forge.acceptance.b@forge.invalid';
 const SOURCE = 'FORGE_005C_ACCEPTANCE';
-const CONTEXT = '[NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA][005C][A]';
+const RUN_SCOPE = process.env.GITHUB_RUN_ID || process.env.FORGE_005C_RUN_ID || `local-${process.pid}`;
+const CONTEXT = `[NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA][005C][A][RUN:${RUN_SCOPE}]`;
 const DISPLAY_NAME = 'FORGE 005C SYNTHETIC ACCEPTANCE PROSPECT';
 const SYNTHETIC_PHONE_A = '+000000000005';
 const OUT = process.env.FORGE_005C_DATA_EVIDENCE
@@ -27,6 +28,7 @@ const report = {
   projectRef: PROJECT_REF,
   dataClass: 'SYNTHETIC',
   source: SOURCE,
+  runScope: RUN_SCOPE,
   aa01: 'NOT_RUN',
   aa02: 'NOT_RUN',
   aa03: 'NOT_RUN',
@@ -82,29 +84,28 @@ async function ensureOneDeterministicProspect(api, userId) {
     .eq('advisor_id', userId)
     .eq('source', SOURCE)
     .eq('initial_context', CONTEXT)
+    .is('archived_at', null)
     .order('created_at', { ascending: true });
   assert.ifError(existing.error);
   assert.ok((existing.data || []).length <= 1, 'AA06_DUPLICATE_FIXTURE_PREEXISTS');
 
   if (existing.data?.[0]?.id) {
-    const reopened = await api
+    const refreshed = await api
       .from('prospects')
       .update({
         display_name: DISPLAY_NAME,
         full_name: DISPLAY_NAME,
         phone_normalized: SYNTHETIC_PHONE_A,
         status: 'referred_new',
-        archived_at: null,
-        archived_by: null,
-        archive_reason: null,
         updated_by: userId,
       })
       .eq('advisor_id', userId)
       .eq('id', existing.data[0].id)
+      .is('archived_at', null)
       .select('id,advisor_id,source,initial_context,archived_at')
       .single();
-    assert.ifError(reopened.error);
-    return { row: reopened.data, created: false };
+    assert.ifError(refreshed.error);
+    return { row: refreshed.data, created: false };
   }
 
   const inserted = await api
