@@ -1,0 +1,67 @@
+name: Advisor Compensation Productive Handoff 011D
+
+on:
+  push:
+    branches:
+      - hotfix/advisor-compensation-productive-handoff-011d
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: advisor-compensation-productive-handoff-011d-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract-and-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Syntax gates
+        run: |
+          node --check compensation/advisor/payment/cartera-080-confirmed-payment-consumer.js
+          node --check compensation/advisor/payment/advisor-compensation-payment-event-adapter.js
+          node --check compensation/advisor/server/advisor-compensation-productive-orchestrator.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-compensation-handoff-aura-011d.js
+
+      - name: Existing compensation authority regressions
+        run: |
+          node compensation/advisor/tests/advisor-compensation-stage-030-master-test.js
+          node compensation/advisor/tests/advisor-compensation-stage-040-master-test.js
+          node compensation/advisor/tests/advisor-compensation-stage-050-master-test.js
+
+      - name: 011D deterministic gates
+        run: node tests/advisor-compensation-productive-handoff-011d.test.mjs
+
+      - name: 011C regression
+        run: node tests/forge-aura-commercial-loop-011c.test.mjs
+
+      - name: Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Edge dependency graph
+        run: |
+          deno check supabase/functions/advisor-compensation-handoff/index.ts
+          deno info supabase/functions/advisor-compensation-handoff/index.ts
+
+      - name: Constitutional summary
+        run: |
+          echo 'SYNTHETIC_PASS_IS_NOT_PRODUCTIVE_PASS=true'
+          echo 'REMOTE_SUPABASE_APPLY=false'
+          echo 'PAGES_DEPLOY=false'
+          echo 'MERGE=false'
+          echo 'UNKNOWN_COERCION_USED=false'
+          echo 'SYNTHETIC_WRITER_USED=false'
+          echo 'DEMO_FALLBACK_USED=false'
+          echo 'PRODUCTIVE_SERVER_ACCEPTANCE=NOT_CLAIMED'
