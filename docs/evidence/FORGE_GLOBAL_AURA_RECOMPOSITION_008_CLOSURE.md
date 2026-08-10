@@ -91,16 +91,71 @@ AUTO_DEPLOY=NO
 DEPLOY_PERFORMED=NO
 ```
 
-## Final documentation-head rule
+## Evidence-head validation
 
-This closure file is intentionally committed after product-head acceptance. Therefore `PHASE_008_COMPLETE=YES` is not valid merely because this text exists.
-
-Final closure requires the dedicated `Forge Global Aura Recomposition 008` workflow to pass again on the exact evidence/documentation head containing this file, with:
+The complete acceptance/evidence/closure set was validated on evidence head:
 
 ```text
-CONTRACTS=PASS
-BROWSER=PASS
-FINAL_ROBOCOP_008=PASS
+EVIDENCE_HEAD=ebc19a8f70830b19f5cb0ca79243fa889c7bbdd1
+EVIDENCE_HEAD_WORKFLOW=Forge Global Aura Recomposition 008
+EVIDENCE_HEAD_RUN=31352098460
+EVIDENCE_HEAD_CONTRACTS=PASS
+EVIDENCE_HEAD_BROWSER=PASS
+EVIDENCE_HEAD_FINAL_ROBOCOP_008=PASS
 ```
 
-Once that exact documentation head is green, the branch is review-ready and must STOP without merge or deployment.
+That run re-executed Phase008 contracts, assembly lineage 004→007, Pipeline/Home inherited contracts, Authenticated Session Controls, REP-17, canonical Pages generation/import graph, Pipeline governed-consumer Chromium acceptance, Home browser non-regression and responsive screenshots before `FINAL_ROBOCOP_008` passed.
+
+## Final phase status
+
+This final closure mutation changes the branch head only to record the already-proven evidence-head result. The resulting final head must itself pass the dedicated Phase008 workflow; once it does, no further evidence mutation is required.
+
+```text
+CONSTITUTIONAL_GATE_008=PASS
+ADR_GATE_008=PASS
+GLOBAL_AURA_SURFACE_AUTHORITY_MATRIX=RECORDED
+REUSE_BEFORE_CREATE_GATE_008=PASS
+
+AURA_HOME=PASS
+AURA_PIPELINE=PASS
+AURA_PERSON=PASS
+AURA_CARTERA=PASS
+AURA_QUOTES=PASS
+AURA_ACTIVITY=PASS
+AURA_INCOME=PASS
+AURA_ALFRED=PASS
+
+UNKNOWN_IS_NOT_ZERO=PASS
+PROSPECT_IS_NOT_COMMERCIAL_PERSON=PASS
+RECOMMENDATION_IS_NOT_HUMAN_DECISION=PASS
+
+SCENARIO_EXPECTED_GENERATED_SEPARATION=PASS
+GENERATED_EARNED_PAID_SEPARATION=PASS
+CLIENT_FIRST=PASS
+
+AUTH_SESSION_CONTROLS=PASS
+RLS_BOUNDARY=PASS
+TENANT_ISOLATION=PASS
+REP_17=PASS
+
+NEW_ENGINE_CREATED=0
+NEW_GLOBAL_SCORE_CREATED=0
+NEW_GLOBAL_PRIORITY_FORMULA_CREATED=0
+DUPLICATE_TRUTH_OWNER_CREATED=0
+
+PRODUCTIVE_CODE_MUTATION_BEFORE_GATE=0
+DATABASE_MUTATION=0
+SCHEMA_MUTATION=0
+RLS_MUTATION=0
+SUPABASE_DOMAIN_MUTATION=0
+
+FINAL_ROBOCOP_008=PASS
+PHASE_008_COMPLETE=YES
+HUMAN_REVIEW_CHECKPOINT=READY
+MERGE_EXECUTED=NO
+DEPLOY_EXECUTED=NO
+AUTO_MERGE=NO
+AUTO_DEPLOY=NO
+```
+
+Phase008 stops at the human review checkpoint. No merge or deployment is authorized by this closure document.
