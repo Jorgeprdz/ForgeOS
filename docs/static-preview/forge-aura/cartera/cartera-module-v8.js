@@ -92,6 +92,19 @@ export function createCarteraModule({
     }
   }
 
+  function projectPolicyPresentation(policyRow, policy) {
+    const primary = policyRow.querySelector('strong');
+    const secondary = policyRow.querySelector('small');
+    const kind = policyRow.querySelector('.cartera-kind');
+    const desiredPrimary = policy.displayLabel || 'Producto no identificado';
+    const desiredSecondary = policy.maskedPolicyNumber || 'Número no identificado';
+    const desiredKind = policy.relationshipLabel || 'PÓLIZA';
+
+    if (primary && primary.textContent !== desiredPrimary) primary.textContent = desiredPrimary;
+    if (secondary && secondary.textContent !== desiredSecondary) secondary.textContent = desiredSecondary;
+    if (kind && kind.textContent !== desiredKind) kind.textContent = desiredKind;
+  }
+
   async function decorateDirectory() {
     decorateScheduled = false;
     if (destroyed || !root.isConnected) return;
@@ -132,10 +145,7 @@ export function createCarteraModule({
           if (policyRow && uniquelyOwnedPresentation) {
             policyRow.classList.add('cartera-relationship-policy');
             policyRow.dataset.relationshipRole = text(policy.relationshipLabel);
-            const label = policyRow.querySelector('small');
-            if (label) label.textContent = policy.displayLabel || 'Producto no identificado';
-            const kind = policyRow.querySelector('.cartera-kind');
-            if (kind) kind.textContent = policy.relationshipLabel || 'PÓLIZA';
+            projectPolicyPresentation(policyRow, policy);
             section.append(policyRow);
           } else {
             section.append(staticRelationRow(doc, policy, 'POLICY'));
