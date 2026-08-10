@@ -7,6 +7,7 @@ on:
       - 'advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js'
       - 'docs/static-preview/forge-aura/pipeline/pipeline-adapter.js'
       - 'tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs'
+      - 'tests/pipeline-scope-guard.test.mjs'
       - 'docs/evidence/FORGE_DOMAIN_INTELLIGENCE_AUTHORITY_RECONCILIATION_005A_DISCOVERY.md'
       - 'docs/evidence/FORGE_DOMAIN_INTELLIGENCE_AUTHORITY_RECONCILIATION_005A_CLOSURE.md'
       - '.github/workflows/forge-domain-intelligence-authority-reconciliation-005a.yml'
@@ -43,7 +44,7 @@ jobs:
           mapfile -t changed < <(git -c core.quotepath=false diff --name-only "$base" "$head")
           test "${#changed[@]}" -gt 0
           printf '%s\n' "${changed[@]}"
-          allowed='^(advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer\.js|docs/static-preview/forge-aura/pipeline/pipeline-adapter\.js|tests/forge-domain-intelligence-authority-reconciliation-005a\.test\.mjs|docs/evidence/FORGE_DOMAIN_INTELLIGENCE_AUTHORITY_RECONCILIATION_005A_(DISCOVERY|CLOSURE)\.md|\.github/workflows/forge-domain-intelligence-authority-reconciliation-005a\.yml)$'
+          allowed='^(advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer\.js|docs/static-preview/forge-aura/pipeline/pipeline-adapter\.js|tests/(forge-domain-intelligence-authority-reconciliation-005a|pipeline-scope-guard)\.test\.mjs|docs/evidence/FORGE_DOMAIN_INTELLIGENCE_AUTHORITY_RECONCILIATION_005A_(DISCOVERY|CLOSURE)\.md|\.github/workflows/forge-domain-intelligence-authority-reconciliation-005a\.yml)$'
           for file in "${changed[@]}"; do
             [[ "$file" =~ $allowed ]] || { echo "PHASE005A_SCOPE_VIOLATION=$file" >&2; exit 1; }
           done
@@ -58,9 +59,13 @@ jobs:
           node --check advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js
           node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter.js
           node --check tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs
+          node --check tests/pipeline-scope-guard.test.mjs
 
       - name: Phase 005A consumer acceptance
         run: node --test tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs
+
+      - name: Preserve Pipeline UX scope contract
+        run: node --test tests/pipeline-scope-guard.test.mjs
 
       - name: Preserve Phase 004 projection authority
         run: node --test tests/forge-cross-domain-decision-projection-004.test.mjs
