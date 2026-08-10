@@ -8,6 +8,7 @@ on:
       - 'index.html'
       - '.github/workflows/pages.yml'
       - '.github/workflows/forge-beta2-canonical-aura-cutover-010h.yml'
+      - 'tests/auth-relogin-canonical-return-test.mjs'
       - 'tests/forge-beta2-canonical-aura-cutover-010h.test.mjs'
       - 'tests/aura010h-playwright.config.mjs'
       - 'tests/e2e/forge-beta2-canonical-aura-cutover-010h.spec.mjs'
@@ -57,13 +58,13 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: '22', cache: npm}
       - run: npm ci
-      - run: node --test tests/forge-beta2-canonical-aura-cutover-010h.test.mjs
+      - run: node --test tests/forge-beta2-canonical-aura-cutover-010h.test.mjs tests/auth-relogin-canonical-return-test.mjs
       - name: Bounded hotfix diff and mutation seal
         run: |
           set -euo pipefail
           git diff --name-only "$HOTFIX_BASE_SHA...HEAD" | sort > /tmp/forge010h-paths
           cat /tmp/forge010h-paths
-          outside=$(grep -Ev '^(index\.html|\.github/workflows/pages\.yml|\.github/workflows/forge-beta2-canonical-aura-cutover-010h\.yml|tests/forge-beta2-canonical-aura-cutover-010h\.test\.mjs|tests/aura010h-playwright\.config\.mjs|tests/e2e/forge-beta2-canonical-aura-cutover-010h\.spec\.mjs|docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H\.md)$' /tmp/forge010h-paths || true)
+          outside=$(grep -Ev '^(index\.html|\.github/workflows/pages\.yml|\.github/workflows/forge-beta2-canonical-aura-cutover-010h\.yml|tests/auth-relogin-canonical-return-test\.mjs|tests/forge-beta2-canonical-aura-cutover-010h\.test\.mjs|tests/aura010h-playwright\.config\.mjs|tests/e2e/forge-beta2-canonical-aura-cutover-010h\.spec\.mjs|docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H\.md)$' /tmp/forge010h-paths || true)
           test -z "$outside"
           ! grep -E '^(advisor-os/|platform/|nash/|manager-os/|supabase/|migrations/)' /tmp/forge010h-paths
           git diff --check "$HOTFIX_BASE_SHA...HEAD"
@@ -124,10 +125,11 @@ jobs:
       FORGE_PAGES_RUNTIME_MODE: pages
       FORGE_CARTERA_PAGES_RUNTIME_MODE: pages
       GITHUB_PAGES: 'true'
-      DEMO_MODE: 'true'
+      DEMO_MODE: 'false'
+      EXPECTED_DEMO_MODE: 'false'
       ENABLE_TEST_ADVISOR_LOGIN: 'false'
-      SUPABASE_URL: ''
-      SUPABASE_ANON_KEY: ''
+      SUPABASE_URL: 'https://rmlxigxysujsuwzgoimv.supabase.co'
+      SUPABASE_ANON_KEY: 'ci-public-browser-key-not-a-secret'
     steps:
       - uses: actions/checkout@v4
         with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
