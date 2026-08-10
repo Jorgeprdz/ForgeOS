@@ -39,7 +39,7 @@ test('010H preserves exact-SHA explicit human Pages deployment governance', () =
 test('010H Aura is an existing complete route surface, not a new UI', () => {
   assert.match(auraIndex, /FORGE_AURA_LIGHT_2026_V4/);
   for (const route of ['inicio', 'pipeline', 'actividad', 'cartera', 'comisiones', 'cotizaciones']) {
-    assert.match(auraRouter, new RegExp(`${route}: \\"${route}\\"|${route}: '${route}'|${route}: \\\`${route}\\\``));
+    assert.ok(auraRouter.includes(`${route}: "${route}"`), `missing Aura route ${route}`);
   }
   assert.match(auraApp, /route === "cotizaciones"/);
   assert.match(auraApp, /createQuotesModule/);
