@@ -1,5 +1,6 @@
 .aura-cartera .cartera-directory-list{display:grid;gap:10px;margin-top:14px}
 .aura-cartera .cartera-directory-row{width:100%;min-width:0;border:1px solid var(--aura-border,#e7e9ee);border-radius:18px;padding:14px;background:var(--aura-surface,#fff);color:inherit;text-align:left;appearance:none;-webkit-appearance:none;box-shadow:0 5px 16px rgba(31,41,55,.035);transition:background .16s ease,border-color .16s ease,box-shadow .16s ease}
+.aura-cartera button.cartera-directory-row{margin:0;font:inherit}
 .aura-cartera .cartera-directory-row:hover{background:#fbfbff;border-color:color-mix(in srgb,var(--cartera-violet) 22%,var(--aura-border,#e7e9ee));box-shadow:0 8px 22px rgba(31,41,55,.055)}
 .aura-cartera .cartera-directory-row>span{min-width:0}
 .aura-cartera .cartera-directory-row strong,.aura-cartera .cartera-directory-row small{overflow-wrap:anywhere;word-break:normal}
@@ -20,6 +21,27 @@
 .aura-cartera .cartera-related-section small{display:block;margin-top:2px;color:var(--aura-muted,#667085);font-size:12px}
 .aura-cartera .cartera-directory-row[data-cartera-has-relations="true"] .cartera-directory-icon{align-self:start;margin-top:1px}
 
+.aura-cartera .cartera-workspace button[data-open-policy][data-policy-detail-affordance="012"]{
+  grid-template-columns:40px minmax(0,1fr) auto;
+  gap:12px;
+  padding:14px;
+  border:1px solid var(--aura-border,#e7e9ee);
+  border-radius:18px;
+  background:var(--aura-surface,#fff);
+  box-shadow:0 5px 16px rgba(31,41,55,.035);
+}
+.aura-cartera .cartera-workspace button[data-open-policy][data-policy-detail-affordance="012"]:hover{
+  border-color:color-mix(in srgb,var(--cartera-violet) 26%,var(--aura-border,#e7e9ee));
+  background:color-mix(in srgb,var(--cartera-violet) 3%,#fff);
+}
+.aura-cartera .cartera-policy-open-cue{
+  justify-self:end;
+  color:var(--cartera-violet);
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
 @media(max-width:640px){
   .aura-cartera .cartera-directory-list{gap:9px}
   .aura-cartera .cartera-directory-row{grid-template-columns:40px minmax(0,1fr);padding:13px 12px;border-radius:16px}
@@ -28,5 +50,7 @@
   .aura-cartera .cartera-related-section{padding:0 12px 10px 52px}
   .aura-cartera .cartera-related-section .cartera-directory-row,.aura-cartera .cartera-related-static-row{grid-template-columns:34px minmax(0,1fr);gap:9px}
   .aura-cartera .cartera-related-section .cartera-kind,.aura-cartera .cartera-related-static-row .cartera-kind{display:none}
+  .aura-cartera .cartera-workspace button[data-open-policy][data-policy-detail-affordance="012"]{grid-template-columns:40px minmax(0,1fr);padding:13px 12px}
+  .aura-cartera .cartera-policy-open-cue{grid-column:2;justify-self:start;margin-top:4px}
 }
 @media(prefers-reduced-motion:reduce){.aura-cartera .cartera-directory-row{transition:none}}
