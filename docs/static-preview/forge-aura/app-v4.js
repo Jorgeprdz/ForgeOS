@@ -2,9 +2,9 @@ import { createAuraRouter } from "./aura-router-v4.js";
 import { createAuraShell } from "./aura-shell.js";
 import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
 import { createHomeModule } from "./home/home-module.js?v=aura-home-command-center-001";
-import { createPipelineModule } from "./pipeline/pipeline-module.js?v=pages-adapter-c5a90d95";
+import { createPipelineModule } from "./pipeline/pipeline-module-v2.js?v=forge-aura-conversation-workspace-011a";
 import { createActivityModule } from "./activity/activity-module.js?v=activity-reports-ux-001-corrected";
-import { createCarteraModule } from "./cartera/cartera-module-v4.js?v=cartera-pdf-semantic-reconciliation-012";
+import { createCarteraModule } from "./cartera/cartera-module-v8.js?v=forge-aura-conversation-cartera-011a";
 import { createIncomeModule } from "./income/income-module.js?v=income-aura-ux-reconciliation-001";
 import { createQuotesModule } from "./quotes/quotes-module.js?v=aura-quotes-product-intelligence-001";
 
@@ -143,9 +143,14 @@ async function mountRoute(route, snapshot) {
   currentShell.main.replaceChildren();
   const client = await auth.getClient();
   if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
+  if (route === "pipeline") {
+    ensureStylesheet("./pipeline/pipeline.css?v=aura-pipeline-ux-reconciliation-001", "pipeline");
+    ensureStylesheet("./pipeline/pipeline-conversation-workspace.css?v=forge-aura-conversation-workspace-011a", "pipeline-conversation-011a");
+  }
   if (route === "cartera") {
     ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
     ensureStylesheet("./cartera/cartera-semantic-012.css?v=cartera-pdf-semantic-reconciliation-012", "cartera-semantic-012");
+    ensureStylesheet("./cartera/cartera-relational-011a.css?v=forge-aura-conversation-cartera-011a", "cartera-relational-011a");
   }
   if (route === "comisiones") ensureStylesheet("./income/income.css?v=income-aura-ux-reconciliation-001", "comisiones");
   if (route === "cotizaciones") ensureStylesheet("./quotes/quotes.css?v=aura-quotes-product-intelligence-001", "cotizaciones");
