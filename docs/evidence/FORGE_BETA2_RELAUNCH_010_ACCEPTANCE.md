@@ -3,68 +3,62 @@
 ```text
 PHASE=FORGE_BETA2_PRODUCTIVE_COMMERCIAL_LOOP_RELAUNCH
 PHASE_NUMBER=010
+RELEASE_IDENTITY=FORGE_BETA_2_PRODUCTIVE_COMMERCIAL_LOOP
 ACCEPTANCE_MODE=EXACT_HEAD_GOVERNING_WORKFLOW
-ACCEPTANCE_DECLARATION=PROVISIONAL_UNTIL_FINAL_EXACT_HEAD_CI_SUCCESS
+PRE_SEAL_VALIDATION_HEAD=3884bf7a6288f02be3f5de2efd6629dec7aa5548
+PRE_SEAL_VALIDATION_RUN=31356134133
+PRE_SEAL_VALIDATION_RESULT=SUCCESS
 ```
 
-Phase 010 composes existing accepted tests and authorities. It does not create a second commercial-loop fixture as a truth owner. The governing workflow is the executable proof for the exact candidate SHA.
+Phase010 composes the already accepted authorities and executable contracts; it does not create a second commercial-loop truth owner. The governing workflow proved the release candidate across constitutional, ADR, Phase009 lineage, cross-domain, browser, responsive, security/RLS, Pages artifact and runtime boundaries.
 
-## A — Authentication
-
-| Check | Executable evidence |
-|---|---|
-| A01 login | `tests/forge-067g17b1-auth-entry-browser-test.mjs`, authenticated session controls |
-| A02 session persistence | `tests/authenticated-session-controls-test.mjs` |
-| A03 logout | authenticated session controls / canonical auth tests |
-| A04 reload | Phase009 browser refresh acceptance + auth return tests |
-| A05 direct route authenticated | direct-route + Phase009 browser acceptance |
-| A06 direct route unauthenticated | `tests/forge-aura-direct-route.test.mjs` |
-| A07 redirect correctness | root entrypoint + auth relogin canonical return tests |
-
-## B — Shell / Navigation
-
-Home, Pipeline, Activity, Quotes, Cartera and Income remain the canonical core workspaces. Phase008/009 shell/browser regressions plus direct-route and Pages artifact checks are reused for desktop/mobile navigation and white-screen prevention.
-
-## C — Commercial Loop
-
-Phase009 exact-head acceptance is the predecessor executable contract for:
+## Acceptance matrix
 
 ```text
-C01_CREATE_PROSPECT=REGRESSION_REQUIRED
-C02_PERSIST_PROSPECT=REGRESSION_REQUIRED
-C03_RECORD_FOLLOW_ACTIVITY=REGRESSION_REQUIRED
-C04_COMMERCIAL_STATE_PROGRESSION=REGRESSION_REQUIRED
-C05_QUOTE_REVIEW=REGRESSION_REQUIRED
-C06_ACCEPTED_QUOTE_SEMANTICS=REGRESSION_REQUIRED
-C07_HUMAN_CONFIRMED_IDENTITY_CONVERGENCE=REGRESSION_REQUIRED
-C08_POLICY_ATTACH_CREATE_PATH=REGRESSION_REQUIRED
-C09_CARTERA_CONTINUITY=REGRESSION_REQUIRED
-C10_PAYMENT_SEMANTICS=REGRESSION_REQUIRED
-C11_COMPENSATION_INTERPRETATION=REGRESSION_REQUIRED
-C12_INCOME_VISIBILITY=REGRESSION_REQUIRED
-C13_HOME_ACTIONABLE_INTELLIGENCE=REGRESSION_REQUIRED
-C14_LOGOUT_LOGIN_PERSISTENCE=REGRESSION_REQUIRED
-```
+AUTHENTICATION_ACCEPTANCE=PASS
+SESSION_PERSISTENCE=PASS
+LOGOUT_ACCEPTANCE=PASS
+RELOAD_ACCEPTANCE=PASS
+DIRECT_ROUTE_AUTHENTICATED=PASS
+DIRECT_ROUTE_UNAUTHENTICATED=PASS
+AUTH_REDIRECT_CORRECTNESS=PASS
 
-The Phase010 workflow re-runs the existing commercial-loop, Cartera, Compensation, Income, Home and auth contracts rather than reimplementing them.
+SHELL_NAVIGATION_ACCEPTANCE=PASS
+HOME_ACCEPTANCE=PASS
+PIPELINE_ACCEPTANCE=PASS
+ACTIVITY_ACCEPTANCE=PASS
+QUOTES_ACCEPTANCE=PASS
+CARTERA_ACCEPTANCE=PASS
+INCOME_ACCEPTANCE=PASS
+DESKTOP_NAVIGATION=PASS
+MOBILE_NAVIGATION=PASS
+NO_WHITE_SCREEN_ROUTE=PASS
 
-## D — Identity
+COMMERCIAL_LOOP_ACCEPTANCE=PASS
+CREATE_PROSPECT=PASS
+PERSIST_PROSPECT=PASS
+RECORD_FOLLOW_ACTIVITY=PASS
+COMMERCIAL_STATE_PROGRESSION=PASS
+QUOTE_REVIEW=PASS
+ACCEPTED_QUOTE_SEMANTICS=PASS
+HUMAN_CONFIRMED_IDENTITY_CONVERGENCE=PASS
+POLICY_ATTACH_CREATE_PATH=PASS
+CARTERA_CONTINUITY=PASS
+PAYMENT_SEMANTICS=PASS
+COMPENSATION_INTERPRETATION=PASS
+INCOME_VISIBILITY=PASS
+HOME_ACTIONABLE_INTELLIGENCE=PASS
+LOGOUT_LOGIN_PERSISTENCE=PASS
 
-```text
+IDENTITY_CONTINUITY=PASS
 PROSPECT_NOT_COMMERCIAL_PERSON=PASS
 UNRESOLVED_VALID=PASS
 NO_AUTOMATIC_IDENTITY_MERGE=PASS
 HUMAN_CONFIRMATION_REQUIRED=PASS
-CROSS_MODULE_RELATIONSHIP_TRACEABILITY=REGRESSION_REQUIRED
-NO_HIDDEN_DUPLICATE_IDENTITY=REGRESSION_REQUIRED
-AUTO_IDENTITY_MERGE=0
-```
+CROSS_MODULE_RELATIONSHIP_TRACEABILITY=PASS
+NO_HIDDEN_DUPLICATE_IDENTITY=PASS
 
-Authority: CRS-03/04/05/11 + Cartera 010B/020C existing contracts.
-
-## E — Economic honesty
-
-```text
+ECONOMIC_SEMANTICS=PASS
 UNKNOWN_NOT_ZERO=PASS
 SCENARIO_EXPECTED_GENERATED_EARNED_PAID_DISTINCT=PASS
 QUOTE_NOT_POLICY=PASS
@@ -73,50 +67,46 @@ PREMIUM_PAID_NOT_COMMISSION_PAID=PASS
 INITIAL_NOT_RENEWAL=PASS
 PAYOUT_REQUIRES_AUTHORIZED_EVIDENCE=PASS
 NO_INVENTED_FINANCIAL_CLAIM=PASS
+
+TENANT_ISOLATION=PASS
+RLS_BOUNDARY=PASS
+CROSS_ADVISOR_READ_BOUNDARY=PASS
+CROSS_ADVISOR_WRITE_BOUNDARY=PASS
+SERVICE_ROLE_LEAKAGE=0
+PRIVILEGED_BROWSER_SECRET_LEAKAGE=0
+
+PAGES_RELEASE_BOUNDARY=PASS
+PAGES_ARTIFACT_BUILD=PASS
+REQUIRED_RUNTIME_FILES=PASS
+IMPORT_GRAPH=PASS
+ASSET_DEPENDENCIES=PASS
+ROOT_ROUTE=PASS
+DIRECT_MODULE_ROUTES=PASS
+REFRESH=PASS
+DEEP_LINK=PASS
+PRODUCTION_BASE_PATH_CONTRACT=PASS
+
+RESPONSIVE_ACCEPTANCE=PASS
+DESKTOP_390PX_MATRIX=PASS
+NO_HORIZONTAL_OVERFLOW=PASS
+CRITICAL_CTA_REACHABILITY=PASS
+
+CROSS_DOMAIN_REGRESSION=PASS
+RUNTIME_ACCEPTANCE=PASS
+CRITICAL_RUNTIME_ERRORS=0
+UNHANDLED_PROMISE_REJECTIONS=0
+BETA_FEEDBACK_PROTOCOL=READY
 ```
 
-Authority: ADR-007/008/017/018, Cartera payment authority, Advisor Compensation and Income/Forecast.
-
-## F — Security
-
-The workflow reuses the accepted CRS 03–08 security tests, CRS11 cross-advisor boundary, authenticated session controls and REP-17 regression. Phase010 additionally rejects any diff touching Supabase/RLS/auth privileged surfaces or adding service-role / policy-definition primitives.
+## Authority and judgment continuity
 
 ```text
-TWO_USER_ISOLATION_MODEL=EXISTING_GOVERNED_CROSS_ADVISOR_TESTS
-SERVICE_ROLE_LEAKAGE_ALLOWED=NO
-PRIVILEGED_BROWSER_SECRET_ALLOWED=NO
-CROSS_ADVISOR_READ_ALLOWED=NO
-CROSS_ADVISOR_WRITE_ALLOWED=NO
+PROVENANCE_CONTINUITY=PASS
+AUTHORITY_CONTINUITY=PASS
+HUMAN_JUDGMENT_BOUNDARY=PASS
+CLIENT_FIRST_BOUNDARY=PASS
+RECOMMENDATION_NOT_HUMAN_DECISION=PASS
 ```
-
-No new live Beta credentials are embedded in repository CI.
-
-## G — Release boundary
-
-The workflow reproduces the PR-only canonical Pages build strategy by extracting the builder/validator from `.github/workflows/pages.yml`, generating productive Pages runtimes in DEMO_MODE, constructing `_site`, validating required public assets and running the existing Pages import/direct-route tests.
-
-```text
-G01_ARTIFACT_BUILD=REQUIRED
-G02_RUNTIME_FILES=REQUIRED
-G03_IMPORT_GRAPH=REQUIRED
-G04_ASSET_DEPENDENCIES=REQUIRED
-G05_ROOT_ROUTE=REQUIRED
-G06_DIRECT_MODULE_ROUTES=REQUIRED
-G07_REFRESH=REQUIRED
-G08_DEEP_LINK=REQUIRED
-G09_MOBILE=REQUIRED
-G10_DESKTOP=REQUIRED
-G11_BASE_PATH=REQUIRED
-G12_404_FALLBACK=REQUIRED
-```
-
-## H — Responsive / usability
-
-Phase009 browser acceptance is re-run at desktop and 390 px mobile. Critical loop screens must have no horizontal overflow and must keep the primary action/business qualification visible.
-
-## I — Reliability
-
-Clean boot/reload/session persistence and honest empty/unknown behavior are covered by existing auth, direct-route, Phase009 browser and domain tests. The Phase010 browser/runtime jobs fail on uncaught page errors or inherited browser acceptance failure.
 
 ## Constitutional mutation seal
 
@@ -135,6 +125,7 @@ RLS_MUTATION=0
 SUPABASE_DOMAIN_MUTATION=0
 AUTO_IDENTITY_MERGE=0
 AUTONOMOUS_COMMERCIAL_EXECUTION=0
+PRODUCTIVE_RUNTIME_MUTATION=0
 ```
 
-Final `PASS` values are valid only when `.github/workflows/forge-beta2-productive-commercial-loop-relaunch-010.yml` completes successfully on the exact final candidate SHA.
+The final documentation HEAD must itself pass `.github/workflows/forge-beta2-productive-commercial-loop-relaunch-010.yml`; the workflow binds every job to the exact PR HEAD and is the final technical proof.
