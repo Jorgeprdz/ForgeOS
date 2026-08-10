@@ -75,12 +75,14 @@ jobs:
         shell: bash
         run: |
           set +e
+          config='supabase/functions/advisor-compensation-handoff/deno.json'
+          entry='supabase/functions/advisor-compensation-handoff/index.ts'
           {
             echo '=== deno check ==='
-            deno check supabase/functions/advisor-compensation-handoff/index.ts
+            deno check --config "$config" "$entry"
             check_status=$?
             echo '=== deno info ==='
-            deno info supabase/functions/advisor-compensation-handoff/index.ts
+            deno info --config "$config" "$entry"
             info_status=$?
             echo "CHECK_STATUS=$check_status"
             echo "INFO_STATUS=$info_status"
