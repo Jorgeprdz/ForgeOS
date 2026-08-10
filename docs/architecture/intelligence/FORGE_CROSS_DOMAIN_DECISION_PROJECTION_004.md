@@ -316,7 +316,7 @@ The consumer does not need to calculate, infer, rescore, reclassify confidence o
 3. Pack03 Nash recommendation → `NEXT_BEST_ACTION`, human-only.
 4. Pack02 Mick observed pattern → coaching experiment.
 5. Advisor Forecast V3 → projected planning decision.
-6. Relationship + Nash same-person follow-up → `AGREE` composition group with no dropped authority or winner.
+6. Relationship + Nash same-person follow-up → `COMPLEMENT` composition group with no dropped authority or winner.
 
 Additional tests cover Pack04 exact score transport, Revenue bucket preservation, conflicts and stale sources.
 
