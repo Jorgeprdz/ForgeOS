@@ -75,7 +75,9 @@ test('011A objection Timeline persistence stores classification only after human
 test('011A Cartera composes canonical relationships without identity merge or name matching',()=>{
   assert.match(carteraAdapter,/forge_cartera010b_list_general_policy_roles/);
   assert.match(carteraAdapter,/participant_person_id/);
-  assert.match(carteraAdapter,/field_claims\?\.productName/);
+  assert.match(carteraAdapter,/verification_state/);
+  assert.match(carteraAdapter,/CONFIRMED/);
+  assert.match(carteraAdapter,/claims\.productName/);
   assert.match(carteraAdapter,/Producto no identificado/);
   assert.match(carteraAdapter,/autoIdentityMerge: false/);
   assert.doesNotMatch(carteraAdapter,/product:imagina-ser-65-15-pagos-udi/);
