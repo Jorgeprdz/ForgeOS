@@ -1,0 +1,36 @@
+name: Advisor Compensation Handoff 011D Temporary Deploy
+
+on:
+  push:
+    branches:
+      - hotfix/advisor-compensation-productive-handoff-011d
+    paths:
+      - ".github/workflows/advisor-compensation-handoff-011d-deploy-temp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+    steps:
+      - name: Checkout exact branch source
+        uses: actions/checkout@v4
+
+      - name: Source identity
+        run: |
+          git rev-parse HEAD
+          grep -n "FUNCTION_VERSION" supabase/functions/advisor-compensation-handoff/index.ts
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy advisor-compensation-handoff with JWT verification
+        run: supabase functions deploy advisor-compensation-handoff --project-ref "$SUPABASE_PROJECT_REF" --debug
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
