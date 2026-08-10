@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 const FIXTURE = '/tests/fixtures/forge-beta2-post-release-productive-recovery-010i.html';
+const FIXTURE_ROUTE = '**/tests/fixtures/forge-beta2-post-release-productive-recovery-010i.html*';
 
 function watchErrors(page) {
   const pageErrors = [];
@@ -15,8 +16,20 @@ function watchErrors(page) {
   return { pageErrors, failed };
 }
 
+async function completeFixtureClient(page) {
+  await page.route(FIXTURE_ROUTE, async route => {
+    const response = await route.fetch();
+    const source = await response.text();
+    const needle = `    const client = {\n      auth: {`;
+    const replacement = `    const client = {\n      functions: {\n        async invoke(name) {\n          window.__RECOVERY_010I_TRACE__.unexpectedFunction = name;\n          return { data: null, error: { message: 'EDGE_FUNCTION_NOT_EXPECTED_IN_READ_RECOVERY_E2E' } };\n        },\n      },\n      auth: {`;
+    if (!source.includes(needle)) throw new Error('010I_FIXTURE_CLIENT_BOUNDARY_NOT_FOUND');
+    await route.fulfill({ response, body: source.replace(needle, replacement) });
+  });
+}
+
 async function ready(page, suffix = '') {
   const errors = watchErrors(page);
+  await completeFixtureClient(page);
   await page.goto(`${FIXTURE}${suffix}`, { waitUntil: 'networkidle' });
   await expect(page.locator('html')).toHaveAttribute('data-recovery010i', 'READY');
   return errors;
@@ -47,6 +60,7 @@ test('010I confirmed review recovery shows one canonical Policy, recovered evide
   await expect.poll(() => page.evaluate(() => window.__RECOVERY_010I_TRACE__.opens.at(-1) || ''))
     .toContain('https://wa.me/525512345678');
 
+  expect(await page.evaluate(() => window.__RECOVERY_010I_TRACE__.unexpectedFunction || null)).toBeNull();
   expect(errors.pageErrors).toEqual([]);
   expect(errors.failed).toEqual([]);
 });
@@ -66,6 +80,7 @@ test('010I genuinely pending Evidence opens the document review instead of the P
   await expect(dialog.getByText('IMAGINA SER 65 - 15 PAGOS UDI', { exact: true })).toBeVisible();
   await expect(page.getByText('No pudimos abrir la póliza')).toHaveCount(0);
 
+  expect(await page.evaluate(() => window.__RECOVERY_010I_TRACE__.unexpectedFunction || null)).toBeNull();
   expect(errors.pageErrors).toEqual([]);
   expect(errors.failed).toEqual([]);
 });
