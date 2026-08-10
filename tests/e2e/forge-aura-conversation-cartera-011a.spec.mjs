@@ -57,15 +57,18 @@ async function noHorizontalOverflow(page,width){
 test('011A Cartera groups confirmed policy below canonical person without technical product leakage',async({page})=>{
   const errors=await ready(page,390,844);
   const cartera=page.locator('#cartera-root');
-  const people=cartera.locator('[data-directory-kind="PERSON"]');
+  const relationship=cartera.locator('.cartera-relationship-card');
+  const people=relationship.locator(':scope > [data-directory-kind="PERSON"]');
+  await expect(relationship).toHaveCount(1);
   await expect(people).toHaveCount(1);
-  await expect(cartera.locator('[data-directory-kind="POLICY"]')).toHaveCount(0);
+  await expect(cartera.locator('.cartera-directory-list > [data-directory-kind="POLICY"]')).toHaveCount(0);
+  await expect(relationship.locator('[data-directory-kind="POLICY"]')).toHaveCount(1);
   await expect(people.getByText('ADRIAN ORTIZ GARCIA',{exact:true})).toBeVisible();
   await expect(people.getByText('Pipeline vinculado',{exact:true})).toBeVisible();
-  await expect(people.getByText('IMAGINA SER 65 - 15 PAGOS UDI',{exact:true})).toBeVisible();
-  await expect(people.getByText('••••6169',{exact:true})).toBeVisible();
+  await expect(relationship.getByText('IMAGINA SER 65 - 15 PAGOS UDI',{exact:true})).toBeVisible();
+  await expect(relationship.getByText('••••6169',{exact:true})).toBeVisible();
   await expect(cartera.getByText(/product:imagina-ser/i)).toHaveCount(0);
-  const border=await people.evaluate(node=>getComputedStyle(node).borderLeftStyle);
+  const border=await relationship.evaluate(node=>getComputedStyle(node).borderLeftStyle);
   expect(border).toBe('solid');
   await noHorizontalOverflow(page,390);
   await page.screenshot({path:'artifacts/011a/screenshots/cartera-390.png',fullPage:true});
