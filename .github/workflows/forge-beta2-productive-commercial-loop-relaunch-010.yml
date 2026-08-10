@@ -321,7 +321,10 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - run: node --test tests/pages-explicit-deployment-governance.test.mjs tests/forge-aura-pages-import-graph.test.mjs tests/rep-16f-pages-runtime-generator-test.mjs
+      - name: Validate release contracts in their native test scope
+        env:
+          FORGE_CARTERA_PAGES_RUNTIME_MODE: ''
+        run: node --test --test-concurrency=1 tests/pages-explicit-deployment-governance.test.mjs tests/forge-aura-pages-import-graph.test.mjs tests/rep-16f-pages-runtime-generator-test.mjs
       - name: Extract canonical Pages builder
         run: |
           python - <<'PY'
