@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Forge Beta2 Productive Recovery 010I</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-semantic-012.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/pipeline/pipeline.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "/docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js?v=cartera-pdf-ingress-legacy-refresh": "/docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js?v=forge-beta2-post-release-recovery-010i",
+        "/docs/static-preview/forge-aura/pipeline/pipeline-adapter.js": "/docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v2.js?v=forge-beta2-post-release-recovery-010i"
+      }
+    }
+  </script>
+  <style>
+    html,body{margin:0;min-height:100%;background:#f5f6fa;font-family:Inter,system-ui,sans-serif}
+    .fixture-shell{display:grid;gap:32px;padding:24px}.fixture-block{min-width:0}.fixture-title{font-size:14px;margin:0 0 12px;color:#5d3fd3}
+  </style>
+</head>
+<body>
+  <main class="fixture-shell">
+    <section class="fixture-block"><h1 class="fixture-title">Cartera 010I</h1><div id="cartera-root"></div></section>
+    <section class="fixture-block"><h1 class="fixture-title">Pipeline 010I</h1><div id="pipeline-root"></div></section>
+  </main>
+  <script type="module">
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v6.js?v=forge-beta2-post-release-recovery-010i';
+    import { createPipelineModule } from '/docs/static-preview/forge-aura/pipeline/pipeline-module.js?v=forge-beta2-post-release-recovery-010i';
+
+    const USER_ID = '00000000-0000-4000-8000-000000000010';
+    const PROSPECT_ID = '11111111-1111-4111-8111-111111111110';
+    const PERSON_ID = '22222222-2222-4222-8222-222222222210';
+    const PERSON_REFERENCE = 'person:cartera:adrian-010i';
+    const POLICY_ID = '33333333-3333-4333-8333-333333333310';
+    const POLICY_REFERENCE = 'policy:cartera:ca56a36d094f05260e830fe36a2c5efdd10d3624';
+    const POLICY_VERSION_ID = '44444444-4444-4444-8444-444444444410';
+    const EVIDENCE_ID = '55555555-5555-4555-8555-555555555510';
+    const DIGEST = 'a'.repeat(40);
+    const PACKET_ORIGINAL = `POLICY_PACKET:AURA:${DIGEST}`;
+    const PACKET_REFRESH = `POLICY_PACKET:AURA:SEMANTIC_REFRESH:${DIGEST}`;
+    const params = new URLSearchParams(location.search);
+    const reviewState = params.get('pending') === '1' ? 'IDENTITY_PENDING' : 'CONFIRMED';
+
+    window.__ENV__ = { SUPABASE_ANON_KEY: 'TEST_ONLY' };
+    window.__RECOVERY_010I_TRACE__ = { opens: [], rpc: [], reviewState, policyReference: POLICY_REFERENCE };
+    window.open = url => { window.__RECOVERY_010I_TRACE__.opens.push(String(url)); return null; };
+
+    const field = value => ({ value, confidence:.98, state:value == null ? 'UNKNOWN':'EXTRACTED', parserId:'cartera-pdf-intake', parserVersion:'010i', extractionMethod:'EDGE_FUNCTION_REVIEW', sourceLocation:null, createsTruth:false });
+    const packetFields = {
+      holderName: field('ADRIAN ORTIZ GARCIA'),
+      insuredName: field('ADRIAN ORTIZ GARCIA'),
+      contractorName: field('ADRIAN ORTIZ GARCIA'),
+      policyNumber: field('VI0003006169'),
+      productName: field('IMAGINA SER 65 - 15 PAGOS UDI'),
+      status: field('ACTIVE'),
+      effectiveFrom: field('2026-08-05'),
+      effectiveTo: field('2053-08-05'),
+      currency: field('UDI'),
+      paymentFrequency: field('MONTHLY'),
+      premiumAmount: field(6816.96),
+      sumInsured: field(75000),
+    };
+
+    const evidencePackets = [PACKET_ORIGINAL, PACKET_REFRESH].map((reference, index) => ({
+      packet_reference: reference,
+      document_type: 'POLICY',
+      extracted_fields: structuredClone(packetFields),
+      extraction_confidence: .98,
+      warnings: index ? ['SEMANTIC_REFRESH'] : [],
+      identity_candidates: [],
+      policy_role_candidates: [],
+      existing_policy_candidates: [],
+      confirmation_state: 'PENDING_CONFIRMATION',
+      created_at: index ? '2026-08-09T23:45:00-06:00' : '2026-08-09T23:40:00-06:00',
+    }));
+
+    const tables = {
+      prospects: [{
+        id: PROSPECT_ID, full_name:'Adrián Ortiz García', display_name:'Adrián Ortiz García', alias:null,
+        status:'client', source:'Referido', source_type:'referral', source_value:'Referido',
+        initial_context:'Cliente registrado desde Cartera.', phone_normalized:null, whatsapp_normalized:null,
+        created_at:'2026-08-08T12:00:00-06:00', updated_at:'2026-08-09T23:30:00-06:00', archived_at:null,
+      }],
+      prospect_commercial_timeline: [],
+      commercial_people: [{
+        id:PERSON_ID, person_reference:PERSON_REFERENCE, display_name:'ADRIAN ORTIZ GARCIA', preferred_name:'Adrián Ortiz García',
+        verified_phone:'+525512345678', lifecycle_state:'CONFIRMED', privacy_classification:'PRIVATE', archived_at:null,
+      }],
+      commercial_source_identity_links: [{
+        source_domain:'PIPELINE', source_identity_type:'PROSPECT', source_record_reference:PROSPECT_ID,
+        person_id:PERSON_ID, match_status:'LINK_CONFIRMED', effective_to:null,
+      }],
+      commercial_accounts: [],
+      canonical_policies: [{
+        id:POLICY_ID, policy_reference:POLICY_REFERENCE, carrier_reference:'SMNYL', policy_number:'VI0003006169',
+        product_reference:'IMAGINA_SER', issue_date:'2026-08-05', effective_from:'2026-08-05T06:00:00Z', effective_to:'2053-08-05T06:00:00Z',
+        status_value:'ACTIVE', status_source:'EVIDENCE_VERSION:010I', status_as_of:'2026-08-09T23:40:00-06:00', currency:'UDI',
+        premium_amount:6816.96, payment_frequency:'MONTHLY', sum_insured:75000, completeness_state:'PARTIAL', freshness_state:'CURRENT',
+        conflict_state:'CLEAR', current_version:1, created_at:'2026-08-09T23:40:00-06:00', updated_at:'2026-08-09T23:40:00-06:00', archived_at:null,
+      }],
+      policy_versions: [{
+        id:POLICY_VERSION_ID, policy_id:POLICY_ID, policy_version_reference:'POLICY_VERSION:010I', version_number:1,
+        evidence_version_id:EVIDENCE_ID, confirmed_at:'2026-08-09T23:40:00-06:00',
+      }],
+      policy_evidence_versions: [{
+        id:EVIDENCE_ID, evidence_version_reference:'EVIDENCE_VERSION:010I', policy_id:POLICY_ID,
+        document_hash:'b'.repeat(64), source_type:'PDF_UPLOAD', observed_at:'2026-08-09T23:39:00-06:00', verification_state:'CONFIRMED',
+        field_claims:{ policyNumber:'VI0003006169', status:'ACTIVE', effectiveFrom:'2026-08-05', effectiveTo:'2053-08-05', currency:'UDI', paymentFrequency:'MONTHLY', premiumAmount:6816.96, sumInsured:75000 },
+        provenance:{ source:'CARTERA_020C', packetReference:PACKET_REFRESH }, created_at:'2026-08-09T23:40:00-06:00',
+      }],
+      cartera020b_policy_evidence_packets: evidencePackets,
+    };
+
+    function filtered(table, filters, inFilters) {
+      return (tables[table] || []).filter(row => {
+        for (const [key,value] of Object.entries(filters)) if (row[key] !== value) return false;
+        for (const [key,values] of Object.entries(inFilters)) if (!values.map(String).includes(String(row[key]))) return false;
+        return true;
+      });
+    }
+
+    function query(table) {
+      const filters = {};
+      const inFilters = {};
+      let limitValue = null;
+      let proxy;
+      const rows = () => {
+        const result = filtered(table, filters, inFilters);
+        return limitValue == null ? result : result.slice(0, limitValue);
+      };
+      proxy = new Proxy({}, { get(_target, property) {
+        if (property === 'then') return (resolve,reject) => Promise.resolve({data:structuredClone(rows()),error:null}).then(resolve,reject);
+        if (property === 'select') return () => proxy;
+        if (property === 'eq') return (key,value) => { filters[key]=value; return proxy; };
+        if (property === 'is') return (key,value) => { filters[key]=value; return proxy; };
+        if (property === 'in') return (key,values) => { inFilters[key]=Array.isArray(values)?values:[]; return proxy; };
+        if (property === 'order') return () => proxy;
+        if (property === 'limit') return value => { limitValue=Number(value); return proxy; };
+        if (property === 'single') return async () => {
+          const row=rows()[0] || null; return {data:row?structuredClone(row):null,error:row?null:{message:'NOT_FOUND',code:'PGRST116'}};
+        };
+        if (property === 'maybeSingle') return async () => ({data:rows()[0]?structuredClone(rows()[0]):null,error:null});
+        return () => proxy;
+      }});
+      return proxy;
+    }
+
+    const roles = [
+      { policy_role_reference:'ROLE:INSURED:010I', participant_person_id:PERSON_ID, role_type:'INSURED', confirmation_state:'CONFIRMED' },
+      { policy_role_reference:'ROLE:OWNER:010I', participant_person_id:PERSON_ID, role_type:'POLICY_OWNER', confirmation_state:'CONFIRMED' },
+    ];
+
+    const client = {
+      auth: {
+        async getUser(){ return {data:{user:{id:USER_ID}},error:null}; },
+        async getSession(){ return {data:{session:{access_token:'TEST'}},error:null}; },
+      },
+      from(table){ return query(table); },
+      async rpc(name,args={}) {
+        window.__RECOVERY_010I_TRACE__.rpc.push(name);
+        if (name === 'forge_cartera020c_get_confirmation_status') return {data:{state:reviewState,reviewReference:args.p_review_reference},error:null};
+        if (name === 'forge_cartera030d_list_policy_payment_calendar') return {data:{sourceState:'CONNECTED',summary:{},items:[]},error:null};
+        if (name === 'forge_cartera050_list_future_radar') return {data:{sourceState:'CONNECTED',items:[]},error:null};
+        if (name === 'forge_cartera010b_list_general_policy_roles') return {data:structuredClone(roles),error:null};
+        if (name === 'forge_policy_intelligence_read_policy_coverages') return {data:{sourceState:'CONNECTED',items:[]},error:null};
+        return {data:[],error:null};
+      },
+    };
+
+    const carteraModule = createCarteraModule({
+      root: document.querySelector('#cartera-root'), client, windowRef:window,
+      globalState: state => { window.__RECOVERY_010I_TRACE__.carteraState = structuredClone(state); },
+    });
+    const pipelineModule = createPipelineModule({
+      root: document.querySelector('#pipeline-root'), client, windowRef:window,
+      globalState: state => { window.__RECOVERY_010I_TRACE__.pipelineState = structuredClone(state); },
+    });
+
+    await carteraModule.mount();
+    await pipelineModule.mount();
+    window.__RECOVERY_010I_MODULES__ = { carteraModule, pipelineModule };
+    document.documentElement.dataset.recovery010i = 'READY';
+  </script>
+</body>
+</html>

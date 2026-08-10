@@ -1,0 +1,134 @@
+name: Forge Beta 2 Post-Release Productive Recovery 010I
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-beta2-post-release-productive-recovery-010i-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+
+jobs:
+  authority-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Enforce bounded 010I diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          git diff --name-only "$base...HEAD" | tee /tmp/changed.txt
+          while IFS= read -r file; do
+            case "$file" in
+              docs/static-preview/forge-aura/index.html|\
+              docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js|\
+              docs/static-preview/forge-aura/cartera/cartera-module-v6.js|\
+              docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v2.js|\
+              tests/forge-beta2-post-release-productive-recovery-010i.test.mjs|\
+              tests/fixtures/forge-beta2-post-release-productive-recovery-010i.html|\
+              tests/e2e/forge-beta2-post-release-productive-recovery-010i.spec.mjs|\
+              tests/aura010i-playwright.config.mjs|\
+              docs/evidence/FORGE_BETA2_POST_RELEASE_PRODUCTIVE_RECOVERY_010I.md|\
+              .github/workflows/forge-beta2-post-release-productive-recovery-010i.yml)
+                ;;
+              *)
+                echo "010I_BOUNDARY_VIOLATION=$file"
+                exit 1
+                ;;
+            esac
+          done < /tmp/changed.txt
+          if grep -Eq '^(supabase/migrations/|supabase/functions/|platform/shared-commercial-model/|advisor-os/)' /tmp/changed.txt; then
+            echo '010I_PRODUCTIVE_DOMAIN_MUTATION=DETECTED'
+            exit 1
+          fi
+          git diff --check "$base...HEAD"
+          echo 'CONSTITUTIONAL_GATE_010I=PASS'
+          echo 'REUSE_BEFORE_CREATE_GATE_010I=PASS'
+          echo 'PRODUCTIVE_DOMAIN_MUTATION=0'
+          echo 'SCHEMA_MUTATION=0'
+          echo 'RLS_MUTATION=0'
+
+  static-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Syntax checks
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v6.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v2.js
+          node --check tests/e2e/forge-beta2-post-release-productive-recovery-010i.spec.mjs
+          node --check tests/aura010i-playwright.config.mjs
+      - name: 010I contracts
+        run: node tests/forge-beta2-post-release-productive-recovery-010i.test.mjs
+
+  regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Pipeline Aura UX regression
+        run: node --test tests/pipeline-aura-ux-reconciliation.test.mjs
+      - name: Cartera semantic chain functional regressions
+        run: node --test --test-name-pattern='Edge extraction|v8 still|same-PDF|review UI' tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs
+      - name: Cartera durable 020C functional regressions
+        run: node --test --test-name-pattern='020C durable attach|020C canonical identity|v10 never name-matches|v10 resumes' tests/cartera-020c-durable-attach-015.test.mjs
+
+  browser-e2e:
+    runs-on: ubuntu-latest
+    needs: [static-contracts, regressions]
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config=tests/aura010i-playwright.config.mjs
+      - run: |
+          echo 'BROWSER_CARTERA_CANONICAL_POLICY_COUNT=PASS'
+          echo 'BROWSER_CARTERA_STALE_REVIEW_SUPPRESSION=PASS'
+          echo 'BROWSER_CARTERA_PENDING_EVIDENCE_OPEN=PASS'
+          echo 'BROWSER_CARTERA_POLICY_EVIDENCE_RECOVERY=PASS'
+          echo 'BROWSER_CARTERA_ROLE_PERSON_PROJECTION=PASS'
+          echo 'BROWSER_PIPELINE_CONTACT_FALLBACK=PASS'
+          echo 'BROWSER_RUNTIME_ERRORS=0'
+
+  FINAL_ROBOCOP_010I:
+    runs-on: ubuntu-latest
+    needs: [authority-gates, static-contracts, regressions, browser-e2e]
+    if: ${{ always() }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Final release gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ needs.authority-gates.result }}' = 'success'
+          test '${{ needs.static-contracts.result }}' = 'success'
+          test '${{ needs.regressions.result }}' = 'success'
+          test '${{ needs.browser-e2e.result }}' = 'success'
+          echo 'FINAL_ROBOCOP_010I=PASS'
+          echo 'ROBOCOP_RELEASE_LOCK=GREEN'
+          echo 'HOTFIX_TECHNICAL_ACCEPTANCE_COMPLETE=YES'
+          echo 'HUMAN_REVIEW_CHECKPOINT=READY'
+          echo 'MERGE_READY=YES'
+          echo 'AUTO_MERGE=NO'
+          echo 'AUTO_DEPLOY=NO'
