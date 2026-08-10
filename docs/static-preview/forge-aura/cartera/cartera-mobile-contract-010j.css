@@ -1,0 +1,91 @@
+.aura-cartera,
+.aura-cartera .cartera-workspace,
+.aura-cartera .cartera-workspace__hero,
+.aura-cartera .cartera-workspace__hero > *,
+.aura-cartera .cartera-section,
+.aura-cartera .cartera-info,
+.aura-cartera .cartera-warning,
+.aura-cartera .cartera-fact,
+.aura-cartera .cartera-directory-row,
+.aura-cartera .coverage-row,
+.aura-cartera .coverage-meta,
+.aura-cartera .cartera-evidence-coverages {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.aura-cartera .cartera-workspace__hero {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.aura-cartera .cartera-workspace h1,
+.aura-cartera .cartera-workspace h2,
+.aura-cartera .cartera-workspace h3,
+.aura-cartera .cartera-workspace p,
+.aura-cartera .cartera-workspace dd,
+.aura-cartera .cartera-workspace small,
+.aura-cartera .cartera-workspace summary,
+.aura-cartera .cartera-technical-reference,
+.aura-cartera .cartera-directory-row strong,
+.aura-cartera .cartera-directory-row small,
+.aura-cartera .coverage-row strong,
+.aura-cartera .coverage-row span,
+.aura-cartera code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.aura-cartera .cartera-evidence-facts .cartera-fact small {
+  display: block;
+  margin-top: 6px;
+  color: var(--aura-muted, #667085);
+  line-height: 1.35;
+}
+
+.aura-cartera .cartera-evidence-coverages {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.aura-cartera .cartera-evidence-coverages > h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.aura-cartera .cartera-evidence-coverages > p {
+  margin: 0 0 4px;
+  color: var(--aura-muted, #667085);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .aura-cartera {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .aura-cartera .cartera-workspace__hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aura-cartera .cartera-truth-badge {
+    justify-self: start;
+  }
+
+  .aura-cartera .cartera-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aura-cartera .coverage-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aura-cartera .coverage-row strong,
+  .aura-cartera .coverage-row span,
+  .aura-cartera .coverage-meta {
+    grid-column: 1;
+  }
+}
