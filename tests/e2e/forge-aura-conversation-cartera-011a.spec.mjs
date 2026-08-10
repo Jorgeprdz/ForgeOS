@@ -146,8 +146,22 @@ test('011A NASH Combat stays inside workspace, excludes legacy final response, a
 
   await workspace.locator('[data-conversation-tab="combat"]').click();
   await workspace.locator('[data-register-combat]').click();
+  await page.waitForFunction(() => {
+    const trace=window.__FORGE_011A_TRACE__;
+    const notice=document.querySelector('[data-aura-conversation-workspace="011A"] [data-conversation-notice]');
+    return (trace?.timelineAppends?.length||0)>0 || notice?.dataset?.tone==='error' || /No pudimos registrar/i.test(notice?.textContent||'');
+  },null,{timeout:5000});
+  const registration=await page.evaluate(()=>{
+    const notice=document.querySelector('[data-aura-conversation-workspace="011A"] [data-conversation-notice]');
+    return {
+      appends:structuredClone(window.__FORGE_011A_TRACE__?.timelineAppends||[]),
+      notice:(notice?.textContent||'').trim(),
+      noticeTone:notice?.dataset?.tone||'',
+    };
+  });
+  expect(registration.appends.length,`COMBAT_REGISTRATION_DIAGNOSTIC=${JSON.stringify(registration)}`).toBe(1);
   await expect(workspace.getByText(/Se registró únicamente la clasificación revisada/i)).toBeVisible();
-  const append=await page.evaluate(()=>window.__FORGE_011A_TRACE__.timelineAppends.at(-1));
+  const append=registration.appends.at(-1);
   expect(append.p_event_type).toBe('OBJECTION_RECORDED');
   expect(append.p_payload.objectionCode).toBeTruthy();
   expect(append.p_payload.resolutionStatus).toBe('OPEN');
