@@ -1,0 +1,59 @@
+name: Aura Live Acceptance Journal Cartera 011E
+
+on:
+  push:
+    branches:
+      - hotfix/aura-live-acceptance-journal-cartera-011e
+  pull_request:
+    paths:
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.js'
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.css'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v9.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-acceptance-011e.css'
+      - 'docs/static-preview/forge-aura/commercial-loop-011c.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/aura-live-acceptance-journal-cartera-011e.test.mjs'
+      - '.github/workflows/aura-live-acceptance-journal-cartera-011e.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  live-acceptance-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Diff hygiene
+        run: git diff --check HEAD^ HEAD
+
+      - name: Syntax
+        run: |
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v9.js
+          node --check docs/static-preview/forge-aura/commercial-loop-011c.js
+
+      - name: 011E live acceptance contract
+        run: node tests/aura-live-acceptance-journal-cartera-011e.test.mjs
+
+      - name: Existing 011C commercial loop regression
+        run: node tests/forge-aura-commercial-loop-011c.test.mjs
+
+      - name: Existing Cartera productive regression
+        run: node tests/aura-cartera-productive-reconciliation.test.mjs
+
+      - name: Constitutional summary
+        run: |
+          echo 'LIVE_USER_EVIDENCE_REPRODUCED=true'
+          echo 'SECOND_SOURCE_OF_TRUTH_CREATED=false'
+          echo 'LOCAL_JOURNAL_FALLBACK_CREATED=false'
+          echo 'POLICY_TRUTH_MUTATED=false'
+          echo 'UNKNOWN_COERCED_TO_ZERO=false'
+          echo 'SIGNALS_ARE_NOT_POLICY_COUNT=true'
