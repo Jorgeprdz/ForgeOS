@@ -18,8 +18,16 @@ function watchErrors(page){
 async function ready(page,width=390,height=844){
   const errors=watchErrors(page);
   await page.setViewportSize({width,height});
-  await page.goto(FIXTURE,{waitUntil:'domcontentloaded'});
-  await expect(page.locator('html')).toHaveAttribute('data-forge011a','READY');
+  await page.goto(FIXTURE,{waitUntil:'commit'});
+  try {
+    await page.waitForFunction(
+      () => document.documentElement?.dataset?.forge011a === 'READY',
+      null,
+      {timeout:10000},
+    );
+  } catch (error) {
+    throw new Error(`FORGE_011A_READY_TIMEOUT: ${errors.pageErrors.join(' | ') || 'NO_PAGEERROR_CAPTURED'} :: ${error.message}`);
+  }
   return errors;
 }
 
