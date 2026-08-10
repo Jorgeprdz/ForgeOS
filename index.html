@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#06101f">
+  <meta name="theme-color" content="#f4f5fb">
   <meta name="robots" content="noindex">
-  <meta name="forge-ui-surface" content="canonical-only">
+  <meta name="forge-ui-surface" content="aura-canonical">
   <title>ForgeOS</title>
-  <meta http-equiv="refresh" content="0; url=./static-preview/forge-alive/?nav=inicio">
+  <meta http-equiv="refresh" content="0; url=./static-preview/forge-aura/?route=inicio">
   <script>
-    /* FORGE_LEGACY_UI_RETIRED: root entry */
+    /* FORGE_BETA2_AURA_CANONICAL_CUTOVER_010H */
     (() => {
       const retireBrowserState = async () => {
         if ('serviceWorker' in navigator) {
@@ -31,18 +31,14 @@
       };
 
       const current = new URL(window.location.href);
-      const target = new URL('./static-preview/forge-alive/', current);
+      const target = new URL('./static-preview/forge-aura/', current);
       for (const [key, value] of current.searchParams) {
         target.searchParams.append(key, value);
       }
-      if (!target.searchParams.has('nav')) {
-        target.searchParams.set('nav', 'inicio');
+      if (!target.searchParams.has('route') && !target.searchParams.has('nav')) {
+        target.searchParams.set('route', 'inicio');
       }
-      const authReturn = target.searchParams.get('auth_return');
-      target.searchParams.set(
-        'v',
-        authReturn ? `auth-${authReturn}` : 'canonical-production-20260804',
-      );
+      target.searchParams.set('v', 'beta2-aura-cutover-010h');
       target.hash = current.hash;
 
       retireBrowserState().finally(() => window.location.replace(target.href));
@@ -50,7 +46,7 @@
   </script>
 </head>
 <body>
-  <p>Abriendo ForgeOS…</p>
-  <p><a href="./static-preview/forge-alive/?nav=inicio&v=canonical-production-20260804">Continuar</a></p>
+  <p>Abriendo Forge Aura…</p>
+  <p><a href="./static-preview/forge-aura/?route=inicio&v=beta2-aura-cutover-010h">Continuar</a></p>
 </body>
 </html>
