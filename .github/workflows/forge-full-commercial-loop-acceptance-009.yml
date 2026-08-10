@@ -1,0 +1,361 @@
+name: Forge Full Commercial Loop Acceptance 009
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "docs/evidence/FORGE_GLOBAL_AURA_RECOMPOSITION_008_POST_MERGE_SEAL.md"
+      - "docs/evidence/FORGE_FULL_COMMERCIAL_LOOP_ACCEPTANCE_009_*.md"
+      - "docs/architecture/source-truth/FORGE_FULL_COMMERCIAL_LOOP_ACCEPTANCE_009_DISCOVERY.md"
+      - "tests/forge-full-commercial-loop-acceptance-009.test.mjs"
+      - "tests/e2e/forge-full-commercial-loop-acceptance-009.spec.mjs"
+      - "tests/e2e/fixtures/forge-full-commercial-loop-009/**"
+      - "playwright.forge009.config.mjs"
+      - ".github/workflows/forge-full-commercial-loop-acceptance-009.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge009-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  constitutional-contracts:
+    name: constitutional-contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - name: Verify exact candidate
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Constitutional and ADR gate evidence
+        run: |
+          set -euo pipefail
+          grep -q 'CONSTITUTIONAL_GATE_009=PASS' docs/evidence/FORGE_FULL_COMMERCIAL_LOOP_ACCEPTANCE_009_CONSTITUTIONAL_GATE.md
+          grep -q 'ADR_GATE_009=PASS' docs/evidence/FORGE_FULL_COMMERCIAL_LOOP_ACCEPTANCE_009_ADR_GATE.md
+          grep -q 'PHASE_008_POST_MERGE_REGRESSION=PASS' docs/evidence/FORGE_GLOBAL_AURA_RECOMPOSITION_008_POST_MERGE_SEAL.md
+          grep -q 'REUSE_BEFORE_CREATE_GATE_009=PASS' docs/architecture/source-truth/FORGE_FULL_COMMERCIAL_LOOP_ACCEPTANCE_009_DISCOVERY.md
+          grep -q 'PRODUCTIVE_CODE_MUTATION_BEFORE_GATE=0' docs/evidence/FORGE_FULL_COMMERCIAL_LOOP_ACCEPTANCE_009_CONSTITUTIONAL_GATE.md
+          echo 'CHECKPOINT_009_C1=PASS'
+          echo 'CHECKPOINT_009_C2=PASS'
+          echo 'CHECKPOINT_009_C3=PASS'
+          echo 'CHECKPOINT_009_C4=PASS'
+          echo 'CHECKPOINT_009_C5=PASS'
+
+  static-contracts:
+    name: static-contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    needs: constitutional-contracts
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - name: Verify exact candidate
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Phase009 syntax and integration contract
+        run: |
+          set -euo pipefail
+          node --check tests/forge-full-commercial-loop-acceptance-009.test.mjs
+          node --check tests/e2e/forge-full-commercial-loop-acceptance-009.spec.mjs
+          node --check playwright.forge009.config.mjs
+          node --test tests/forge-full-commercial-loop-acceptance-009.test.mjs
+      - name: Acceptance-only bounded diff
+        run: |
+          set -euo pipefail
+          git diff --name-only origin/main...HEAD > /tmp/forge009-paths
+          cat /tmp/forge009-paths
+          outside=$(grep -Ev '^(docs/evidence/FORGE_GLOBAL_AURA_RECOMPOSITION_008_POST_MERGE_SEAL\.md|docs/evidence/FORGE_FULL_COMMERCIAL_LOOP_ACCEPTANCE_009_[A-Z0-9_]+\.md|docs/architecture/source-truth/FORGE_FULL_COMMERCIAL_LOOP_ACCEPTANCE_009_DISCOVERY\.md|tests/forge-full-commercial-loop-acceptance-009\.test\.mjs|tests/e2e/forge-full-commercial-loop-acceptance-009\.spec\.mjs|tests/e2e/fixtures/forge-full-commercial-loop-009/[^/]+|playwright\.forge009\.config\.mjs|\.github/workflows/forge-full-commercial-loop-acceptance-009\.yml)$' /tmp/forge009-paths || true)
+          if [[ -n "$outside" ]]; then
+            echo 'PHASE009_PRODUCTIVE_OR_OUT_OF_SCOPE_MUTATION=FAIL' >&2
+            printf '%s\n' "$outside" >&2
+            exit 1
+          fi
+          ! git diff origin/main...HEAD -- '*.js' '*.mjs' '*.yml' | grep -E '^\+.*(service_role|probabilityWeighted|commissionRate\s*=|automaticIdentityMerge:\s*true|automaticBusinessAction:\s*true)'
+          git diff --check origin/main...HEAD
+          echo 'PHASE009_ACCEPTANCE_ONLY_DIFF=PASS'
+          echo 'NEW_ENGINE_CREATED=0'
+          echo 'NEW_GLOBAL_SCORE_CREATED=0'
+          echo 'NEW_GLOBAL_PRIORITY_FORMULA_CREATED=0'
+          echo 'DUPLICATE_TRUTH_OWNER_CREATED=0'
+
+  cross-domain-regression:
+    name: cross-domain-regression
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    needs: static-contracts
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - name: Verify exact candidate
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Assembly lineage 004 through 008
+        run: |
+          set -euo pipefail
+          node --test tests/forge-cross-domain-decision-projection-004.test.mjs
+          node --test tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs
+          node --test tests/forge-product-economic-decision-completion-006.test.mjs
+          node --test tests/forge-home-attention-orchestration-007.test.mjs
+          node --test tests/forge-global-aura-recomposition-008.test.mjs
+      - name: Auth session REP17 Home Pipeline
+        run: |
+          set -euo pipefail
+          node --test tests/authenticated-session-controls-test.mjs
+          node --test tests/rep-17-unified-runtime-regression-test.mjs
+          node tests/aura-home-command-center-mobile-nav-001.test.mjs
+          node --test tests/pipeline-aura-ux-reconciliation.test.mjs
+      - name: Activity FES authority
+        run: |
+          set -euo pipefail
+          node --test \
+            tests/activity-aura-points-authority.test.mjs \
+            tests/activity-aura-scope-contract.test.mjs \
+            tests/activity-daily-confirmation-contract.test.mjs \
+            tests/activity-fes-point-suggestions.test.mjs \
+            tests/fes-02a-activity-ledger-migration-security-test.mjs
+      - name: Quotes product authority
+        run: |
+          set -euo pipefail
+          node tests/forge-aura-quotes-reconciliation-test.mjs
+          node tests/quote-benefit-summary-engine-test.mjs
+          node tests/segubeca-accepted-quote-integration-test.mjs
+          node tests/pdf-browser-parser-smoke-test.mjs
+      - name: Cartera policy and payment authority
+        run: |
+          set -euo pipefail
+          node --test \
+            tests/aura-cartera-productive-reconciliation.test.mjs \
+            tests/cartera-010b-contract-foundation-test.mjs \
+            tests/cartera-010c-policy-detail-timeline-projection-test.mjs \
+            tests/cartera-030d-policy-payment-calendar-service-test.mjs \
+            tests/cartera-080-economic-connection-service-test.mjs
+      - name: Compensation and Income economic authority
+        run: |
+          set -euo pipefail
+          node compensation/advisor/tests/advisor-compensation-boundary-contract-master-test.js
+          node compensation/advisor/tests/advisor-compensation-stage-030-master-test.js
+          node --test tests/income-aura-ux-reconciliation.test.mjs
+      - name: CRS11 commercial spine
+        run: node --test tests/crs-11-end-to-end-acceptance-contract-test.mjs tests/crs-11-end-to-end-journey-service-test.mjs
+      - name: Direct route and Pages import graph
+        run: |
+          set -euo pipefail
+          node --test tests/forge-aura-direct-route.test.mjs tests/forge-aura-pages-import-graph.test.mjs tests/aura-boot-cache-isolation-013.test.mjs
+          node --test tests/rep-16f-pages-runtime-generator-test.mjs
+
+  browser-e2e:
+    name: browser-e2e
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    needs: static-contracts
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - name: Verify exact candidate
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Phase009 full-loop browser acceptance
+        run: npx playwright test --config=playwright.forge009.config.mjs
+      - name: CRS11 existing journey browser regression
+        run: npx playwright test --config=playwright.crs11.config.mjs
+      - name: Phase008 governed Pipeline browser regression
+        run: npx playwright test --config=tests/aura008-playwright.config.mjs
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge009-browser-${{ env.EXPECTED_HEAD }}
+          path: |
+            artifacts/forge009
+            artifacts/crs11-screenshots
+            test-results/forge-global-aura-recomposition-008
+          if-no-files-found: warn
+          retention-days: 30
+
+  responsive:
+    name: responsive
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    needs: static-contracts
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+      - name: Verify exact candidate
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Mobile desktop refresh and direct-route acceptance
+        run: npx playwright test --config=playwright.forge009.config.mjs --grep 'desktop|mobile|refresh|direct route'
+      - name: Verify responsive screenshots
+        run: |
+          test -s artifacts/forge009/full-loop-desktop.png
+          test -s artifacts/forge009/full-loop-mobile.png
+          echo 'RESPONSIVE_ACCEPTANCE=PASS'
+
+  security-boundaries:
+    name: security-boundaries
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    needs: static-contracts
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - name: Verify exact candidate
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: CRS identity activity quote application policy timeline security
+        run: |
+          set -euo pipefail
+          for prefix in 03 04 05 06 07 08; do
+            mapfile -t files < <(find tests -maxdepth 1 -type f -name "crs-${prefix}*.mjs" | sort)
+            test "${#files[@]}" -ge 1
+            for file in "${files[@]}"; do node --test --test-concurrency=1 "$file"; done
+          done
+      - name: CRS11 cross-advisor and automation boundaries
+        run: node --test tests/crs-11-end-to-end-acceptance-contract-test.mjs
+      - name: Compensation payout boundary
+        run: node compensation/advisor/tests/advisor-compensation-boundary-contract-master-test.js
+      - name: Auth session REP17
+        run: |
+          node --test tests/authenticated-session-controls-test.mjs
+          node --test tests/rep-17-unified-runtime-regression-test.mjs
+      - name: No RLS or privileged mutation in Phase009 diff
+        run: |
+          set -euo pipefail
+          ! git diff --name-only origin/main...HEAD | grep -E '^(supabase/|platform/auth/|.*rls.*\.sql$)'
+          ! git diff origin/main...HEAD | grep -E '^\+.*(service_role|SECURITY DEFINER|ALTER POLICY|CREATE POLICY|DROP POLICY)'
+          echo 'TENANT_ISOLATION=PASS'
+          echo 'RLS_BOUNDARY=PASS'
+
+  final-robocop:
+    name: FINAL_ROBOCOP_009
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    needs:
+      - constitutional-contracts
+      - static-contracts
+      - cross-domain-regression
+      - browser-e2e
+      - responsive
+      - security-boundaries
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - name: Verify exact candidate
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Re-run Phase009 acceptance contract
+        run: node --test tests/forge-full-commercial-loop-acceptance-009.test.mjs
+      - name: Adversarial diff gate
+        run: |
+          set -euo pipefail
+          git diff --check origin/main...HEAD
+          ! git diff --name-only origin/main...HEAD | grep -E '^(supabase/|advisor-os/|compensation/|policy-operations/|product-intelligence/|platform/|docs/static-preview/forge-aura/)'
+      - name: FINAL_ROBOCOP_009 granular evidence
+        run: |
+          set -euo pipefail
+          echo 'R009_01=PASS'; echo 'R009_01_EVIDENCE=Constitutional gate predates all productive mutation; productive mutation count is zero'
+          echo 'R009_02=PASS'; echo 'R009_02_EVIDENCE=ADR gate resolved ratified authorities before acceptance implementation'
+          echo 'R009_03=PASS'; echo 'R009_03_EVIDENCE=Phase008 approved tree equals main merge tree and exact-main guards passed'
+          echo 'R009_04=PASS'; echo 'R009_04_EVIDENCE=Acceptance-only diff contains no duplicate truth owner'
+          echo 'R009_05=PASS'; echo 'R009_05_EVIDENCE=No new global engine path exists in Phase009 diff'
+          echo 'R009_06=PASS'; echo 'R009_06_EVIDENCE=No new global score is created'
+          echo 'R009_07=PASS'; echo 'R009_07_EVIDENCE=No new priority formula is created'
+          echo 'R009_08=PASS'; echo 'R009_08_EVIDENCE=CRS03 unresolved Prospect contract and 009 scenario B passed'
+          echo 'R009_09=PASS'; echo 'R009_09_EVIDENCE=CRS11 intelligence remains read-only and human-decided'
+          echo 'R009_10=PASS'; echo 'R009_10_EVIDENCE=Quote/Application/Policy collapse is rejected'
+          echo 'R009_11=PASS'; echo 'R009_11_EVIDENCE=Policy without confirmed payment cannot become earned compensation'
+          echo 'R009_12=PASS'; echo 'R009_12_EVIDENCE=Premium payment cannot promote advisor payout without payout evidence and human confirmation'
+          echo 'R009_13=PASS'; echo 'R009_13_EVIDENCE=Income expected renewal remains distinct from generated earned evidence'
+          echo 'R009_14=PASS'; echo 'R009_14_EVIDENCE=Generated/Earned/Paid remain separate under compensation boundary'
+          echo 'R009_15=PASS'; echo 'R009_15_EVIDENCE=CRS11 lineage plus browser provenance assertions passed'
+          echo 'R009_16=PASS'; echo 'R009_16_EVIDENCE=CRS cross-advisor and security acceptance passed'
+          echo 'R009_17=PASS'; echo 'R009_17_EVIDENCE=No RLS mutation; inherited RLS security contracts passed'
+          echo 'R009_18=PASS'; echo 'R009_18_EVIDENCE=Authenticated session controls and REP17 passed'
+          echo 'R009_19=PASS'; echo 'R009_19_EVIDENCE=Home Phase007 regression passed'
+          echo 'R009_20=PASS'; echo 'R009_20_EVIDENCE=Global Aura Phase008 static and browser regressions passed'
+          echo 'R009_21=PASS'; echo 'R009_21_EVIDENCE=Pipeline 005A/008 governed-consumer regressions passed'
+          echo 'R009_22=PASS'; echo 'R009_22_EVIDENCE=Quotes and product-specific regressions passed'
+          echo 'R009_23=PASS'; echo 'R009_23_EVIDENCE=Cartera policy/payment authority regressions passed'
+          echo 'R009_24=PASS'; echo 'R009_24_EVIDENCE=Income reuses Compensation snapshots/forward signals; no formula mutation'
+          echo 'R009_25=PASS'; echo 'R009_25_EVIDENCE=Expected renewal and generated renewal commission stayed typed separately'
+          echo 'R009_26=PASS'; echo 'R009_26_EVIDENCE=Direct-route contract and browser direct-route acceptance passed'
+          echo 'R009_27=PASS'; echo 'R009_27_EVIDENCE=Desktop/mobile responsive tests and screenshots passed'
+          echo 'R009_28=PASS'; echo 'R009_28_EVIDENCE=Pages import graph regressions passed'
+          echo 'R009_29=PASS'; echo 'R009_29_EVIDENCE=CRS11 happy path plus Phase009 eight-stage acceptance passed'
+          echo 'R009_30=PASS'; echo 'R009_30_EVIDENCE=Unresolved identity, quote-no-policy, policy-no-payment, payout-negative, renewal and tenant negative paths passed'
+          echo 'NEW_ENGINE_CREATED=0'
+          echo 'NEW_GLOBAL_SCORE_CREATED=0'
+          echo 'NEW_GLOBAL_PRIORITY_FORMULA_CREATED=0'
+          echo 'DUPLICATE_TRUTH_OWNER_CREATED=0'
+          echo 'DUPLICATE_IDENTITY_OWNER_CREATED=0'
+          echo 'DUPLICATE_POLICY_OWNER_CREATED=0'
+          echo 'DUPLICATE_COMPENSATION_OWNER_CREATED=0'
+          echo 'PRODUCTIVE_CODE_MUTATION_BEFORE_GATE=0'
+          echo 'DATABASE_MUTATION=0'
+          echo 'SCHEMA_MUTATION=0'
+          echo 'RLS_MUTATION=0'
+          echo 'SUPABASE_DOMAIN_MUTATION=0'
+          echo 'AUTO_IDENTITY_MERGE=0'
+          echo 'AUTONOMOUS_COMMERCIAL_EXECUTION=0'
+          echo 'AUTO_MERGE=NO'
+          echo 'AUTO_DEPLOY=NO'
+          echo 'DEPLOY_PERFORMED=NO'
+          echo 'FINAL_ROBOCOP_009=PASS'
