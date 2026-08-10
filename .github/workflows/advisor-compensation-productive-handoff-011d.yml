@@ -68,9 +68,31 @@ jobs:
           deno-version: v2.x
 
       - name: Edge dependency graph
+        id: edge_graph
+        shell: bash
         run: |
-          deno check supabase/functions/advisor-compensation-handoff/index.ts
-          deno info supabase/functions/advisor-compensation-handoff/index.ts
+          set +e
+          {
+            echo '=== deno check ==='
+            deno check supabase/functions/advisor-compensation-handoff/index.ts
+            check_status=$?
+            echo '=== deno info ==='
+            deno info supabase/functions/advisor-compensation-handoff/index.ts
+            info_status=$?
+            echo "CHECK_STATUS=$check_status"
+            echo "INFO_STATUS=$info_status"
+          } > 011d-edge-graph.log 2>&1
+          cat 011d-edge-graph.log
+          if [ "$check_status" -ne 0 ] || [ "$info_status" -ne 0 ]; then exit 1; fi
+
+      - name: Preserve Edge dependency log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-compensation-011d-edge-graph-${{ github.run_id }}
+          path: 011d-edge-graph.log
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Constitutional summary
         run: |
