@@ -4,6 +4,14 @@ function text(value) {
   return String(value ?? '').trim();
 }
 
+function setTextIfChanged(node, value) {
+  if (!node) return false;
+  const next = String(value ?? '');
+  if (node.textContent === next) return false;
+  node.textContent = next;
+  return true;
+}
+
 function humanizeProductReference(value) {
   const raw = text(value);
   if (!raw) return 'Producto no identificado';
@@ -43,9 +51,10 @@ export function createCarteraModule(options = {}) {
     if (!items.length) return;
 
     const copy = panel.querySelector(':scope > header > div > p:not(.cartera-eyebrow)');
-    if (copy) {
-      copy.textContent = 'Hasta tres señales explicables. Cada tarjeta es una señal sobre tu cartera; no equivale a una póliza adicional.';
-    }
+    setTextIfChanged(
+      copy,
+      'Hasta tres señales explicables. Cada tarjeta es una señal sobre tu cartera; no equivale a una póliza adicional.',
+    );
 
     const uniquePolicies = new Set(
       [...root.querySelectorAll('.cartera-directory-row[data-directory-kind="POLICY"][data-directory-reference]')]
@@ -55,8 +64,10 @@ export function createCarteraModule(options = {}) {
     const counter = panel.querySelector(':scope > header > span');
     if (counter) {
       const signalLabel = `${items.length} ${items.length === 1 ? 'señal' : 'señales'}`;
-      counter.textContent = uniquePolicies.size === 1 ? `${signalLabel} · 1 póliza` : signalLabel;
-      counter.setAttribute('aria-label', `${signalLabel} de atención`);
+      const counterLabel = uniquePolicies.size === 1 ? `${signalLabel} · 1 póliza` : signalLabel;
+      setTextIfChanged(counter, counterLabel);
+      const ariaLabel = `${signalLabel} de atención`;
+      if (counter.getAttribute('aria-label') !== ariaLabel) counter.setAttribute('aria-label', ariaLabel);
     }
   }
 
@@ -68,12 +79,12 @@ export function createCarteraModule(options = {}) {
 
     const icon = row.querySelector('.cartera-directory-icon');
     if (icon) {
-      icon.textContent = '▤';
+      setTextIfChanged(icon, '▤');
       icon.setAttribute('aria-hidden', 'true');
     }
 
     const secondary = row.querySelector('small');
-    if (secondary) secondary.textContent = normalizeProductCopy(secondary.textContent);
+    if (secondary) setTextIfChanged(secondary, normalizeProductCopy(secondary.textContent));
 
     const number = text(row.querySelector('strong')?.textContent) || 'póliza';
     row.setAttribute('aria-label', `Abrir detalle de la póliza ${number}`);
@@ -90,10 +101,14 @@ export function createCarteraModule(options = {}) {
   function normalizeWorkspace() {
     root.querySelectorAll('.cartera-workspace button[data-open-policy]').forEach(normalizePolicyRow);
     root.querySelectorAll('.cartera-workspace__hero h1').forEach(title => {
-      if (/^product:/i.test(text(title.textContent))) title.textContent = humanizeProductReference(title.textContent);
+      if (/^product:/i.test(text(title.textContent))) {
+        setTextIfChanged(title, humanizeProductReference(title.textContent));
+      }
     });
     root.querySelectorAll('.cartera-directory-row small').forEach(node => {
-      if (/^product:/i.test(text(node.textContent))) node.textContent = normalizeProductCopy(node.textContent);
+      if (/^product:/i.test(text(node.textContent))) {
+        setTextIfChanged(node, normalizeProductCopy(node.textContent));
+      }
     });
   }
 
@@ -121,9 +136,9 @@ export function createCarteraModule(options = {}) {
     ...base,
     async mount() {
       destroyed = false;
-      start();
       await base.mount?.();
       normalize();
+      start();
     },
     async reload() {
       const result = await base.reload?.();
