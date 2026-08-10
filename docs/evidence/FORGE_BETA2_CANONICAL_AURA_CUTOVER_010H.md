@@ -96,7 +96,7 @@ Forge Alive assets remain published only because Aura still imports accepted pro
 
 ## Implementation decision
 
-The bounded hotfix performs only the canonical presentation cutover:
+The bounded hotfix performs only the canonical presentation / navigation cutover:
 
 1. `index.html`
    - changes the public root target from `static-preview/forge-alive/` to `static-preview/forge-aura/`;
@@ -115,16 +115,22 @@ The bounded hotfix performs only the canonical presentation cutover:
    - requires Aura index/bootstrap/auth/shell assets in the Pages artifact;
    - validates root -> Aura and rejects the old root -> Forge Alive target.
 
-3. `tests/auth-relogin-canonical-return-test.mjs`
+3. `docs/static-preview/forge-aura/aura-router-v4.js`
+   - reuses the existing Aura router; no new routing authority is created;
+   - when an explicit productive route is forced through unauthenticated `route=login`, carries that route only as transient `return_route`;
+   - allows the existing Google OAuth callback builder to recover that transient route;
+   - removes `return_route` again when the authenticated productive route is restored;
+   - changes no Supabase provider, session, credential, identity or domain semantics.
+
+4. `tests/auth-relogin-canonical-return-test.mjs`
    - updates the inherited root-entry expectation from Forge Alive to Forge Aura;
    - preserves OAuth parameters, route, hash and `auth_return` versioning assertions;
-   - reclassifies Forge Alive auth assertions as shared-runtime compatibility rather than canonical presentation authority;
-   - changes no productive auth implementation.
+   - reclassifies Forge Alive auth assertions as shared-runtime compatibility rather than canonical presentation authority.
 
-4. Hotfix-only acceptance files
-   - static contract test;
+5. Hotfix-only acceptance files
+   - static contract test, including Google OAuth deep-route continuity;
    - Pages-artifact Playwright config;
-   - desktop/mobile/deep-route browser acceptance;
+   - desktop/mobile/OAuth deep-route browser acceptance;
    - governing RoboCop 010H workflow;
    - this evidence record.
 
@@ -134,6 +140,7 @@ The bounded hotfix performs only the canonical presentation cutover:
 index.html
 .github/workflows/pages.yml
 .github/workflows/forge-beta2-canonical-aura-cutover-010h.yml
+docs/static-preview/forge-aura/aura-router-v4.js
 tests/auth-relogin-canonical-return-test.mjs
 tests/forge-beta2-canonical-aura-cutover-010h.test.mjs
 tests/aura010h-playwright.config.mjs
@@ -149,11 +156,13 @@ Aura's existing router and auth implementation remain the authority:
 
 - direct routes accept `route` and legacy-compatible `nav` query parameters;
 - OAuth callback is `oauth-callback-v4.html`;
-- callback preserves `return_route`;
+- an explicit productive route is carried across unauthenticated login as transient `return_route`;
+- Google callback receives the same valid `return_route` and the callback already returns to that route after session establishment;
+- `return_route` is scrubbed from the productive URL after restoration;
 - session restore remains `createAuraAuth().restore()`;
 - logout remains the existing Aura auth flow;
 - root relogin keeps `auth_return` cache-bust versioning;
-- no Supabase configuration or auth semantics are changed.
+- no Supabase configuration, provider choice, credential handling or identity semantics are changed.
 
 Expected governing acceptance:
 
@@ -162,6 +171,7 @@ AURA_AUTH_ENTRY=PASS
 AURA_AUTH_CALLBACK=PASS
 AURA_SESSION_RESTORE=PASS
 AURA_LOGOUT=PASS
+AURA_GOOGLE_OAUTH_RETURN_ROUTE=PASS
 DEEP_LINK_RELOAD=PASS
 ```
 
@@ -213,7 +223,17 @@ MERGE != DEPLOY
 
 ## Browser acceptance
 
-The 010H browser suite runs against the built `_site` Pages artifact rather than the repository source tree. It verifies the actual public root redirect, Aura runtime marker, anonymous Aura auth entry, local critical 404s, page errors, 390px overflow and explicit Quotes deep-route preservation.
+The 010H browser suite runs against the built `_site` Pages artifact rather than the repository source tree. It verifies:
+
+- actual public root redirect to Aura;
+- Aura runtime marker and anonymous login presentation;
+- local critical 404s and page errors;
+- 390px horizontal overflow;
+- legacy `nav=cotizaciones` ingress into Aura;
+- transient `route=login&return_route=cotizaciones` while unauthenticated;
+- Google OAuth `redirectTo` targets Aura callback with `return_route=cotizaciones`.
+
+The URL convergence assertion uses stable URL polling instead of Playwright navigation-event waiting because the root intentionally combines a fallback meta refresh with governed JavaScript replacement; this avoids a false `ERR_ABORTED` race while still asserting the final Aura URL and runtime marker.
 
 Expected:
 
@@ -223,19 +243,45 @@ BROWSER_E2E_DESKTOP=PASS
 ROOT_CANONICAL_ENTRY=AURA
 ROOT_TO_AURA=PASS
 AURA_DIRECT_ENTRY=PASS
+AURA_GOOGLE_OAUTH_RETURN_ROUTE=PASS
 RUNTIME_ERRORS=0
 CRITICAL_404=0
 RESPONSIVE_ACCEPTANCE=PASS
 ```
 
-## First governing run diagnosis
+## Governing run diagnoses before final acceptance
 
-Initial exact-head run `31358002396` correctly blocked the hotfix before merge. Authority, bounded static contracts and commercial-loop smoke passed. Two CI-contract mismatches were found:
+### Run `31358002396`
+
+Correctly blocked before merge. Authority, bounded static contracts and commercial-loop smoke passed. Two CI-contract mismatches were found:
 
 1. inherited `auth-relogin-canonical-return-test.mjs` still expected the public root to resolve to Forge Alive;
 2. the 010H Pages harness generated `DEMO_MODE=true` while the production validator correctly expects `false` unless explicitly told otherwise.
 
-Both were corrected inside the permitted acceptance/release boundary. No productive auth, domain or data mutation was introduced. Any result from run `31358002396` is stale after these corrections; only a new exact-final-HEAD run may unlock merge.
+Both were corrected inside the permitted acceptance/release boundary.
+
+### Browser harness follow-up
+
+A later exact-head run reached `browser-e2e` but the Playwright web server served `tests/_site` instead of repository-root `_site`; the harness path was corrected from `_site` to `../_site`. No production code was changed for that harness failure.
+
+### Browser semantic follow-up
+
+Subsequent Chromium execution proved desktop root -> Aura and exposed two distinctions:
+
+1. `page.waitForURL()` can observe an intentional root replacement as `ERR_ABORTED`; the stable acceptance is final URL + Aura runtime marker, so the harness now polls the resulting URL;
+2. unauthenticated deep routes correctly show `route=login`; while investigating the expected post-auth restoration, Google OAuth was found to need the transient `return_route` carried through that login URL. The existing Aura router was minimally extended to preserve and then scrub that route.
+
+No run before the exact final HEAD may unlock merge.
+
+## Legacy scoped workflow note
+
+The independent `SeguBeca Pages Authority Asset` workflow can fail on this PR at its own bounded-path verification because its whitelist only permits files from the historical SeguBeca Pages hotfix. Example observed failure:
+
+```text
+SEGUBECA_PAGES_UNAUTHORIZED_PATH=.github/workflows/forge-beta2-canonical-aura-cutover-010h.yml
+```
+
+This is a scoped legacy bounded-diff false-positive for unrelated 010H files. The SeguBeca authority/formula checks do not run after that whitelist stop. 010H does not weaken or modify that historical whitelist merely to make the unrelated workflow green.
 
 ## Mutation seal
 
@@ -255,10 +301,10 @@ SUPABASE_DOMAIN_MUTATION=0
 AUTO_IDENTITY_MERGE=0
 AUTONOMOUS_COMMERCIAL_EXECUTION=0
 PRODUCTIVE_DOMAIN_MUTATION=0
-PRODUCTIVE_RUNTIME_MUTATION=1_PRESENTATION_DISTRIBUTION_BOUNDARY_ONLY
+PRODUCTIVE_RUNTIME_MUTATION=1_PRESENTATION_DISTRIBUTION_AND_AUTH_RETURN_ROUTE_BOUNDARY_ONLY
 ```
 
-The non-zero presentation-runtime mutation is limited to which already-existing UI the production entrypoint and isolated Quotes return route open. It changes no business truth, persistence, domain computation or productive authority.
+The non-zero runtime mutation is limited to which already-existing UI the production entrypoint opens, the isolated Quotes return route, and transient preservation of an already-existing Aura route across login/OAuth. It changes no business truth, persistence, domain computation, scoring, economic semantics, auth provider or identity authority.
 
 ## Pre-merge release state
 
@@ -268,6 +314,7 @@ FORGE_ALIVE_REQUIRED_RUNTIME_PRESERVED=IMPLEMENTED_PENDING_CI
 ROOT_CANONICAL_ENTRY=AURA_PENDING_CI
 ROOT_TO_AURA=IMPLEMENTED_PENDING_CI
 PAGES_AURA_CANONICAL_BOUNDARY=IMPLEMENTED_PENDING_CI
+AURA_GOOGLE_OAUTH_RETURN_ROUTE=IMPLEMENTED_PENDING_CI
 
 AUTO_MERGE=NO
 AUTO_DEPLOY=NO
