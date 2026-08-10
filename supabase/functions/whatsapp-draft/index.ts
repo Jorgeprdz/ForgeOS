@@ -2,16 +2,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { GoogleGenerativeAI } from "npm:@google/generative-ai";
 
-const FUNCTION_VERSION = "whatsapp-draft-v1";
+const FUNCTION_VERSION = "whatsapp-humanizer-v2";
 const MODEL_VERSION = "gemini-3.1-flash-lite";
-const ALLOWED_INTENTS = new Set([
-  "primer_contacto",
-  "seguimiento",
-  "retomar_conversacion",
-  "confirmar_cita",
-  "solicitar_documentos",
-  "seguimiento_propuesta",
-]);
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -45,45 +37,62 @@ serve(async (request) => {
     if (!user) return response({ error: "auth_required" }, 401);
 
     const body = await request.json();
-    const intent = clean(body?.intent, 80);
-    if (!ALLOWED_INTENTS.has(intent)) return response({ error: "invalid_intent" }, 400);
+    const baseMessage = clean(body?.baseMessage, 1800);
+    const lockedCta = clean(body?.lockedCta, 500);
+    const tone = clean(body?.tone, 80) || "natural y directo";
+    const locale = clean(body?.locale, 40) || "es-MX";
+    const prohibitedClaims = Array.isArray(body?.prohibitedClaims)
+      ? body.prohibitedClaims.map((value: unknown) => clean(value, 200)).filter(Boolean).slice(0, 30)
+      : [];
 
-    const context = {
-      name: clean(body?.context?.name, 160),
-      stage: clean(body?.context?.stage, 120),
-      source: clean(body?.context?.source, 120),
-      lastActivity: clean(body?.context?.lastActivity, 500),
-      objection: clean(body?.context?.objection, 500),
-      objective: clean(body?.context?.objective, 500),
-      notes: clean(body?.context?.notes, 1200),
-    };
-    if (!context.name) return response({ error: "prospect_name_required" }, 400);
+    if (!baseMessage) return response({ error: "base_message_required" }, 400);
+    if (!lockedCta || !baseMessage.includes(lockedCta)) return response({ error: "locked_cta_required" }, 400);
 
     const genAI = new GoogleGenerativeAI(Deno.env.get("GEMINI_API_KEY") || "");
     const model = genAI.getGenerativeModel({ model: MODEL_VERSION });
-    const prompt = `Eres el redactor de WhatsApp de ForgeOS. Redacta UN SOLO borrador breve, natural y profesional en español de México. No inventes datos, productos, coberturas, fechas ni conversaciones. Usa únicamente el contexto proporcionado. No digas que eres una IA. Incluye un CTA sencillo. Devuelve JSON válido con la forma {"draft":"..."}.
+    const prompt = `No escribas un mensaje nuevo. Recibirás un mensaje base completo y gobernado por ForgeOS. Tu única tarea es hacerlo sonar más natural en español de México.
 
-Intención: ${intent}
-Contexto gobernado: ${JSON.stringify(context)}`;
+Reglas obligatorias:
+- No agregues hechos, personas, empresas, productos, coberturas, cantidades, fechas, beneficios, promesas ni conversaciones.
+- No elimines ni cambies nombres.
+- No cambies el objetivo.
+- No cambies el nivel de certeza.
+- Conserva textualmente el CTA bloqueado.
+- No uses ningún claim prohibido.
+- No digas que eres una IA.
+- Devuelve JSON válido con la forma {"draft":"...","transformations":["..."]}.
+
+Locale: ${locale}
+Tono permitido: ${tone}
+CTA bloqueado: ${JSON.stringify(lockedCta)}
+Claims prohibidos: ${JSON.stringify(prohibitedClaims)}
+Mensaje base: ${JSON.stringify(baseMessage)}`;
+
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: "application/json", temperature: 0.45 },
+      generationConfig: { responseMimeType: "application/json", temperature: 0.15 },
     });
     const parsed = JSON.parse(result.response.text());
     const draft = clean(parsed?.draft, 1800);
+    const transformations = Array.isArray(parsed?.transformations)
+      ? parsed.transformations.map((value: unknown) => clean(value, 160)).filter(Boolean).slice(0, 10)
+      : [];
     if (!draft) return response({ error: "empty_draft" }, 502);
+    if (!draft.includes(lockedCta)) return response({ error: "changed_locked_cta" }, 422);
 
     return response({
       ok: true,
       functionVersion: FUNCTION_VERSION,
       modelVersion: MODEL_VERSION,
+      promptVersion: "FORGE_WHATSAPP_RESTRICTED_HUMANIZER_002",
       requiresHumanReview: true,
       mutatesProductState: false,
       draft,
+      transformations,
     });
   } catch (error) {
     return response({
-      error: "draft_unavailable",
+      error: "humanizer_unavailable",
       message: error instanceof Error ? error.message : String(error),
       requiresHumanReview: true,
     }, 503);
