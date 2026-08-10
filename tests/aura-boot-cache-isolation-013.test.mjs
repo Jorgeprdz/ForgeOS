@@ -15,12 +15,13 @@ test("Aura cache-isolated bootstrap retires only governed legacy runtime state",
   assert.match(bootstrap, /navigator\.serviceWorker\.getRegistrations\(\)/);
   assert.match(bootstrap, /registration\.unregister\(\)/);
   assert.match(bootstrap, /scope\.pathname\.includes\("\/ForgeOS\/"\)/);
-  assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013-forge-global-aura-recomposition-008/);
+  assert.match(bootstrap, /auraPipelineRouteRecovery = "011H"/);
+  assert.match(bootstrap, /app-v4-r1\.js\?v=aura-pipeline-route-recovery-011h/);
   assert.match(bootstrap, /BOOT_IMPORT_OK/);
   assert.match(bootstrap, /AURA_BOOT_R1_IMPORT_FAILED/);
 });
 
-test("Aura base boot lazy-loads every productive route, including governed Phase008 bridges", () => {
+test("Aura base boot lazy-loads every productive route and Pipeline fails closed instead of blank", () => {
   const staticImports = [...app.matchAll(/^import\s+.*from\s+["']([^"']+)["'];/gm)].map(match => match[1]);
   assert.deepEqual(staticImports, [
     "./aura-router-v4.js",
@@ -29,7 +30,7 @@ test("Aura base boot lazy-loads every productive route, including governed Phase
   ]);
 
   assert.match(app, /import\("\.\/home\/home-module-008\.js\?v=forge-global-aura-recomposition-008"\)/);
-  assert.match(app, /import\("\.\/recomposition\/pipeline-consumer-bridge-008\.js\?v=forge-global-aura-recomposition-008"\)/);
+  assert.match(app, /import\("\.\/recomposition\/pipeline-consumer-bridge-011b\.js\?v=aura-pipeline-route-recovery-011h"\)/);
   assert.match(homeBridge, /from "\.\/home-module\.js"/);
   assert.match(pipelineBridge, /from "\.\.\/pipeline\/pipeline-module\.js"/);
   assert.match(pipelineBridge, /from "\.\.\/pipeline\/pipeline-adapter\.js"/);
@@ -38,6 +39,10 @@ test("Aura base boot lazy-loads every productive route, including governed Phase
   assert.match(app, /import\("\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012"\)/);
   assert.match(app, /import\("\.\/income\/income-module\.js\?v=income-aura-ux-reconciliation-001"\)/);
   assert.match(app, /import\("\.\/quotes\/quotes-module\.js\?v=aura-quotes-product-intelligence-001"\)/);
+  assert.match(app, /renderRouteLoading/);
+  assert.match(app, /routeDeadline\(auth\.getClient\(\), route, "CLIENT", 8000\)/);
+  assert.match(app, /routeDeadline\(createRouteModule\(route, currentShell, client, snapshot\), route, "FACTORY", 12000\)/);
+  assert.match(app, /currentShell\.main\.dataset\.auraRouteState = "LOAD_ERROR"/);
   assert.match(app, /wireQuotesEntry/);
   assert.match(app, /forge:alfred-navigation/);
   assert.match(app, /AURA_ROUTE_LOAD_FAILED/);
