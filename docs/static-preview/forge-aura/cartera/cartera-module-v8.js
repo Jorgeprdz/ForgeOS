@@ -84,6 +84,14 @@ export function createCarteraModule({
     if (headerCopy && headerCopy.textContent !== desiredCopy) headerCopy.textContent = desiredCopy;
   }
 
+  function projectPersonContinuity(personRow, relationships) {
+    const secondary = personRow.querySelector('small');
+    const desiredSecondary = relationships?.pipelineLinked === true ? 'Pipeline vinculado' : null;
+    if (secondary && desiredSecondary && secondary.textContent !== desiredSecondary) {
+      secondary.textContent = desiredSecondary;
+    }
+  }
+
   async function decorateDirectory() {
     decorateScheduled = false;
     if (destroyed || !root.isConnected) return;
@@ -101,6 +109,7 @@ export function createCarteraModule({
       const relationships = presentation[reference];
       const policies = relationships?.policies || [];
       const accounts = relationships?.accounts || [];
+      projectPersonContinuity(personRow, relationships);
       if (!policies.length && !accounts.length) continue;
 
       const card = doc.createElement('article');
