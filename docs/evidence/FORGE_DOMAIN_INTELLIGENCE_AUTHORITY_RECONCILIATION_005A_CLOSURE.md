@@ -4,16 +4,17 @@ PHASE=FORGE_DOMAIN_INTELLIGENCE_AUTHORITY_RECONCILIATION_005A
 ASSEMBLY_PARENT=FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004
 CURRENT_MAIN_BASE=dd990fba5762ee84f35103d04871d474e2b2b8df
 HISTORICAL_PHASE005A_HEAD=5d553412cbbd3495ceb7ce74ef12cf0b7d36d76e
+ACCEPTED_IMPLEMENTATION_HEAD=0cc77d886fb6fd3c5d8dcf5790747949127279eb
 
 ## Disposition
 
-The original `FORGE_DOMAIN_INTELLIGENCE_ACTIVATION_005` branch never progressed beyond its constitutional gate. Its required activation is therefore satisfied through the bounded 005A reconciliation rather than by merging the obsolete stacked Phase005 branch.
+The original `FORGE_DOMAIN_INTELLIGENCE_ACTIVATION_005` branch never progressed beyond its constitutional gate. Its required activation is satisfied through the bounded 005A reconciliation rather than by merging the obsolete stacked Phase005 branch.
 
 PHASE_005_SEPARATE_MERGE_REQUIRED=NO
 PHASE_005_AUTHORITY_ACTIVATION=SATISFIED_THROUGH_005A
 PHASE_005A_DISPOSITION=PARTIALLY_REQUIRED
 
-005A remains required only for the missing Productive Pipeline read-consumer boundary. It does not promote historical preview adapters or create missing domain authorities.
+005A was required only for the missing Productive Pipeline read-consumer boundary. It does not promote historical preview adapters or create missing domain authorities.
 
 ## Canonical activation
 
@@ -51,6 +52,38 @@ IDENTITY_MUTATION=NO
 
 CRS-03 remains the productive Prospect→Person convergence boundary.
 
+## CI baseline reconciliation
+
+The inherited Pipeline scope guard was still pinned to historical SHA `cbf493409fc9ff7787ec8da60a436cbed42dd12b`, causing modern main lineage to be misclassified as Pipeline scope. It was reconciled to the current PR merge-base and given only the explicit 005A integration paths. No Pipeline business logic changed as part of that CI repair.
+
+CI_BASELINE_DRIFT=CORRECTED
+PIPELINE_SCOPE_GUARD=PASS
+
+## Acceptance evidence
+
+Governing 005A workflow:
+
+RUN=31346366282
+JOB=93328937528
+HEAD=0cc77d886fb6fd3c5d8dcf5790747949127279eb
+CONCLUSION=SUCCESS
+
+Pipeline Aura UX regression:
+
+RUN=31346366247
+CONTRACT_JOB=93328943583
+BROWSER_JOB=93328989011
+CONCLUSION=SUCCESS
+
+Additional exact-head checks on the same implementation head:
+
+PIPELINE_REAL_INTERACTION=SUCCESS
+AUTHENTICATED_SESSION_CONTROLS=SUCCESS
+REP_17=SUCCESS
+CANONICAL_PAGES_ARTIFACT_VALIDATION=SUCCESS
+
+The governing 005A workflow passed bounded diff, consumer acceptance, Phase004 projection regression, CRS-03 identity regression, Pack01/02/03/04/07 authority regressions, Advisor Forecast V3, authenticated session controls, REP-17, no-persistence/no-score/no-new-truth checks and Final Robocop 005A.
+
 ## Scope
 
 NEW_DOMAIN_ENGINE=NO
@@ -66,25 +99,10 @@ NEW_RLS=NO
 SUPABASE_DOMAIN_MUTATION=NO
 SERVICE_ROLE_DOMAIN_WRITE=NO
 
-## Acceptance contract
+PHASE_005_AUTHORITY_ACTIVATION=PASS
+PHASE_005A_RECONCILIATION=PASS
+FINAL_ROBOCOP_005A=PASS
+PHASE_STATUS=PASS
+MERGE_READY=YES
 
-The governing pull-request workflow must execute against the exact PR head and prove:
-
-- bounded diff;
-- Phase005A consumer acceptance;
-- Phase004 projection regression;
-- CRS-03 identity regressions;
-- Pack01/02/03/04/07 authority regressions;
-- Advisor Forecast V3 regressions;
-- authenticated session controls;
-- REP-17;
-- no persistence/new score/new truth owner;
-- Final Robocop 005A.
-
-A workflow success is required before merge.
-
-PHASE_005_AUTHORITY_ACTIVATION=PASS_PENDING_EXACT_HEAD_CI
-PHASE_005A_RECONCILIATION=PASS_PENDING_EXACT_HEAD_CI
-FINAL_ROBOCOP_005A=PENDING_EXACT_HEAD_CI
-PHASE_STATUS=PENDING_EXACT_HEAD_CI
-MERGE_READY=NO_UNTIL_EXACT_HEAD_CI
+The final evidence-only HEAD still requires the normal exact-head PR rerun before merge; any HEAD movement invalidates prior merge authorization evidence until CI is green again.
