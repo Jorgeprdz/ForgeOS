@@ -13,6 +13,25 @@ function appendText(parent, tag, className, value) {
   return node;
 }
 
+function presentationToken(token) {
+  const raw = text(token);
+  if (!raw) return '';
+  if (/^\d+$/.test(raw)) return raw;
+  if (/^[A-Z0-9]{2,6}$/.test(raw)) return raw;
+  const lower = raw.toLocaleLowerCase('es-MX');
+  if (['udi', 'mxn', 'usd'].includes(lower)) return lower.toUpperCase();
+  return lower.charAt(0).toLocaleUpperCase('es-MX') + lower.slice(1);
+}
+
+function presentTechnicalProductReference(value) {
+  const source = text(value);
+  if (!source) return 'Producto no identificado';
+  const withoutNamespace = source.replace(/^product:/i, '');
+  const tokens = withoutNamespace.split(/[-_/\s]+/).filter(Boolean);
+  if (!tokens.length) return 'Producto no identificado';
+  return tokens.map(presentationToken).filter(Boolean).join(' ');
+}
+
 function staticRelationRow(doc, item, kind) {
   const row = doc.createElement('div');
   row.className = 'cartera-related-static-row';
@@ -34,6 +53,17 @@ function relationSection(doc, label) {
   section.className = 'cartera-related-section';
   appendText(section, 'p', 'cartera-related-heading', label);
   return section;
+}
+
+function flattenedPolicyPresentation(presentation) {
+  const byReference = new Map();
+  for (const relationships of Object.values(presentation || {})) {
+    for (const policy of relationships?.policies || []) {
+      const reference = text(policy.reference);
+      if (reference && !byReference.has(reference)) byReference.set(reference, policy);
+    }
+  }
+  return byReference;
 }
 
 export function createCarteraModule({
@@ -84,6 +114,35 @@ export function createCarteraModule({
     if (headerCopy && headerCopy.textContent !== desiredCopy) headerCopy.textContent = desiredCopy;
   }
 
+  function updateAttentionCopy() {
+    const panel = root.querySelector('[aria-labelledby="cartera-attention-title"]');
+    if (!panel || panel.dataset.acceptancePresentation012 === 'true') return;
+    const title = panel.querySelector('#cartera-attention-title');
+    const eyebrow = panel.querySelector('.cartera-eyebrow');
+    const helper = panel.querySelector('header p:not(.cartera-eyebrow)');
+    const countNode = panel.querySelector(':scope > header > span');
+    const items = [...panel.querySelectorAll('.cartera-attention-item')];
+    if (!items.length) return;
+
+    const policyReferences = new Set(
+      items
+        .map(item => text(item.querySelector('[data-open-policy]')?.dataset.openPolicy))
+        .filter(Boolean),
+    );
+    const itemCount = items.length;
+    const policyCount = policyReferences.size;
+    const topicLabel = `${itemCount} ${itemCount === 1 ? 'tema' : 'temas'} por revisar`;
+    const policyLabel = policyCount
+      ? ` en ${policyCount} ${policyCount === 1 ? 'póliza' : 'pólizas'}`
+      : '';
+
+    if (eyebrow) eyebrow.textContent = 'PARA REVISAR';
+    if (title) title.textContent = `${topicLabel}${policyLabel}`;
+    if (helper) helper.textContent = 'Una misma póliza puede generar varios temas —por ejemplo datos pendientes, próximos eventos o pagos—. Ninguna acción se ejecuta automáticamente.';
+    if (countNode) countNode.textContent = `${itemCount} ${itemCount === 1 ? 'tema' : 'temas'}`;
+    panel.dataset.acceptancePresentation012 = 'true';
+  }
+
   function projectPersonContinuity(personRow, relationships) {
     const secondary = personRow.querySelector('small');
     const desiredSecondary = relationships?.pipelineLinked === true ? 'Pipeline vinculado' : null;
@@ -105,12 +164,45 @@ export function createCarteraModule({
     if (kind && kind.textContent !== desiredKind) kind.textContent = desiredKind;
   }
 
+  function decoratePersonPolicyRows(presentation) {
+    const policyByReference = flattenedPolicyPresentation(presentation);
+    root.querySelectorAll('.cartera-workspace button[data-open-policy]:not([data-policy-detail-affordance="012"])').forEach(row => {
+      const reference = text(row.dataset.openPolicy);
+      if (!reference || reference.startsWith('POLICY_PACKET:AURA:')) return;
+      const primary = row.querySelector('strong');
+      const secondary = row.querySelector('small');
+      if (!primary || !secondary) return;
+
+      const maskedNumber = text(primary.textContent);
+      const secondaryParts = text(secondary.textContent).split(' · ');
+      const rawProduct = secondaryParts.shift() || '';
+      const status = secondaryParts.join(' · ');
+      const relation = policyByReference.get(reference);
+      const projectedLabel = text(relation?.displayLabel);
+      const productLabel = projectedLabel && projectedLabel !== 'Producto no identificado'
+        ? projectedLabel
+        : presentTechnicalProductReference(rawProduct);
+
+      primary.textContent = productLabel;
+      secondary.textContent = `${maskedNumber}${status ? ` · ${status}` : ''}`;
+      const icon = row.querySelector('.cartera-directory-icon');
+      if (icon) icon.textContent = 'P';
+      if (!row.querySelector('.cartera-policy-open-cue')) {
+        appendText(row, 'span', 'cartera-policy-open-cue', 'Ver detalle');
+      }
+      row.setAttribute('aria-label', `Abrir detalle de ${productLabel}, póliza ${maskedNumber}`);
+      row.dataset.policyDetailAffordance = '012';
+    });
+  }
+
   async function decorateDirectory() {
     decorateScheduled = false;
     if (destroyed || !root.isConnected) return;
     const presentation = await projection();
     if (destroyed || !root.isConnected) return;
 
+    updateAttentionCopy();
+    decoratePersonPolicyRows(presentation);
     updateDirectoryCopy();
     const list = root.querySelector('.cartera-directory-list');
     if (!list) return;
