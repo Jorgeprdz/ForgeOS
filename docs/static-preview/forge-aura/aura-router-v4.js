@@ -9,6 +9,12 @@ const ROUTES = Object.freeze({
 });
 const ALIASES = Object.freeze({ home: "inicio", dashboard: "inicio", ingresos: "comisiones", quotes: "cotizaciones" });
 const AURA_MARKER = "/static-preview/forge-aura/";
+const CONTEXT_PARAMS = Object.freeze({
+  source: "ctx_source",
+  contract: "ctx_contract",
+  decisionReference: "ctx_decision",
+  sourceReference: "ctx_ref",
+});
 
 function explicitRouteValue(value) {
   const input = String(value || "").trim().toLowerCase();
@@ -17,6 +23,26 @@ function explicitRouteValue(value) {
   if (!Object.prototype.hasOwnProperty.call(ROUTES, route)) return null;
   const normalized = ROUTES[route];
   return normalized === ROUTES.login ? null : normalized;
+}
+
+function contextValue(value, max = 320) {
+  const normalized = String(value ?? "").trim().replace(/\s+/g, " ");
+  return normalized ? normalized.slice(0, max) : null;
+}
+
+function clearContextParams(url) {
+  Object.values(CONTEXT_PARAMS).forEach(param => url.searchParams.delete(param));
+  return url;
+}
+
+function applyContext(url, context = null) {
+  clearContextParams(url);
+  if (!context || typeof context !== "object") return url;
+  Object.entries(CONTEXT_PARAMS).forEach(([key, param]) => {
+    const value = contextValue(context[key]);
+    if (value) url.searchParams.set(param, value);
+  });
+  return url;
 }
 
 export function resolveRuntimeBase(urlLike = globalThis.location?.href || "http://localhost/") {
@@ -46,12 +72,22 @@ export function readRoute(urlLike = globalThis.location?.href || "http://localho
   return normalizeRoute(url.searchParams.get("route") || url.searchParams.get("nav") || "inicio");
 }
 
-export function routeUrl(route, current = globalThis.location?.href || "http://localhost/") {
+export function readRouteContext(urlLike = globalThis.location?.href || "http://localhost/") {
+  const url = new URL(urlLike, "http://localhost/");
+  const context = {};
+  Object.entries(CONTEXT_PARAMS).forEach(([key, param]) => {
+    const value = contextValue(url.searchParams.get(param));
+    if (value) context[key] = value;
+  });
+  return Object.freeze(context);
+}
+
+export function routeUrl(route, current = globalThis.location?.href || "http://localhost/", context = null) {
   const url = new URL(current, "http://localhost/");
   url.searchParams.delete("nav");
   url.searchParams.delete("auth");
   url.searchParams.set("route", normalizeRoute(route));
-  return url;
+  return applyContext(url, context);
 }
 
 export function authEntryUrl(route = "inicio", current = globalThis.location?.href || "http://localhost/") {
@@ -78,13 +114,14 @@ export function createAuraRouter({ windowRef = window, onChange } = {}) {
 
   const emit = () => {
     const route = remember(readRoute(windowRef.location.href));
-    onChange?.(route);
+    onChange?.(route, readRouteContext(windowRef.location.href));
   };
 
-  const navigate = (route, { replace = false } = {}) => {
+  const navigate = (route, { replace = false, context = null, preserveContext = false } = {}) => {
     const normalized = normalizeRoute(route);
     remember(normalized);
-    const url = routeUrl(normalized, windowRef.location.href);
+    const nextContext = preserveContext ? readRouteContext(windowRef.location.href) : context;
+    const url = routeUrl(normalized, windowRef.location.href, nextContext);
     windowRef.history[replace ? "replaceState" : "pushState"]({}, "", url);
     emit();
   };
@@ -93,10 +130,15 @@ export function createAuraRouter({ windowRef = window, onChange } = {}) {
 
   return Object.freeze({
     current: () => readRoute(windowRef.location.href),
+    context: () => readRouteContext(windowRef.location.href),
     navigate,
+    clearContext() {
+      const url = routeUrl(readRoute(windowRef.location.href), windowRef.location.href, null);
+      windowRef.history.replaceState({}, "", url);
+    },
     restoreAfterAuth() {
       const target = returnRoute === ROUTES.login ? ROUTES.inicio : returnRoute;
-      const url = routeUrl(target, windowRef.location.href);
+      const url = routeUrl(target, windowRef.location.href, null);
       windowRef.history.replaceState({}, "", url);
       emit();
     },
@@ -105,3 +147,5 @@ export function createAuraRouter({ windowRef = window, onChange } = {}) {
     },
   });
 }
+
+export { CONTEXT_PARAMS };

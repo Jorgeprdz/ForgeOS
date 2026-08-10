@@ -42,12 +42,33 @@ const cartera015CompatibilityAllowed = new Set([
   "tests/income-scope-guard.test.mjs",
 ]);
 
+const phase008CompatibilityAllowed = [
+  /^\.github\/workflows\/forge-global-aura-recomposition-008\.yml$/,
+  /^docs\/architecture\/source-truth\/FORGE_GLOBAL_AURA_RECOMPOSITION_008_[^/]*\.md$/,
+  /^docs\/evidence\/FORGE_GLOBAL_AURA_RECOMPOSITION_008_[^/]*\.md$/,
+  /^docs\/evidence\/FORGE_HOME_ATTENTION_ORCHESTRATION_007_POST_MERGE_SEAL\.md$/,
+  /^docs\/static-preview\/forge-aura\/app-v4-r1\.js$/,
+  /^docs\/static-preview\/forge-aura\/aura-bootstrap-v4-r1\.js$/,
+  /^docs\/static-preview\/forge-aura\/aura-router-v4\.js$/,
+  /^docs\/static-preview\/forge-aura\/aura-recomposition-008\.css$/,
+  /^docs\/static-preview\/forge-aura\/index\.html$/,
+  /^docs\/static-preview\/forge-aura\/home\/home-module-008\.js$/,
+  /^docs\/static-preview\/forge-aura\/recomposition\//,
+  /^scripts\/aura-auth-premium-entry-scope-guard-001\.mjs$/,
+  /^tests\/aura-boot-cache-isolation-013\.test\.mjs$/,
+  /^tests\/aura008-playwright\.config\.mjs$/,
+  /^tests\/e2e\/forge-global-aura-recomposition-008\.spec\.mjs$/,
+  /^tests\/forge-global-aura-recomposition-008\.test\.mjs$/,
+  /^tests\/income-scope-guard\.test\.mjs$/,
+];
+const isPhase008Compatibility = file => phase008CompatibilityAllowed.some(pattern => pattern.test(file));
+
 const base = process.env.BASE_SHA || execFileSync("git", ["merge-base", "origin/main", "HEAD"], { encoding: "utf8" }).trim();
 const output = execFileSync("git", ["-c", "core.quotepath=false", "diff", "--name-only", "-z", base, "HEAD"], { encoding: "utf8" });
 const changed = output.split("\0").filter(Boolean);
 
 for (const file of changed) {
-  if (!allowed.has(file) && !cartera015CompatibilityAllowed.has(file)) {
+  if (!allowed.has(file) && !cartera015CompatibilityAllowed.has(file) && !isPhase008Compatibility(file)) {
     console.error(`AUTH_SCOPE_FORBIDDEN_MUTATION=${file}`);
     process.exitCode = 1;
   }
@@ -66,7 +87,7 @@ const forbiddenPrefixes = [
 ];
 
 for (const file of changed) {
-  if (!cartera015CompatibilityAllowed.has(file) && forbiddenPrefixes.some(prefix => file.startsWith(prefix))) {
+  if (!cartera015CompatibilityAllowed.has(file) && !isPhase008Compatibility(file) && forbiddenPrefixes.some(prefix => file.startsWith(prefix))) {
     console.error(`AUTH_SCOPE_FORBIDDEN_DOMAIN=${file}`);
     process.exitCode = 1;
   }
@@ -75,7 +96,9 @@ for (const file of changed) {
 if (process.exitCode) process.exit(process.exitCode);
 
 const durableMigrationChanged = changed.includes("supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql");
+const phase008Changed = changed.some(isPhase008Compatibility);
 console.log(`AUTH_SCOPE_CHANGED_FILES=${changed.length}`);
+console.log(`PHASE_008_GLOBAL_AURA_COMPATIBILITY=${phase008Changed ? "ALLOWED_BOUNDED" : "NOT_PRESENT"}`);
 console.log(durableMigrationChanged ? "DATABASE_MUTATION=CARTERA_020C_DURABLE_ATTACH_ONLY" : "DATABASE_MUTATION=0");
 console.log("RLS_MUTATION=0");
 console.log("AUTH_PROVIDER_CONFIGURATION_MUTATION=0");

@@ -113,6 +113,7 @@ function ensureShell(snapshot) {
         finally { router.navigate("login", { replace: true }); showLogin(); }
       },
     });
+    ensureStylesheet("./aura-recomposition-008.css?v=forge-global-aura-recomposition-008", "aura-recomposition-008");
     wireQuotesEntry(shell);
   }
   activeAdvisorId = snapshot.user?.id || null;
@@ -122,7 +123,7 @@ function ensureShell(snapshot) {
 }
 async function loadRouteFactory(route) {
   if (route === "inicio") {
-    const module = await import("./home/home-module.js?v=aura-home-command-center-001");
+    const module = await import("./home/home-module-008.js?v=forge-global-aura-recomposition-008");
     return module.createHomeModule;
   }
   if (route === "actividad") {
@@ -141,13 +142,19 @@ async function loadRouteFactory(route) {
     const module = await import("./quotes/quotes-module.js?v=aura-quotes-product-intelligence-001");
     return module.createQuotesModule;
   }
-  const module = await import("./pipeline/pipeline-module.js?v=pages-adapter-c5a90d95");
+  const module = await import("./recomposition/pipeline-consumer-bridge-008.js?v=forge-global-aura-recomposition-008");
   return module.createPipelineModule;
 }
 async function createRouteModule(route, currentShell, client, snapshot) {
   const factory = await loadRouteFactory(route);
   if (typeof factory !== "function") throw Object.assign(new Error("AURA_ROUTE_FACTORY_INVALID"), { route });
-  if (route === "inicio") return factory({ root: currentShell.main, client, user: snapshot.user, globalState: currentShell.setGlobalState, onNavigate: target => router.navigate(target) });
+  if (route === "inicio") return factory({
+    root: currentShell.main,
+    client,
+    user: snapshot.user,
+    globalState: currentShell.setGlobalState,
+    onNavigate: (target, context = null) => router.navigate(target, { context }),
+  });
   if (route === "actividad") return factory({ root: currentShell.main, client, user: snapshot.user, globalState: currentShell.setGlobalState });
   if (route === "cartera") return factory({ root: currentShell.main, client, globalState: currentShell.setGlobalState });
   if (route === "comisiones") return factory({ root: currentShell.main, client, user: snapshot.user, globalState: currentShell.setGlobalState });
@@ -162,9 +169,46 @@ function renderRouteLoadFailure(currentShell, route) {
   currentShell.main.querySelector("[data-aura-route-retry]")?.addEventListener("click", () => router.navigate(route, { replace: true }));
   currentShell.setGlobalState(`No pudimos cargar ${label}.`, "error");
 }
+function renderRouteContext(shellRoot, main, route, context = {}) {
+  shellRoot?.querySelector("[data-aura-route-context]")?.remove();
+  if (!shellRoot || !main || !context || !Object.keys(context).length) return;
+
+  const section = document.createElement("section");
+  section.className = "aura-route-context";
+  section.dataset.auraRouteContext = "true";
+  section.dataset.auraContextRoute = route;
+  section.setAttribute("aria-label", "Continuidad de decisión");
+
+  const copy = document.createElement("div");
+  const eyebrow = document.createElement("p");
+  eyebrow.className = "aura-route-context__eyebrow";
+  eyebrow.textContent = "CONTINUIDAD DE DECISIÓN";
+  const title = document.createElement("strong");
+  title.textContent = "Llegaste desde una señal gobernada";
+  const detail = document.createElement("span");
+  const source = context.contract || context.source || "Origen conservado";
+  const reference = context.decisionReference || context.sourceReference || "sin referencia adicional";
+  detail.textContent = `${source} · ${reference}. Este módulo conserva el origen; no recalcula ni sustituye a la autoridad fuente.`;
+  copy.append(eyebrow, title, detail);
+
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "aura-route-context__close";
+  close.textContent = "Cerrar contexto";
+  close.addEventListener("click", () => {
+    router.clearContext();
+    section.remove();
+  });
+
+  section.append(copy, close);
+  main.before(section);
+}
 async function mountRoute(route, snapshot) {
   const revision = ++bootRevision;
-  if (activeRoute === route && activeModule && activeAdvisorId === snapshot.user?.id) return;
+  if (activeRoute === route && activeModule && activeAdvisorId === snapshot.user?.id) {
+    renderRouteContext(shell?.root, shell?.main, route, router?.context?.());
+    return;
+  }
   await destroyActiveModule();
   const currentShell = ensureShell(snapshot);
   currentShell.setActiveRoute(route);
@@ -185,6 +229,7 @@ async function mountRoute(route, snapshot) {
     activeRoute = route;
     await activeModule.mount();
     if (revision !== bootRevision) { await destroyActiveModule(); return; }
+    renderRouteContext(currentShell.root, currentShell.main, route, router.context());
     root.setAttribute("aria-busy", "false");
     currentShell.main.focus({ preventScroll: true });
   } catch (error) {
