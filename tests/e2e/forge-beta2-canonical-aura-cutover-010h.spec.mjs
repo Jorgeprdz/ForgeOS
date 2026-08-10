@@ -67,5 +67,7 @@ test('010H root preserves an explicit Quotes deep route inside Aura', async ({ p
   await page.goto('/?nav=cotizaciones');
   await assertAuraEntry(page, errors);
   const url = new URL(page.url());
-  expect(url.searchParams.get('nav')).toBe('cotizaciones');
+  // Aura accepts legacy nav input, then canonicalizes it to the route authority.
+  expect(url.searchParams.get('route')).toBe('cotizaciones');
+  expect(url.searchParams.get('nav')).toBeNull();
 });
