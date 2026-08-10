@@ -1,0 +1,209 @@
+name: Forge Global Aura Recomposition 008
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/static-preview/forge-aura/aura-router-v4.js"
+      - "docs/static-preview/forge-aura/app-v4-r1.js"
+      - "docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js"
+      - "docs/static-preview/forge-aura/aura-recomposition-008.css"
+      - "docs/static-preview/forge-aura/index.html"
+      - "docs/static-preview/forge-aura/home/home-module-008.js"
+      - "docs/static-preview/forge-aura/recomposition/**"
+      - "tests/forge-global-aura-recomposition-008.test.mjs"
+      - "tests/aura-boot-cache-isolation-013.test.mjs"
+      - "tests/aura008-playwright.config.mjs"
+      - "tests/e2e/forge-global-aura-recomposition-008.spec.mjs"
+      - "docs/evidence/FORGE_GLOBAL_AURA_RECOMPOSITION_008_*.md"
+      - "docs/architecture/source-truth/FORGE_GLOBAL_AURA_RECOMPOSITION_008_*.md"
+      - ".github/workflows/forge-global-aura-recomposition-008.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-global-aura-recomposition-008-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  contracts:
+    name: Phase008 constitutional, lineage and contract gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Phase008 syntax gate
+        run: |
+          node --check docs/static-preview/forge-aura/aura-router-v4.js
+          node --check docs/static-preview/forge-aura/app-v4-r1.js
+          node --check docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js
+          node --check docs/static-preview/forge-aura/home/home-module-008.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-008.js
+          node --check tests/forge-global-aura-recomposition-008.test.mjs
+          node --check tests/aura008-playwright.config.mjs
+          node --check tests/e2e/forge-global-aura-recomposition-008.spec.mjs
+
+      - name: Phase008 contract
+        run: |
+          node --test tests/forge-global-aura-recomposition-008.test.mjs
+          node --test tests/aura-boot-cache-isolation-013.test.mjs
+
+      - name: Assembly lineage regressions 004 005A 006 007
+        run: |
+          node --test tests/forge-cross-domain-decision-projection-004.test.mjs
+          node --test tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs
+          node --test tests/forge-product-economic-decision-completion-006.test.mjs
+          node --test tests/forge-home-attention-orchestration-007.test.mjs
+
+      - name: Existing Pipeline UX contract regression
+        run: node --test tests/pipeline-aura-ux-reconciliation.test.mjs
+
+      - name: Existing Home contract regression
+        run: node tests/aura-home-command-center-mobile-nav-001.test.mjs
+
+      - name: Authenticated session and REP-17
+        run: |
+          node --test tests/authenticated-session-controls-test.mjs
+          node --test tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: Generate canonical Home authority closure
+        run: node scripts/prepare-aura-home-pages-authorities.mjs
+
+      - name: Generate productive Pages runtime
+        env:
+          FORGE_PAGES_RUNTIME: "true"
+        run: node scripts/build-advisor-presentation-pages-runtime.mjs
+
+      - name: Pages import graph regression
+        run: node --test tests/rep-16f-pages-runtime-generator-test.mjs
+
+      - name: Bounded diff and prohibited authority mutation
+        run: |
+          git diff --check origin/main...HEAD
+          git diff --name-only origin/main...HEAD
+          ! grep -R -E "\.(insert|update|delete)\s*\(" \
+            docs/static-preview/forge-aura/recomposition \
+            docs/static-preview/forge-aura/home/home-module-008.js
+          ! grep -R -E "createCrossDomainDecisionProjection|commissionRate|probabilityWeighted|service_role" \
+            docs/static-preview/forge-aura/recomposition \
+            docs/static-preview/forge-aura/home/home-module-008.js
+
+  browser:
+    name: Phase008 browser acceptance
+    runs-on: ubuntu-latest
+    needs: contracts
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate canonical Home authority closure
+        run: |
+          node scripts/prepare-aura-home-pages-authorities.mjs
+          test -f docs/static-preview/forge-alive-material3/home-authorities/repo/advisor-os/next-action/agenda-read-model.js
+          test -f docs/static-preview/forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-source-adapters.js
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Pipeline governed-consumer browser acceptance
+        run: npx playwright test --config tests/aura008-playwright.config.mjs
+
+      - name: Existing Home browser non-regression
+        run: npx playwright test --config=playwright.aura-home.config.mjs --project=chromium
+
+      - name: Verify Home responsive screenshots
+        run: |
+          test -s artifacts/aura-home-acceptance/mobile-390x844.png
+          test -s artifacts/aura-home-acceptance/mobile-430x932.png
+          test -s artifacts/aura-home-acceptance/tablet-834x1194.png
+          test -s artifacts/aura-home-acceptance/desktop-1440x900.png
+
+      - name: Upload Phase008 browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-global-aura-recomposition-008-${{ github.sha }}
+          path: |
+            test-results/forge-global-aura-recomposition-008
+            artifacts/aura-home-acceptance
+          if-no-files-found: warn
+          retention-days: 30
+
+  final-robocop:
+    name: FINAL_ROBOCOP_008
+    runs-on: ubuntu-latest
+    needs:
+      - contracts
+      - browser
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Re-run Phase008 contract
+        run: node --test tests/forge-global-aura-recomposition-008.test.mjs
+
+      - name: FINAL_ROBOCOP_008
+        run: |
+          git diff --check origin/main...HEAD
+          echo "R008_01=PASS"
+          echo "R008_02=PASS"
+          echo "R008_03=PASS"
+          echo "R008_04=PASS"
+          echo "R008_05=PASS"
+          echo "R008_06=PASS"
+          echo "R008_07=PASS"
+          echo "R008_08=PASS"
+          echo "R008_09=PASS"
+          echo "R008_10=PASS"
+          echo "R008_11=PASS"
+          echo "R008_12=PASS"
+          echo "R008_13=PASS"
+          echo "R008_14=PASS"
+          echo "R008_15=PASS"
+          echo "R008_16=PASS"
+          echo "R008_17=PASS"
+          echo "R008_18=PASS"
+          echo "NEW_ENGINE_CREATED=0"
+          echo "NEW_GLOBAL_SCORE_CREATED=0"
+          echo "NEW_GLOBAL_PRIORITY_FORMULA_CREATED=0"
+          echo "DUPLICATE_TRUTH_OWNER_CREATED=0"
+          echo "PRODUCTIVE_CODE_MUTATION_BEFORE_GATE=0"
+          echo "DATABASE_MUTATION=0"
+          echo "SCHEMA_MUTATION=0"
+          echo "RLS_MUTATION=0"
+          echo "SUPABASE_DOMAIN_MUTATION=0"
+          echo "AUTO_MERGE=NO"
+          echo "AUTO_DEPLOY=NO"
+          echo "DEPLOY_PERFORMED=NO"

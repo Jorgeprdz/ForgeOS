@@ -1,0 +1,88 @@
+.aura-route-context {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--forge-page-padding-mobile);
+  width: min(100%, var(--aura-content));
+  margin: var(--aura-space-5) auto 0;
+  padding: var(--aura-space-4) clamp(16px, 4vw, 32px);
+  border: 1px solid var(--forge-border-subtle);
+  border-radius: var(--forge-radius-card);
+  background: var(--forge-brand-soft);
+  color: var(--forge-text-primary);
+  box-shadow: var(--forge-shadow-card);
+}
+
+.aura-route-context > div {
+  display: grid;
+  gap: var(--aura-space-1);
+  min-width: 0;
+}
+
+.aura-route-context__eyebrow {
+  margin: 0;
+  color: var(--forge-brand);
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.aura-route-context strong {
+  font-size: .95rem;
+}
+
+.aura-route-context span {
+  color: var(--forge-text-secondary);
+  font-size: .86rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.aura-route-context__close {
+  min-height: var(--aura-control);
+  padding: 0 var(--aura-space-4);
+  border: 1px solid var(--forge-border-default);
+  border-radius: var(--forge-radius-pill);
+  background: var(--forge-surface);
+  color: var(--forge-text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.aura-governed-dialog .aura-dialog__body {
+  display: grid;
+  gap: var(--aura-space-4);
+}
+
+.aura-governed-context-summary,
+.aura-governed-projection {
+  padding: var(--aura-space-4);
+  border: 1px solid var(--forge-border-subtle);
+  border-radius: var(--forge-radius-card);
+  background: var(--forge-surface);
+}
+
+.aura-governed-projection-list {
+  display: grid;
+  gap: var(--aura-space-3);
+}
+
+.aura-governed-context-summary > p:first-child,
+.aura-governed-projection > p {
+  color: var(--forge-text-secondary);
+}
+
+@media (max-width: 640px) {
+  .aura-route-context {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .aura-route-context__close {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .aura-route-context { width: calc(100% - 32px); margin-top: var(--aura-space-4); }
+}

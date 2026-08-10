@@ -39,7 +39,7 @@ document.documentElement.dataset.auraEnvState = hasProductiveConfig()
 
 try {
   await retireLegacyRuntime();
-  await import("./app-v4-r1.js?v=aura-boot-cache-isolation-013");
+  await import("./app-v4-r1.js?v=aura-boot-cache-isolation-013-forge-global-aura-recomposition-008");
   document.documentElement.dataset.auraBootState = "BOOT_IMPORT_OK";
 } catch (error) {
   document.documentElement.dataset.auraBootState = "BOOT_IMPORT_FAILED";

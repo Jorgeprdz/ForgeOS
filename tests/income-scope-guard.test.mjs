@@ -87,6 +87,23 @@ const quotesCompatibilityAllowed = [
   /^\.github\/workflows\/income-aura-ux-reconciliation-001\.yml$/,
 ];
 
+const phase008CompatibilityAllowed = [
+  ...sharedAuraRuntime,
+  ...auraBootCompatibilityAllowed,
+  /^\.github\/workflows\/forge-global-aura-recomposition-008\.yml$/,
+  /^docs\/architecture\/source-truth\/FORGE_GLOBAL_AURA_RECOMPOSITION_008_[^/]*\.md$/,
+  /^docs\/evidence\/FORGE_GLOBAL_AURA_RECOMPOSITION_008_[^/]*\.md$/,
+  /^docs\/evidence\/FORGE_HOME_ATTENTION_ORCHESTRATION_007_POST_MERGE_SEAL\.md$/,
+  /^docs\/static-preview\/forge-aura\/aura-recomposition-008\.css$/,
+  /^docs\/static-preview\/forge-aura\/home\/home-module-008\.js$/,
+  /^docs\/static-preview\/forge-aura\/recomposition\//,
+  /^scripts\/aura-auth-premium-entry-scope-guard-001\.mjs$/,
+  /^tests\/aura008-playwright\.config\.mjs$/,
+  /^tests\/e2e\/forge-global-aura-recomposition-008\.spec\.mjs$/,
+  /^tests\/forge-global-aura-recomposition-008\.test\.mjs$/,
+  /^tests\/income-scope-guard\.test\.mjs$/,
+];
+
 const forbidden = [
   /^compensation\/advisor\/engine\//,
   /^compensation\/advisor-development\/.*engine/,
@@ -128,6 +145,11 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
   );
   assert.deepEqual(forbiddenHits, [], `Forbidden mutation detected: ${forbiddenHits.join(", ")}`);
 
+  const phase008Mutation = changed.some(file =>
+    /^\.github\/workflows\/forge-global-aura-recomposition-008\.yml$/.test(file)
+      || /^docs\/static-preview\/forge-aura\/recomposition\//.test(file)
+      || /^docs\/architecture\/source-truth\/FORGE_GLOBAL_AURA_RECOMPOSITION_008_/.test(file),
+  );
   const incomeProductMutation = changed.some(file => /^docs\/static-preview\/forge-aura\/income\//.test(file));
   const quotePhaseMutation = changed.some(file =>
     /^docs\/static-preview\/forge-aura\/quotes\//.test(file)
@@ -140,20 +162,24 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
       || /^docs\/architecture\/source-truth\/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_RECONCILIATION_REPORT_001\.md$/.test(file),
   );
 
-  const activeAllowlist = incomeProductMutation
-    ? incomeAllowed
-    : quotePhaseMutation
-      ? quotesCompatibilityAllowed
-      : homePhaseMutation
-        ? homeCompatibilityAllowed
-        : carteraCompatibilityAllowed;
-  const scopeName = incomeProductMutation
-    ? "OUT_OF_SCOPE_VIOLATION"
-    : quotePhaseMutation
-      ? "QUOTES_COMPATIBILITY_SCOPE_VIOLATION"
-      : homePhaseMutation
-        ? "HOME_COMPATIBILITY_SCOPE_VIOLATION"
-        : "CARTERA_COMPATIBILITY_SCOPE_VIOLATION";
+  const activeAllowlist = phase008Mutation
+    ? phase008CompatibilityAllowed
+    : incomeProductMutation
+      ? incomeAllowed
+      : quotePhaseMutation
+        ? quotesCompatibilityAllowed
+        : homePhaseMutation
+          ? homeCompatibilityAllowed
+          : carteraCompatibilityAllowed;
+  const scopeName = phase008Mutation
+    ? "PHASE008_GLOBAL_AURA_COMPATIBILITY_SCOPE_VIOLATION"
+    : incomeProductMutation
+      ? "OUT_OF_SCOPE_VIOLATION"
+      : quotePhaseMutation
+        ? "QUOTES_COMPATIBILITY_SCOPE_VIOLATION"
+        : homePhaseMutation
+          ? "HOME_COMPATIBILITY_SCOPE_VIOLATION"
+          : "CARTERA_COMPATIBILITY_SCOPE_VIOLATION";
   const outOfScope = changed.filter(file => !matchesAny(file, activeAllowlist));
   assert.deepEqual(outOfScope, [], `${scopeName}: ${outOfScope.join(", ")}`);
 });
