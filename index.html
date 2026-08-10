@@ -38,7 +38,11 @@
       if (!target.searchParams.has('route') && !target.searchParams.has('nav')) {
         target.searchParams.set('route', 'inicio');
       }
-      target.searchParams.set('v', 'beta2-aura-cutover-010h');
+      const authReturn = target.searchParams.get('auth_return');
+      target.searchParams.set(
+        'v',
+        authReturn ? `auth-${authReturn}` : 'beta2-aura-cutover-010h',
+      );
       target.hash = current.hash;
 
       retireBrowserState().finally(() => window.location.replace(target.href));
@@ -46,7 +50,7 @@
   </script>
 </head>
 <body>
-  <p>Abriendo Forge Aura…</p>
+  <p>Abriendo ForgeOS…</p>
   <p><a href="./static-preview/forge-aura/?route=inicio&v=beta2-aura-cutover-010h">Continuar</a></p>
 </body>
 </html>
