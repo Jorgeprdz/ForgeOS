@@ -57,6 +57,15 @@ test('005C data plane has no privileged credential or management path', () => {
   assert.match(runner, /FORGE_005C_ACCEPTANCE_CLEANUP/);
 });
 
+test('005C prospect fixture is deterministic only inside one run and never reopens archive history', () => {
+  assert.match(runner, /const RUN_SCOPE = process\.env\.GITHUB_RUN_ID/);
+  assert.match(runner, /\[RUN:\$\{RUN_SCOPE\}\]/);
+  assert.match(runner, /\.eq\('initial_context', CONTEXT\)[\s\S]*?\.is\('archived_at', null\)/);
+  assert.doesNotMatch(runner, /archived_at:\s*null/);
+  assert.doesNotMatch(runner, /archived_by:\s*null/);
+  assert.doesNotMatch(runner, /archive_reason:\s*null/);
+});
+
 test('005C migration deployer is control-plane DDL only', () => {
   assert.match(deployer, /SUPABASE_ACCESS_TOKEN/);
   assert.match(deployer, /database\/query/);
