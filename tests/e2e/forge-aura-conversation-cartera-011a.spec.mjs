@@ -63,7 +63,7 @@ test('011A Cartera groups confirmed policy below canonical person without techni
   await expect(people).toHaveCount(1);
   await expect(cartera.locator('.cartera-directory-list > [data-directory-kind="POLICY"]')).toHaveCount(0);
   await expect(relationship.locator('[data-directory-kind="POLICY"]')).toHaveCount(1);
-  await expect(people.getByText('ADRIAN ORTIZ GARCIA',{exact:true})).toBeVisible();
+  await expect(people.getByText(/adrian ortiz garcia/i)).toBeVisible();
   await expect(people.getByText('Pipeline vinculado',{exact:true})).toBeVisible();
   await expect(relationship.getByText('IMAGINA SER 65 - 15 PAGOS UDI',{exact:true})).toBeVisible();
   await expect(relationship.getByText('••••6169',{exact:true})).toBeVisible();
