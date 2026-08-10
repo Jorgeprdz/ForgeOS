@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { createAuraRouter, oauthCallbackUrl } from '../docs/static-preview/forge-aura/aura-router-v4.js';
 
 const read = path => readFileSync(path, 'utf8');
 
@@ -10,6 +11,21 @@ const auraIndex = read('docs/static-preview/forge-aura/index.html');
 const auraRouter = read('docs/static-preview/forge-aura/aura-router-v4.js');
 const auraApp = read('docs/static-preview/forge-aura/app-v4-r1.js');
 const auraShell = read('docs/static-preview/forge-aura/aura-shell.js');
+
+function createWindow(initialHref) {
+  let href = new URL(initialHref).href;
+  const listeners = new Map();
+  const setHref = next => { href = new URL(String(next), href).href; };
+  return {
+    location: { get href() { return href; } },
+    history: {
+      pushState(_state, _title, next) { setHref(next); },
+      replaceState(_state, _title, next) { setHref(next); },
+    },
+    addEventListener(type, handler) { listeners.set(type, handler); },
+    removeEventListener(type) { listeners.delete(type); },
+  };
+}
 
 test('010H root canonical entry resolves to Forge Aura', () => {
   assert.match(root, /FORGE_BETA2_AURA_CANONICAL_CUTOVER_010H/);
@@ -52,6 +68,25 @@ test('010H keeps Aura auth callback/session routing native', () => {
   assert.match(auraRouter, /return_route/);
   assert.match(auraRouter, /restoreAfterAuth/);
   assert.match(auraRouter, /routeUrl\(/);
+});
+
+test('010H preserves an explicit deep route through Aura Google OAuth handoff', () => {
+  const windowRef = createWindow('https://jorgeprdz.github.io/ForgeOS/static-preview/forge-aura/?nav=cotizaciones');
+  const router = createAuraRouter({ windowRef });
+  router.navigate('login', { replace: true });
+
+  const login = new URL(windowRef.location.href);
+  assert.equal(login.searchParams.get('route'), 'login');
+  assert.equal(login.searchParams.get('return_route'), 'cotizaciones');
+  assert.equal(login.searchParams.has('nav'), false);
+
+  const callback = new URL(oauthCallbackUrl(windowRef.location.href));
+  assert.equal(callback.searchParams.get('return_route'), 'cotizaciones');
+
+  router.restoreAfterAuth();
+  const restored = new URL(windowRef.location.href);
+  assert.equal(restored.searchParams.get('route'), 'cotizaciones');
+  assert.equal(restored.searchParams.has('return_route'), false);
 });
 
 console.log('ROOT_CANONICAL_ENTRY=AURA');
