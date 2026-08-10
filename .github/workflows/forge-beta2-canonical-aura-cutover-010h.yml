@@ -8,6 +8,7 @@ on:
       - 'index.html'
       - '.github/workflows/pages.yml'
       - '.github/workflows/forge-beta2-canonical-aura-cutover-010h.yml'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
       - 'tests/auth-relogin-canonical-return-test.mjs'
       - 'tests/forge-beta2-canonical-aura-cutover-010h.test.mjs'
       - 'tests/aura010h-playwright.config.mjs'
@@ -64,7 +65,7 @@ jobs:
           set -euo pipefail
           git diff --name-only "$HOTFIX_BASE_SHA...HEAD" | sort > /tmp/forge010h-paths
           cat /tmp/forge010h-paths
-          outside=$(grep -Ev '^(index\.html|\.github/workflows/pages\.yml|\.github/workflows/forge-beta2-canonical-aura-cutover-010h\.yml|tests/auth-relogin-canonical-return-test\.mjs|tests/forge-beta2-canonical-aura-cutover-010h\.test\.mjs|tests/aura010h-playwright\.config\.mjs|tests/e2e/forge-beta2-canonical-aura-cutover-010h\.spec\.mjs|docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H\.md)$' /tmp/forge010h-paths || true)
+          outside=$(grep -Ev '^(index\.html|\.github/workflows/pages\.yml|\.github/workflows/forge-beta2-canonical-aura-cutover-010h\.yml|docs/static-preview/forge-aura/aura-router-v4\.js|tests/auth-relogin-canonical-return-test\.mjs|tests/forge-beta2-canonical-aura-cutover-010h\.test\.mjs|tests/aura010h-playwright\.config\.mjs|tests/e2e/forge-beta2-canonical-aura-cutover-010h\.spec\.mjs|docs/evidence/FORGE_BETA2_CANONICAL_AURA_CUTOVER_010H\.md)$' /tmp/forge010h-paths || true)
           test -z "$outside"
           ! grep -E '^(advisor-os/|platform/|nash/|manager-os/|supabase/|migrations/)' /tmp/forge010h-paths
           git diff --check "$HOTFIX_BASE_SHA...HEAD"
@@ -84,7 +85,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: '22', cache: npm}
       - run: npm ci
-      - run: node --test tests/auth-relogin-canonical-return-test.mjs tests/forge-aura-direct-route.test.mjs tests/aura-boot-cache-isolation-013.test.mjs
+      - run: node --test tests/auth-relogin-canonical-return-test.mjs tests/forge-aura-direct-route.test.mjs tests/aura-boot-cache-isolation-013.test.mjs tests/forge-beta2-canonical-aura-cutover-010h.test.mjs
       - run: |
           echo 'AURA_AUTH_ENTRY=PASS'
           echo 'AURA_AUTH_CALLBACK=PASS'
@@ -205,6 +206,7 @@ jobs:
           echo 'ROOT_CANONICAL_ENTRY=AURA'
           echo 'ROOT_TO_AURA=PASS'
           echo 'AURA_DIRECT_ENTRY=PASS'
+          echo 'AURA_GOOGLE_OAUTH_RETURN_ROUTE=PASS'
 
   final-robocop-010h:
     name: FINAL_ROBOCOP_010H
