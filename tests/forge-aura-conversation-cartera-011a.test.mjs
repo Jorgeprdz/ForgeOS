@@ -9,6 +9,7 @@ const pipelineModule=read('docs/static-preview/forge-aura/pipeline/pipeline-modu
 const pipelineAdapter=read('docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v4.js');
 const pipelineSafetyAdapter=read('docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v5.js');
 const workspace=read('docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js');
+const workspaceCss=read('docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.css');
 const carteraAdapter=read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js');
 const carteraModule=read('docs/static-preview/forge-aura/cartera/cartera-module-v8.js');
 const carteraCss=read('docs/static-preview/forge-aura/cartera/cartera-relational-011a.css');
@@ -61,6 +62,12 @@ test('011A exact approval is the only path that exposes manual WhatsApp navigati
   assert.match(workspace,/invalidateApproval/);
   assert.match(workspace,/windowRef\.open\(state\.approval\.whatsappUrl/);
   assert.match(workspace,/Forge no marcó el mensaje como enviado/);
+});
+
+test('011A Conversation Workspace reserves a dedicated tab row above the scroll body',()=>{
+  assert.match(workspaceCss,/grid-template-rows:auto auto auto minmax\(0,1fr\) auto/);
+  assert.match(workspaceCss,/\.aura-conversation__tabs\{[^}]*position:relative;z-index:2/s);
+  assert.match(workspaceCss,/\.aura-conversation__body\{[^}]*position:relative;z-index:1;min-height:0;overflow:auto/s);
 });
 
 test('011A objection Timeline persistence stores classification only after human review',()=>{
