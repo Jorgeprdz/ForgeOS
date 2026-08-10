@@ -1,0 +1,127 @@
+.aura-cartera .cartera-directory[data-relational-presentation="011a"] .cartera-directory-list {
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.aura-cartera .cartera-relationship-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--aura-border, #e7e9ee);
+  border-radius: 18px;
+  background: var(--aura-surface, #fff);
+  box-shadow: 0 8px 22px rgba(31, 41, 55, .045);
+}
+
+.aura-cartera .cartera-relationship-card .cartera-directory-row {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 13px 14px;
+  background: transparent;
+  text-align: left;
+  box-shadow: none;
+}
+
+.aura-cartera .cartera-relationship-card .cartera-relationship-person {
+  padding: 16px 14px;
+}
+
+.aura-cartera .cartera-relationship-card .cartera-relationship-person:hover {
+  background: color-mix(in srgb, var(--cartera-violet) 3%, white);
+}
+
+.aura-cartera .cartera-related-section {
+  min-width: 0;
+  padding: 0 14px 12px 72px;
+}
+
+.aura-cartera .cartera-related-section + .cartera-related-section {
+  padding-top: 2px;
+}
+
+.aura-cartera .cartera-related-heading {
+  margin: 0;
+  padding: 0 0 5px;
+  color: var(--aura-muted, #667085);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.aura-cartera .cartera-related-section .cartera-directory-row,
+.aura-cartera .cartera-related-static-row {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 9px 0;
+  border-top: 1px solid var(--aura-border, #edf0f4);
+}
+
+.aura-cartera .cartera-related-section .cartera-directory-row {
+  cursor: pointer;
+}
+
+.aura-cartera .cartera-related-static-row {
+  cursor: default;
+}
+
+.aura-cartera .cartera-related-section .cartera-directory-icon,
+.aura-cartera .cartera-related-static-row .cartera-directory-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: #f6f6fb;
+  font-size: 11px;
+}
+
+.aura-cartera .cartera-related-section strong,
+.aura-cartera .cartera-related-section small {
+  overflow-wrap: anywhere;
+}
+
+.aura-cartera .cartera-related-section strong {
+  display: block;
+  color: var(--aura-text, #172033);
+  font-size: 13px;
+}
+
+.aura-cartera .cartera-related-section small {
+  display: block;
+  margin-top: 2px;
+  color: var(--aura-muted, #667085);
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .aura-cartera .cartera-directory[data-relational-presentation="011a"] .cartera-directory-list {
+    gap: 8px;
+  }
+
+  .aura-cartera .cartera-relationship-card {
+    border-radius: 16px;
+  }
+
+  .aura-cartera .cartera-relationship-card .cartera-relationship-person {
+    grid-template-columns: 40px minmax(0, 1fr);
+    padding: 13px 12px;
+  }
+
+  .aura-cartera .cartera-related-section {
+    padding: 0 12px 10px 52px;
+  }
+
+  .aura-cartera .cartera-related-section .cartera-directory-row,
+  .aura-cartera .cartera-related-static-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .aura-cartera .cartera-related-section .cartera-kind,
+  .aura-cartera .cartera-related-static-row .cartera-kind {
+    display: none;
+  }
+}
