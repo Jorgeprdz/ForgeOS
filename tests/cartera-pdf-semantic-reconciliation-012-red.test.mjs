@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const edge = fs.readFileSync('supabase/functions/cartera-pdf-intake/index.ts', 'utf8');
+const v13 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js', 'utf8');
+const v12 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v12.js', 'utf8');
+const v11 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js', 'utf8');
 const v10 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', 'utf8');
 const v9 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js', 'utf8');
 const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js', 'utf8');
@@ -64,9 +67,13 @@ test('review UI distinguishes type/status, protected beneficiaries and document 
   assert.doesNotMatch(ui, /Confianza alta/);
 });
 
-test('canonical Aura keeps inherited app specifier but maps it through v5 to the v10 durable boundary', () => {
+test('canonical Aura keeps inherited app specifier while current v13 chain preserves the v10 durable boundary', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
+  assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v9\.js\?v=forge-aura-live-acceptance-journal-cartera-011e"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
+  assert.match(v13, /cartera-adapter-pages-v12\.js/);
+  assert.match(v12, /cartera-adapter-pages-v11\.js/);
+  assert.match(v11, /cartera-adapter-pages-v10\.js/);
+  assert.match(v10, /cartera-adapter-pages-v9\.js/);
 });
