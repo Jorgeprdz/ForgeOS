@@ -1,5 +1,5 @@
 import { createPipelineModule as createBasePipelineModule } from './pipeline-module.js?v=forge-aura-conversation-workspace-011a-base';
-import { createPipelineAdapter as createConversationPipelineAdapter } from './pipeline-adapter-pages-v4.js?v=forge-aura-conversation-workspace-011a';
+import { createPipelineAdapter as createConversationPipelineAdapter } from './pipeline-adapter-pages-v5.js?v=forge-aura-conversation-workspace-011a';
 import { createConversationWorkspaceController } from './pipeline-conversation-workspace.js?v=forge-aura-conversation-workspace-011a';
 
 export function createPipelineModule({
