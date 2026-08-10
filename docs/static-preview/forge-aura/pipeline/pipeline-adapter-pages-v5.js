@@ -1,6 +1,7 @@
 import { createPipelineAdapter as createConversationAdapter } from './pipeline-adapter-pages-v4.js?v=forge-aura-conversation-workspace-011a';
 
-const rootUrl = new URL('../../../../', import.meta.url);
+const sourceLayout = import.meta.url.includes('/docs/static-preview/');
+const rootUrl = new URL(sourceLayout ? '../../../../' : '../../../', import.meta.url);
 let timelineAuthorityPromise;
 
 function freeze(value) {
@@ -21,8 +22,8 @@ function cardProspect(card) {
 async function ensureTimelineAuthority() {
   if (timelineAuthorityPromise) return timelineAuthorityPromise;
   timelineAuthorityPromise = (async () => {
-    await import(`${new URL('advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-contract.js', rootUrl).href}?v=forge-aura-conversation-workspace-011a`);
-    await import(`${new URL('advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-service.js', rootUrl).href}?v=forge-aura-conversation-workspace-011a`);
+    await import(`${new URL('advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-contract.js', rootUrl).href}?v=forge-aura-commercial-loop-011c`);
+    await import(`${new URL('advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-service.js', rootUrl).href}?v=forge-aura-commercial-loop-011c`);
     const authority = globalThis.ForgeProspectTimelineServiceNFAST08;
     if (!authority?.create) throw new Error('NFAST_08_TIMELINE_AUTHORITY_UNAVAILABLE');
     return authority;

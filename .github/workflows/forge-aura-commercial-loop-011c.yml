@@ -1,0 +1,41 @@
+name: Forge Aura Commercial Loop 011C
+
+on:
+  push:
+    branches:
+      - hotfix/aura-productive-commercial-loop-recovery-011c
+  pull_request:
+    paths:
+      - 'docs/static-preview/forge-aura/**'
+      - 'advisor-os/sales-pipeline/**'
+      - 'supabase/migrations/20260731000100_pipeline_prospect_journal.sql'
+      - 'supabase/migrations/20260801000260_cartera030c_confirmed_payment_event_reconciliation.sql'
+      - 'tests/forge-aura-commercial-loop-011c.test.mjs'
+      - '.github/workflows/forge-aura-commercial-loop-011c.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax checks
+        run: |
+          node --check docs/static-preview/forge-aura/commercial-loop-011c.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011c.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-payment-aura-011c.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v5.js
+      - name: Commercial loop guards
+        run: node tests/forge-aura-commercial-loop-011c.test.mjs
+      - name: Constitutional summary
+        run: |
+          echo 'DEMO_FALLBACK_USED=false'
+          echo 'UNKNOWN_COERCION_USED=false'
+          echo 'RLS_BYPASS_USED=false'
+          echo 'SERVICE_ROLE_FRONTEND_USED=false'
+          echo 'SYNTHETIC_PASS_IS_NOT_PRODUCTIVE_PASS=true'

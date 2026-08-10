@@ -59,6 +59,13 @@ function requiredDate(value, code) {
   return text;
 }
 
+function requiredInstant(value, code) {
+  const text = requiredString(value, code);
+  const parsed = new Date(text);
+  if (!text.includes("T") || !Number.isFinite(parsed.getTime())) fail(code);
+  return new Date(parsed).toISOString();
+}
+
 function optionalDate(value, code) {
   return present(value) ? requiredDate(value, code) : null;
 }
@@ -143,17 +150,33 @@ function validateHandoff(command, handoffReceipt, expectedDigest) {
   }
 }
 
-function consumeCartera080ConfirmedPayment({ command, handoffReceipt } = {}) {
-  validateCommand(command);
-  const commandDigest = sha256(command);
-  validateHandoff(command, handoffReceipt, commandDigest);
-
+function paymentResult({
+  sourceSystem,
+  handoffId,
+  commandDigest,
+  idempotencyKey,
+  correlationId,
+  paymentEvidenceReference,
+  policyReference,
+  obligationReference,
+  personReference,
+  paymentAmount,
+  currency,
+  paymentDate,
+  periodCoveredStart,
+  periodCoveredEnd,
+  paymentSource,
+  evidenceReferences,
+  humanDecision,
+  sourceReplay = false,
+  downstreamResult = {}
+}) {
   const periodStart = optionalDate(
-    command.periodCoveredStart,
+    periodCoveredStart,
     "ADVISOR_COMPENSATION_CARTERA080_PERIOD_START_INVALID"
   );
   const periodEnd = optionalDate(
-    command.periodCoveredEnd,
+    periodCoveredEnd,
     "ADVISOR_COMPENSATION_CARTERA080_PERIOD_END_INVALID"
   );
   if (periodStart && periodEnd && periodStart > periodEnd) {
@@ -162,8 +185,47 @@ function consumeCartera080ConfirmedPayment({ command, handoffReceipt } = {}) {
 
   return deepFreeze({
     consumerVersion: "ADVISOR_COMPENSATION_CARTERA080_CONSUMER_001",
-    sourceSystem: "CARTERA_080",
+    sourceSystem,
     sourceAuthority: CARTERA_080_PAYMENT_AUTHORITY,
+    handoffId,
+    commandDigest,
+    idempotencyKey,
+    correlationId,
+    paymentEvidenceReference,
+    policyReference,
+    obligationReference,
+    personReference,
+    paymentAmount: Number(paymentAmount),
+    currency: String(currency).trim().toUpperCase(),
+    paymentDate,
+    periodCoveredStart: periodStart,
+    periodCoveredEnd: periodEnd,
+    paymentSource,
+    evidenceReferences: Object.freeze(
+      [...new Set((Array.isArray(evidenceReferences) ? evidenceReferences : [])
+        .filter(present)
+        .map(String))]
+    ),
+    humanDecision: deepFreeze({ ...humanDecision }),
+    handoffStatus: CARTERA_080_HANDOFF_STATUS,
+    compensationState: CARTERA_080_COMPENSATION_STATE,
+    commissionCalculationRequested: false,
+    commissionCalculationPerformed: false,
+    downstreamResult: deepFreeze({ ...downstreamResult }),
+    sourceReplay,
+    mutationAuthorized: false,
+    compensationEventWriteAuthorized: false,
+    payoutTruth: false
+  });
+}
+
+function consumeCartera080ConfirmedPayment({ command, handoffReceipt } = {}) {
+  validateCommand(command);
+  const commandDigest = sha256(command);
+  validateHandoff(command, handoffReceipt, commandDigest);
+
+  return paymentResult({
+    sourceSystem: "CARTERA_080",
     handoffId: handoffReceipt.handoffId,
     commandDigest,
     idempotencyKey: command.idempotencyKey,
@@ -172,27 +234,81 @@ function consumeCartera080ConfirmedPayment({ command, handoffReceipt } = {}) {
     policyReference: command.policyReference,
     obligationReference: command.obligationReference,
     personReference: command.personReference,
-    paymentAmount: Number(command.paymentAmount),
-    currency: String(command.currency).trim().toUpperCase(),
-    paymentDate: command.paymentDate,
-    periodCoveredStart: periodStart,
-    periodCoveredEnd: periodEnd,
+    paymentAmount: requiredPositiveMoney(command.paymentAmount, "ADVISOR_COMPENSATION_CARTERA080_PAYMENT_AMOUNT_INVALID"),
+    currency: requiredString(command.currency, "ADVISOR_COMPENSATION_CARTERA080_PAYMENT_CURRENCY_REQUIRED"),
+    paymentDate: requiredDate(command.paymentDate, "ADVISOR_COMPENSATION_CARTERA080_PAYMENT_DATE_INVALID"),
+    periodCoveredStart: command.periodCoveredStart,
+    periodCoveredEnd: command.periodCoveredEnd,
     paymentSource: command.paymentSource,
-    evidenceReferences: Object.freeze(
-      [...new Set((Array.isArray(command.evidenceReferences) ? command.evidenceReferences : [])
-        .filter(present)
-        .map(String))]
-    ),
-    humanDecision: deepFreeze({ ...command.humanDecisionReceipt }),
-    handoffStatus: handoffReceipt.status,
-    compensationState: handoffReceipt.compensationState,
-    commissionCalculationRequested: false,
-    commissionCalculationPerformed: false,
-    downstreamResult: deepFreeze({ ...(handoffReceipt.downstreamResult || {}) }),
+    evidenceReferences: command.evidenceReferences,
+    humanDecision: command.humanDecisionReceipt,
     sourceReplay: handoffReceipt.replayed === true,
-    mutationAuthorized: false,
-    compensationEventWriteAuthorized: false,
-    payoutTruth: false
+    downstreamResult: handoffReceipt.downstreamResult || {}
+  });
+}
+
+function consumeCartera030cCanonicalPayment({ paymentEvent, reconciliation, personReference } = {}) {
+  if (!paymentEvent || typeof paymentEvent !== "object" || Array.isArray(paymentEvent)) {
+    fail("ADVISOR_COMPENSATION_CARTERA030C_PAYMENT_EVENT_REQUIRED");
+  }
+  if (paymentEvent.confirmationState !== "CONFIRMED") {
+    fail("ADVISOR_COMPENSATION_CARTERA080_PAYMENT_NOT_CONFIRMED");
+  }
+  const advisorId = requiredString(paymentEvent.advisorId, "ADVISOR_COMPENSATION_CARTERA030C_ADVISOR_REQUIRED");
+  const confirmedBy = requiredString(paymentEvent.confirmedBy, "ADVISOR_COMPENSATION_CARTERA030C_CONFIRMED_BY_REQUIRED");
+  if (advisorId !== confirmedBy) fail("ADVISOR_COMPENSATION_CARTERA030C_CONFIRMED_OWNER_MISMATCH");
+  if (!reconciliation || !["MATCHED", "PARTIAL_MATCH"].includes(reconciliation.outcome)) {
+    fail("ADVISOR_COMPENSATION_CARTERA030C_OBLIGATION_RECONCILIATION_REQUIRED");
+  }
+
+  const paymentEventReference = requiredString(
+    paymentEvent.paymentEventReference,
+    "ADVISOR_COMPENSATION_CARTERA030C_PAYMENT_REFERENCE_REQUIRED"
+  );
+  const eventDigest = requiredString(
+    paymentEvent.eventDigest,
+    "ADVISOR_COMPENSATION_CARTERA030C_EVENT_DIGEST_REQUIRED"
+  );
+  if (!/^[a-f0-9]{64}$/.test(eventDigest)) fail("ADVISOR_COMPENSATION_CARTERA030C_EVENT_DIGEST_INVALID");
+  const evidenceHash = eventDigest;
+  const canonicalDecision = {
+    decisionId: paymentEventReference,
+    actorId: confirmedBy,
+    decidedAt: requiredInstant(paymentEvent.confirmedAt, "ADVISOR_COMPENSATION_CARTERA030C_CONFIRMED_AT_REQUIRED"),
+    reason: "canonical_confirmed_payment_event",
+    evidenceHash,
+    authorizationBasis: "cartera_030c_confirmed_payment_event"
+  };
+
+  return paymentResult({
+    sourceSystem: "CARTERA_030C",
+    handoffId: `canonical:${paymentEventReference}`,
+    commandDigest: eventDigest,
+    idempotencyKey: requiredString(paymentEvent.idempotencyKey, "ADVISOR_COMPENSATION_CARTERA030C_IDEMPOTENCY_REQUIRED"),
+    correlationId: paymentEventReference,
+    paymentEvidenceReference: requiredString(
+      paymentEvent.paymentEvidenceReference,
+      "ADVISOR_COMPENSATION_CARTERA080_EVIDENCE_REFERENCE_REQUIRED"
+    ),
+    policyReference: requiredString(paymentEvent.policyReference, "ADVISOR_COMPENSATION_CARTERA080_POLICY_REFERENCE_REQUIRED"),
+    obligationReference: requiredString(
+      reconciliation.obligationReference,
+      "ADVISOR_COMPENSATION_CARTERA080_OBLIGATION_REFERENCE_REQUIRED"
+    ),
+    personReference: requiredString(personReference, "ADVISOR_COMPENSATION_CARTERA080_PERSON_REFERENCE_REQUIRED"),
+    paymentAmount: requiredPositiveMoney(paymentEvent.paymentAmount, "ADVISOR_COMPENSATION_CARTERA080_PAYMENT_AMOUNT_INVALID"),
+    currency: requiredString(paymentEvent.currency, "ADVISOR_COMPENSATION_CARTERA080_PAYMENT_CURRENCY_REQUIRED"),
+    paymentDate: requiredDate(paymentEvent.paymentDate, "ADVISOR_COMPENSATION_CARTERA080_PAYMENT_DATE_INVALID"),
+    periodCoveredStart: paymentEvent.periodCoveredStart,
+    periodCoveredEnd: paymentEvent.periodCoveredEnd,
+    paymentSource: requiredString(paymentEvent.paymentSource, "ADVISOR_COMPENSATION_CARTERA080_PAYMENT_SOURCE_REQUIRED"),
+    evidenceReferences: paymentEvent.evidenceReferences,
+    humanDecision: canonicalDecision,
+    sourceReplay: false,
+    downstreamResult: {
+      canonicalPaymentEventReference: paymentEventReference,
+      reconciliationOutcome: reconciliation.outcome
+    }
   });
 }
 
@@ -203,5 +319,6 @@ module.exports = {
   Cartera080ConfirmedPaymentConsumerError,
   stable,
   sha256,
-  consumeCartera080ConfirmedPayment
+  consumeCartera080ConfirmedPayment,
+  consumeCartera030cCanonicalPayment
 };
