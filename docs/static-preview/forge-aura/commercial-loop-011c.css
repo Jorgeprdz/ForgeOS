@@ -1,0 +1,149 @@
+/* Forge Aura Productive Commercial Loop 011C — presentation only */
+.aura-journal-action {
+  min-width: 76px;
+  padding-inline: 10px;
+  font: inherit;
+}
+
+.aura-journal-dialog,
+.aura-payment-dialog {
+  width: min(760px, calc(100vw - 24px));
+  max-height: min(820px, calc(100dvh - 24px));
+}
+
+.aura-journal-context,
+.aura-payment-summary,
+.aura-payment-entry,
+.aura-runtime-diagnostic,
+.aura-journal-history > li {
+  border: 1px solid var(--aura-border, rgba(15, 23, 42, .12));
+  border-radius: 16px;
+  background: var(--aura-surface, #fff);
+}
+
+.aura-journal-context,
+.aura-payment-summary,
+.aura-payment-entry {
+  padding: 16px;
+}
+
+.aura-journal-context h3,
+.aura-payment-summary strong,
+.aura-payment-entry h2 {
+  margin-top: 0;
+}
+
+.aura-journal-dialog form,
+.aura-payment-dialog form {
+  display: grid;
+  gap: 14px;
+  margin-block: 16px;
+}
+
+.aura-journal-dialog textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.aura-journal-form-actions,
+.aura-payment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.aura-journal-history {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  margin: 12px 0 0;
+  list-style: none;
+}
+
+.aura-journal-history > li {
+  padding: 14px;
+}
+
+.aura-journal-history header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.aura-journal-history time {
+  font-size: .78rem;
+  opacity: .72;
+}
+
+.aura-journal-history p,
+.aura-journal-context p,
+.aura-payment-summary p,
+.aura-payment-entry p {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.aura-journal-error {
+  margin: 0;
+  font-weight: 650;
+}
+
+.aura-payment-confirm {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.aura-payment-confirm input {
+  flex: 0 0 auto;
+  margin-top: .2rem;
+}
+
+.aura-payment-calendar {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.aura-payment-calendar > div {
+  display: grid;
+  grid-template-columns: minmax(110px, .8fr) minmax(140px, 1fr) minmax(120px, .8fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--aura-border, rgba(15, 23, 42, .12));
+}
+
+.aura-runtime-diagnostic {
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.aura-runtime-diagnostic summary {
+  cursor: pointer;
+  padding: 12px 14px;
+  font-weight: 700;
+}
+
+.aura-runtime-diagnostic pre {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  border-top: 1px solid var(--aura-border, rgba(15, 23, 42, .12));
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: .78rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 720px) {
+  .aura-journal-form-actions,
+  .aura-payment-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .aura-payment-calendar > div {
+    grid-template-columns: 1fr;
+  }
+}
