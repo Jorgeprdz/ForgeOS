@@ -66,8 +66,8 @@ check('Confirmed payment SQL requires auth, authorization digest and positive co
 });
 
 check('Desktop Cotizaciones is promoted to the native Aura route', () => {
-  assert.match(runtime, /data\.auraDesktopQuotes = '011c'/);
-  assert.match(runtime, /data\.auraRouteLink = 'cotizaciones'/);
+  assert.match(runtime, /link\.dataset\.auraDesktopQuotes\s*=\s*'011c'/);
+  assert.match(runtime, /link\.dataset\.auraRouteLink\s*=\s*'cotizaciones'/);
   assert.match(runtime, /nativeNavigate\('cotizaciones'\)/);
   assert.match(runtime, /<span>Cotizaciones<\/span>/);
   assert.match(shell, /data-aura-route-link="comisiones"/);
