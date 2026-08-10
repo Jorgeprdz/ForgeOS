@@ -18,7 +18,7 @@ function watchErrors(page){
 async function ready(page,width=390,height=844){
   const errors=watchErrors(page);
   await page.setViewportSize({width,height});
-  await page.goto(FIXTURE,{waitUntil:'networkidle'});
+  await page.goto(FIXTURE,{waitUntil:'domcontentloaded'});
   await expect(page.locator('html')).toHaveAttribute('data-forge011a','READY');
   return errors;
 }
