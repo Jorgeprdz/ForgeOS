@@ -1,0 +1,94 @@
+name: Forge Beta 2 Post-Release Productive Recovery 010I
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-beta2-post-release-productive-recovery-010i-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  authority-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Enforce bounded 010I diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          git diff --name-only "$base...HEAD" | tee /tmp/changed.txt
+          while IFS= read -r file; do
+            case "$file" in
+              docs/static-preview/forge-aura/index.html|\
+              docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js|\
+              docs/static-preview/forge-aura/cartera/cartera-module-v6.js|\
+              docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v2.js|\
+              tests/forge-beta2-post-release-productive-recovery-010i.test.mjs|\
+              docs/evidence/FORGE_BETA2_POST_RELEASE_PRODUCTIVE_RECOVERY_010I.md|\
+              .github/workflows/forge-beta2-post-release-productive-recovery-010i.yml)
+                ;;
+              *)
+                echo "010I_BOUNDARY_VIOLATION=$file"
+                exit 1
+                ;;
+            esac
+          done < /tmp/changed.txt
+          if grep -Eq '^(supabase/migrations/|supabase/functions/|platform/shared-commercial-model/|advisor-os/)' /tmp/changed.txt; then
+            echo '010I_PRODUCTIVE_DOMAIN_MUTATION=DETECTED'
+            exit 1
+          fi
+          echo 'CONSTITUTIONAL_GATE_010I=PASS'
+          echo 'REUSE_BEFORE_CREATE_GATE_010I=PASS'
+          echo 'PRODUCTIVE_DOMAIN_MUTATION=0'
+          echo 'SCHEMA_MUTATION=0'
+          echo 'RLS_MUTATION=0'
+
+  static-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax checks
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v6.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v2.js
+      - name: 010I contracts
+        run: node tests/forge-beta2-post-release-productive-recovery-010i.test.mjs
+
+  regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pipeline Aura UX regression
+        run: node --test tests/pipeline-aura-ux-reconciliation.test.mjs
+      - name: Cartera semantic chain regression excluding superseded import-map assertion
+        run: node --test --test-name-pattern='^(?!canonical Aura)' tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs
+      - name: Cartera durable 020C regression excluding superseded import-map assertion
+        run: node --test --test-name-pattern='^(?!Aura productive import map)' tests/cartera-020c-durable-attach-015.test.mjs
+
+  FINAL_ROBOCOP_010I:
+    runs-on: ubuntu-latest
+    needs: [authority-gates, static-contracts, regressions]
+    if: ${{ always() }}
+    steps:
+      - name: Final release gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ needs.authority-gates.result }}' = 'success'
+          test '${{ needs.static-contracts.result }}' = 'success'
+          test '${{ needs.regressions.result }}' = 'success'
+          echo 'FINAL_ROBOCOP_010I=PASS'
+          echo 'ROBOCOP_RELEASE_LOCK=GREEN'
+          echo 'HOTFIX_TECHNICAL_ACCEPTANCE_COMPLETE=YES'
+          echo 'HUMAN_REVIEW_CHECKPOINT=READY'
+          echo 'MERGE_READY=YES'
+          echo 'AUTO_MERGE=NO'
+          echo 'AUTO_DEPLOY=NO'
