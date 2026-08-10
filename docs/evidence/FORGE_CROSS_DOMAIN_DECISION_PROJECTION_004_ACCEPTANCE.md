@@ -1,269 +1,198 @@
-# Forge Cross-Domain Decision Projection 004 — Acceptance
+# Forge Cross-Domain Decision Projection 004 — Final Closure Acceptance
 
 ```text
 PHASE=FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004
 BRANCH=feature/forge-cross-domain-decision-projection-004
-PHASE_BASE_SHA=95755f7680fe235d515c02ec4ec06fa6c49eab17
-IMPLEMENTATION_ACCEPTANCE_HEAD=4ac81208b2a8c2043fd2f942c505b784843bed99
 PR=327
-MERGE_TO_MAIN=NO
-PRODUCTION_DEPLOYMENT=NO
-PHASE_STATUS=PASS
+
+HISTORICAL_PHASE_BASE=95755f7680fe235d515c02ec4ec06fa6c49eab17
+HISTORICAL_PHASE_HEAD=4332ee1c0d7bb84858d412fd84be50d0861d9eee
+BASE_MAIN_SHA=64e07107cbb10946fab8584f24de01646d771ed4
+MERGE_BASE_AFTER_RECONCILIATION=64e07107cbb10946fab8584f24de01646d771ed4
+DRIFT_CLASSIFICATION=COMPATIBLE_DRIFT
+
+BASELINE_RECONCILIATION=MAIN_TREE_PLUS_PHASE004_NINE_PATH_OVERLAY
+RECONCILIATION_MERGE_COMMIT=4b39c7e1d63dc6d1ccf49ae35a85e8407cab974a
+DIRECT_MAIN_MUTATION=NO
+FORCE_RESET=NO
+BLIND_CHERRY_PICK=NO
+POST_PHASE004_FEATURE_LOSS=NO
+HISTORICAL_CODE_RESURRECTION=NO
+AUTHORITY_DOWNGRADE=NO
 ```
 
-## Executive result
+## Closure decision
 
-Phase004 created **no new business intelligence engine**. It created a neutral, read-only projection contract and authority-safe adapters so existing Forge intelligences can be consumed through one stable semantic shape without changing source ownership.
+Phase004 establishes one neutral, read-only cross-domain consumer projection over existing Forge domain authorities.
 
 ```text
+DECISION_PROJECTION_CONTRACT=FORGE_CROSS_DOMAIN_DECISION_PROJECTION
+DECISION_PROJECTION_VERSION=FCDP-004-001
+DECISION_PROJECTION_ROLE=READ_ONLY_COMPOSITION
+
 NEW_BUSINESS_ENGINE=0
 NEW_RECOMMENDATION_ENGINE=0
 NEW_SCORE=0
+NEW_GLOBAL_PRIORITY=0
 NEW_SOURCE_OF_TRUTH=0
+NEW_DECISION_TRUTH=0
 NEW_PERSISTENCE=0
 NEW_TABLE=0
 NEW_MIGRATION=0
 NEW_RPC=0
 NEW_EDGE_FUNCTION=0
 NEW_FORECAST_FORMULA=0
-NEW_INCOME_FORMULA=0
+NEW_REVENUE_FORMULA=0
+NEW_COMPENSATION_FORMULA=0
 UI_REDESIGN=0
 ```
 
-The dedicated Phase004 CI passed on the implementation acceptance head after one deliberate correction to the test semantics. The initial test expected Relationship and Nash to become `AGREE`; the projection correctly classified them as `COMPLEMENT` because they have different domain meanings. The test was corrected rather than weakening or changing the runtime behavior.
+## Reconciled bounded diff
 
-## 1. What decision contract already existed?
-
-Forge had several complementary decision-shaped contracts rather than one neutral universal contract:
-
-- Pack01 Relationship Foundation;
-- Pack02 Advisor Intelligence / Mick;
-- Pack03 Nash Next Best Action;
-- Pack04 Opportunity / Priority / Forecast / Scenario;
-- Pack07 Alfred Productive Experience;
-- Advisor Forecast V3 read model;
-- Revenue Value economic truth-state model.
-
-## 2. What contract became canonical?
-
-No domain contract was promoted to universal truth.
-
-The cross-domain **consumer projection contract** is:
+The historical branch had been stacked over Blueprint002/Phase003. Closure preserved current `main` and overlaid only the nine canonical Phase004 paths:
 
 ```text
-FORGE_CROSS_DOMAIN_DECISION_PROJECTION
-FCDP-004-001
+.github/workflows/forge-cross-domain-decision-projection-004.yml
+docs/architecture/intelligence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004.md
+docs/architecture/intelligence/FORGE_DECISION_CONTRACT_RECONCILIATION_004.md
+docs/architecture/intelligence/FORGE_FORECAST_AUTHORITY_TRACE_004.md
+docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_ACCEPTANCE.md
+docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_CONSTITUTIONAL_GATE.md
+platform/decision-projection/forge-cross-domain-decision-adapters.js
+platform/decision-projection/forge-cross-domain-decision-projection.js
+tests/forge-cross-domain-decision-projection-004.test.mjs
 ```
 
-implemented at:
+```text
+BOUNDED_DIFF=PASS
+UNRELATED_REFACTOR=NO
+SCHEMA_CHANGE=NO
+MIGRATION_CHANGE=NO
+RLS_CHANGE=NO
+AURA_REDESIGN=NO
+PAGES_RUNTIME_MUTATION=NO
+```
 
-`platform/decision-projection/forge-cross-domain-decision-projection.js`
+## Current authority compatibility
 
-This is a read-only adapter contract, not a new decision authority.
-
-## 3. Was a new engine created?
-
-No.
-
-`NEW_ENGINES=0`
-
-## 4. Was a new score created?
-
-No.
-
-Pack04 priority score is transported verbatim. Pack01 relationship scoring stays Pack01-owned. No global score exists.
-
-`NEW_SCORES=0`
-
-## 5. Was a new source of truth created?
-
-No.
-
-`NEW_SOURCE_OF_TRUTH=0`
-
-## 6. Was persistence created?
-
-No. The projection is derived, ephemeral/read-only and has no Supabase client or storage.
-
-`NEW_PERSISTENCE=0`
-
-## 7. Who owns priority?
-
-There is no global priority owner created by Phase004.
-
-For the opportunity/operation path, Pack04 remains the owner of its explainable priority score and attention budget. Other domains retain their own priority semantics. The projection only transports source-owned priority plus authority.
-
-## 8. Who owns NBA?
-
-FIP Pack03 Nash owns the governed Next Best Action recommendation contract.
-
-The Phase004 Nash adapter transports it; it never creates an NBA.
-
-## 9. Who owns Forecast?
-
-The dependency trace resolved the previously deferred question:
+Consumed authority contracts were compared against current `main` by Git blob SHA before closure:
 
 ```text
-CURRENT_CANONICAL_FORECAST_AUTHORITY=MANAGER_OS_FORECAST
-CURRENT_FORECAST_COMPOSITION_PATH=ADVISOR_FORECAST_COMPOSER_V3
-CURRENT_FORECAST_DECISION_READ_MODEL=ADVISOR_FORECAST_READ_MODEL_V3
+RELATIONSHIP_AUTHORITY=FORGE_RELATIONSHIP_INTELLIGENCE_FOUNDATION
+RELATIONSHIP_BLOB=f0008483e3d7fc5efef4cd75a329a501213f824c
+RELATIONSHIP_BRANCH_MAIN_IDENTICAL=YES
+
+MICK_AUTHORITY=FORGE_MICK_EXECUTION_REVIEW
+MICK_BLOB=3e661bdd4010bf63812eae88d822eebfbe09662c
+MICK_BRANCH_MAIN_IDENTICAL=YES
+
+NASH_AUTHORITY=FIP_NASH_NEXT_BEST_ACTION
+NASH_BLOB=baa8132208cdcc731d64c4ff0e0f028003916171
+NASH_BRANCH_MAIN_IDENTICAL=YES
+
+OPPORTUNITY_AUTHORITY=FIP_PACK_04_OPPORTUNITY_AND_OPERATION
+OPPORTUNITY_BLOB=7466d26419cfdd79bee2a51df32812e859e3ef9b
+OPPORTUNITY_BRANCH_MAIN_IDENTICAL=YES
+
+FORECAST_AUTHORITY=MANAGER_OS_FORECAST
+FORECAST_DECISION_READ_MODEL=ADVISOR_FORECAST_READ_MODEL_V3
+FORECAST_READ_MODEL_BLOB=bf3487b28eb9c90d9f2016f7d53336878bb9e509
+FORECAST_BRANCH_MAIN_IDENTICAL=YES
 PACE_PROJECTION_OWNER=SMNYL_PACE_FORECAST_ENGINE
 SCENARIO_CONTEXT_OWNER=MANAGER_ADVISOR_FORECAST_ENGINE
-```
 
-## 10. What role does Alfred retain?
+REVENUE_AUTHORITY=REVENUE_VALUE
+REVENUE_BLOB=a48fa3e469400804a5d74479dc93aafe98e87685
+REVENUE_BRANCH_MAIN_IDENTICAL=YES
 
-```text
+ALFRED_AUTHORITY=FIP_PACK_07_PRODUCTIVE_EXPERIENCE
 ALFRED_ROLE=ORCHESTRATOR_CONSUMER
+ALFRED_DECISION_TRUTH_OWNER=NO
+
+DOMAIN_AUTHORITY_PRESERVATION=PASS
 ```
 
-Pack07 may compose/present/route. It does not become domain truth owner, priority owner, Forecast owner or NBA owner.
-
-## 11. Can one person produce decisions from multiple domains?
-
-Yes. A single `CommercialPerson`/person reference can have Relationship, Follow-up, Nash/Commercial Attention and other projections while each retains its owning authority.
-
-## 12. Are equivalent decisions deduplicated?
-
-They are **composition-grouped**, not destructively merged.
-
-An explicit composition key is required. All original projections remain in the set.
-
-## 13. Are different decisions preserved?
-
-Yes. Different families under the same explicit composition context are classified `COMPLEMENT` and both remain visible to a consumer.
-
-## 14. Are conflicts preserved?
-
-Yes.
-
-Different explicit action keys in the same composition context produce:
+## Projection semantics
 
 ```text
-relationship=CONFLICT
+PROVENANCE_REQUIRED=YES
+AUTHORITY_ATTRIBUTION_REQUIRED=YES
+UNKNOWN_PRESERVED=YES
+DEGRADED_SOURCE_VISIBLE=YES
+HUMAN_DECISION_BOUNDARY_PRESERVED=YES
+
+LOCAL_PRIORITY_CALCULATION=NO
+LOCAL_CONFIDENCE_CALCULATION=NO
+LOCAL_IMPACT_CALCULATION=NO
+LOCAL_SCORE=NO
+LOCAL_FORECAST=NO
+LOCAL_REVENUE_CALCULATION=NO
+AUTOMATIC_CONFLICT_WINNER=NO
+AUTOMATIC_BUSINESS_ACTION=NO
+```
+
+Composition keeps all source projections and does not select a winner:
+
+```text
+AGREE=SUPPORTED_FOR_EXPLICITLY_COMPATIBLE_SAME_FAMILY_ACTIONS
+COMPLEMENT=SUPPORTED_FOR_DIFFERENT_FAMILIES_IN_SHARED_CONTEXT
+CONFLICT=SUPPORTED_FOR_DIFFERENT_EXPLICIT_ACTION_KEYS
+STALE=PRESERVED
+INSUFFICIENT_EVIDENCE=PRESERVED
+UNKNOWN=PRESERVED
 winnerDecisionReference=null
 automaticResolutionAllowed=false
 ```
 
-## 15. Is provenance preserved?
+The representative Relationship + Nash trace was corrected from historical `AGREE` text to `COMPLEMENT`, matching the actual contract and test.
 
-Yes. Every projection requires `sourceAuthorities` and may include source references, adapter ids, evidence authority/freshness and evaluated time.
-
-## 16. Are economic semantics preserved?
-
-Yes. The Revenue adapter uses the **exact Revenue Value bucket** as its truth/impact semantics. For example:
+## Truth boundaries
 
 ```text
-earned_estimated != paid_confirmed
-```
-
-Forecast remains `PROJECTED`; it is not payout truth.
-
-## 17. Can a consumer act without reinterpretation?
-
-Yes. The consumer proof uses only projection fields to:
-
-```text
-format
-render
-route/delegate
-```
-
-It does not infer, rescore or recalculate confidence/impact.
-
-## 18. Can the feedback that resolves a decision be identified?
-
-Yes. Projection feedback declares owning domain + expected event names, for example:
-
-- follow-up → Activity/Commitment event;
-- coaching → Activity pattern / coach review;
-- Forecast → observed outcome / confirmed policy event.
-
-The projection does not write those events.
-
-## 19. Does RLS still govern inputs?
-
-Yes. Phase004 adds no source query path. Inputs must already have passed their owning source/session/RLS boundaries.
-
-## 20. Is there cross-tenant leakage?
-
-No new path is introduced. The projection has no client/query capability and therefore cannot expand source scope.
-
-Inherited source suites continue to enforce advisor/session boundaries.
-
-## 21. Can the projection layer bypass RLS?
-
-No.
-
-```text
-PROJECTION_HAS_SUPABASE_CLIENT=NO
-PROJECTION_DATABASE_ACCESS=NO
-PROJECTION_RPC_ACCESS=NO
-```
-
-## 22. Does the session eliminate stale advisor decisions?
-
-Phase004 creates no session store. It inherits the Pack07/Forecast requirements for logout scrub, advisor-switch scrub and late-result rejection. Forecast runtime acceptance remains green in the Phase004 CI source-authority regression.
-
-No cross-session persistence was introduced.
-
-## 23. What is the canonical Forecast authority?
-
-`MANAGER_OS_FORECAST`, with responsibility split through the already-reconciled source map rather than one monolithic calculation owner.
-
-## 24. What Forecast implementations remain adapters/legacy?
-
-- Composer v1/v2 remain inherited generations upstream of V3.
-- Composer V3 is current composition path.
-- Read Model V3 is current decision-ready read model.
-- Productive SmartWidget is presentation consumer.
-- SMNYL Forecast owns monthly pace through adapter.
-- Manager Advisor Forecast owns scenario context.
-- root `revenue-forecast-engine.js` is rejected for Advisor Forecast by existing runtime reconciliation.
-
-No legacy file was deleted in this phase.
-
-## 25. Was Forecast deferred?
-
-No. The repository contained a later authoritative runtime reconciliation and runtime acceptance sufficient to resolve the Blueprint002 ambiguity.
-
-```text
-FORECAST_AUTHORITY_STATUS=RESOLVED
-FORECAST_PROJECTION=PASS
-```
-
-# Representative traces
-
-```text
-TRACE_1_FOLLOW_UP_OVERDUE=PASS
-TRACE_2_RELATIONSHIP_COOLING=PASS
-TRACE_3_NASH_NBA=PASS
-TRACE_4_MICK_COACHING=PASS
-TRACE_5_ADVISOR_FORECAST_V3=PASS
-TRACE_6_MULTI_AUTHORITY_SAME_PERSON=PASS
-```
-
-Additional:
-
-```text
-PACK04_PRIORITY_TRANSPORT_EXACT=PASS
+UNKNOWN_IS_NOT_ZERO=YES
+PROJECTION_IS_NOT_FACT=YES
+RECOMMENDATION_IS_NOT_HUMAN_DECISION=YES
+FORECAST_IS_NOT_REVENUE_TRUTH=YES
+EXPECTED_IS_NOT_GENERATED=YES
+SCENARIO_IS_NOT_GENERATED=YES
+EARNED_ESTIMATED_IS_NOT_PAID_CONFIRMED=YES
 REVENUE_BUCKET_PRESERVATION=PASS
-CONFLICT_PRESERVATION=PASS
-STALE_PRESERVATION=PASS
-CONSUMER_PROOF=PASS
-STATIC_NO_PERSISTENCE_NO_SCORE_LOCK=PASS
 ```
 
-# Source authority regression CI
-
-Dedicated workflow:
-
-`.github/workflows/forge-cross-domain-decision-projection-004.yml`
-
-Implementation acceptance head result:
+## Constitutional / ADR gate
 
 ```text
-PHASE004_SCOPE_LOCK=PASS
+CONSTITUTIONAL_GATE_004=PASS
+ADR_GATE_004=PASS
+BASELINE_RECONCILIATION_GATE=PASS
+```
+
+Current boundaries reviewed include Evidence Ownership, One Metric One Owner, Recommendation vs Decision Authority, No Invented Recommendations, Mick Behavior Intelligence, Manager Intelligence authority, Compensation/Economic evidence, authenticated session controls and REP-17.
+
+## Governing exact-head runs
+
+### Reconciled implementation run
+
+```text
+IMPLEMENTATION_ACCEPTED_HEAD=2fa7cf013b85610e9f3d69e00c27fd021c8339cb
+WORKFLOW_RUN=31344031009
+WORKFLOW_JOB=93322496800
+WORKFLOW_CONCLUSION=SUCCESS
+```
+
+### Post-evidence exact-head run
+
+```text
+POST_EVIDENCE_ACCEPTED_HEAD=4a2eb7f43669b21ca706e64b86930e4317c28b12
+POST_EVIDENCE_WORKFLOW_RUN=31344088705
+POST_EVIDENCE_WORKFLOW_JOB=93322656250
+POST_EVIDENCE_WORKFLOW_CONCLUSION=SUCCESS
+```
+
+Both accepted runs passed:
+
+```text
+RECONCILED_BOUNDED_DIFF=PASS
 SYNTAX=PASS
 PHASE004_DECISION_TRACES=PASS
 PACK01_RELATIONSHIP=PASS
@@ -272,103 +201,56 @@ PACK03_NASH=PASS
 PACK04_OPPORTUNITY=PASS
 PACK07_ALFRED=PASS
 ADVISOR_FORECAST_V3_CHAIN=PASS
-NO_PERSISTENCE_NO_NEW_ENGINE=PASS
-SECURITY_BOUNDARY=PASS
-CI_RESULT=SUCCESS
+AUTHENTICATED_SESSION_CONTROLS=PASS
+REP_17=PASS
+NO_PERSISTENCE_NO_NEW_ENGINE_NO_LOCAL_SCORING=PASS
+FINAL_ROBOCOP_004=PASS
 ```
 
-The first CI attempt failed only because the Trace 6 test incorrectly expected `AGREE`. The contract correctly returned `COMPLEMENT`; the expectation was corrected and the next implementation head passed the complete workflow.
+The final evidence-seal commit is documentation-only. Per the exact-head rule, the PR must pass the same workflow one final time after this file update before the human checkpoint is declared.
 
-# Phase004 exact diff counts
-
-Counts below include this Acceptance document and compare against the exact Phase003 base, not against `main`:
+## Security / runtime boundary
 
 ```text
-FILES_CHANGED=9
-PRODUCTION_FILES_CHANGED=2
-TEST_FILES_CHANGED=1
-DOC_FILES_CHANGED=5
-WORKFLOW_FILES_CHANGED=1
+READ_ONLY_BOUNDARY=PASS
+PROJECTION_HAS_SUPABASE_CLIENT=NO
+PROJECTION_DATABASE_ACCESS=NO
+PROJECTION_RPC_ACCESS=NO
+SERVICE_ROLE_DOMAIN_WRITE=NO
+RLS_BYPASS=NO
+NEW_SCHEMA=NO
+NEW_RLS=NO
 
-NEW_ENGINES=0
-NEW_SCORES=0
-NEW_TABLES=0
-NEW_MIGRATIONS=0
-NEW_RPC=0
-NEW_EDGE_FUNCTIONS=0
+PRODUCT_INTELLIGENCE_MUTATION=NO
+POLICY_TRUTH_MUTATION=NO
+COMPENSATION_MUTATION=NO
+INCOME_TRUTH_MUTATION=NO
+QUOTE_AUTHORITY_MUTATION=NO
+APPLICATION_AUTHORITY_MUTATION=NO
+COMMERCIAL_PERSON_AUTHORITY_MUTATION=NO
+IDENTITY_RESOLUTION_AUTHORITY_MUTATION=NO
 
-AUTHORITIES_ADAPTED=6
-DECISION_TYPES_PROJECTED=7
-REPRESENTATIVE_TRACES=6
-DUPLICATE_GROUP_BEHAVIORS_TESTED=3
-CONFLICT_CASES_TESTED=1
-
-CI_RESULT=PASS
-SECURITY_RESULT=PASS
-FORECAST_AUTHORITY_STATUS=RESOLVED
+PAGES_IMPORT_GRAPH=NOT_APPLICABLE_NO_PAGES_RUNTIME_MUTATION
+PRODUCTION_DEPLOYMENT=NO
+AUTO_MERGE=NO
+AUTO_DEPLOY=NO
+NEXT_PHASE_STARTED=NO
 ```
 
-Six adapter authority families:
-
-1. Relationship / Pack01;
-2. Nash / Pack03;
-3. Opportunity / Pack04;
-4. Mick / Pack02;
-5. Advisor Forecast / Manager OS Forecast V3;
-6. Revenue Value.
-
-Seven representative projection types implemented:
-
-1. `FOLLOW_UP_DUE / COMMITMENT_REVIEW`;
-2. `RELATIONSHIP_HEALTH_REVIEW`;
-3. `NEXT_BEST_ACTION`;
-4. `OPPORTUNITY_PRIORITY`;
-5. `MICK_EXECUTION_PATTERN`;
-6. `ADVISOR_MONTHLY_FORECAST`;
-7. `REVENUE_TRUTH_STATE`.
-
-# Pass gate
+## Phase closure
 
 ```text
-PREVIOUS_PHASE_003=PASS
-CANONICAL_DECISION_CONTRACT_DISCOVERED_OR_RECONCILED=YES
-
-NEW_BUSINESS_ENGINE=ZERO
-NEW_SCORE=ZERO
-NEW_SOURCE_OF_TRUTH=ZERO
-
-PROVENANCE_PRESERVED=YES
-IMPACT_SEMANTICS_PRESERVED=YES
-HUMAN_DECISION_BOUNDARY_PRESERVED=YES
-
-RELATIONSHIP_PROJECTION=PASS
-OPPORTUNITY_PROJECTION=PASS
-NASH_PROJECTION=PASS
-ADVISOR_OR_MICK_PROJECTION=PASS
-FORECAST_PROJECTION=PASS
-ECONOMIC_TRUTH_STATE_PROJECTION=PASS
-
-DEDUPLICATION_BEHAVIOR=PASS
-CONFLICT_BEHAVIOR=PASS
-STALE_BEHAVIOR=PASS
-
-SECURITY=PASS
-CI=PASS
+DECISION_PROJECTION_AUTHORITY=PASS
+DOMAIN_AUTHORITY_PRESERVATION=PASS
+PROVENANCE=PASS
+UNKNOWN_PRESERVATION=PASS
+CONFLICT_SEMANTICS=PASS
+READ_ONLY_BOUNDARY=PASS
+CONSTITUTIONAL_GATE_004=PASS
+ADR_GATE_004=PASS
+BASELINE_RECONCILIATION_GATE=PASS
+FINAL_ROBOCOP_004=PASS
+PHASE_STATUS=PASS
+MERGE_READY=YES
+HUMAN_CHECKPOINT=PENDING_FINAL_EXACT_HEAD_CI
 ```
-
-# Known limitations / deliberate boundaries
-
-1. Phase004 does not wire the projection into every Aura module. That is Phase005.
-2. Phase004 does not redesign Home or create a final attention queue. That remains Phase007.
-3. No new browser UI acceptance is claimed because no Phase004 UI surface was created.
-4. The projection does not perform global ranking. This is deliberate.
-5. Composition never drops a source decision or chooses a conflict winner.
-6. Economic mapping currently proves Revenue Value truth-state transport; full Product + Economic experience completion remains a later assembly phase.
-
-# Next phase
-
-```text
-NEXT_RECOMMENDED_PHASE=FORGE_DOMAIN_INTELLIGENCE_ACTIVATION_005
-```
-
-Phase005 should connect the stable projection contract to the owning module workspaces without moving business logic into Aura.

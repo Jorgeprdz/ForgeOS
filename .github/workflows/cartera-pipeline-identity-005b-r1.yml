@@ -1,0 +1,179 @@
+name: Cartera Pipeline Identity Productive Acceptance 005B-R1
+
+on:
+  workflow_call:
+    inputs:
+      run_id:
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cartera-pipeline-identity-005b-r1
+  cancel-in-progress: false
+
+jobs:
+  governed-productive-acceptance:
+    if: github.repository == 'Jorgeprdz/ForgeOS' && github.actor == 'Jorgeprdz'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: 067g17a1-remote-acceptance
+    env:
+      SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      FORGE_005B_EVIDENCE_DIR: artifacts/cartera-pipeline-identity-005b-r1
+    steps:
+      - name: Checkout exact selected revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Preflight 005B-R1 contracts
+        run: |
+          set -euo pipefail
+          node --check scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures.mjs
+          node --check scripts/forge-cartera-pipeline-identity-productive-005b.mjs
+          node --check scripts/finalize-cartera-pipeline-identity-005b-r1.mjs
+          node --test tests/cartera-pipeline-identity-productive-005b.test.mjs
+          node --test tests/writable-synthetic-acceptance-005c.test.mjs
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Generate one-run 05C control-plane credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/forge005br1"
+          admin_token="$(openssl rand -hex 32)"
+          password_a="$(openssl rand -base64 36 | tr -d '\n' | tr '/+' '_-')Aa1!"
+          password_b="$(openssl rand -base64 36 | tr -d '\n' | tr '/+' '_-')Bb2!"
+          printf '%s' "$admin_token" > "$RUNNER_TEMP/forge005br1/admin-token"
+          printf '%s' "$password_a" > "$RUNNER_TEMP/forge005br1/a-password"
+          printf '%s' "$password_b" > "$RUNNER_TEMP/forge005br1/b-password"
+          chmod 600 "$RUNNER_TEMP/forge005br1/"*
+          echo "::add-mask::$admin_token"
+          echo "::add-mask::$password_a"
+          echo "::add-mask::$password_b"
+          echo '005B_R1_ONE_RUN_CREDENTIALS=PREPARED'
+
+      - name: Configure existing 05C acceptance control plane
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          admin_token="$(cat "$RUNNER_TEMP/forge005br1/admin-token")"
+          password_a="$(cat "$RUNNER_TEMP/forge005br1/a-password")"
+          password_b="$(cat "$RUNNER_TEMP/forge005br1/b-password")"
+          supabase secrets set \
+            FORGE_ACCEPTANCE_ADMIN_TOKEN="$admin_token" \
+            FORGE_ACCEPTANCE_A_PASSWORD="$password_a" \
+            FORGE_ACCEPTANCE_B_PASSWORD="$password_b" \
+            --project-ref "$SUPABASE_PROJECT_REF"
+          supabase functions deploy forge-acceptance-admin --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt
+          echo '005C_CONTROL_PLANE_FOR_005B_R1=READY'
+
+      - name: Capture sealed state before 005B-R1
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$FORGE_005B_EVIDENCE_DIR"
+          admin_token="$(cat "$RUNNER_TEMP/forge005br1/admin-token")"
+          curl --fail --silent --show-error -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
+            -H 'Content-Type: application/json' \
+            -H "x-forge-acceptance-admin-token: $admin_token" \
+            --data '{"action":"STATUS"}' > "$FORGE_005B_EVIDENCE_DIR/status-before.json"
+          node -e "const p=require('./$FORGE_005B_EVIDENCE_DIR/status-before.json');if(p.ok!==true)throw Error('005B_R1_STATUS_BEFORE_FAILED')"
+
+      - name: Provision and open dedicated 05C acceptance identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          admin_token="$(cat "$RUNNER_TEMP/forge005br1/admin-token")"
+          curl --fail --silent --show-error -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
+            -H 'Content-Type: application/json' \
+            -H "x-forge-acceptance-admin-token: $admin_token" \
+            --data '{"action":"PROVISION"}' > "$FORGE_005B_EVIDENCE_DIR/provision.json"
+          node -e "const p=require('./$FORGE_005B_EVIDENCE_DIR/provision.json');if(p.ok!==true||p.accountsOpened!==2)throw Error('005B_R1_PROVISION_FAILED')"
+          curl --fail --silent --show-error -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
+            -H 'Content-Type: application/json' \
+            -H "x-forge-acceptance-admin-token: $admin_token" \
+            --data '{"action":"STATUS"}' > "$FORGE_005B_EVIDENCE_DIR/status-open.json"
+          echo '005B_R1_ACCEPTANCE_WINDOW=OPEN'
+
+      - name: Execute authenticated 005B-R1 productive data plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FORGE_ACCEPTANCE_A_PASSWORD="$(cat "$RUNNER_TEMP/forge005br1/a-password")"
+          export FORGE_ACCEPTANCE_B_PASSWORD="$(cat "$RUNNER_TEMP/forge005br1/b-password")"
+          export ADVISOR_A_EMAIL='forge.acceptance.a@forge.invalid'
+          export ADVISOR_B_EMAIL='forge.acceptance.b@forge.invalid'
+          export ADVISOR_A_PASSWORD="$FORGE_ACCEPTANCE_A_PASSWORD"
+          export ADVISOR_B_PASSWORD="$FORGE_ACCEPTANCE_B_PASSWORD"
+          export FORGE_005B_REMOTE_ACCEPTANCE_AUTHORIZATION='YES:CARTERA_PIPELINE_IDENTITY_005B_REMOTE_MUTATION'
+          export FORGE_005B_REMOTE_WRITE_CONFIRMATION='YES'
+          export FORGE_005B_R1_FIXTURE_EVIDENCE="$FORGE_005B_EVIDENCE_DIR/fixture-preflight.json"
+          node scripts/prepare-cartera-pipeline-identity-005b-r1-fixtures.mjs | tee "$FORGE_005B_EVIDENCE_DIR/fixture-preflight.log"
+          node scripts/forge-cartera-pipeline-identity-productive-005b.mjs | tee "$FORGE_005B_EVIDENCE_DIR/data-plane-output.log"
+
+      - name: Seal dedicated acceptance identities
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          admin_token="$(cat "$RUNNER_TEMP/forge005br1/admin-token")"
+          curl --fail --silent --show-error -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
+            -H 'Content-Type: application/json' \
+            -H "x-forge-acceptance-admin-token: $admin_token" \
+            --data '{"action":"SEAL"}' > "$FORGE_005B_EVIDENCE_DIR/seal.json"
+          node -e "const p=require('./$FORGE_005B_EVIDENCE_DIR/seal.json');if(p.ok!==true||p.accountsSealed!==2)throw Error('005B_R1_SEAL_FAILED')"
+          curl --fail --silent --show-error -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
+            -H 'Content-Type: application/json' \
+            -H "x-forge-acceptance-admin-token: $admin_token" \
+            --data '{"action":"STATUS"}' > "$FORGE_005B_EVIDENCE_DIR/status-after.json"
+          echo '005B_R1_ACCEPTANCE_WINDOW=SEALED'
+
+      - name: Verify one-run credentials invalid after seal
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FORGE_ACCEPTANCE_A_PASSWORD="$(cat "$RUNNER_TEMP/forge005br1/a-password")"
+          export FORGE_ACCEPTANCE_B_PASSWORD="$(cat "$RUNNER_TEMP/forge005br1/b-password")"
+          node scripts/verify-writable-synthetic-acceptance-005c-sealed.mjs
+          cp artifacts/writable-synthetic-acceptance-005c/sealed-auth-report.json "$FORGE_005B_EVIDENCE_DIR/sealed-auth-report.json"
+
+      - name: Finalize PA-01 through PA-07 evidence
+        if: always()
+        run: node scripts/finalize-cartera-pipeline-identity-005b-r1.mjs
+
+      - name: Upload sanitized 005B-R1 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartera-pipeline-identity-005b-r1-${{ github.sha }}-${{ inputs.run_id || github.run_id }}
+          path: artifacts/cartera-pipeline-identity-005b-r1/
+          if-no-files-found: error
+          retention-days: 30
