@@ -107,8 +107,10 @@ test('011A Cartera observer decoration is idempotent and cannot self-trigger on 
   assert.match(carteraModule,/observer\.observe\(root, \{ childList: true, subtree: true \}\)/);
 });
 
-test('011A Cartera row resets native button geometry instead of leaving black browser borders',()=>{
-  assert.match(carteraCss,/\.cartera-directory-row\{[^}]*border:1px solid/s);
+test('011A Cartera uses one light relationship card and removes independent nested row boxes',()=>{
+  assert.match(carteraCss,/\.cartera-relationship-card\{[^}]*border:1px solid/s);
+  assert.match(carteraCss,/\.cartera-relationship-card>\.cartera-directory-row\{[^}]*border:0/s);
+  assert.match(carteraCss,/\.cartera-related-section \.cartera-directory-row,[^{]+\{[^}]*border:0;border-top:1px solid/s);
   assert.match(carteraCss,/appearance:none/);
   assert.match(carteraCss,/@media\(max-width:640px\)/);
 });
