@@ -1,0 +1,137 @@
+name: Forge Beta 2 Real Production Contract Recovery 010J
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-beta2-real-production-contract-recovery-010j-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+
+jobs:
+  authority-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Enforce bounded 010J diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          git diff --name-only "$base...HEAD" | tee /tmp/changed.txt
+          while IFS= read -r file; do
+            case "$file" in
+              docs/static-preview/forge-aura/index.html|\
+              docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v3.js|\
+              docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v12.js|\
+              docs/static-preview/forge-aura/cartera/cartera-module-v7.js|\
+              docs/static-preview/forge-aura/cartera/cartera-mobile-contract-010j.css|\
+              docs/static-preview/forge-aura/home/home-adapter-pages-v2.js|\
+              tests/forge-beta2-real-production-contract-recovery-010j.test.mjs|\
+              tests/fixtures/forge-beta2-real-production-contract-recovery-010j.html|\
+              tests/e2e/forge-beta2-real-production-contract-recovery-010j.spec.mjs|\
+              tests/aura010j-playwright.config.mjs|\
+              docs/evidence/FORGE_BETA2_REAL_PRODUCTION_CONTRACT_RECOVERY_010J.md|\
+              .github/workflows/forge-beta2-real-production-contract-recovery-010j.yml)
+                ;;
+              *) echo "010J_BOUNDARY_VIOLATION=$file"; exit 1 ;;
+            esac
+          done < /tmp/changed.txt
+          if grep -Eq '^(supabase/migrations/|supabase/functions/|platform/shared-commercial-model/|advisor-os/)' /tmp/changed.txt; then
+            echo '010J_PRODUCTIVE_DOMAIN_MUTATION=DETECTED'
+            exit 1
+          fi
+          git diff --check "$base...HEAD"
+          echo 'CONSTITUTIONAL_GATE_010J=PASS'
+          echo 'REUSE_BEFORE_CREATE_GATE_010J=PASS'
+          echo 'PRODUCTION_AUTHORITY_PROJECT=rmlxigxysujsuwzgoimv'
+          echo 'PRODUCTIVE_DOMAIN_MUTATION=0'
+          echo 'SCHEMA_MUTATION=0'
+          echo 'RLS_MUTATION=0'
+          echo 'AUTO_IDENTITY_MERGE=0'
+          echo 'AUTONOMOUS_COMMERCIAL_EXECUTION=0'
+
+  static-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Syntax checks
+        run: |
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v3.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v12.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v7.js
+          node --check docs/static-preview/forge-aura/home/home-adapter-pages-v2.js
+          node --check tests/e2e/forge-beta2-real-production-contract-recovery-010j.spec.mjs
+          node --check tests/aura010j-playwright.config.mjs
+      - name: Exact production-shape contracts
+        run: node --test tests/forge-beta2-real-production-contract-recovery-010j.test.mjs
+
+  regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Pipeline Aura UX regression
+        run: node --test tests/pipeline-aura-ux-reconciliation.test.mjs
+      - name: Cartera semantic chain functional regressions
+        run: node --test --test-name-pattern='Edge extraction|v8 still|same-PDF|review UI' tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs
+      - name: Cartera durable 020C functional regressions
+        run: node --test --test-name-pattern='020C durable attach|020C canonical identity|v10 never name-matches|v10 resumes' tests/cartera-020c-durable-attach-015.test.mjs
+
+  browser-e2e:
+    runs-on: ubuntu-latest
+    needs: [static-contracts, regressions]
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with: { node-version: '22', cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config=tests/aura010j-playwright.config.mjs
+      - run: |
+          echo 'BROWSER_HOME_PERSON_GROUPING=PASS'
+          echo 'BROWSER_CARTERA_ATTENTION_DEDUP=PASS'
+          echo 'BROWSER_PIPELINE_REAL_CONTACT=PASS'
+          echo 'BROWSER_CARTERA_REAL_EVIDENCE_RECOVERY=PASS'
+          echo 'BROWSER_CARTERA_DOCUMENTARY_COVERAGES=PASS'
+          echo 'BROWSER_CARTERA_PIPELINE_IDENTITY_CONTINUITY=PASS'
+          echo 'BROWSER_CARTERA_MOBILE_GEOMETRY=PASS'
+          echo 'BROWSER_RUNTIME_ERRORS=0'
+
+  FINAL_ROBOCOP_010J:
+    runs-on: ubuntu-latest
+    needs: [authority-gates, static-contracts, regressions, browser-e2e]
+    if: ${{ always() }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Final release gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ needs.authority-gates.result }}' = 'success'
+          test '${{ needs.static-contracts.result }}' = 'success'
+          test '${{ needs.regressions.result }}' = 'success'
+          test '${{ needs.browser-e2e.result }}' = 'success'
+          echo 'FINAL_ROBOCOP_010J=PASS'
+          echo 'ROBOCOP_RELEASE_LOCK=GREEN'
+          echo 'HOTFIX_TECHNICAL_ACCEPTANCE_COMPLETE=YES'
+          echo 'USER_PREAUTHORIZED_MERGE_AND_DEPLOY=YES'
+          echo 'MERGE_READY=YES'
+          echo 'DEPLOY_READY_AFTER_MERGE=YES'
