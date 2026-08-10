@@ -68,10 +68,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Pipeline Aura UX regression
         run: node --test tests/pipeline-aura-ux-reconciliation.test.mjs
-      - name: Cartera semantic chain regression excluding superseded import-map assertion
-        run: node --test --test-name-pattern='^(?!canonical Aura)' tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs
-      - name: Cartera durable 020C regression excluding superseded import-map assertion
-        run: node --test --test-name-pattern='^(?!Aura productive import map)' tests/cartera-020c-durable-attach-015.test.mjs
+      - name: Cartera semantic chain functional regressions
+        run: node --test --test-name-pattern='Edge extraction|v8 still|same-PDF|review UI' tests/cartera-pdf-semantic-reconciliation-012-red.test.mjs
+      - name: Cartera durable 020C functional regressions
+        run: node --test --test-name-pattern='020C durable attach|020C canonical identity|v10 never name-matches|v10 resumes' tests/cartera-020c-durable-attach-015.test.mjs
 
   FINAL_ROBOCOP_010I:
     runs-on: ubuntu-latest
