@@ -10,7 +10,10 @@ window.supabase = {
         async getSession() { return { data: { session: null }, error: null }; },
         async signOut() { return { error: null }; },
         async signInWithPassword() { return { data: { session: null, user: null }, error: null }; },
-        async signInWithOAuth() { return { data: {}, error: null }; },
+        async signInWithOAuth(input) {
+          window.__auraLastOAuth = input;
+          return { data: {}, error: null };
+        },
       },
     };
   },
@@ -34,7 +37,7 @@ async function prepare(page) {
 }
 
 async function assertAuraEntry(page, errors) {
-  await page.waitForURL(/\/static-preview\/forge-aura\//);
+  await expect.poll(() => page.url(), { timeout: 8_000 }).toContain('/static-preview/forge-aura/');
   expect(page.url()).not.toContain('/static-preview/forge-alive/');
   await expect(page.locator('html')).toHaveAttribute('data-aura-runtime', 'FORGE_AURA_LIGHT_2026_V4');
   await expect(page.getByRole('heading', { name: 'Clara y lista para avanzar.' })).toBeVisible();
@@ -62,12 +65,24 @@ test('010H mobile root converges to Aura without horizontal overflow', async ({ 
   expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth + 1);
 });
 
-test('010H root preserves an explicit Quotes deep route inside Aura', async ({ page }) => {
+test('010H Quotes deep route survives Aura Google OAuth handoff', async ({ page }) => {
   const errors = await prepare(page);
   await page.goto('/?nav=cotizaciones');
   await assertAuraEntry(page, errors);
-  const url = new URL(page.url());
-  // Aura accepts legacy nav input, then canonicalizes it to the route authority.
-  expect(url.searchParams.get('route')).toBe('cotizaciones');
-  expect(url.searchParams.get('nav')).toBeNull();
+
+  const loginUrl = new URL(page.url());
+  expect(loginUrl.searchParams.get('route')).toBe('login');
+  expect(loginUrl.searchParams.get('return_route')).toBe('cotizaciones');
+  expect(loginUrl.searchParams.get('nav')).toBeNull();
+
+  await page.getByRole('button', { name: 'Continuar con Google' }).click();
+  await expect.poll(() => page.evaluate(() => window.__auraLastOAuth?.options?.redirectTo || ''))
+    .toContain('oauth-callback-v4.html');
+
+  const redirectTo = await page.evaluate(() => window.__auraLastOAuth.options.redirectTo);
+  const callback = new URL(redirectTo);
+  expect(callback.pathname).toContain('/static-preview/forge-aura/oauth-callback-v4.html');
+  expect(callback.searchParams.get('return_route')).toBe('cotizaciones');
+  expect(errors.pageErrors).toEqual([]);
+  expect(errors.critical404).toEqual([]);
 });
