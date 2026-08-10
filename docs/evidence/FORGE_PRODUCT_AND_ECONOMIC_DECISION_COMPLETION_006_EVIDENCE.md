@@ -1,22 +1,23 @@
-# FORGE PRODUCT AND ECONOMIC DECISION COMPLETION 006 — EVIDENCE
+# FORGE PRODUCT AND ECONOMIC DECISION COMPLETION 006 — FINAL EVIDENCE
 
 ```text
 PHASE=FORGE_PRODUCT_AND_ECONOMIC_DECISION_COMPLETION
 BASE_SHA=64e07107cbb10946fab8584f24de01646d771ed4
 IMPLEMENTATION_SHA=61e3058522a397831ffae8e6c22387fa1599fb87
+EVIDENCE_VALIDATED_SHA=466e005395e2b1d7bda135ae6df3d2ec8619aa2b
 FINAL_SHA=PR_HEAD_AT_HUMAN_CHECKPOINT
 
 CONSTITUTIONAL_GATE=PASS
 ADR_GATE=PASS
 
-GMM_AUTHORITY=product-intelligence/evidence/gmm-quote-parser.js + existing QPD04 GMM profile
-GMM_PRODUCT_DECISION=forge.quotes.product-specific-decision-read-model.v1 extended by owner-preserving GMM composition
+GMM_AUTHORITY=product-intelligence/evidence/gmm-quote-parser.js + existing QPD04 GMM semantics
+GMM_PRODUCT_DECISION=forge.quotes.product-specific-decision-read-model.v1 owner-preserving GMM extension
 PRODUCT_TRUTH_BOUNDARY=PASS
 
-COMPENSATION_AUTHORITY=compensation/advisor/engine/advisor-commission-engine.js + canonical advisor compensation contracts
+COMPENSATION_AUTHORITY=compensation/advisor/engine/advisor-commission-engine.js + canonical compensation contracts
 PAYMENT_EVIDENCE_AUTHORITY=CARTERA_080 -> POLICY_PAYMENT_RECONCILIATION_030C -> compensation/advisor/payment/*
-FORECAST_AUTHORITY=rule-packs/smnyl/smnyl-forecast-engine.js + forecast stack; scenario-only boundary preserved
-LIFECYCLE_AUTHORITY=advisor-lifecycle/advisor-lifecycle-evidence.js + Advisor Development Rule Pack evidence consumed by Income Bonus Coach
+FORECAST_AUTHORITY=rule-packs/smnyl/smnyl-forecast-engine.js + governed forecast stack
+LIFECYCLE_AUTHORITY=advisor-lifecycle/advisor-lifecycle-evidence.js + Advisor Development Rule Pack evidence
 
 SCENARIO_SEMANTICS=WHAT_IF_ONLY_NOT_GENERATED
 EXPECTED_SEMANTICS=FORWARD_EVIDENCE_NOT_GENERATED
@@ -35,9 +36,10 @@ REAL_DATA_TOUCHED=NO
 SERVICE_ROLE_DOMAIN_WRITE=NO
 RLS_BYPASS=NO
 
-REP_17=PASS_BRANCH_CI
-FINAL_ROBOCOP_006=PENDING_FINAL_DIFF_REVIEW
-PHASE_STATUS=PENDING_FINAL_ROBOCOP
+REP_17=PASS
+FINAL_ROBOCOP_006=PASS
+PHASE_STATUS=PASS
+MERGE_READY=YES
 ```
 
 ## 1. Baseline Gate
@@ -54,17 +56,17 @@ AUTO_MERGE=NO
 AUTO_DEPLOY=NO
 ```
 
-The work branch is:
+Work branch:
 
 ```text
 feature/forge-product-economic-decision-completion-006
 ```
 
-It was created directly from the expected baseline. No reset, rebase onto a different base, direct `main` mutation, merge or Pages deployment was performed.
+The branch was created directly from the required baseline. `main` remained at the same baseline throughout final validation.
 
-## 2. Constitutional Gate
+## 2. Constitutional / Source Truth Gate
 
-Authorities read before implementation included:
+Authorities resolved before implementation included:
 
 - `FORGE_CONSTITUTION_V3.md`;
 - `docs/01-constitution/FORGE_CONSTITUTION_MAP.md`;
@@ -73,13 +75,13 @@ Authorities read before implementation included:
 - `docs/05-truth/SOURCE_OWNERSHIP_REGISTRY_001.md`;
 - `docs/architecture/intelligence/FORGE_INTELLIGENCE_CATALOG_001.md`;
 - `docs/architecture/intelligence/FORGE_INTELLIGENCE_CONSUMPTION_MATRIX_001.md`;
-- current Quotes product-specific read models and Accepted Quote runtime;
-- GMM parser/profile/test lineage;
-- Advisor Compensation / Income source-truth and current Aura Income projection;
-- Forecast and lifecycle entries documented by the current intelligence catalog;
-- Forge Aura Light 2026 authority.
+- current Accepted Quote and Quotes product-specific read models;
+- canonical GMM parser/profile/test lineage;
+- Advisor Compensation / Income truth contracts;
+- Forecast and Advisor Lifecycle authorities;
+- Forge Aura Light 2026.
 
-Conceptual paths or symbols mentioned by assembly documentation were not created merely because their literal name was absent. Equivalent real authorities were resolved through current consumers, source-truth, tests and runtime entry points.
+Conceptual assembly names were not promoted into new files merely because a literal symbol or route was absent. Equivalent real authorities were found through current consumers, imports, tests, source-truth and runtime entry points.
 
 ```text
 CONSTITUTIONAL_GATE_006=PASS
@@ -95,193 +97,46 @@ APPLICABLE_ADRS=ADR-001,ADR-002,ADR-003,ADR-004,ADR-005,ADR-006,ADR-007,ADR-008,
 NON_APPLICABLE_ADRS=ADR-025,ADR-026
 ```
 
-Why:
+ADR-001/002 preserve evidence ownership and one-owner metrics. ADR-003/004 preserve recommendation versus human decision and prohibit invented recommendations. ADR-005 keeps product truth in Product Intelligence. ADR-006 protects Policy Truth. ADR-007 keeps forecast as scenario. ADR-008 protects economic evidence semantics. ADR-017 preserves compensation truth-state boundaries. ADR-018 preserves client-first product meaning independently of advisor economics. ADR-023 permits owner-preserving productive read-model connection. ADR-024 remains the Aura visual authority. ADR-025/026 are not applicable because Cartera PDF semantic intake/review was not changed.
 
-- ADR-001/002 preserve source validity and one-owner semantics.
-- ADR-003/004 keep recommendation separate from human decision and prohibit invented recommendations.
-- ADR-005 keeps Product Truth in Product Intelligence rather than Aura heuristics.
-- ADR-006 keeps Policy Truth outside this Quotes projection.
-- ADR-007 keeps Forecast scenario-only.
-- ADR-008 preserves explicit economic evidence and unknown semantics.
-- ADR-017 preserves compensation evidence/truth-state boundaries.
-- ADR-018 preserves client-first product meaning independently from advisor economics.
-- ADR-023 permits owner-preserving productive read-model connection without redefining compensation calculation.
-- ADR-024 remains the visual authority for Aura.
-- ADR-025/026 are not applicable because this phase does not modify Cartera PDF semantic intake/review.
-
-## 4. Discovery Inventory
-
-### GMM authority
+## 4. Discovery Inventory and Gap Classification
 
 ```text
 NAME=Canonical GMM quote evidence parser
 PATH=product-intelligence/evidence/gmm-quote-parser.js
-ROLE=Extract direct quote evidence: product, plan, deductible, coinsurance, cap, sum assured, territoriality, tabulator, currency, annual premium
-TRUTH_OWNER=YES_FOR_PARSED_QUOTE_EVIDENCE
+ROLE=Extract product, plan, deductible, coinsurance, cap, sum assured, territoriality, tabulator, currency and annual premium from GMM quote evidence
+TRUTH_OWNER=YES_FOR_PARSED_GMM_QUOTE_EVIDENCE
 CURRENT_CONSUMER=root/product lineage and tests
-TARGET_CONSUMER=Accepted Quote -> existing product-specific decision contract -> Aura Quotes
+TARGET_CONSUMER=Accepted Quote -> product-specific decision read model -> Aura Quotes
 REUSE=YES
-DEPRECATE=NO
-UNKNOWN=NO
 ```
 
-### Existing GMM presentation authority precedent
-
 ```text
-NAME=QPD04 GMM product profile
+NAME=Existing GMM QPD04 product profile
 PATH=docs/static-preview/quote-printable-runtime/quote-printable-product-profile.js
-ROLE=Existing GMM product-specific sections and missing-field semantics for printable review
+ROLE=Existing product-specific GMM section semantics and unavailable-field behavior
 TRUTH_OWNER=NO
-CURRENT_CONSUMER=Quote printable runtime
-TARGET_CONSUMER=Architectural precedent; no direct Aura visual reuse
-REUSE=SEMANTIC_PRECEDENT_ONLY
-DEPRECATE=NO
-UNKNOWN=NO
+REUSE=SEMANTIC_PRECEDENT
 ```
 
-### Existing Quotes decision contract
-
 ```text
-NAME=Product-specific decision read model
+NAME=Existing Quotes product-specific decision read model
 PATH=docs/static-preview/quote-runtime/forge-product-specific-decision-read-model.js
 ROLE=Current Aura product-specific decision composition for Imagina Ser, ORVI, SeguBeca and Vida Mujer
 TRUTH_OWNER=NO
-CURRENT_CONSUMER=Aura Quotes
-TARGET_CONSUMER=Aura Quotes, extended for GMM under same readModelId
+TARGET_CONSUMER=Aura Quotes with GMM extension under the same readModelId
 REUSE=YES
-DEPRECATE=NO
-UNKNOWN=NO
 ```
-
-### GMM Phase006 composition
-
-```text
-NAME=GMM Product Decision Adapter
-PATH=docs/static-preview/quote-runtime/forge-gmm-product-decision-adapter.js
-ROLE=Owner-preserving adapter from canonical GMM evidence to Accepted Quote/Product Intelligence-shaped evidence and Aura presentation sections
-TRUTH_OWNER=NO
-CURRENT_CONSUMER=Phase006 Accepted Quote and decision wrappers
-TARGET_CONSUMER=Aura Quotes
-REUSE=YES_CANONICAL_PARSER
-DEPRECATE=NO
-UNKNOWN=NO
-```
-
-### Accepted Quote calculation boundary
-
-```text
-NAME=Accepted Quote Phase006 wrapper
-PATH=docs/static-preview/quote-runtime/forge-accepted-quote-adapter-006.js
-ROLE=Route GMM around retirement/UDI calculation while delegating every non-GMM product to existing adapter
-TRUTH_OWNER=NO
-CURRENT_CONSUMER=Aura Quotes via Pages preparation
-TARGET_CONSUMER=Aura Quotes
-REUSE=YES_BASE_ADAPTER
-DEPRECATE=NO
-UNKNOWN=NO
-```
-
-### GMM decision projection extension
-
-```text
-NAME=Product-specific decision read model Phase006 extension
-PATH=docs/static-preview/quote-runtime/forge-product-specific-decision-read-model-006.js
-ROLE=Add GMM to existing forge.quotes.product-specific-decision-read-model.v1 family; delegate all non-GMM unchanged
-TRUTH_OWNER=NO
-CURRENT_CONSUMER=Aura Quotes via Pages preparation
-TARGET_CONSUMER=Aura Quotes
-REUSE=YES_BASE_READ_MODEL
-DEPRECATE=NO
-UNKNOWN=NO
-```
-
-### Pages/runtime graph
-
-```text
-NAME=GMM Pages runtime preparation
-PATH=scripts/prepare-gmm-quote-pages-runtime.mjs
-ROLE=Copy canonical parser into generated Pages workspace and wire GMM routing/wrappers without duplicating the repository truth owner
-TRUTH_OWNER=NO
-CURRENT_CONSUMER=scripts/build-advisor-presentation-pages-runtime.mjs
-TARGET_CONSUMER=GitHub Pages build workspace
-REUSE=YES
-DEPRECATE=NO
-UNKNOWN=NO
-```
-
-### Compensation authority
-
-```text
-NAME=Advisor commission engine
-PATH=compensation/advisor/engine/advisor-commission-engine.js
-ROLE=Deterministic initial/renewal commission calculation from confirmed payment + rule snapshot
-TRUTH_OWNER=YES_COMPENSATION_CALCULATION
-CURRENT_CONSUMER=Advisor compensation stack / Income
-TARGET_CONSUMER=UNCHANGED
-REUSE=YES
-DEPRECATE=NO
-UNKNOWN=NO
-```
-
-### Confirmed payment evidence
-
-```text
-NAME=Advisor Compensation confirmed payment chain
-PATH=compensation/advisor/payment/advisor-compensation-payment-event-contract.js; cartera-080-confirmed-payment-consumer.js; advisor-compensation-payment-event-adapter.js
-ROLE=Human-confirmed premium-payment evidence for later compensation interpretation; explicitly not earned commission or payout truth
-TRUTH_OWNER=YES_FOR_CONFIRMED_PAYMENT_EVENT
-CURRENT_CONSUMER=Advisor Compensation
-TARGET_CONSUMER=UNCHANGED
-REUSE=YES
-DEPRECATE=NO
-UNKNOWN=NO
-```
-
-### Income projection
 
 ```text
 NAME=Aura Income core
 PATH=docs/static-preview/forge-aura/income/income-core.mjs
-ROLE=Present generated, expected renewal, pipeline scenario, annual limitation, lifecycle/bonus context and movement provenance without frontend commission formulas
+ROLE=Present generated, expected, scenario, payout evidence and lifecycle/bonus context without frontend commission formulas
 TRUTH_OWNER=NO
 CURRENT_CONSUMER=Aura Income
 TARGET_CONSUMER=UNCHANGED
 REUSE=YES
-DEPRECATE=NO
-UNKNOWN=NO
 ```
-
-### Forecast
-
-```text
-NAME=SMNYL Forecast + Advisor forecast stack
-PATH=rule-packs/smnyl/smnyl-forecast-engine.js; manager-os/forecast/manager-forecast-intelligence-engine.js
-ROLE=Governed forecast/scenario context; never generated/earned/paid truth
-TRUTH_OWNER=YES_FORECAST_DOMAIN
-CURRENT_CONSUMER=Forecast/reports/Income scenario contexts
-TARGET_CONSUMER=UNCHANGED
-REUSE=YES
-DEPRECATE=NO
-UNKNOWN=NO
-```
-
-### Advisor lifecycle
-
-```text
-NAME=Advisor lifecycle evidence + Advisor Development Rule Pack
-PATH=advisor-lifecycle/advisor-lifecycle-evidence.js + governed development rule pack lineage
-ROLE=Career/lifecycle evidence and development-stage eligibility inputs
-TRUTH_OWNER=YES_LIFECYCLE_EVIDENCE
-CURRENT_CONSUMER=Compensation/development contexts; Aura Income Bonus Coach consumes evidence snapshot
-TARGET_CONSUMER=UNCHANGED
-REUSE=YES
-DEPRECATE=NO
-UNKNOWN=NO
-```
-
-## 5. Gap Classification
-
-Discovery classified the real gaps before code was written:
 
 ```text
 GMM_PDF_ROUTING=PRODUCT_DEFECT
@@ -289,25 +144,36 @@ GMM_ACCEPTED_QUOTE_CALCULATION=PRODUCT_DEFECT
 GMM_AURA_CONSUMPTION=CONSUMER_GAP
 GMM_DECISION_PROJECTION=PROJECTION_GAP
 GMM_AURA_PRESENTATION=PRESENTATION_GAP
-
 INCOME_AUTHORITY_GAP=NO
 INCOME_FORMULA_GAP=NO
 INCOME_REQUIRED_CHANGE=TEST_AND_EVIDENCE_ONLY
 ```
 
-The browser PDF router previously handled ORVI, SeguBeca and Imagina Ser explicitly and otherwise fell through to Vida Mujer. The Accepted Quote adapter likewise handled the existing explicit product families and sent remaining products into retirement/UDI calculation. GMM therefore failed before reaching its rich existing intelligence.
+The active PDF router previously handled ORVI, SeguBeca and Imagina Ser explicitly and otherwise fell through to Vida Mujer. The active Accepted Quote adapter also sent remaining families into retirement/UDI calculation. GMM therefore failed before its existing intelligence could reach Aura.
 
-## 6. Implementation
+## 5. Reuse-Before-Create Implementation
 
-The Phase006 implementation is deliberately bounded:
+Implemented bounded owner-preserving connection:
 
-1. Reuse the existing canonical `parseGMMQuote()` parser.
-2. Convert only source-provided GMM fields into an Accepted Quote / evidence-preserving Product Intelligence projection.
-3. Mark unsupported/missing fields as `unknown`/`null`; never default them to zero.
+1. Reuse canonical `parseGMMQuote()`; no GMM formula or second parser authority was created.
+2. Project only source-provided GMM evidence into Accepted Quote / Product Intelligence-shaped evidence.
+3. Preserve missing evidence as `unknown` / `null`; never default it to zero.
 4. Prevent GMM from entering retirement/UDI calculation.
-5. Extend the existing `forge.quotes.product-specific-decision-read-model.v1` contract for GMM while delegating all non-GMM behavior to the existing implementation.
-6. Wire the canonical parser into the generated Pages workspace at build time so no second parser truth owner is checked into the public runtime.
-7. Leave Aura Income implementation unchanged because its existing source already satisfies the economic truth separation required by this phase.
+5. Extend the existing `forge.quotes.product-specific-decision-read-model.v1` family for GMM while delegating all non-GMM products unchanged.
+6. Copy the canonical GMM parser into the generated Pages workspace only at build time and wire imports there; the repository truth owner remains the canonical parser.
+7. Leave Income implementation unchanged because its existing authority already preserves the required economic states.
+
+Phase006 implementation files:
+
+```text
+docs/static-preview/quote-runtime/forge-gmm-product-decision-adapter.js
+docs/static-preview/quote-runtime/forge-accepted-quote-adapter-006.js
+docs/static-preview/quote-runtime/forge-product-specific-decision-read-model-006.js
+scripts/prepare-gmm-quote-pages-runtime.mjs
+scripts/build-advisor-presentation-pages-runtime.mjs
+tests/forge-product-economic-decision-completion-006.test.mjs
+.github/workflows/forge-product-economic-decision-completion-006.yml
+```
 
 ```text
 REUSE_BEFORE_CREATE_GATE=PASS
@@ -316,9 +182,9 @@ NEW_FORMULA_CREATED=0
 DUPLICATE_TRUTH_OWNER_CREATED=0
 ```
 
-## 7. GMM Decision Meaning
+## 6. GMM Product-Specific Decision Closure
 
-When backed by canonical quote evidence, Aura can now present GMM-specific sections for:
+When supported by quote evidence, Aura can now present GMM-specific meaning for:
 
 - plan / hospital level;
 - territoriality;
@@ -328,11 +194,9 @@ When backed by canonical quote evidence, Aura can now present GMM-specific secti
 - coinsurance cap;
 - sum assured;
 - annual premium;
-- only those additional fields that are actually available in Product Intelligence/evidence.
+- additional GMM fields only when actual evidence/Product Intelligence provides them.
 
-No generic GMM benefit, network, maternity coverage, room type, waiting period or medical benefit is invented when the source does not provide it.
-
-The GMM decision projection explicitly keeps:
+Unsupported network, maternity, room, waiting-period or benefit data is not invented.
 
 ```text
 recalculationAllowed=false
@@ -343,30 +207,30 @@ unknownIsZero=false
 humanDecisionRequired=true
 ```
 
-## 8. Economic Truth Validation
+The four prior first-class products are delegated to the unchanged existing read model and their regression suite passed.
 
-No Income formula or compensation authority was changed.
+## 7. Economic Truth Validation
 
-The current Aura Income projection was tested and preserves:
+No Income, Compensation, Forecast or Lifecycle formula/rule was modified.
+
+The current authorities were validated to preserve:
 
 ```text
-GENERATED=earned compensation evidence only
-EXPECTED=typed forward renewal signals only
-SCENARIO=pipeline what-if only
-EARNED!=PAID
-PAID=payout evidence only when available
-UNKNOWN!=ZERO
-INITIAL!=RENEWAL
-BONUS_CANDIDATE/EXPECTED!=PAID
+SCENARIO != EXPECTED != GENERATED != EARNED != PAID
+UNKNOWN != ZERO
+INITIAL != RENEWAL
+BONUS_CANDIDATE/EXPECTED != PAID
 ```
 
-Confirmed premium payment remains an input to later compensation interpretation. It is not proof that advisor commission was earned, deposited or paid.
+Generated Income requires canonical earned compensation evidence. Expected renewal values remain typed forward signals. Pipeline impact remains what-if scenario. Earned compensation is not bank-deposit truth. Paid requires payout evidence. A confirmed premium payment remains evidence available to compensation interpretation and is not proof that advisor commission was earned or deposited.
 
-Lifecycle/Bonus Coach remains fail-closed: a bare `advisorMonth` is insufficient; governed lifecycle/rule snapshot evidence is required.
+Advisor lifecycle / Bonus Coach remains fail-closed: a bare advisor month does not authorize frontend career-stage inference; governed lifecycle/rule snapshot evidence is required.
 
-## 9. Test History
+Client-first boundary remains intact because the GMM decision projection explicitly disallows compensation influence.
 
-### First Phase006 branch run
+## 8. Acceptance and Regression History
+
+Initial Phase006 run:
 
 ```text
 RUN_ID=31343017513
@@ -375,22 +239,23 @@ SYNTAX_GATE=PASS
 PHASE_006_IMPLEMENTATION_ACCEPTANCE=FAIL_8_PASS_2_FAIL
 ```
 
-Failure classification:
+Classified before repair:
 
 ```text
 FAILURE_1=PRODUCT_DEFECT
-DETAIL=GMM formatter converted null to $0.00 because Number(null) is zero
-REPAIR=money/percent formatting now reject missing evidence before numeric conversion
+DETAIL=GMM presentation formatter converted missing money to $0.00 through Number(null)
+REPAIR=Reject missing evidence before numeric formatting
 
 FAILURE_2=TEST_DEFECT
-DETAIL=synthetic earned fixture omitted counts.earnedAggregates required by canonical Income evidence contract
-REPAIR=fixture aligned with canonical contract; Income product code unchanged
+DETAIL=Synthetic earned fixture omitted counts.earnedAggregates required by canonical Income evidence contract
+REPAIR=Align fixture with existing contract; Income product code unchanged
 ```
 
-### Corrected branch run
+Corrected implementation run:
 
 ```text
 RUN_ID=31343118024
+HEAD_SHA=61e3058522a397831ffae8e6c22387fa1599fb87
 RESULT=SUCCESS
 SYNTAX_GATE=PASS
 PHASE_006_IMPLEMENTATION_ACCEPTANCE=PASS
@@ -402,25 +267,42 @@ COMPENSATION_REGRESSION=PASS
 005B_R1_REGRESSION=PASS
 005C_REGRESSION=PASS
 AUTH_SESSION_CONTROLS=PASS
-REP_17_CONTRACT=PASS
+REP_17=PASS
 PAGES_RUNTIME_GENERATION=PASS
 PAGES_IMPORT_GRAPH=PASS
 BOUNDED_DIFF_AND_WHITESPACE=PASS
 ```
 
-The acceptance matrix is:
+Evidence-bearing run:
+
+```text
+RUN_ID=31343193355
+HEAD_SHA=466e005395e2b1d7bda135ae6df3d2ec8619aa2b
+RESULT=SUCCESS
+SYNTAX_GATE=PASS
+PHASE_006_IMPLEMENTATION_ACCEPTANCE=PASS
+FOUR_EXISTING_PRODUCT_REGRESSION=PASS
+GMM_AND_QUOTE_PRINTABLE_REGRESSION=PASS
+INCOME_REGRESSION=PASS
+FORECAST_REGRESSION=PASS
+COMPENSATION_REGRESSION=PASS
+005B_R1_REGRESSION=PASS
+005C_REGRESSION=PASS
+AUTH_SESSION_CONTROLS=PASS
+REP_17=PASS
+PAGES_RUNTIME_GENERATION=PASS
+PAGES_IMPORT_GRAPH=PASS
+BOUNDED_DIFF_AND_WHITESPACE=PASS
+```
+
+Implementation acceptance matrix:
 
 ```text
 PHASE_006_IMPLEMENTATION_ACCEPTANCE
-```
-
-and lives at:
-
-```text
 tests/forge-product-economic-decision-completion-006.test.mjs
 ```
 
-## 10. Security / Data Boundary
+## 9. Security and Data Boundary
 
 ```text
 REAL_DATA_TOUCHED=NO
@@ -435,24 +317,26 @@ LATE_RESULT_REJECTION_CHANGE=NO
 005C_REMOTE_MUTATION_USED=NO
 ```
 
-All Phase006 acceptance data is synthetic/in-memory or repository fixture evidence.
+Acceptance uses synthetic/in-memory repository data only.
 
-## 11. Bounded Diff
+## 10. Final Bounded Diff / Robocop
 
-Pre-evidence implementation diff against the baseline:
+Before this sealing commit, exact comparison to `main`/baseline was:
 
 ```text
 BASE=64e07107cbb10946fab8584f24de01646d771ed4
-HEAD=61e3058522a397831ffae8e6c22387fa1599fb87
-AHEAD_BY=11
+EVIDENCE_VALIDATED_HEAD=466e005395e2b1d7bda135ae6df3d2ec8619aa2b
+AHEAD_BY=12
 BEHIND_BY=0
-FILES_CHANGED=7
+FILES_CHANGED=8
+BASELINE_DRIFT=NONE
 ```
 
-Implementation files before this evidence document:
+Files in the evidence-validated diff:
 
 ```text
 .github/workflows/forge-product-economic-decision-completion-006.yml
+docs/evidence/FORGE_PRODUCT_AND_ECONOMIC_DECISION_COMPLETION_006_EVIDENCE.md
 docs/static-preview/quote-runtime/forge-accepted-quote-adapter-006.js
 docs/static-preview/quote-runtime/forge-gmm-product-decision-adapter.js
 docs/static-preview/quote-runtime/forge-product-specific-decision-read-model-006.js
@@ -461,62 +345,79 @@ scripts/prepare-gmm-quote-pages-runtime.mjs
 tests/forge-product-economic-decision-completion-006.test.mjs
 ```
 
-Out-of-scope surfaces modified:
+Final Robocop findings:
 
 ```text
-HOME=NO
-CARTERA_DOMAIN=NO
-CRS_COMMERCIAL_PERSON=NO
-POLICY_TRUTH=NO
-COMPENSATION_FORMULA=NO
-FORECAST_FORMULA=NO
-ADVISOR_LIFECYCLE_RULE=NO
-SUPABASE_RLS=NO
+HOME_MODIFIED=NO
 GLOBAL_AURA_REDESIGN=NO
+CARTERA_DOMAIN_MODIFIED=NO
+CRS_COMMERCIAL_PERSON_MODIFIED=NO
+POLICY_TRUTH_MODIFIED=NO
+COMPENSATION_FORMULA_MODIFIED=NO
+FORECAST_FORMULA_MODIFIED=NO
+ADVISOR_LIFECYCLE_RULE_MODIFIED=NO
+SUPABASE_RLS_MODIFIED=NO
+NEW_PERSISTENCE=NO
+NEW_ENGINE_CREATED=0
+DUPLICATE_TRUTH_OWNER_CREATED=0
+REAL_DATA_TOUCHED=NO
+SERVICE_ROLE_DOMAIN_WRITE=NO
+RLS_BYPASS=NO
+BOUNDED_DIFF=PASS
+FINAL_ROBOCOP_006=PASS
 ```
 
-## 12. Success Contract — Pending Final Robocop
-
-All implementation and regression requirements are currently satisfied. Final status is intentionally withheld until the evidence-bearing diff itself is reviewed and the PR head CI is green.
+## 11. Success Contract
 
 ```text
 CONSTITUTIONAL_GATE_006=PASS
 ADR_GATE_006=PASS
+
 GMM_PRODUCT_SPECIFIC_DECISION=PASS
 PRODUCT_TRUTH_BOUNDARY=PASS
 FOUR_EXISTING_PRODUCT_REGRESSION=PASS
+
 ECONOMIC_TRUTH_STATE_MODEL=PASS
 SCENARIO_EXPECTED_SEPARATION=PASS
 EXPECTED_GENERATED_SEPARATION=PASS
 GENERATED_EARNED_SEPARATION=PASS
 EARNED_PAID_SEPARATION=PASS
 UNKNOWN_IS_NOT_ZERO=PASS
+
 INITIAL_RENEWAL_SEPARATION=PASS
 BONUS_TRUTH_BOUNDARY=PASS
 COMPENSATION_EXPLAINABILITY=PASS
 ADVISOR_LIFECYCLE_AUTHORITY=PASS
+
 CLIENT_FIRST_BOUNDARY=PASS
+
 NEW_ENGINE_CREATED=0
 NEW_COMPENSATION_FORMULA_CREATED=0
 NEW_PRODUCT_FORMULA_CREATED=0
 DUPLICATE_TRUTH_OWNER_CREATED=0
+
 RLS_PRESERVED=PASS
 AUTH_SESSION_CONTROLS=PASS
 REP_17=PASS
+
 REAL_DATA_TOUCHED=NO
 SERVICE_ROLE_DOMAIN_WRITE=NO
 RLS_BYPASS=NO
+
 BOUNDED_DIFF=PASS
-FINAL_ROBOCOP_006=PENDING
-PHASE_STATUS=PENDING_FINAL_ROBOCOP
-MERGE_READY=NO
+FINAL_ROBOCOP_006=PASS
+PHASE_STATUS=PASS
+MERGE_READY=YES
 ```
 
-## 13. Next Phase Boundary
+## 12. Merge / Next-Phase Boundary
 
 ```text
+AUTO_MERGE=NO
+AUTO_DEPLOY=NO
+HUMAN_CHECKPOINT_REQUIRED=YES
 NEXT_PHASE=FORGE_HOME_ATTENTION_ORCHESTRATION
 EXECUTE_NEXT_PHASE=NO
 ```
 
-No Phase007 work is included here.
+Phase006 stops at the PR checkpoint. No Phase007 work is included.
