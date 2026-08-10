@@ -23,9 +23,9 @@ test('011A runtime cutover points Aura to bounded relational and conversation mo
 });
 
 test('011A removes direct WhatsApp bypass from the active Pipeline binding',()=>{
-  assert.match(pipelineModule,/addEventListener\('click',interceptWhatsapp,true\)/);
+  assert.match(pipelineModule,/addEventListener\('click',\s*interceptWhatsapp,\s*true\)/);
   assert.match(pipelineModule,/stopImmediatePropagation\(\)/);
-  assert.match(pipelineModule,/workspace\.open\(\{ card, adapter, trigger \}\)/);
+  assert.match(pipelineModule,/workspace\.open\(\{\s*card,\s*adapter,\s*trigger\s*\}\)/);
   assert.doesNotMatch(pipelineModule,/windowRef\.open\(/);
   assert.doesNotMatch(pipelineModule,/adapter\.whatsappUrl\(record\)/);
 });
