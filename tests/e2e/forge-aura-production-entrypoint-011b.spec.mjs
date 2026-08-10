@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
+import { mkdirSync } from 'node:fs';
 
 const FIXTURE='/tests/fixtures/forge-aura-conversation-cartera-011a.html';
+mkdirSync('artifacts/011b/screenshots',{recursive:true});
 
 async function prepare(page,width=390,height=844){
   await page.route('**/docs/static-preview/forge-aura/pipeline/pipeline-module-v2.js*',route=>route.fulfill({
@@ -52,6 +54,7 @@ test('011B Cartera renders one integrated relationship card without a second pol
   expect(geometry.policyBorder).toBe('none');
   expect(geometry.headingDisplay).toBe('none');
   expect(geometry.policyIconDisplay).toBe('none');
+  await page.screenshot({path:'artifacts/011b/screenshots/cartera-integrated-390.png',fullPage:true});
 });
 
 test('011B productive Pipeline bridge blocks direct WhatsApp until exact human approval',async({page})=>{
@@ -72,6 +75,7 @@ test('011B productive Pipeline bridge blocks direct WhatsApp until exact human a
   await workspace.locator('[data-approve-draft]').click();
   await expect(workspace.locator('[data-open-whatsapp]')).toBeEnabled();
   const approved=await workspace.locator('[data-draft]').inputValue();
+  await page.screenshot({path:'artifacts/011b/screenshots/conversation-approved-412.png',fullPage:true});
   await workspace.locator('[data-open-whatsapp]').click();
 
   const opened=await page.evaluate(()=>window.__FORGE_011A_TRACE__.opens.at(-1)||'');
