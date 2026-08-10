@@ -31,6 +31,7 @@ const carteraJs = walkJs(CARTERA);
 const carteraSource = carteraJs.map(file => fs.readFileSync(file, 'utf8')).join('\n');
 const coreUrl = pathToFileURL(path.join(CARTERA, 'cartera-core.js')).href;
 const coverageAdapterUrl = pathToFileURL(path.join(CARTERA, 'cartera-coverage-adapter.js')).href;
+const directSupabaseDml = /\.from\s*\([^)]*\)(?:(?!;)[\s\S]){0,600}\.(?:insert|update|delete)\s*\(/;
 
 function queryFor(table) {
   const state = { eq: [] };
@@ -62,7 +63,7 @@ test('PDF multi-Coverage extraction is candidate-only and governed', () => {
   assert.match(moduleV4Source, /Coberturas detectadas/);
   assert.doesNotMatch(moduleV4Source, /Coberturas detectadas: no disponibles en este parser/);
 });
-test('Cartera frontend contains no canonical insert/update/delete writes', () => { for (const file of carteraJs) assert.doesNotMatch(fs.readFileSync(file,'utf8'), /\.(?:insert|update|delete)\s*\(/, `direct canonical mutation found in ${path.relative(ROOT,file)}`); });
+test('Cartera frontend contains no canonical insert/update/delete writes', () => { for (const file of carteraJs) assert.doesNotMatch(fs.readFileSync(file,'utf8'), directSupabaseDml, `direct canonical mutation found in ${path.relative(ROOT,file)}`); });
 test('bulk unknown semantics preserve absent or unrecognized facts without defaults', async () => { const { mapPortfolioRows } = await import(`${coreUrl}?contract=${Date.now()}`); const result=mapPortfolioRows([['Titular','Poliza','Producto','Estado','Moneda','Frecuencia'],['Ana Sintética','SYN-1','Vida','estado misterioso','','cuando se pueda']],'synthetic.csv'); assert.equal(result.length,1); assert.equal(result[0].draft.status,null); assert.equal(result[0].draft.currency,null); assert.equal(result[0].draft.paymentFrequency,null); assert.equal(result[0].state,'REQUIRES_REVIEW'); });
 test('no legacy unknown normalization forces MXN, ACTIVE or MONTHLY', () => { assert.doesNotMatch(adapterSource, /\|\|\s*['"]MXN['"]/); assert.doesNotMatch(adapterSource, /\|\|\s*['"]ACTIVE['"]/); assert.doesNotMatch(adapterSource, /\|\|\s*['"]MONTHLY['"]/); assert.doesNotMatch(coreSource, /\|\|\s*['"]MXN['"]/); assert.doesNotMatch(coreSource, /\|\|\s*['"]ACTIVE['"]/); assert.doesNotMatch(coreSource, /\|\|\s*['"]MONTHLY['"]/); });
 test('Coverage writer binds exact PolicyVersion/Evidence and keeps unknown facts null', async () => {

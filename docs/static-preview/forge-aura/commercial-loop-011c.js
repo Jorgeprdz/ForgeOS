@@ -1,5 +1,5 @@
 import { createAuraAuth } from './aura-auth-v4.js';
-import { installPipelineJournalAura } from './pipeline/pipeline-journal-aura-011c.js?v=forge-aura-commercial-loop-011c';
+import { installPipelineJournalAura } from './pipeline/pipeline-journal-aura-011e.js?v=forge-aura-live-acceptance-journal-cartera-011e';
 import { installCarteraPaymentAura } from './cartera/cartera-payment-aura-011c.js?v=forge-aura-commercial-loop-011c';
 
 const RUNTIME_ID = 'FORGE_AURA_PRODUCTIVE_COMMERCIAL_LOOP_011C';

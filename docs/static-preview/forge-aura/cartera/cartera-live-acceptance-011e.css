@@ -1,0 +1,102 @@
+.aura-cartera button.cartera-directory-row{
+  -webkit-appearance:none;
+  appearance:none;
+  font:inherit;
+  color:inherit;
+}
+
+.aura-cartera .cartera-workspace button.cartera-policy-row-011e{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-width:0;
+  margin:10px 0 0;
+  padding:14px!important;
+  border:1px solid var(--aura-border)!important;
+  border-radius:16px!important;
+  background:var(--aura-surface)!important;
+  box-shadow:none!important;
+  text-align:left;
+  cursor:pointer;
+}
+
+.aura-cartera .cartera-workspace button.cartera-policy-row-011e:hover,
+.aura-cartera .cartera-workspace button.cartera-policy-row-011e:focus-visible{
+  background:color-mix(in srgb,var(--cartera-violet) 5%,var(--aura-surface))!important;
+}
+
+.aura-cartera .cartera-workspace button.cartera-policy-row-011e:focus-visible{
+  outline:3px solid color-mix(in srgb,var(--cartera-violet) 34%,transparent);
+  outline-offset:2px;
+}
+
+.aura-cartera .cartera-workspace .cartera-policy-row-011e .cartera-directory-icon{
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  margin:0;
+  border:0;
+  border-radius:13px;
+  background:color-mix(in srgb,var(--cartera-violet) 9%,var(--aura-surface));
+  color:var(--cartera-violet);
+  font-size:19px;
+  font-weight:800;
+}
+
+.aura-cartera .cartera-workspace .cartera-policy-row-011e>span:nth-child(2){
+  min-width:0;
+}
+
+.aura-cartera .cartera-workspace .cartera-policy-row-011e strong{
+  display:block;
+  font-size:15px;
+  line-height:1.3;
+  color:var(--aura-text);
+}
+
+.aura-cartera .cartera-workspace .cartera-policy-row-011e small{
+  display:block;
+  margin-top:4px;
+  color:var(--aura-muted);
+  font-size:13px;
+  line-height:1.4;
+  overflow-wrap:anywhere;
+}
+
+.aura-cartera .cartera-policy-row__action{
+  align-self:center;
+  white-space:nowrap;
+  color:var(--cartera-violet);
+  font-size:13px;
+  font-weight:800;
+}
+
+.aura-cartera #cartera-attention-title+ p,
+.aura-cartera [aria-labelledby="cartera-attention-title"]>header p:not(.cartera-eyebrow){
+  max-width:48ch;
+}
+
+.aura-cartera [aria-labelledby="cartera-attention-title"]>header>span{
+  white-space:nowrap;
+  font-size:12px;
+  font-weight:800;
+  color:var(--aura-muted);
+}
+
+@media(max-width:640px){
+  .aura-cartera .cartera-workspace button.cartera-policy-row-011e{
+    grid-template-columns:auto minmax(0,1fr);
+    padding:13px!important;
+  }
+  .aura-cartera .cartera-policy-row__action{
+    grid-column:2;
+    white-space:normal;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .aura-cartera .cartera-policy-row-011e{transition:none!important}
+}
