@@ -13,27 +13,27 @@ function appendText(parent, tag, className, value) {
   return node;
 }
 
-function relationGroup(doc, heading, items, kind) {
-  if (!items?.length) return null;
-  const group = doc.createElement('span');
-  group.className = 'cartera-related-group';
-  appendText(group, 'span', 'cartera-related-heading', heading);
+function staticRelationRow(doc, item, kind) {
+  const row = doc.createElement('div');
+  row.className = 'cartera-related-static-row';
+  row.dataset.relatedKind = kind;
+  row.dataset.relatedReference = text(item.reference);
 
-  for (const item of items) {
-    const row = doc.createElement('span');
-    row.className = 'cartera-related-item';
-    row.dataset.relatedKind = kind;
-    row.dataset.relatedReference = text(item.reference);
+  const icon = appendText(row, 'span', 'cartera-directory-icon', kind === 'POLICY' ? 'PÓL' : 'A');
+  icon.setAttribute('aria-hidden', 'true');
+  const main = doc.createElement('span');
+  appendText(main, 'strong', '', item.displayLabel || (kind === 'POLICY' ? 'Producto no identificado' : 'Cuenta'));
+  appendText(main, 'small', '', kind === 'POLICY' ? item.maskedPolicyNumber : item.relationshipLabel);
+  row.append(main);
+  appendText(row, 'span', 'cartera-kind', item.relationshipLabel || 'RELACIÓN');
+  return row;
+}
 
-    const main = doc.createElement('span');
-    main.className = 'cartera-related-item-main';
-    appendText(main, 'strong', '', item.displayLabel || (kind === 'POLICY' ? 'Producto no identificado' : 'Cuenta'));
-    appendText(main, 'small', '', kind === 'POLICY' ? item.maskedPolicyNumber : item.relationshipLabel);
-    row.append(main);
-    appendText(row, 'span', 'cartera-related-role', item.relationshipLabel || 'Relación confirmada');
-    group.append(row);
-  }
-  return group;
+function relationSection(doc, label) {
+  const section = doc.createElement('section');
+  section.className = 'cartera-related-section';
+  appendText(section, 'p', 'cartera-related-heading', label);
+  return section;
 }
 
 export function createCarteraModule({
@@ -44,102 +44,162 @@ export function createCarteraModule({
 } = {}) {
   if (!root || !client) throw new Error('AURA_CARTERA_ROOT_AND_CLIENT_REQUIRED');
 
-  let adapter = null;
+  const doc = root.ownerDocument;
+  const base = createBaseCarteraModule({ root, client, windowRef, globalState });
+  let relationalAdapter = null;
+  let projectionPromise = null;
   let observer = null;
   let decorateScheduled = false;
+  let destroyed = false;
 
-  const adapterFactory = async options => {
-    adapter = await createRelationalCarteraAdapter(options);
-    return adapter;
-  };
+  async function projection() {
+    if (!projectionPromise) {
+      projectionPromise = (async () => {
+        relationalAdapter ||= await createRelationalCarteraAdapter({ client, windowRef });
+        await relationalAdapter.loadDirectory();
+        return relationalAdapter.getRelationshipPresentation?.() || {};
+      })().catch(error => {
+        projectionPromise = null;
+        console.error('AURA_CARTERA_RELATIONSHIP_PROJECTION_011A_FAILED', error);
+        return {};
+      });
+    }
+    return projectionPromise;
+  }
 
-  const base = createBaseCarteraModule({
-    root,
-    client,
-    windowRef,
-    globalState,
-    adapterFactory,
-  });
+  function relationUseCount(presentation, kind, reference) {
+    let count = 0;
+    for (const relationships of Object.values(presentation || {})) {
+      const list = kind === 'POLICY' ? relationships?.policies : relationships?.accounts;
+      if ((list || []).some(item => text(item.reference) === reference)) count += 1;
+    }
+    return count;
+  }
 
-  function decorateDirectory() {
+  function updateDirectoryCopy() {
+    const directory = root.querySelector('.cartera-directory');
+    if (!directory) return;
+    const headerCopy = directory.querySelector(':scope > header p:not(.cartera-eyebrow)');
+    if (headerCopy) headerCopy.textContent = 'Personas como centro de relación; pólizas y cuentas vinculadas aparecen dentro de su contexto cuando existe una relación confirmada.';
+  }
+
+  async function decorateDirectory() {
     decorateScheduled = false;
-    const presentation = adapter?.getRelationshipPresentation?.() || {};
-    const rows = root.querySelectorAll?.('.cartera-directory-row[data-directory-kind="PERSON"]') || [];
+    if (destroyed || !root.isConnected) return;
+    const presentation = await projection();
+    if (destroyed || !root.isConnected) return;
 
-    for (const row of rows) {
-      if (row.dataset.carteraRelationalDecorated === 'true') continue;
-      row.dataset.carteraRelationalDecorated = 'true';
-      const reference = text(row.dataset.directoryReference);
+    updateDirectoryCopy();
+    const list = root.querySelector('.cartera-directory-list');
+    if (!list) return;
+    const personRows = [...list.querySelectorAll(':scope > .cartera-directory-row[data-directory-kind="PERSON"]')];
+
+    for (const personRow of personRows) {
+      if (!personRow.isConnected || personRow.closest('.cartera-relationship-card')) continue;
+      const reference = text(personRow.dataset.directoryReference);
       const relationships = presentation[reference];
-      if (!relationships) continue;
-      const policies = relationships.policies || [];
-      const accounts = relationships.accounts || [];
+      const policies = relationships?.policies || [];
+      const accounts = relationships?.accounts || [];
       if (!policies.length && !accounts.length) continue;
 
-      row.dataset.carteraHasRelations = 'true';
-      const content = row.children?.[1];
-      if (!content) continue;
+      const card = doc.createElement('article');
+      card.className = 'cartera-relationship-card';
+      card.dataset.relationshipPersonReference = reference;
+      card.setAttribute('aria-label', `Relación comercial de ${personRow.querySelector('strong')?.textContent || 'persona'}`);
+      list.insertBefore(card, personRow);
 
-      const wrapper = root.ownerDocument.createElement('span');
-      wrapper.className = 'cartera-related-entities';
-      const policyGroup = relationGroup(
-        root.ownerDocument,
-        policies.length === 1 ? 'Póliza' : 'Pólizas',
-        policies,
-        'POLICY',
-      );
-      const accountGroup = relationGroup(
-        root.ownerDocument,
-        accounts.length === 1 ? 'Cuenta' : 'Cuentas',
-        accounts,
-        'ACCOUNT',
-      );
-      if (policyGroup) wrapper.append(policyGroup);
-      if (accountGroup) wrapper.append(accountGroup);
-      content.append(wrapper);
+      personRow.classList.add('cartera-relationship-person');
+      personRow.dataset.carteraHasRelations = 'true';
+      card.append(personRow);
 
-      const relationSummary = [
-        policies.length ? `${policies.length} póliza${policies.length === 1 ? '' : 's'}` : '',
-        accounts.length ? `${accounts.length} cuenta${accounts.length === 1 ? '' : 's'}` : '',
-      ].filter(Boolean).join(', ');
-      row.setAttribute('aria-label', `${row.querySelector('strong')?.textContent || 'Persona'} · ${relationSummary}`);
+      if (policies.length) {
+        const section = relationSection(doc, policies.length === 1 ? 'Póliza' : 'Pólizas');
+        for (const policy of policies) {
+          const policyReference = text(policy.reference);
+          const policyRow = [...list.querySelectorAll(':scope > .cartera-directory-row[data-directory-kind="POLICY"]')]
+            .find(row => text(row.dataset.directoryReference) === policyReference);
+          const uniquelyOwnedPresentation = relationUseCount(presentation, 'POLICY', policyReference) === 1;
+          if (policyRow && uniquelyOwnedPresentation) {
+            policyRow.classList.add('cartera-relationship-policy');
+            policyRow.dataset.relationshipRole = text(policy.relationshipLabel);
+            const label = policyRow.querySelector('small');
+            if (label) label.textContent = policy.displayLabel || 'Producto no identificado';
+            const kind = policyRow.querySelector('.cartera-kind');
+            if (kind) kind.textContent = policy.relationshipLabel || 'PÓLIZA';
+            section.append(policyRow);
+          } else {
+            section.append(staticRelationRow(doc, policy, 'POLICY'));
+          }
+        }
+        card.append(section);
+      }
+
+      if (accounts.length) {
+        const section = relationSection(doc, accounts.length === 1 ? 'Cuenta' : 'Cuentas');
+        for (const account of accounts) section.append(staticRelationRow(doc, account, 'ACCOUNT'));
+        card.append(section);
+      }
     }
+
+    root.querySelector('.cartera-directory')?.setAttribute('data-relational-presentation', '011a');
   }
 
   function scheduleDecorate() {
-    if (decorateScheduled) return;
+    if (decorateScheduled || destroyed) return;
     decorateScheduled = true;
-    queueMicrotask(decorateDirectory);
+    queueMicrotask(() => { void decorateDirectory(); });
   }
 
   function startObserver() {
     if (observer) return;
-    observer = new MutationObserver(scheduleDecorate);
+    const Observer = windowRef.MutationObserver || globalThis.MutationObserver;
+    if (!Observer) return;
+    observer = new Observer(scheduleDecorate);
     observer.observe(root, { childList: true, subtree: true });
   }
 
+  function resetProjection() {
+    projectionPromise = null;
+  }
+
   async function mount() {
+    destroyed = false;
     startObserver();
     await base.mount();
-    decorateDirectory();
+    await decorateDirectory();
   }
 
   async function reload() {
-    await base.reload?.();
-    decorateDirectory();
+    resetProjection();
+    const result = await base.reload?.();
+    await decorateDirectory();
+    return result;
   }
 
-  function destroy() {
+  function stop() {
     observer?.disconnect();
     observer = null;
-    adapter = null;
-    return base.destroy?.();
+    decorateScheduled = false;
+    projectionPromise = null;
+    relationalAdapter = null;
   }
 
   return Object.freeze({
     ...base,
     mount,
     reload,
-    destroy,
+    async scrub() {
+      stop();
+      return base.scrub?.();
+    },
+    async unmount() {
+      stop();
+      return base.unmount?.();
+    },
+    async destroy() {
+      destroyed = true;
+      stop();
+      return base.destroy?.();
+    },
   });
 }
