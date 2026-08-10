@@ -1,4 +1,5 @@
 import { deriveCard, stageLabel } from "./pipeline-core.js";
+import { createPipelineDomainIntelligenceConsumer } from "../../../../advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js";
 
 const rootUrl = new URL("../../../../", import.meta.url);
 const authority = path => new URL(path, rootUrl);
@@ -16,6 +17,18 @@ async function loadAuthorities() {
     await loadScript("advisor-os/sales-pipeline/productive-prospect-service.js");
     await loadScript("advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-contract.js");
     await loadScript("advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-service.js");
+
+    let intelligenceUnavailableReason = null;
+    try {
+      await loadScript("platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js");
+      await loadScript("platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js");
+      await loadScript("platform/shared-commercial-model/crs-03-pipeline-person-convergence-contract.js");
+      await loadScript("advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js");
+    } catch (error) {
+      intelligenceUnavailableReason = error?.code || error?.message || "PIPELINE_INTELLIGENCE_DEPENDENCY_UNAVAILABLE";
+    }
+
+    return Object.freeze({ intelligenceUnavailableReason });
   })();
   return loadedPromise;
 }
@@ -65,7 +78,7 @@ export async function requestConfirmedStage({ client, prospectId, status }) {
 
 export async function createPipelineAdapter({ client } = {}) {
   if (!client) throw new Error("PRODUCTIVE_CLIENT_REQUIRED");
-  await loadAuthorities();
+  const authorityState = await loadAuthorities();
 
   const prospectAuthority = globalThis.ForgeProductiveProspectService067G17B;
   const timelineAuthority = globalThis.ForgeProspectTimelineServiceNFAST08;
@@ -75,12 +88,27 @@ export async function createPipelineAdapter({ client } = {}) {
 
   const service = prospectAuthority.create(client);
   const timelineService = timelineAuthority.create(client);
+  let intelligenceConsumer = null;
+  let intelligenceUnavailableReason = authorityState.intelligenceUnavailableReason;
+  if (!intelligenceUnavailableReason) {
+    try {
+      intelligenceConsumer = createPipelineDomainIntelligenceConsumer({
+        client,
+        convergenceServiceModule: globalThis.ForgeCrs03PipelinePersonConvergenceService,
+      });
+    } catch (error) {
+      intelligenceUnavailableReason = error?.code || error?.message || "PIPELINE_INTELLIGENCE_CONSUMER_UNAVAILABLE";
+    }
+  }
+
   const capabilities = Object.freeze({
     createProspect: typeof service.createProspect === "function",
     importProspects: false,
     nashAvailable: false,
     nbaAvailable: false,
     contactAvailable: false,
+    personConvergenceAvailable: Boolean(intelligenceConsumer),
+    intelligenceAvailable: Boolean(intelligenceConsumer),
   });
 
   let records = [];
@@ -175,6 +203,27 @@ export async function createPipelineAdapter({ client } = {}) {
     return timelineService.listProspectTimeline(id);
   }
 
+  async function intelligence(id, options = {}) {
+    if (!intelligenceConsumer) {
+      return Object.freeze({
+        state: "unavailable",
+        prospectReference: id || null,
+        personReference: null,
+        projections: Object.freeze([]),
+        degradedReasons: Object.freeze([
+          intelligenceUnavailableReason || "PIPELINE_INTELLIGENCE_CONSUMER_UNAVAILABLE",
+        ]),
+        boundaries: Object.freeze({
+          readOnly: true,
+          automaticExecutionAllowed: false,
+          identityMutationAllowed: false,
+          persistenceAllowed: false,
+        }),
+      });
+    }
+    return intelligenceConsumer.getProspectDecisionContext(id, options);
+  }
+
   function whatsappUrl(record, text = "") {
     const phone = String(
       record.phone || record.prospect?.whatsapp || "",
@@ -186,6 +235,7 @@ export async function createPipelineAdapter({ client } = {}) {
   return Object.freeze({
     service,
     timelineService,
+    intelligenceConsumer,
     capabilities,
     reload,
     create,
@@ -193,6 +243,7 @@ export async function createPipelineAdapter({ client } = {}) {
     update,
     archive,
     timeline,
+    intelligence,
     whatsappUrl,
     getCards: () => cards,
   });

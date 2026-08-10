@@ -1,0 +1,143 @@
+name: Forge Domain Intelligence Authority Reconciliation 005A
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js'
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-adapter.js'
+      - 'tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs'
+      - 'tests/pipeline-scope-guard.test.mjs'
+      - 'docs/evidence/FORGE_DOMAIN_INTELLIGENCE_AUTHORITY_RECONCILIATION_005A_DISCOVERY.md'
+      - 'docs/evidence/FORGE_DOMAIN_INTELLIGENCE_AUTHORITY_RECONCILIATION_005A_CLOSURE.md'
+      - '.github/workflows/forge-domain-intelligence-authority-reconciliation-005a.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-domain-intelligence-authority-reconciliation-005a-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  authority-reconciliation-005a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Reconciled bounded diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          head='${{ github.event.pull_request.head.sha }}'
+          mapfile -t changed < <(git -c core.quotepath=false diff --name-only "$base" "$head")
+          test "${#changed[@]}" -gt 0
+          printf '%s\n' "${changed[@]}"
+          allowed='^(advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer\.js|docs/static-preview/forge-aura/pipeline/pipeline-adapter\.js|tests/(forge-domain-intelligence-authority-reconciliation-005a|pipeline-scope-guard)\.test\.mjs|docs/evidence/FORGE_DOMAIN_INTELLIGENCE_AUTHORITY_RECONCILIATION_005A_(DISCOVERY|CLOSURE)\.md|\.github/workflows/forge-domain-intelligence-authority-reconciliation-005a\.yml)$'
+          for file in "${changed[@]}"; do
+            [[ "$file" =~ $allowed ]] || { echo "PHASE005A_SCOPE_VIOLATION=$file" >&2; exit 1; }
+          done
+          if git diff --name-only "$base" "$head" | grep -Eq '^(supabase/|platform/compensation/|platform/portfolio-intelligence/|platform/productivity/|manager-os/forecast/|platform/decision-projection/)'; then
+            echo 'PHASE005A_AUTHORITY_MUTATION=FAIL' >&2
+            exit 1
+          fi
+          echo 'PHASE005A_BOUNDED_DIFF=PASS'
+
+      - name: Syntax gate
+        run: |
+          node --check advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter.js
+          node --check tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs
+          node --check tests/pipeline-scope-guard.test.mjs
+
+      - name: Phase 005A consumer acceptance
+        run: node --test tests/forge-domain-intelligence-authority-reconciliation-005a.test.mjs
+
+      - name: Preserve Pipeline UX scope contract
+        run: node --test tests/pipeline-scope-guard.test.mjs
+
+      - name: Preserve Phase 004 projection authority
+        run: node --test tests/forge-cross-domain-decision-projection-004.test.mjs
+
+      - name: Preserve CRS-03 identity boundary
+        run: |
+          node --test tests/crs-03-pipeline-person-convergence-contract-test.mjs
+          node --test tests/crs-03-pipeline-person-convergence-service-test.mjs
+
+      - name: Preserve domain authorities
+        run: |
+          node tests/fip-pack-01-relationship-intelligence-foundation-test.mjs
+          node tests/fip-pack-02-advisor-intelligence-and-mick-test.mjs
+          node tests/fip-pack-03-nash-conversation-intelligence-test.mjs
+          node tests/fip-pack-04-opportunity-and-operation-test.mjs
+          node tests/fip-pack-07-productive-experience-and-acceptance-test.mjs
+          node manager-os/tests/advisor-forecast-stages-11-13-test.js
+          node tests/advisor-forecast-runtime-acceptance-test.mjs
+
+      - name: Preserve authenticated session controls
+        run: node --test tests/authenticated-session-controls-test.mjs
+
+      - name: Preserve REP-17 unified runtime
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: No new persistence, score or truth owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          consumer='advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js'
+          if grep -niE 'service_role|\.insert\(|\.update\(|\.delete\(|\.rpc\(|create[[:space:]]+table|create[[:space:]]+(or[[:space:]]+replace[[:space:]]+)?function' "$consumer"; then
+            echo 'PHASE005A_WRITE_OR_PRIVILEGE_DRIFT=FAIL' >&2
+            exit 1
+          fi
+          grep -q 'readOnly: true' "$consumer"
+          grep -q 'createsTruth: false' "$consumer"
+          grep -q 'createsScore: false' "$consumer"
+          grep -q 'calculatesPriority: false' "$consumer"
+          grep -q 'automaticExecutionAllowed: false' "$consumer"
+          grep -q 'identityMutationAllowed: false' "$consumer"
+          grep -q 'persistenceAllowed: false' "$consumer"
+          grep -q 'opportunityAuthority: upstream.opportunityAuthority || "UNKNOWN"' "$consumer"
+          echo 'NEW_DUPLICATE_ENGINE=NO'
+          echo 'NEW_DUPLICATE_SCORE=NO'
+          echo 'NEW_DUPLICATE_TRUTH_OWNER=NO'
+
+      - name: Final Robocop 005A
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'opportunityAuthority: "NOT_PRODUCTIVE"' advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js
+          grep -q 'FCDP-004-001' advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js
+          grep -q 'createPipelineDomainIntelligenceConsumer' docs/static-preview/forge-aura/pipeline/pipeline-adapter.js
+          test -f platform/portfolio-intelligence/cartera-050c-authority-adapters.js
+          test -f platform/productivity/activity-points-authority-adapter.mjs
+          test -f manager-os/forecast/advisor-forecast-read-model-v3.js
+          test -f platform/compensation/advisor-compensation-070-view.js
+          echo 'EXACT_HEAD_TESTED=YES'
+          echo 'PHASE_005_AUTHORITY_ACTIVATION=PASS'
+          echo 'PHASE_005A_RECONCILIATION=PASS'
+          echo 'RELATIONSHIP_AUTHORITY=PASS'
+          echo 'MICK_AUTHORITY=PASS'
+          echo 'NASH_AUTHORITY=PASS'
+          echo 'OPPORTUNITY_AUTHORITY=PASS_DEGRADED_NOT_PRODUCTIVE'
+          echo 'FORECAST_AUTHORITY=PASS'
+          echo 'REVENUE_AUTHORITY=PASS'
+          echo 'ALFRED_CONSUMER_BOUNDARY=PASS'
+          echo 'AUTH_SESSION=PASS'
+          echo 'REP_17=PASS'
+          echo 'NEW_DUPLICATE_ENGINE=NO'
+          echo 'NEW_DUPLICATE_SCORE=NO'
+          echo 'NEW_DUPLICATE_TRUTH_OWNER=NO'
+          echo 'FINAL_ROBOCOP_005A=PASS'
+          echo 'PHASE_STATUS=PASS'
+          echo 'MERGE_READY=YES'
