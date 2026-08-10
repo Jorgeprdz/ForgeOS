@@ -1,0 +1,124 @@
+.aura-cartera .cartera-directory-list{display:grid;gap:10px;margin-top:14px}
+.aura-cartera .cartera-directory-row{width:100%;min-width:0;appearance:none;-webkit-appearance:none}
+
+.aura-cartera .cartera-relationship-card{
+  min-width:0;
+  overflow:hidden;
+  border:1px solid var(--aura-border,#e1e4ec);
+  border-radius:18px;
+  background:var(--aura-surface,#fff);
+  box-shadow:0 8px 22px rgba(31,41,55,.045);
+}
+
+.aura-cartera .cartera-relationship-card>.cartera-directory-row{
+  width:100%;
+  min-width:0;
+  border:0!important;
+  border-radius:0!important;
+  padding:15px 14px 8px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  outline:0;
+  text-align:left;
+}
+
+.aura-cartera .cartera-relationship-card>.cartera-directory-row:hover{
+  background:color-mix(in srgb,var(--cartera-violet) 3%,white)!important;
+  box-shadow:none!important;
+}
+
+.aura-cartera .cartera-related-section{
+  min-width:0;
+  margin:0;
+  padding:0 14px 14px 66px;
+}
+
+.aura-cartera .cartera-related-section+.cartera-related-section{padding-top:0}
+.aura-cartera .cartera-related-heading{display:none!important}
+
+.aura-cartera .cartera-related-section .cartera-directory-row,
+.aura-cartera .cartera-related-static-row{
+  display:flex!important;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:4px 7px;
+  min-width:0;
+  width:100%;
+  margin:0;
+  padding:5px 0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  outline:0;
+  color:inherit;
+  text-align:left;
+}
+
+.aura-cartera .cartera-related-section .cartera-directory-row:hover{
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.aura-cartera .cartera-related-section .cartera-directory-icon,
+.aura-cartera .cartera-related-static-row .cartera-directory-icon,
+.aura-cartera .cartera-related-section .cartera-kind,
+.aura-cartera .cartera-related-static-row .cartera-kind{
+  display:none!important;
+}
+
+.aura-cartera .cartera-related-section .cartera-directory-row>span:nth-child(2),
+.aura-cartera .cartera-related-static-row>span:nth-child(2){
+  display:flex;
+  min-width:0;
+  flex:1 1 100%;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:3px 7px;
+}
+
+.aura-cartera .cartera-related-section strong,
+.aura-cartera .cartera-related-static-row strong{
+  display:inline;
+  min-width:0;
+  color:var(--aura-text,#172033);
+  font-size:13px;
+  font-weight:750;
+  overflow-wrap:anywhere;
+}
+
+.aura-cartera .cartera-related-section strong::before,
+.aura-cartera .cartera-related-static-row strong::before{
+  content:'Póliza · ';
+  color:var(--aura-muted,#667085);
+  font-weight:650;
+}
+
+.aura-cartera .cartera-related-section small,
+.aura-cartera .cartera-related-static-row small{
+  display:inline;
+  margin:0;
+  color:var(--aura-muted,#667085);
+  font-size:12px;
+  overflow-wrap:anywhere;
+}
+
+.aura-cartera .cartera-related-section small::before,
+.aura-cartera .cartera-related-static-row small::before{content:'· '}
+
+.aura-cartera .cartera-directory-row[data-cartera-has-relations="true"] .cartera-directory-icon{
+  align-self:start;
+  margin-top:1px;
+}
+
+@media(max-width:640px){
+  .aura-cartera .cartera-relationship-card{border-radius:16px}
+  .aura-cartera .cartera-relationship-card>.cartera-directory-row{padding:13px 12px 7px!important}
+  .aura-cartera .cartera-related-section{padding:0 12px 12px 52px}
+  .aura-cartera .cartera-related-section .cartera-directory-row,
+  .aura-cartera .cartera-related-static-row{padding:4px 0!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .aura-cartera .cartera-directory-row{transition:none}
+}
