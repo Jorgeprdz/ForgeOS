@@ -35,6 +35,19 @@ assert.match(carteraCss, /button\.cartera-directory-row/);
 assert.match(carteraCss, /-webkit-appearance:none/);
 assert.match(carteraCss, /cartera-policy-row-011e/);
 
+// 011F regression: MutationObserver normalization must be idempotent.
+assert.match(cartera, /function setTextIfChanged\(/);
+assert.match(cartera, /setTextIfChanged\(\s*copy,/);
+assert.match(cartera, /setTextIfChanged\(counter, counterLabel\)/);
+assert.doesNotMatch(cartera, /copy\.textContent\s*=/);
+assert.doesNotMatch(cartera, /counter\.textContent\s*=/);
+const mountBlock = cartera.match(/async mount\(\) \{([\s\S]*?)\n    \},\n    async reload/);
+assert.ok(mountBlock, 'Cartera mount wrapper must remain inspectable');
+assert.ok(
+  mountBlock[1].indexOf('await base.mount?.()') < mountBlock[1].indexOf('start();'),
+  'MutationObserver must start only after the base Cartera mount completes',
+);
+
 assert.match(loop, /pipeline-journal-aura-011e\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
 assert.match(index, /pipeline-journal-aura-011e\.css/);
 assert.match(index, /cartera-live-acceptance-011e\.css/);
@@ -46,3 +59,4 @@ console.log('JOURNAL_CLOSE_RECOVERY=PASS');
 console.log('JOURNAL_TRUTHFUL_DEGRADATION=PASS');
 console.log('CARTERA_POLICY_AFFORDANCE=PASS');
 console.log('CARTERA_SIGNAL_COUNT_COPY=PASS');
+console.log('CARTERA_MUTATION_OBSERVER_IDEMPOTENCE_011F=PASS');
