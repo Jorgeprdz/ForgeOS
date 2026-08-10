@@ -9,17 +9,21 @@ HISTORICAL_PHASE_BASE=95755f7680fe235d515c02ec4ec06fa6c49eab17
 HISTORICAL_PHASE_HEAD=4332ee1c0d7bb84858d412fd84be50d0861d9eee
 BASE_MAIN_SHA=64e07107cbb10946fab8584f24de01646d771ed4
 MERGE_BASE_AFTER_RECONCILIATION=64e07107cbb10946fab8584f24de01646d771ed4
-
 DRIFT_CLASSIFICATION=COMPATIBLE_DRIFT
+
 BASELINE_RECONCILIATION=MAIN_TREE_PLUS_PHASE004_NINE_PATH_OVERLAY
+RECONCILIATION_MERGE_COMMIT=4b39c7e1d63dc6d1ccf49ae35a85e8407cab974a
+DIRECT_MAIN_MUTATION=NO
+FORCE_RESET=NO
+BLIND_CHERRY_PICK=NO
 POST_PHASE004_FEATURE_LOSS=NO
 HISTORICAL_CODE_RESURRECTION=NO
 AUTHORITY_DOWNGRADE=NO
 ```
 
-## Executive closure
+## Closure decision
 
-Phase004 establishes one neutral, read-only cross-domain consumer projection over existing Forge domain authorities. It does not become a new business brain, score, truth owner, priority owner, Forecast owner, Revenue owner or execution authority.
+Phase004 establishes one neutral, read-only cross-domain consumer projection over existing Forge domain authorities.
 
 ```text
 DECISION_PROJECTION_CONTRACT=FORGE_CROSS_DOMAIN_DECISION_PROJECTION
@@ -43,36 +47,35 @@ NEW_COMPENSATION_FORMULA=0
 UI_REDESIGN=0
 ```
 
-## Baseline reconciliation
+## Reconciled bounded diff
 
-The historical PR had been stacked over Blueprint002/Phase003 and had diverged from current `main`. Closure did not force-reset the branch or replay the historical stack onto the product.
-
-The reconciliation created a non-destructive merge commit whose tree was built from current `main` and overlaid only the nine canonical Phase004 paths:
-
-1. `.github/workflows/forge-cross-domain-decision-projection-004.yml`
-2. `docs/architecture/intelligence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004.md`
-3. `docs/architecture/intelligence/FORGE_DECISION_CONTRACT_RECONCILIATION_004.md`
-4. `docs/architecture/intelligence/FORGE_FORECAST_AUTHORITY_TRACE_004.md`
-5. `docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_ACCEPTANCE.md`
-6. `docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_CONSTITUTIONAL_GATE.md`
-7. `platform/decision-projection/forge-cross-domain-decision-adapters.js`
-8. `platform/decision-projection/forge-cross-domain-decision-projection.js`
-9. `tests/forge-cross-domain-decision-projection-004.test.mjs`
+The historical branch had been stacked over Blueprint002/Phase003. Closure preserved current `main` and overlaid only the nine canonical Phase004 paths:
 
 ```text
-RECONCILIATION_MERGE_COMMIT=4b39c7e1d63dc6d1ccf49ae35a85e8407cab974a
-RECONCILIATION_PARENT_PHASE004=4332ee1c0d7bb84858d412fd84be50d0861d9eee
-RECONCILIATION_PARENT_MAIN=64e07107cbb10946fab8584f24de01646d771ed4
-DIRECT_MAIN_MUTATION=NO
-FORCE_RESET=NO
-BLIND_CHERRY_PICK=NO
+.github/workflows/forge-cross-domain-decision-projection-004.yml
+docs/architecture/intelligence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004.md
+docs/architecture/intelligence/FORGE_DECISION_CONTRACT_RECONCILIATION_004.md
+docs/architecture/intelligence/FORGE_FORECAST_AUTHORITY_TRACE_004.md
+docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_ACCEPTANCE.md
+docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_CONSTITUTIONAL_GATE.md
+platform/decision-projection/forge-cross-domain-decision-adapters.js
+platform/decision-projection/forge-cross-domain-decision-projection.js
+tests/forge-cross-domain-decision-projection-004.test.mjs
 ```
 
-After reconciliation the PR is zero commits behind current main and its changed-file set is bounded to those nine Phase004 paths.
+```text
+BOUNDED_DIFF=PASS
+UNRELATED_REFACTOR=NO
+SCHEMA_CHANGE=NO
+MIGRATION_CHANGE=NO
+RLS_CHANGE=NO
+AURA_REDESIGN=NO
+PAGES_RUNTIME_MUTATION=NO
+```
 
-## Current authority compatibility proof
+## Current authority compatibility
 
-The consumed authority contracts were compared branch-vs-current-main by Git blob SHA before closure:
+Consumed authority contracts were compared against current `main` by Git blob SHA before closure:
 
 ```text
 RELATIONSHIP_AUTHORITY=FORGE_RELATIONSHIP_INTELLIGENCE_FOUNDATION
@@ -95,6 +98,8 @@ FORECAST_AUTHORITY=MANAGER_OS_FORECAST
 FORECAST_DECISION_READ_MODEL=ADVISOR_FORECAST_READ_MODEL_V3
 FORECAST_READ_MODEL_BLOB=bf3487b28eb9c90d9f2016f7d53336878bb9e509
 FORECAST_BRANCH_MAIN_IDENTICAL=YES
+PACE_PROJECTION_OWNER=SMNYL_PACE_FORECAST_ENGINE
+SCENARIO_CONTEXT_OWNER=MANAGER_ADVISOR_FORECAST_ENGINE
 
 REVENUE_AUTHORITY=REVENUE_VALUE
 REVENUE_BLOB=a48fa3e469400804a5d74479dc93aafe98e87685
@@ -103,16 +108,11 @@ REVENUE_BRANCH_MAIN_IDENTICAL=YES
 ALFRED_AUTHORITY=FIP_PACK_07_PRODUCTIVE_EXPERIENCE
 ALFRED_ROLE=ORCHESTRATOR_CONSUMER
 ALFRED_DECISION_TRUTH_OWNER=NO
-```
 
-```text
 DOMAIN_AUTHORITY_PRESERVATION=PASS
-AUTHORITY_DOWNGRADE=NO
 ```
 
 ## Projection semantics
-
-The canonical projection preserves source-owned meaning and provenance.
 
 ```text
 PROVENANCE_REQUIRED=YES
@@ -131,7 +131,7 @@ AUTOMATIC_CONFLICT_WINNER=NO
 AUTOMATIC_BUSINESS_ACTION=NO
 ```
 
-Composition is mechanical metadata only. It retains all source projections and never chooses a winner.
+Composition keeps all source projections and does not select a winner:
 
 ```text
 AGREE=SUPPORTED_FOR_EXPLICITLY_COMPATIBLE_SAME_FAMILY_ACTIONS
@@ -144,26 +144,22 @@ winnerDecisionReference=null
 automaticResolutionAllowed=false
 ```
 
-The closure corrected one documentation-only inconsistency so the representative Relationship + Nash trace now says `COMPLEMENT`, matching the implementation and acceptance test.
+The representative Relationship + Nash trace was corrected from historical `AGREE` text to `COMPLEMENT`, matching the actual contract and test.
 
-## Forecast and economic truth
+## Truth boundaries
 
 ```text
-CURRENT_CANONICAL_FORECAST_AUTHORITY=MANAGER_OS_FORECAST
-CURRENT_FORECAST_COMPOSITION_PATH=ADVISOR_FORECAST_COMPOSER_V3
-CURRENT_FORECAST_DECISION_READ_MODEL=ADVISOR_FORECAST_READ_MODEL_V3
-PACE_PROJECTION_OWNER=SMNYL_PACE_FORECAST_ENGINE
-SCENARIO_CONTEXT_OWNER=MANAGER_ADVISOR_FORECAST_ENGINE
+UNKNOWN_IS_NOT_ZERO=YES
+PROJECTION_IS_NOT_FACT=YES
+RECOMMENDATION_IS_NOT_HUMAN_DECISION=YES
 FORECAST_IS_NOT_REVENUE_TRUTH=YES
-
-REVENUE_BUCKET_PRESERVATION=PASS
 EXPECTED_IS_NOT_GENERATED=YES
 SCENARIO_IS_NOT_GENERATED=YES
 EARNED_ESTIMATED_IS_NOT_PAID_CONFIRMED=YES
-UNKNOWN_IS_NOT_ZERO=YES
+REVENUE_BUCKET_PRESERVATION=PASS
 ```
 
-## Constitutional / ADR closure
+## Constitutional / ADR gate
 
 ```text
 CONSTITUTIONAL_GATE_004=PASS
@@ -171,21 +167,29 @@ ADR_GATE_004=PASS
 BASELINE_RECONCILIATION_GATE=PASS
 ```
 
-Applicable current boundaries include Evidence Ownership, One Metric One Owner, Recommendation vs Decision Authority, No Invented Recommendations, Mick Behavior Intelligence, Manager Intelligence authority and Compensation/Economic evidence boundaries.
+Current boundaries reviewed include Evidence Ownership, One Metric One Owner, Recommendation vs Decision Authority, No Invented Recommendations, Mick Behavior Intelligence, Manager Intelligence authority, Compensation/Economic evidence, authenticated session controls and REP-17.
 
-## Exact-head governing run before evidence seal
+## Governing exact-head runs
 
-The reconciled workflow was upgraded so bounded diff is evaluated against the actual PR base/head rather than the obsolete historical Phase003 base. It also adds current authenticated-session and REP-17 regression coverage and an explicit Final Robocop 004 step.
+### Reconciled implementation run
 
 ```text
 IMPLEMENTATION_ACCEPTED_HEAD=2fa7cf013b85610e9f3d69e00c27fd021c8339cb
-WORKFLOW=Forge Cross-Domain Decision Projection 004
 WORKFLOW_RUN=31344031009
 WORKFLOW_JOB=93322496800
 WORKFLOW_CONCLUSION=SUCCESS
 ```
 
-The exact-head job passed:
+### Post-evidence exact-head run
+
+```text
+POST_EVIDENCE_ACCEPTED_HEAD=4a2eb7f43669b21ca706e64b86930e4317c28b12
+POST_EVIDENCE_WORKFLOW_RUN=31344088705
+POST_EVIDENCE_WORKFLOW_JOB=93322656250
+POST_EVIDENCE_WORKFLOW_CONCLUSION=SUCCESS
+```
+
+Both accepted runs passed:
 
 ```text
 RECONCILED_BOUNDED_DIFF=PASS
@@ -203,9 +207,9 @@ NO_PERSISTENCE_NO_NEW_ENGINE_NO_LOCAL_SCORING=PASS
 FINAL_ROBOCOP_004=PASS
 ```
 
-Because this evidence file itself is a subsequent documentation-only seal, the workflow must run once more on the resulting PR HEAD. The final PR body/checkpoint records that post-evidence exact HEAD and run without creating another source-of-truth layer.
+The final evidence-seal commit is documentation-only. Per the exact-head rule, the PR must pass the same workflow one final time after this file update before the human checkpoint is declared.
 
-## Security and scope
+## Security / runtime boundary
 
 ```text
 READ_ONLY_BOUNDARY=PASS
@@ -226,20 +230,27 @@ APPLICATION_AUTHORITY_MUTATION=NO
 COMMERCIAL_PERSON_AUTHORITY_MUTATION=NO
 IDENTITY_RESOLUTION_AUTHORITY_MUTATION=NO
 
-HOME_REDESIGN=NO
-AURA_REDESIGN=NO
-PAGES_DEPLOY_WORKFLOW_MUTATION=NO
+PAGES_IMPORT_GRAPH=NOT_APPLICABLE_NO_PAGES_RUNTIME_MUTATION
 PRODUCTION_DEPLOYMENT=NO
-```
-
-`PAGES_IMPORT_GRAPH=NOT_APPLICABLE_NO_PAGES_RUNTIME_MUTATION` because Phase004 introduces no Pages/static-preview runtime path or Pages workflow mutation. Source/session boundaries remain covered by the dedicated domain regressions, authenticated-session controls and REP-17.
-
-## Closure state before final post-evidence CI
-
-```text
-PHASE_STATUS=PASS_PENDING_POST_EVIDENCE_EXACT_HEAD_CI
-MERGE_READY=PENDING_POST_EVIDENCE_EXACT_HEAD_CI
 AUTO_MERGE=NO
 AUTO_DEPLOY=NO
 NEXT_PHASE_STARTED=NO
+```
+
+## Phase closure
+
+```text
+DECISION_PROJECTION_AUTHORITY=PASS
+DOMAIN_AUTHORITY_PRESERVATION=PASS
+PROVENANCE=PASS
+UNKNOWN_PRESERVATION=PASS
+CONFLICT_SEMANTICS=PASS
+READ_ONLY_BOUNDARY=PASS
+CONSTITUTIONAL_GATE_004=PASS
+ADR_GATE_004=PASS
+BASELINE_RECONCILIATION_GATE=PASS
+FINAL_ROBOCOP_004=PASS
+PHASE_STATUS=PASS
+MERGE_READY=YES
+HUMAN_CHECKPOINT=PENDING_FINAL_EXACT_HEAD_CI
 ```
