@@ -14,30 +14,42 @@ function text(value) {
   return String(value ?? '').trim();
 }
 
-function confirmedClaimValue(claim) {
-  if (!claim || typeof claim !== 'object' || Array.isArray(claim)) return null;
-  const decision = text(claim.decision).toUpperCase();
-  if (decision === 'REJECT') return null;
-  const confirmed = text(claim.confirmedValue);
-  if (confirmed) return confirmed;
-  if (decision === 'ACCEPT') {
-    const candidate = text(claim.candidateValue);
-    if (candidate) return candidate;
+export function isTechnicalProductReference011a(value) {
+  const candidate = text(value);
+  if (!candidate) return false;
+  if (/^(product|plan|policy|quote|coverage|carrier)[:/]/i.test(candidate)) return true;
+  if (/^[a-z0-9]+(?:[_:-][a-z0-9]+)+$/i.test(candidate)) return true;
+  if (/^[a-z0-9]+(?:-[a-z0-9]+){2,}$/i.test(candidate)) return true;
+  return false;
+}
+
+export function safeProductPresentationLabel011a(value, fallback = 'Producto no identificado') {
+  const candidate = text(value);
+  return candidate && !isTechnicalProductReference011a(candidate) ? candidate : fallback;
+}
+
+function governedClaimValue(claim) {
+  if (claim === null || claim === undefined) return null;
+  if (typeof claim !== 'object' || Array.isArray(claim)) {
+    return safeProductPresentationLabel011a(claim, null);
+  }
+  if (text(claim.decision).toUpperCase() === 'REJECT') return null;
+  for (const value of [claim.confirmedValue, text(claim.decision).toUpperCase() === 'ACCEPT' ? claim.candidateValue : null, claim.value, claim.normalizedValue]) {
+    const safe = safeProductPresentationLabel011a(value, null);
+    if (safe) return safe;
   }
   return null;
 }
 
 function maskPolicyNumber(value) {
-  const raw = text(value);
+  const raw = text(value).replace(/\s+/g, '');
   if (!raw) return 'Número no identificado';
-  const compact = raw.replace(/\s+/g, '');
-  if (compact.length <= 4) return compact;
-  return `••••${compact.slice(-4)}`;
+  return raw.length <= 4 ? raw : `••••${raw.slice(-4)}`;
 }
 
 function relationshipLabel(value) {
   const code = text(value).toUpperCase();
-  const labels = {
+  return ({
     POLICY_OWNER: 'Contratante',
     OWNER: 'Contratante',
     INSURED: 'Asegurado',
@@ -47,8 +59,7 @@ function relationshipLabel(value) {
     PRIMARY: 'Principal',
     SPOUSE: 'Cónyuge',
     DEPENDENT: 'Dependiente',
-  };
-  return labels[code] || 'Relación confirmada';
+  })[code] || 'Relación confirmada';
 }
 
 async function queryRows(query) {
@@ -66,17 +77,14 @@ async function readEvidenceLabels(client, policies) {
       .in('policy_id', policyIds)
       .order('version_number', { ascending: false }),
   );
-
   const latestByPolicy = new Map();
   for (const version of versions) {
     const policyId = text(version.policy_id);
-    if (!policyId || latestByPolicy.has(policyId)) continue;
-    latestByPolicy.set(policyId, version);
+    if (policyId && !latestByPolicy.has(policyId)) latestByPolicy.set(policyId, version);
   }
 
-  const evidenceIds = [...new Set(
-    [...latestByPolicy.values()].map(version => text(version.evidence_version_id)).filter(Boolean),
-  )];
+  const evidenceIds = [...new Set([...latestByPolicy.values()]
+    .map(version => text(version.evidence_version_id)).filter(Boolean))];
   if (!evidenceIds.length) return new Map();
 
   const evidenceRows = await queryRows(
@@ -91,17 +99,18 @@ async function readEvidenceLabels(client, policies) {
     const version = latestByPolicy.get(text(policy.id));
     const evidence = evidenceById.get(text(version?.evidence_version_id));
     if (text(evidence?.verification_state).toUpperCase() !== 'CONFIRMED') continue;
-    const label = confirmedClaimValue(evidence?.field_claims?.productName);
+    const claims = evidence?.field_claims || {};
+    const label = governedClaimValue(claims.productName) || governedClaimValue(claims.product);
     if (label) labels.set(text(policy.policy_reference), label);
   }
-
   return labels;
 }
 
 async function readPolicyRelations(client, directory) {
-  const personReferences = directory.filter(item => item.type === 'PERSON').map(item => text(item.reference)).filter(Boolean);
+  const personReferences = directory.filter(item => item.type === 'PERSON' && !text(item.reference).startsWith('pipeline-prospect:'))
+    .map(item => text(item.reference)).filter(Boolean);
   const policyReferences = directory.filter(item => item.type === 'POLICY').map(item => text(item.reference)).filter(Boolean);
-  if (!policyReferences.length) return { byPerson: new Map(), linkedPolicyReferences: new Set(), productLabels: new Map() };
+  if (!policyReferences.length) return { byPerson: new Map(), productLabels: new Map() };
 
   const [people, policies] = await Promise.all([
     personReferences.length
@@ -116,7 +125,6 @@ async function readPolicyRelations(client, directory) {
   const productLabels = await readEvidenceLabels(client, policies);
   const personReferenceById = new Map(people.map(person => [text(person.id), text(person.person_reference)]));
   const byPerson = new Map();
-  const linkedPolicyReferences = new Set();
 
   await Promise.all(policies.map(async policy => {
     const result = await client.rpc(GENERAL_ROLE_RPC, { p_policy_reference: policy.policy_reference });
@@ -128,28 +136,30 @@ async function readPolicyRelations(client, directory) {
       const personReference = personReferenceById.get(text(role?.participant_person_id));
       if (!personReference || seenPeople.has(personReference)) continue;
       seenPeople.add(personReference);
-      linkedPolicyReferences.add(text(policy.policy_reference));
-      const productLabel = productLabels.get(text(policy.policy_reference)) || 'Producto no identificado';
+      const productLabel = productLabels.get(text(policy.policy_reference))
+        || safeProductPresentationLabel011a(policy.product_reference);
       const relation = freeze({
         type: 'POLICY',
         reference: text(policy.policy_reference),
         displayLabel: productLabel,
         maskedPolicyNumber: maskPolicyNumber(policy.policy_number),
         relationshipLabel: relationshipLabel(role?.role_type),
-        searchText: [policy.policy_number, productLabel, policy.product_reference, policy.carrier_reference].map(text).filter(Boolean).join(' '),
+        searchText: [policy.policy_number, productLabel, policy.product_reference, policy.carrier_reference]
+          .map(text).filter(Boolean).join(' '),
       });
       const current = byPerson.get(personReference) || [];
       byPerson.set(personReference, [...current, relation]);
     }
   }));
 
-  return { byPerson, linkedPolicyReferences, productLabels };
+  return { byPerson, productLabels };
 }
 
 async function readAccountRelations(client, directory) {
-  const personReferences = directory.filter(item => item.type === 'PERSON').map(item => text(item.reference)).filter(Boolean);
+  const personReferences = directory.filter(item => item.type === 'PERSON' && !text(item.reference).startsWith('pipeline-prospect:'))
+    .map(item => text(item.reference)).filter(Boolean);
   const accountReferences = directory.filter(item => item.type === 'ACCOUNT').map(item => text(item.reference)).filter(Boolean);
-  if (!personReferences.length || !accountReferences.length) return { byPerson: new Map(), suppressibleAccounts: new Set() };
+  if (!personReferences.length || !accountReferences.length) return { byPerson: new Map() };
 
   const [people, accounts] = await Promise.all([
     queryRows(client.from('commercial_people').select('id,person_reference').in('person_reference', personReferences).is('archived_at', null)),
@@ -157,6 +167,8 @@ async function readAccountRelations(client, directory) {
   ]);
   const peopleById = new Map(people.map(row => [text(row.id), text(row.person_reference)]));
   const accountsById = new Map(accounts.map(row => [text(row.id), row]));
+  if (!peopleById.size || !accountsById.size) return { byPerson: new Map() };
+
   const memberships = await queryRows(
     client.from('commercial_account_memberships')
       .select('person_id,account_id,relationship_role,confirmation_state,privacy_classification,effective_to')
@@ -164,27 +176,13 @@ async function readAccountRelations(client, directory) {
       .in('account_id', [...accountsById.keys()]),
   );
 
-  const currentMemberships = memberships.filter(row =>
-    CURRENT_MEMBERSHIP_STATES.has(text(row.confirmation_state).toUpperCase())
-    && !row.effective_to
-    && text(row.privacy_classification).toUpperCase() !== 'RESTRICTED'
-  );
-  const peoplePerAccount = new Map();
-  for (const membership of currentMemberships) {
-    const accountId = text(membership.account_id);
-    const personId = text(membership.person_id);
-    const set = peoplePerAccount.get(accountId) || new Set();
-    set.add(personId);
-    peoplePerAccount.set(accountId, set);
-  }
-
   const byPerson = new Map();
-  const suppressibleAccounts = new Set();
-  for (const membership of currentMemberships) {
+  for (const membership of memberships) {
+    if (!CURRENT_MEMBERSHIP_STATES.has(text(membership.confirmation_state).toUpperCase())) continue;
+    if (membership.effective_to || text(membership.privacy_classification).toUpperCase() === 'RESTRICTED') continue;
     const personReference = peopleById.get(text(membership.person_id));
     const account = accountsById.get(text(membership.account_id));
     if (!personReference || !account) continue;
-    if ((peoplePerAccount.get(text(account.id))?.size || 0) === 1) suppressibleAccounts.add(text(account.account_reference));
     const relation = freeze({
       type: 'ACCOUNT',
       reference: text(account.account_reference),
@@ -195,8 +193,7 @@ async function readAccountRelations(client, directory) {
     const current = byPerson.get(personReference) || [];
     if (!current.some(item => item.reference === relation.reference)) byPerson.set(personReference, [...current, relation]);
   }
-
-  return { byPerson, suppressibleAccounts };
+  return { byPerson };
 }
 
 function buildPresentation(directory, policyRelations, accountRelations) {
@@ -236,19 +233,15 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
       ]);
       relationshipPresentation = buildPresentation(directory || [], policyRelations, accountRelations);
 
-      const projected = [];
-      for (const item of directory || []) {
-        if (item.type === 'POLICY' && policyRelations.linkedPolicyReferences.has(text(item.reference))) continue;
-        if (item.type === 'ACCOUNT' && accountRelations.suppressibleAccounts.has(text(item.reference))) continue;
-
+      const projected = (directory || []).map(item => {
         if (item.type === 'POLICY') {
-          const label = policyRelations.productLabels.get(text(item.reference)) || 'Producto no identificado';
-          projected.push({
+          const label = policyRelations.productLabels.get(text(item.reference))
+            || safeProductPresentationLabel011a(item.label);
+          return {
             ...item,
             label,
-            searchText: [item.searchText, item.reference, label].map(text).filter(Boolean).join(' '),
-          });
-          continue;
+            searchText: [item.searchText, item.reference, item.label, label].map(text).filter(Boolean).join(' '),
+          };
         }
 
         if (item.type === 'PERSON') {
@@ -257,18 +250,16 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
             ...relations.policies.map(relation => relation.searchText),
             ...relations.accounts.map(relation => relation.searchText),
           ].join(' ');
-          projected.push({
+          return {
             ...item,
             secondary: item.pipelineLinked ? 'Pipeline vinculado' : 'Persona',
             searchText: [item.searchText, relationSearch].map(text).filter(Boolean).join(' '),
             relationshipPolicyCount: relations.policies.length,
             relationshipAccountCount: relations.accounts.length,
-          });
-          continue;
+          };
         }
-
-        projected.push(item);
-      }
+        return item;
+      });
 
       return freeze(projected);
     },
