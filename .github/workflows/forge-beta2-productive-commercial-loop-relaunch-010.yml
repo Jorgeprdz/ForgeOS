@@ -2,13 +2,8 @@ name: Forge Beta 2 Productive Commercial Loop Relaunch 010
 
 on:
   pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'docs/evidence/FORGE_BETA2_RELAUNCH_010_*.md'
       - 'docs/evidence/FORGE_BETA2_BEHAVIORAL_VALIDATION_PROTOCOL_010.md'
@@ -32,17 +27,13 @@ env:
 
 jobs:
   constitutional-contracts:
-    name: constitutional-contracts
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-      - name: Constitutional gate
-        run: |
+      - run: |
           set -euo pipefail
           grep -q 'CONSTITUTIONAL_GATE_010=PASS' docs/evidence/FORGE_BETA2_RELAUNCH_010_CONSTITUTIONAL_GATE.md
           grep -q 'PRODUCTIVE_CODE_MUTATION_BEFORE_GATE=0' docs/evidence/FORGE_BETA2_RELAUNCH_010_CONSTITUTIONAL_GATE.md
@@ -51,17 +42,13 @@ jobs:
           echo 'CHECKPOINT_010_C1=PASS'
 
   adr-authority:
-    name: adr-authority
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-      - name: ADR applicability
-        run: |
+      - run: |
           set -euo pipefail
           grep -q 'ADR_GATE_010=PASS' docs/evidence/FORGE_BETA2_RELAUNCH_010_ADR_GATE.md
           grep -q 'ADR_CONFLICTS_UNRESOLVED=0' docs/evidence/FORGE_BETA2_RELAUNCH_010_ADR_GATE.md
@@ -71,17 +58,13 @@ jobs:
           echo 'CHECKPOINT_010_C2=PASS'
 
   phase009-post-merge:
-    name: phase009-post-merge
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-      - name: Verify Phase009 merge seal
-        run: |
+      - run: |
           set -euo pipefail
           test "$(git rev-parse ${PHASE009_APPROVED_HEAD}^{tree})" = "$(git rev-parse ${PHASE010_BASE_SHA}^{tree})"
           git merge-base --is-ancestor "$PHASE009_APPROVED_HEAD" "$PHASE010_BASE_SHA"
@@ -90,23 +73,15 @@ jobs:
           echo 'CHECKPOINT_010_C3=PASS'
 
   static-contracts:
-    name: static-contracts
     runs-on: ubuntu-24.04
     timeout-minutes: 18
-    needs:
-      - constitutional-contracts
-      - adr-authority
-      - phase009-post-merge
+    needs: [constitutional-contracts, adr-authority, phase009-post-merge]
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - run: node --test tests/forge-beta2-relaunch-010.test.mjs
       - name: Bounded Phase010 diff
@@ -124,20 +99,15 @@ jobs:
           echo 'BOUNDED_DIFF=PASS'
 
   cross-domain-regression:
-    name: cross-domain-regression
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     needs: static-contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - name: Assembly lineage 004 through 009
         run: |
@@ -169,20 +139,15 @@ jobs:
           node --test tests/rep-16f-pages-runtime-generator-test.mjs
 
   auth-session:
-    name: auth-session
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     needs: static-contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - run: |
           set -euo pipefail
@@ -194,42 +159,31 @@ jobs:
           echo 'SESSION_ACCEPTANCE=PASS'
 
   commercial-loop:
-    name: commercial-loop
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     needs: static-contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - run: node --test tests/forge-full-commercial-loop-acceptance-009.test.mjs tests/crs-11-end-to-end-acceptance-contract-test.mjs tests/crs-11-end-to-end-journey-service-test.mjs
       - run: echo 'COMMERCIAL_LOOP_ACCEPTANCE=PASS'
 
   identity-boundary:
-    name: identity-boundary
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     needs: static-contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
-      - name: Prospect/person convergence and relationship identity
-        run: |
+      - run: |
           set -euo pipefail
           mapfile -t files < <(find tests -maxdepth 1 -type f -name 'crs-03*.mjs' | sort)
           test "${#files[@]}" -ge 1
@@ -238,20 +192,15 @@ jobs:
           echo 'IDENTITY_CONTINUITY=PASS'
 
   economic-semantics:
-    name: economic-semantics
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     needs: static-contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - run: |
           set -euo pipefail
@@ -262,20 +211,15 @@ jobs:
           echo 'ECONOMIC_SEMANTICS=PASS'
 
   security-rls:
-    name: security-rls
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     needs: static-contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - name: Existing governed RLS and cross-advisor acceptance
         run: |
@@ -297,9 +241,8 @@ jobs:
           echo 'RLS_BOUNDARY=PASS'
 
   pages-release-boundary:
-    name: pages-release-boundary
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     needs: static-contracts
     env:
       FORGE_BUILD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -312,25 +255,36 @@ jobs:
       SUPABASE_ANON_KEY: ''
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
-      - name: Validate release contracts in their native test scope
-        env:
-          FORGE_CARTERA_PAGES_RUNTIME_MODE: ''
-        run: node --test --test-concurrency=1 tests/pages-explicit-deployment-governance.test.mjs tests/forge-aura-pages-import-graph.test.mjs tests/rep-16f-pages-runtime-generator-test.mjs
+      - name: Non-mutating release contracts
+        run: node --test --test-concurrency=1 tests/pages-explicit-deployment-governance.test.mjs tests/forge-aura-pages-import-graph.test.mjs
+      - name: REP-16F contract in disposable worktree
+        run: |
+          set -euo pipefail
+          contract_dir="${RUNNER_TEMP}/forge010-rep16f"
+          rm -rf "$contract_dir"
+          git worktree add --detach "$contract_dir" "$EXPECTED_HEAD"
+          ln -s "$GITHUB_WORKSPACE/node_modules" "$contract_dir/node_modules"
+          (
+            cd "$contract_dir"
+            FORGE_PAGES_RUNTIME_MODE=pages \
+            FORGE_CARTERA_PAGES_RUNTIME_MODE='' \
+            GITHUB_PAGES=true \
+            GITHUB_WORKFLOW='REP-16F Generator Contract' \
+            node --test --test-concurrency=1 tests/rep-16f-pages-runtime-generator-test.mjs
+          )
+          git worktree remove --force "$contract_dir"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain)"
       - name: Extract canonical Pages builder
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
-          import textwrap
+          import re, textwrap
           workflow = Path('.github/workflows/pages.yml').read_text()
           blocks = re.findall(r"node - <<'EOF'\n(.*?)\n\s+EOF", workflow, re.S)
           if len(blocks) != 3:
@@ -340,11 +294,11 @@ jobs:
           Path('/tmp/validate-canonical.cjs').write_text(textwrap.dedent(blocks[2]).replace('process.env.EXPECTED_COMMIT_SHA', 'process.env.FORGE_BUILD_SHA'))
           PY
       - run: node /tmp/generate-env.cjs
-      - run: node scripts/build-advisor-presentation-pages-runtime.mjs
+      - name: Build productive Pages runtimes from clean exact HEAD
+        run: node scripts/build-advisor-presentation-pages-runtime.mjs
       - run: node /tmp/build-canonical.cjs
       - name: Validate canonical Pages candidate
-        env:
-          EXPECTED_DEMO_MODE: 'true'
+        env: {EXPECTED_DEMO_MODE: 'true'}
         run: |
           set -euo pipefail
           node /tmp/validate-canonical.cjs
@@ -357,20 +311,15 @@ jobs:
           echo 'PAGES_RELEASE_BOUNDARY=PASS'
 
   browser-e2e:
-    name: browser-e2e
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     needs: static-contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test --config=playwright.forge009.config.mjs
@@ -389,20 +338,15 @@ jobs:
           retention-days: 30
 
   responsive:
-    name: responsive
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     needs: static-contracts
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test --config=playwright.forge009.config.mjs --grep 'desktop|mobile|refresh|direct route'
@@ -413,22 +357,15 @@ jobs:
           echo 'RESPONSIVE_ACCEPTANCE=PASS'
 
   runtime-errors:
-    name: runtime-errors
     runs-on: ubuntu-24.04
     timeout-minutes: 25
-    needs:
-      - browser-e2e
-      - pages-release-boundary
+    needs: [browser-e2e, pages-release-boundary]
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+        with: {node-version: '22', cache: npm}
       - run: npm ci
       - run: |
           set -euo pipefail
@@ -438,28 +375,15 @@ jobs:
           echo 'RUNTIME_ACCEPTANCE=PASS'
 
   beta-readiness:
-    name: beta-readiness
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    needs:
-      - cross-domain-regression
-      - auth-session
-      - commercial-loop
-      - identity-boundary
-      - economic-semantics
-      - security-rls
-      - pages-release-boundary
-      - responsive
-      - runtime-errors
+    needs: [cross-domain-regression, auth-session, commercial-loop, identity-boundary, economic-semantics, security-rls, pages-release-boundary, responsive, runtime-errors]
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+        with: {node-version: '22'}
       - run: node --test tests/forge-beta2-relaunch-010.test.mjs
       - run: |
           set -euo pipefail
@@ -469,8 +393,7 @@ jobs:
           grep -q 'OBSERVABILITY_IMPLEMENTATION=DEFERRED' docs/architecture/source-truth/FORGE_BETA2_RELAUNCH_010_RELEASE_DISCOVERY.md
           echo 'BETA_READINESS_PREMERGE=PASS'
 
-  final-robocop-010:
-    name: FINAL_ROBOCOP_010
+  FINAL_ROBOCOP_010:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     needs:
@@ -491,13 +414,10 @@ jobs:
       - beta-readiness
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0}
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
+        with: {node-version: '22'}
       - run: node --test tests/forge-beta2-relaunch-010.test.mjs
       - name: Adversarial bounded-diff gate
         run: |
@@ -537,25 +457,25 @@ jobs:
           echo 'R010_26_EVIDENCE=Auth pass'
           echo 'R010_27_EVIDENCE=session pass'
           echo 'R010_28_EVIDENCE=RLS pass'
-          echo 'R010_29_EVIDENCE=two-user isolation model pass'
+          echo 'R010_29_EVIDENCE=two-user isolation pass'
           echo 'R010_30_EVIDENCE=commercial loop pass'
           echo 'R010_31_EVIDENCE=persistence pass'
           echo 'R010_32_EVIDENCE=direct routes pass'
           echo 'R010_33_EVIDENCE=refresh pass'
           echo 'R010_34_EVIDENCE=Pages artifact pass'
           echo 'R010_35_EVIDENCE=import graph pass'
-          echo 'R010_36_EVIDENCE=no white screen acceptance pass'
+          echo 'R010_36_EVIDENCE=no white screen'
           echo 'R010_37_EVIDENCE=desktop pass'
           echo 'R010_38_EVIDENCE=mobile pass'
-          echo 'R010_39_EVIDENCE=no horizontal overflow acceptance pass'
-          echo 'R010_40_EVIDENCE=no critical runtime error acceptance pass'
-          echo 'R010_41_EVIDENCE=no unhandled rejection acceptance pass'
+          echo 'R010_39_EVIDENCE=no horizontal overflow'
+          echo 'R010_40_EVIDENCE=no critical runtime error'
+          echo 'R010_41_EVIDENCE=no unhandled rejection'
           echo 'R010_42_EVIDENCE=rollback documented'
           echo 'R010_43_EVIDENCE=Beta feedback protocol ready'
           echo 'R010_44_EVIDENCE=observability privacy boundary pass'
           echo 'R010_45_EVIDENCE=no unauthorized schema mutation'
           echo 'R010_46_EVIDENCE=no unauthorized RLS mutation'
-          echo 'R010_47_EVIDENCE=no secrets leaked in Phase010 diff'
+          echo 'R010_47_EVIDENCE=no secrets leaked'
           echo 'R010_48_EVIDENCE=bounded diff pass'
           echo 'R010_49_EVIDENCE=release candidate exact-head CI pass'
           echo 'R010_50_EVIDENCE=premerge Beta2 evidence complete'
