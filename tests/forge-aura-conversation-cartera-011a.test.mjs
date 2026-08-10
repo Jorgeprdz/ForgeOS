@@ -93,6 +93,14 @@ test('011A Cartera surfaces confirmed Pipeline continuity through the relational
   assert.match(carteraModule,/secondary && desiredSecondary && secondary\.textContent !== desiredSecondary/);
 });
 
+test('011A Cartera projects evidence-backed product and masked policy number on the nested policy row',()=>{
+  assert.match(carteraModule,/function projectPolicyPresentation\(policyRow, policy\)/);
+  assert.match(carteraModule,/const desiredPrimary = policy\.displayLabel \|\| 'Producto no identificado'/);
+  assert.match(carteraModule,/const desiredSecondary = policy\.maskedPolicyNumber \|\| 'Número no identificado'/);
+  assert.match(carteraModule,/primary && primary\.textContent !== desiredPrimary/);
+  assert.match(carteraModule,/secondary && secondary\.textContent !== desiredSecondary/);
+});
+
 test('011A Cartera observer decoration is idempotent and cannot self-trigger on identical copy',()=>{
   assert.match(carteraModule,/const desiredCopy =/);
   assert.match(carteraModule,/headerCopy && headerCopy\.textContent !== desiredCopy/);
