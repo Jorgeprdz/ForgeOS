@@ -87,6 +87,12 @@ test('011A Cartera composes canonical relationships without identity merge or na
   assert.match(carteraModule,/cartera-related-section/);
 });
 
+test('011A Cartera surfaces confirmed Pipeline continuity through the relational projection',()=>{
+  assert.match(carteraAdapter,/pipelineLinked: item\.pipelineLinked === true/);
+  assert.match(carteraModule,/relationships\?\.pipelineLinked === true \? 'Pipeline vinculado' : null/);
+  assert.match(carteraModule,/secondary && desiredSecondary && secondary\.textContent !== desiredSecondary/);
+});
+
 test('011A Cartera observer decoration is idempotent and cannot self-trigger on identical copy',()=>{
   assert.match(carteraModule,/const desiredCopy =/);
   assert.match(carteraModule,/headerCopy && headerCopy\.textContent !== desiredCopy/);
