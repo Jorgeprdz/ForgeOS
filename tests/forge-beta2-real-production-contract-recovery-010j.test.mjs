@@ -72,7 +72,7 @@ test('010J Home groups multiple Cartera contexts for the same confirmed person i
   assert.equal(grouped.length, 1);
   assert.equal(grouped[0].personReference, PERSON_REFERENCE);
   assert.equal(grouped[0].relatedSignalCount, 2);
-  assert.deepEqual(grouped[0].relatedSignalTypes.sort(), ['INCOMPLETE_POLICY_DATA', 'RELATIONSHIP_REVIEW_DUE'].sort());
+  assert.deepEqual([...grouped[0].relatedSignalTypes].sort(), ['INCOMPLETE_POLICY_DATA', 'RELATIONSHIP_REVIEW_DUE'].sort());
 });
 
 test('010J evidence renderer understands real field_claims confirmedValue/candidateValue and coverageCandidates', () => {
