@@ -20,11 +20,11 @@ assert.match(journal, /Nota guardada · Timeline confirmado\./);
 assert.match(journal, /Forge no sustituyó la fuente por notas locales\./);
 assert.match(journal, /No pudimos consultar la Bitácora/);
 assert.match(journalCss, /\.aura-journal-layer/);
-assert.match(journalCss, /max-height:min\(92dvh/);
+assert.match(journalCss, /max-height:92dvh/);
 assert.match(journalCss, /aura-journal-form-actions/);
 
 assert.match(cartera, /humanizeProductReference/);
-assert.match(cartera, /2|items\.length/);
+assert.match(cartera, /items\.length/);
 assert.match(cartera, /señal/);
 assert.match(cartera, /no equivale a una póliza adicional/);
 assert.doesNotMatch(cartera, /mostradas/);
