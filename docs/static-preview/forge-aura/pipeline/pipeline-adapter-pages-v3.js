@@ -16,7 +16,7 @@ function usablePhone(value) {
   return null;
 }
 
-function hydrateCard(card = {}) {
+export function hydratePipelineContact010j(card = {}) {
   const prospect = card.prospect || {};
   const phone = usablePhone(
     card.phone
@@ -38,7 +38,7 @@ function hydrateCard(card = {}) {
 }
 
 function hydrateCards(cards = []) {
-  return freeze((cards || []).map(hydrateCard));
+  return freeze((cards || []).map(hydratePipelineContact010j));
 }
 
 export async function createPipelineAdapter({ client } = {}) {
