@@ -79,6 +79,15 @@ test('011A objection Timeline persistence stores classification only after human
   assert.match(workspace,/data-register-combat disabled/);
 });
 
+test('011A confirmed Timeline append is the Combat registration boundary without mandatory Pipeline reload',()=>{
+  assert.match(pipelineSafetyAdapter,/async registerObjection\(card, combat\)/);
+  assert.match(pipelineSafetyAdapter,/appendProspectTimelineEvent/);
+  assert.match(pipelineSafetyAdapter,/registered: true/);
+  assert.match(pipelineSafetyAdapter,/pipelineReloadRequired: false/);
+  assert.match(pipelineSafetyAdapter,/rawObjectionPersisted: false/);
+  assert.doesNotMatch(pipelineSafetyAdapter,/adapter\.reload\(/);
+});
+
 test('011A Cartera composes canonical relationships without identity merge or name matching',()=>{
   assert.match(carteraAdapter,/forge_cartera010b_list_general_policy_roles/);
   assert.match(carteraAdapter,/participant_person_id/);
