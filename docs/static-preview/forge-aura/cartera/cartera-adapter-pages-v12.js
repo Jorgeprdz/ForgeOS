@@ -68,7 +68,7 @@ function isIncompletePolicy(policy = {}) {
     || String(policy.conflict_state || policy.conflictState || 'UNKNOWN').toUpperCase() !== 'CLEAR';
 }
 
-function suppressDuplicatePolicyRadar(home = {}) {
+export function suppressDuplicatePolicyRadar010j(home = {}) {
   const policies = home.policies || [];
   const directPolicyAttention = new Set(policies.filter(isIncompletePolicy).map(policy => String(policy.policy_reference || policy.policyReference || '')).filter(Boolean));
   const radar = home.radar;
@@ -95,7 +95,7 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
       autonomousCommercialExecution: false,
     }),
     async loadHome() {
-      return freeze(suppressDuplicatePolicyRadar(await adapter.loadHome()));
+      return freeze(suppressDuplicatePolicyRadar010j(await adapter.loadHome()));
     },
     async loadDirectory() {
       const [directory, links] = await Promise.all([
@@ -120,10 +120,11 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
         adapter.loadPersonWorkspace(reference),
         readConfirmedPipelineLinks(client),
       ]);
+      const linkedProspects = links.get(String(reference || '')) || [];
       return freeze({
         ...workspace,
-        linkedProspects: links.get(String(reference || '')) || [],
-        identityContinuity: (links.get(String(reference || '')) || []).length
+        linkedProspects,
+        identityContinuity: linkedProspects.length
           ? 'PIPELINE_LINK_CONFIRMED'
           : 'NO_CONFIRMED_PIPELINE_LINK',
       });
