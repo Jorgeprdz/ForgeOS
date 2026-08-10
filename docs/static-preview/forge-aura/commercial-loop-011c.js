@@ -12,6 +12,7 @@ if (!globalThis[INSTALL_KEY]) {
   let desktopQuoteLink = null;
   let diagnosticsObserver = null;
   let shellObserver = null;
+  let diagnosticsScheduled = false;
 
   function nativeNavigate(route) {
     globalThis.dispatchEvent(new CustomEvent('forge:alfred-navigation', { detail: { route } }));
@@ -83,14 +84,14 @@ if (!globalThis[INSTALL_KEY]) {
   }
 
   async function reconcileDiagnostics() {
-    const auth = await authState();
+    const currentAuthState = await authState();
     const pipelineError = documentRef.querySelector('[data-aura-app] .aura-error-state[data-state^="PIPELINE_"]');
     if (pipelineError) {
       addDiagnostic(pipelineError, [
         'FORGE AURA RUNTIME',
         'MODULE       pipeline',
         `STATE        ${pipelineError.dataset.state || 'PIPELINE_ERROR'}`,
-        `AUTH         ${auth}`,
+        `AUTH         ${currentAuthState}`,
         'IDENTITY     SAME CLIENT SESSION',
         'SOURCE       prospects / Timeline',
         'STAGE        MODULE_RUNTIME',
@@ -105,12 +106,47 @@ if (!globalThis[INSTALL_KEY]) {
         'FORGE AURA RUNTIME',
         'MODULE       income',
         `STATE        ${incomePanel.dataset.incomeStatePanel || 'UNKNOWN'}`,
-        `AUTH         ${auth}`,
+        `AUTH         ${currentAuthState}`,
         'RPC          forge_advisor_compensation_read_product',
         `CODE         ${code}`,
         `BUILD        ${buildSha()}`,
       ]);
     }
+  }
+
+  function scheduleDiagnostics() {
+    if (diagnosticsScheduled) return;
+    diagnosticsScheduled = true;
+    queueMicrotask(() => {
+      diagnosticsScheduled = false;
+      void reconcileDiagnostics();
+    });
+  }
+
+  function loopDiagnostics() {
+    const pipelineRoot = documentRef.querySelector('[data-aura-app] [data-pipeline-state]');
+    const incomePanel = documentRef.querySelector('[data-aura-app] [data-income-state-panel]');
+    return Object.freeze({
+      runtimeId: RUNTIME_ID,
+      buildSha: buildSha(),
+      accountMode: 'PRODUCTIVE_ONLY',
+      route: activeRoute() || null,
+      pipelineState: pipelineRoot?.dataset?.pipelineState || null,
+      journalState: documentRef.documentElement.dataset.auraJournalState || null,
+      timelineState: documentRef.documentElement.dataset.auraJournalState === 'WRITE_CONFIRMED' ? 'CONFIRMED' : null,
+      carteraState: documentRef.querySelector('[data-aura-app] .cartera-workspace') ? 'WORKSPACE_VISIBLE' : null,
+      paymentConfirmationState: documentRef.documentElement.dataset.auraPaymentState || null,
+      paymentHandoffState: 'PRODUCTIVE_SERVER_HANDOFF_MISSING',
+      compensationState: 'PRODUCTIVE_SERVER_HANDOFF_MISSING',
+      incomeState: incomePanel?.dataset?.incomeStatePanel || null,
+      quotesDesktopVisible: Boolean(documentRef.querySelector('.aura-nav [data-aura-desktop-quotes="011c"]')),
+      journalInstalled: Boolean(journal),
+      paymentConfirmationInstalled: Boolean(payments),
+      demoFallbackUsed: false,
+      unknownCoercionUsed: false,
+      watchTowerGate: 'FAIL',
+      watchTowerReason: 'PRODUCTIVE_COMPENSATION_SERVER_HANDOFF_MISSING',
+    });
   }
 
   const journal = installPipelineJournalAura({ documentRef, getClient });
@@ -120,27 +156,19 @@ if (!globalThis[INSTALL_KEY]) {
   if (Observer) {
     shellObserver = new Observer(() => reconcileDesktopQuotesState());
     shellObserver.observe(documentRef.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-aura-active-route', 'data-forge-route'] });
-    diagnosticsObserver = new Observer(() => { void reconcileDiagnostics(); });
+    diagnosticsObserver = new Observer(scheduleDiagnostics);
     diagnosticsObserver.observe(documentRef.documentElement, { childList: true, subtree: true });
   }
 
   reconcileDesktopQuotesState();
-  void reconcileDiagnostics();
+  scheduleDiagnostics();
   documentRef.documentElement.dataset.auraCommercialLoop = '011c';
 
-  globalThis[INSTALL_KEY] = Object.freeze({
+  const runtime = Object.freeze({
     runtimeId: RUNTIME_ID,
     journal,
     payments,
-    diagnostics: () => Object.freeze({
-      runtimeId: RUNTIME_ID,
-      accountMode: 'PRODUCTIVE_ONLY',
-      journalInstalled: Boolean(journal),
-      paymentConfirmationInstalled: Boolean(payments),
-      quotesDesktopVisible: Boolean(documentRef.querySelector('.aura-nav [data-aura-desktop-quotes="011c"]')),
-      demoFallbackUsed: false,
-      unknownCoercionUsed: false,
-    }),
+    diagnostics: loopDiagnostics,
     destroy() {
       shellObserver?.disconnect();
       diagnosticsObserver?.disconnect();
@@ -149,9 +177,12 @@ if (!globalThis[INSTALL_KEY]) {
       desktopQuoteLink?.remove?.();
       auth.destroy?.();
       delete documentRef.documentElement.dataset.auraCommercialLoop;
+      delete globalThis.ForgeAuraCommercialLoop011C;
       delete globalThis[INSTALL_KEY];
     },
   });
+  globalThis[INSTALL_KEY] = runtime;
+  globalThis.ForgeAuraCommercialLoop011C = runtime;
 }
 
 export const FORGE_AURA_COMMERCIAL_LOOP_011C = globalThis[INSTALL_KEY];
