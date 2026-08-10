@@ -10,6 +10,7 @@ if (!buildSha) {
   console.log("FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=SKIPPED_NO_GITHUB_SHA");
 } else {
   const runtimeDir = join(root, "docs/static-preview/forge-alive-material3");
+  const auraIndexPath = join(root, "docs/static-preview/forge-aura/index.html");
   const carteraRuntimeDirectory = `cartera-runtime-${buildSha}`;
   const dynamicModuleUrl = (name) =>
     `\`${name}\${layout.extension}?v=${buildSha}\``;
@@ -103,13 +104,30 @@ if (!buildSha) {
     await writeFile(path, source);
   }
 
-  const [app, home, orchestrator, adapter, shell, cartera] = await Promise.all([
+  let auraIndex = await readFile(auraIndexPath, "utf8");
+  const auraCarteraPattern = /\.\/cartera\/cartera-module-v9\.js\?v=[^"\s]+/g;
+  const auraBootstrapPattern = /\.\/aura-bootstrap-v4-r1\.js\?v=[^"\s]+/g;
+  const auraCarteraMatches = auraIndex.match(auraCarteraPattern) || [];
+  const auraBootstrapMatches = auraIndex.match(auraBootstrapPattern) || [];
+  if (!auraCarteraMatches.length) {
+    throw new Error("FORGE_PAGES_AURA_CARTERA_VERSION_SOURCE_MISSING");
+  }
+  if (!auraBootstrapMatches.length) {
+    throw new Error("FORGE_PAGES_AURA_BOOTSTRAP_VERSION_SOURCE_MISSING");
+  }
+  auraIndex = auraIndex
+    .replace(auraCarteraPattern, `./cartera/cartera-module-v9.js?v=${buildSha}`)
+    .replace(auraBootstrapPattern, `./aura-bootstrap-v4-r1.js?v=${buildSha}`);
+  await writeFile(auraIndexPath, auraIndex);
+
+  const [app, home, orchestrator, adapter, shell, cartera, versionedAuraIndex] = await Promise.all([
     readFile(join(runtimeDir, "app.js"), "utf8"),
     readFile(join(runtimeDir, "home-module.js"), "utf8"),
     readFile(join(runtimeDir, "home-productive-orchestrator.js"), "utf8"),
     readFile(join(runtimeDir, "smart-widget-productive-home-adapter.js"), "utf8"),
     readFile(join(runtimeDir, "forge-shell.js"), "utf8"),
     readFile(join(runtimeDir, "cartera-module.js"), "utf8"),
+    readFile(auraIndexPath, "utf8"),
   ]);
 
   for (const [name, source] of Object.entries({ app, home, orchestrator, adapter, shell, cartera })) {
@@ -133,9 +151,19 @@ if (!buildSha) {
   if (cartera.includes('sourceLayout ? "../../../" : "./cartera-runtime-03bca89dba800f7bd5052d6e67caa29241271be0/"')) {
     throw new Error("FORGE_PAGES_CARTERA_ROOT_RUNTIME_BINDING_LEAK");
   }
+  if (!versionedAuraIndex.includes(`./cartera/cartera-module-v9.js?v=${buildSha}`)) {
+    throw new Error("FORGE_PAGES_AURA_CARTERA_BUILD_VERSION_MISSING");
+  }
+  if (!versionedAuraIndex.includes(`./aura-bootstrap-v4-r1.js?v=${buildSha}`)) {
+    throw new Error("FORGE_PAGES_AURA_BOOTSTRAP_BUILD_VERSION_MISSING");
+  }
+  if (versionedAuraIndex.includes("cartera-module-v9.js?v=forge-aura-live-acceptance-journal-cartera-011e")) {
+    throw new Error("FORGE_PAGES_AURA_STALE_CARTERA_CACHE_KEY");
+  }
 
   console.log(`FORGE_PAGES_TRANSITIVE_CACHE_VERSIONING=PASS SHA=${buildSha}`);
   console.log("FORGE_PAGES_RUNTIME_PLACEHOLDER_LEAK=NONE");
   console.log("FORGE_PAGES_CARTERA_TRANSITIVE_VERSIONING=PASS");
   console.log(`FORGE_PAGES_CARTERA_CANONICAL_RUNTIME=${carteraRuntimeDirectory}`);
+  console.log("FORGE_PAGES_AURA_CARTERA_CACHE_CUTOVER=PASS");
 }
