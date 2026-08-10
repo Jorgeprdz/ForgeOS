@@ -1,0 +1,52 @@
+name: Aura Real User Acceptance 012
+
+on:
+  push:
+    branches:
+      - hotfix/aura-real-user-acceptance-012
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011c.js'
+      - 'docs/static-preview/forge-aura/commercial-loop-011c.css'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v8.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-relational-011a.css'
+      - 'tests/aura-real-user-acceptance-012.test.mjs'
+      - '.github/workflows/aura-real-user-acceptance-012.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax gates
+        run: |
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011c.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v8.js
+
+      - name: Real user acceptance 012 contracts
+        run: node --test tests/aura-real-user-acceptance-012.test.mjs
+
+      - name: Inherited commercial loop regression
+        run: node --test tests/forge-aura-commercial-loop-011c.test.mjs
+
+      - name: Constitutional summary
+        run: |
+          echo 'REAL_USER_ACCEPTANCE_012=PASS'
+          echo 'BITACORA_LOCAL_FALLBACK=false'
+          echo 'CARTERA_NEW_WRITER=false'
+          echo 'CARTERA_NEW_ENGINE=false'
+          echo 'UNKNOWN_COERCION=false'
+          echo 'PAGES_DEPLOYED_BY_THIS_WORKFLOW=false'
+          echo 'MERGE_PERFORMED_BY_THIS_WORKFLOW=false'
