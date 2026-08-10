@@ -1,0 +1,29 @@
+name: 011D Temporary Pages Dispatch
+
+on:
+  push:
+    branches:
+      - hotfix/advisor-compensation-productive-handoff-011d
+    paths:
+      - ".github/workflows/pages-011d-dispatch-temp.yml"
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch canonical Pages release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: c36f41618e14f9f8786d299aad15d59301a999d8
+        run: |
+          set -euo pipefail
+          gh workflow run pages.yml \
+            --repo Jorgeprdz/ForgeOS \
+            --ref main \
+            -f expected_sha="$EXPECTED_SHA" \
+            -f authorization=DEPLOY_FORGE_PAGES
+          echo "PAGES_DISPATCHED_SHA=$EXPECTED_SHA"
