@@ -40,7 +40,24 @@ jobs:
           node compensation/advisor/tests/advisor-compensation-stage-050-master-test.js
 
       - name: 011D deterministic gates
-        run: node tests/advisor-compensation-productive-handoff-011d.test.mjs
+        id: deterministic
+        shell: bash
+        run: |
+          set +e
+          node tests/advisor-compensation-productive-handoff-011d.test.mjs > 011d-deterministic.log 2>&1
+          status=$?
+          cat 011d-deterministic.log
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Preserve 011D deterministic log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: advisor-compensation-011d-deterministic-${{ github.run_id }}
+          path: 011d-deterministic.log
+          if-no-files-found: error
+          retention-days: 7
 
       - name: 011C regression
         run: node tests/forge-aura-commercial-loop-011c.test.mjs
