@@ -83,7 +83,8 @@ test('011A Cartera composes canonical relationships without identity merge or na
   assert.doesNotMatch(carteraAdapter,/product:imagina-ser-65-15-pagos-udi/);
   assert.doesNotMatch(carteraAdapter,/normalizedName\(/);
   assert.match(carteraModule,/data-directory-kind="PERSON"/);
-  assert.match(carteraModule,/cartera-related-entities/);
+  assert.match(carteraModule,/cartera-relationship-card/);
+  assert.match(carteraModule,/cartera-related-section/);
 });
 
 test('011A Cartera row resets native button geometry instead of leaving black browser borders',()=>{
