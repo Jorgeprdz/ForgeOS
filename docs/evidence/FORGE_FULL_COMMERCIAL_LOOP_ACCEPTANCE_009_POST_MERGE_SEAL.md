@@ -1,0 +1,48 @@
+# FORGE FULL COMMERCIAL LOOP ACCEPTANCE 009 — POST-MERGE SEAL
+
+```text
+PHASE009_APPROVED_HEAD=77935cd5c05409813d0d3fa88a25e32b759a37de
+PHASE009_MERGE_SHA=a0c9617921e9a7f8df45492d4ec09a2637098d0a
+PHASE009_APPROVED_TREE=71085ca36dbc7ff8fbc328ec89eabff6cd38ec63
+PHASE009_MERGE_TREE=71085ca36dbc7ff8fbc328ec89eabff6cd38ec63
+TREE_EQUIVALENCE=YES
+MERGE_ANCESTRY=PASS
+MAIN_AT_PHASE010_GATE=a0c9617921e9a7f8df45492d4ec09a2637098d0a
+POST_MERGE_DRIFT=NO
+```
+
+## Verified lineage
+
+The Phase 009 final head is the second parent of the merge commit. GitHub records the merge as the governed Phase 009 merge after human review. The final-head tree and merge tree are byte-identical at the Git tree boundary.
+
+PR #335 records:
+
+```text
+FINAL_HEAD=77935cd5c05409813d0d3fa88a25e32b759a37de
+FINAL_GOVERNING_RUN=31353742757
+FINAL_GOVERNING_RESULT=SUCCESS
+MERGE_COMMIT_SHA=a0c9617921e9a7f8df45492d4ec09a2637098d0a
+```
+
+The Phase 009 evidence, acceptance, closure and governing workflow remain present on the merge tree. The accepted commercial-loop semantics remain:
+
+```text
+IDENTITY_CONTINUITY=PASS
+PROVENANCE_CONTINUITY=PASS
+AUTHORITY_CONTINUITY=PASS
+ECONOMIC_SEMANTICS=PASS
+HUMAN_JUDGMENT_BOUNDARY=PASS
+TENANT_ISOLATION=PASS
+RLS_BOUNDARY=PASS
+RESPONSIVE_ACCEPTANCE=PASS
+CROSS_DOMAIN_REGRESSION=PASS
+FINAL_ROBOCOP_009=PASS
+```
+
+No product mutation occurred during the merge because the trees are identical.
+
+```text
+PHASE_009_POST_MERGE_REGRESSION=PASS
+CHECKPOINT_010_C3=PASS
+BETA2_RELEASE_BLOCKED_BY_PHASE009_DRIFT=NO
+```
