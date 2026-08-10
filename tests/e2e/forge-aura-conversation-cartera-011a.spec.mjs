@@ -26,7 +26,25 @@ async function ready(page,width=390,height=844){
       {timeout:10000},
     );
   } catch (error) {
-    throw new Error(`FORGE_011A_READY_TIMEOUT: ${errors.pageErrors.join(' | ') || 'NO_PAGEERROR_CAPTURED'} :: ${error.message}`);
+    let diagnostic={evaluation:'unavailable'};
+    try {
+      diagnostic=await page.evaluate(()=>({
+        readyState:document.readyState,
+        dataset:{...document.documentElement.dataset},
+        carteraText:(document.querySelector('#cartera-root')?.textContent||'').trim().slice(0,500),
+        carteraHtml:(document.querySelector('#cartera-root')?.innerHTML||'').slice(0,500),
+        pipelineText:(document.querySelector('#pipeline-root')?.textContent||'').trim().slice(0,500),
+        pipelineHtml:(document.querySelector('#pipeline-root')?.innerHTML||'').slice(0,500),
+        trace:window.__FORGE_011A_TRACE__?{
+          rpc:window.__FORGE_011A_TRACE__.rpc,
+          opens:window.__FORGE_011A_TRACE__.opens?.length||0,
+          providerRequests:window.__FORGE_011A_TRACE__.providerRequests?.length||0,
+          timelineAppends:window.__FORGE_011A_TRACE__.timelineAppends?.length||0,
+        }:null,
+        modulesCreated:Boolean(window.__FORGE_011A_MODULES__),
+      }));
+    } catch {}
+    throw new Error(`FORGE_011A_READY_TIMEOUT: ${errors.pageErrors.join(' | ') || 'NO_PAGEERROR_CAPTURED'} :: ${JSON.stringify(diagnostic)} :: ${error.message}`);
   }
   return errors;
 }
