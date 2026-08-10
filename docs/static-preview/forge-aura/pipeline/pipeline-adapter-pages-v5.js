@@ -7,6 +7,14 @@ function freeze(value) {
   return value;
 }
 
+function text(value) {
+  return String(value ?? '').trim();
+}
+
+function cardProspect(card) {
+  return card?.prospect || card;
+}
+
 export async function createPipelineAdapter(options = {}) {
   const adapter = await createConversationAdapter(options);
   return Object.freeze({
@@ -17,6 +25,35 @@ export async function createPipelineAdapter(options = {}) {
       return freeze({
         ...prepared,
         status: blocked ? 'BLOCKED' : prepared.status,
+      });
+    },
+    async registerObjection(card, combat) {
+      if (combat?.reviewed !== true || !combat?.classification?.type) {
+        throw new Error('REVIEWED_OBJECTION_CLASSIFICATION_REQUIRED');
+      }
+      const prospect = cardProspect(card);
+      const prospectId = text(prospect?.id || card?.id);
+      if (!prospectId) throw new Error('PROSPECT_REFERENCE_REQUIRED');
+      const occurredAt = new Date().toISOString();
+      const appended = await adapter.timelineService.appendProspectTimelineEvent(prospectId, {
+        eventType: 'OBJECTION_RECORDED',
+        occurredAt,
+        sourceRecordReference: `PROSPECT:${prospectId}`,
+        payload: {
+          objectionCode: text(combat.classification.type),
+          resolutionStatus: 'OPEN',
+        },
+        evidenceReferences: [`PROSPECT:${prospectId}`],
+        idempotencyKey: `OBJECTION:${prospectId}:${text(combat.classification.type)}:${occurredAt}`,
+      });
+      return freeze({
+        registered: true,
+        eventReference: appended?.id || null,
+        eventType: appended?.eventType || 'OBJECTION_RECORDED',
+        objectionCode: text(combat.classification.type),
+        resolutionStatus: 'OPEN',
+        rawObjectionPersisted: false,
+        pipelineReloadRequired: false,
       });
     },
   });
