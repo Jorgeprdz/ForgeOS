@@ -122,6 +122,13 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test --config=tests/aura011a-playwright.config.mjs
+      - name: Upload 011A visual evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-aura-011a-visual-evidence
+          path: artifacts/011a/screenshots
+          if-no-files-found: error
+          retention-days: 14
       - name: Emit 011A browser gates
         run: |
           echo 'CARTERA_RELATIONAL_PRESENTATION=PASS'
