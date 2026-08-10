@@ -6,10 +6,12 @@ PHASE_NUMBER=010
 RELEASE_IDENTITY=FORGE_BETA_2_PRODUCTIVE_COMMERCIAL_LOOP
 BASE_SHA=a0c9617921e9a7f8df45492d4ec09a2637098d0a
 BRANCH=feature/forge-beta2-productive-commercial-loop-relaunch-010
+PR=336
 GOVERNING_WORKFLOW=.github/workflows/forge-beta2-productive-commercial-loop-relaunch-010.yml
-FINAL_HEAD=PENDING_FINAL_EXACT_HEAD
-FINAL_GOVERNING_RUN=PENDING_FINAL_EXACT_HEAD
-FINAL_GOVERNING_RESULT=PENDING_FINAL_EXACT_HEAD
+PRE_SEAL_VALIDATION_HEAD=3884bf7a6288f02be3f5de2efd6629dec7aa5548
+PRE_SEAL_VALIDATION_RUN=31356134133
+PRE_SEAL_VALIDATION_RESULT=SUCCESS
+FINAL_HEAD=EXACT_PR_HEAD_VERIFIED_BY_FINAL_GOVERNING_RUN
 ```
 
 ## Gate evidence
@@ -24,7 +26,7 @@ RELEASE_BOUNDARY_DISCOVERED=YES
 PRODUCTIVE_CODE_MUTATION_BEFORE_GATE=0
 ```
 
-Phase009 cryptographic merge evidence:
+Phase009 cryptographic lineage:
 
 ```text
 PHASE009_APPROVED_HEAD=77935cd5c05409813d0d3fa88a25e32b759a37de
@@ -35,7 +37,7 @@ PHASE009_FINAL_RUN=31353742757
 PHASE009_FINAL_RUN_RESULT=SUCCESS
 ```
 
-## Release discovery evidence
+## Release boundary evidence
 
 ```text
 PRODUCTION_WORKFLOW=.github/workflows/pages.yml
@@ -48,20 +50,64 @@ ASSEMBLED_MAIN_SHA_AT_DISCOVERY=a0c9617921e9a7f8df45492d4ec09a2637098d0a
 CURRENT_DEPLOYMENT_BEHIND_ASSEMBLY=YES
 ```
 
-This gap is intentionally not repaired on the feature branch. `MERGE != DEPLOY` remains authoritative.
+The production lag is governed, not hidden: merge and deploy are separate human unlocks. Phase010 does not deploy in the pre-merge pass.
 
-## Bounded Phase010 implementation
+## Final Boss validation evidence
 
-Phase010 adds only:
+Governing run `31356134133` on `3884bf7a6288f02be3f5de2efd6629dec7aa5548` completed successfully across all required jobs:
 
-- constitutional/ADR/post-merge evidence;
-- release discovery and gap matrix;
-- manual governed Beta behavioral validation protocol;
-- Beta2 acceptance/evidence/closure records;
-- one static Phase010 contract test;
-- one exact-head governing workflow that composes existing accepted tests.
+```text
+constitutional-contracts=SUCCESS
+adr-authority=SUCCESS
+phase009-post-merge=SUCCESS
+static-contracts=SUCCESS
+cross-domain-regression=SUCCESS
+auth-session=SUCCESS
+commercial-loop=SUCCESS
+identity-boundary=SUCCESS
+economic-semantics=SUCCESS
+security-rls=SUCCESS
+pages-release-boundary=SUCCESS
+browser-e2e=SUCCESS
+responsive=SUCCESS
+runtime-errors=SUCCESS
+beta-readiness=SUCCESS
+FINAL_ROBOCOP_010=PASS
+ROBOCOP_RELEASE_LOCK=GREEN
+```
 
-No productive runtime path is authorized in the Phase010 diff.
+The Pages gate built the canonical `_site` from a clean exact-HEAD checkout. The mutating REP-16F generator contract runs in a disposable Git worktree so test side effects cannot contaminate the release artifact.
+
+Two CI-only defects were discovered and reconciled without product mutation:
+
+```text
+CI_TEST_ENV_SCOPE_DEFECT=RESOLVED
+CI_MUTATING_TEST_WORKSPACE_CONTAMINATION=RESOLVED
+CI_SELF_SCAN_FALSE_POSITIVE=RESOLVED
+PRODUCT_DEFECT_REQUIRED_FOR_RESOLUTION=NO
+```
+
+## Product acceptance evidence
+
+```text
+COMMERCIAL_LOOP_ACCEPTANCE=PASS
+IDENTITY_CONTINUITY=PASS
+PROVENANCE_CONTINUITY=PASS
+AUTHORITY_CONTINUITY=PASS
+ECONOMIC_SEMANTICS=PASS
+HUMAN_JUDGMENT_BOUNDARY=PASS
+TENANT_ISOLATION=PASS
+RLS_BOUNDARY=PASS
+PAGES_RELEASE_BOUNDARY=PASS
+RESPONSIVE_ACCEPTANCE=PASS
+CROSS_DOMAIN_REGRESSION=PASS
+RUNTIME_ACCEPTANCE=PASS
+BETA_FEEDBACK_PROTOCOL=READY
+OBSERVABILITY_IMPLEMENTATION=DEFERRED
+OBSERVABILITY_MODE=MANUAL_GOVERNED_FEEDBACK
+```
+
+## Mutation ledger
 
 ```text
 NEW_ENGINE_CREATED=0
@@ -81,43 +127,6 @@ AUTONOMOUS_COMMERCIAL_EXECUTION=0
 PRODUCTIVE_RUNTIME_MUTATION=0
 ```
 
-## Governing workflow proof plan
+No automated Beta telemetry backend was invented. The manual governed behavioral validation protocol is the accepted Phase010 observability mode.
 
-The exact-head workflow contains all mandatory jobs:
-
-```text
-constitutional-contracts
-adr-authority
-phase009-post-merge
-static-contracts
-cross-domain-regression
-auth-session
-commercial-loop
-identity-boundary
-economic-semantics
-security-rls
-pages-release-boundary
-browser-e2e
-responsive
-runtime-errors
-beta-readiness
-FINAL_ROBOCOP_010
-```
-
-The workflow rejects out-of-scope productive diff, re-runs accepted cross-domain and browser contracts, builds the canonical Pages artifact without deploying, and makes Final RoboCop depend on all critical jobs.
-
-## Observability decision
-
-```text
-AUTOMATED_BETA_TELEMETRY_AUTHORITY_DISCOVERED=NO
-NEW_OBSERVABILITY_DB_AUTHORIZED=NO
-NEW_OBSERVABILITY_RLS_AUTHORIZED=NO
-OBSERVABILITY_IMPLEMENTATION=DEFERRED
-BETA_FEEDBACK_PROTOCOL=READY
-```
-
-A manual governed protocol is used instead of inventing telemetry infrastructure.
-
-## Evidence completion rule
-
-This document is intentionally incomplete until the final documentation head passes the governing workflow. After CI, `FINAL_HEAD`, `FINAL_GOVERNING_RUN` and result are updated and the updated exact head must pass again before human review.
+The final documentation commit must pass the same governing workflow on its exact PR HEAD before `ROBOCOP_GATE_UNLOCK=READY_FOR_HUMAN` is presented as the final checkpoint.
