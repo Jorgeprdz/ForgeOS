@@ -11,14 +11,14 @@ const css=read('docs/static-preview/forge-aura/cartera/cartera-relational-011b.c
 test('011B productive importmap redirects the exact runtime specifiers used by app-v4-r1',()=>{
   assert.match(app,/import\("\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012"\)/);
   assert.match(app,/import\("\.\/recomposition\/pipeline-consumer-bridge-008\.js\?v=forge-global-aura-recomposition-008"\)/);
-  assert.match(index,/"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v8\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
+  assert.match(index,/"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v9\.js\?v=forge-aura-cartera-freeze-cache-cutover-011g"/);
   assert.match(index,/"\.\/recomposition\/pipeline-consumer-bridge-008\.js\?v=forge-global-aura-recomposition-008": "\.\/recomposition\/pipeline-consumer-bridge-011b\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
 });
 
 test('011B productive page loads governed conversation and integrated Cartera styles with a fresh cache key',()=>{
   assert.match(index,/pipeline-conversation-workspace\.css\?v=forge-aura-production-entrypoint-hotfix-011b/);
   assert.match(index,/cartera-relational-011b\.css\?v=forge-aura-production-entrypoint-hotfix-011b/);
-  assert.match(index,/aura-bootstrap-v4-r1\.js\?v=forge-aura-production-entrypoint-hotfix-011b/);
+  assert.match(index,/aura-bootstrap-v4-r1\.js\?v=forge-aura-cartera-freeze-cache-cutover-011g/);
   assert.doesNotMatch(index,/cartera-relationship-011a\.css/);
 });
 
