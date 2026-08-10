@@ -33,13 +33,14 @@ async function retireLegacyRuntime() {
 }
 
 document.documentElement.dataset.auraBootRevision = AURA_BOOT_REVISION;
+document.documentElement.dataset.auraPipelineRouteRecovery = "011H";
 document.documentElement.dataset.auraEnvState = hasProductiveConfig()
   ? "PRODUCTIVE_CONFIG_READY"
   : "PRODUCTIVE_CONFIG_BLOCKED";
 
 try {
   await retireLegacyRuntime();
-  await import("./app-v4-r1.js?v=aura-boot-cache-isolation-013-forge-global-aura-recomposition-008");
+  await import("./app-v4-r1.js?v=aura-pipeline-route-recovery-011h");
   document.documentElement.dataset.auraBootState = "BOOT_IMPORT_OK";
 } catch (error) {
   document.documentElement.dataset.auraBootState = "BOOT_IMPORT_FAILED";
