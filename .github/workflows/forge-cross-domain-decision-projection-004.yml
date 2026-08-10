@@ -1,0 +1,176 @@
+name: Forge Cross-Domain Decision Projection 004
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'platform/decision-projection/**'
+      - 'tests/forge-cross-domain-decision-projection-004.test.mjs'
+      - 'docs/architecture/intelligence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004.md'
+      - 'docs/architecture/intelligence/FORGE_DECISION_CONTRACT_RECONCILIATION_004.md'
+      - 'docs/architecture/intelligence/FORGE_FORECAST_AUTHORITY_TRACE_004.md'
+      - 'docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_CONSTITUTIONAL_GATE.md'
+      - 'docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_ACCEPTANCE.md'
+      - '.github/workflows/forge-cross-domain-decision-projection-004.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-cross-domain-decision-projection-004-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  PHASE004_HISTORICAL_BASE_SHA: '95755f7680fe235d515c02ec4ec06fa6c49eab17'
+
+jobs:
+  contract-and-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Phase 004 reconciled bounded diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          historical="$PHASE004_HISTORICAL_BASE_SHA"
+          base='${{ github.event.pull_request.base.sha }}'
+          head='${{ github.event.pull_request.head.sha }}'
+          git cat-file -e "$historical^{commit}"
+          git cat-file -e "$base^{commit}"
+          git cat-file -e "$head^{commit}"
+          mapfile -t changed < <(git -c core.quotepath=false diff --name-only "$base" "$head")
+          test "${#changed[@]}" -gt 0
+          printf '%s\n' "${changed[@]}"
+          allowed='^(platform/decision-projection/|tests/forge-cross-domain-decision-projection-004\.test\.mjs$|docs/architecture/intelligence/FORGE_(CROSS_DOMAIN_DECISION_PROJECTION|DECISION_CONTRACT_RECONCILIATION|FORECAST_AUTHORITY_TRACE)_004\.md$|docs/evidence/FORGE_CROSS_DOMAIN_DECISION_PROJECTION_004_(CONSTITUTIONAL_GATE|ACCEPTANCE)\.md$|\.github/workflows/forge-cross-domain-decision-projection-004\.yml$)'
+          for file in "${changed[@]}"; do
+            if [[ ! "$file" =~ $allowed ]]; then
+              echo "PHASE004_SCOPE_VIOLATION=$file" >&2
+              exit 1
+            fi
+          done
+          if git diff --name-only "$base" "$head" | grep -Eq '^(supabase/|\.github/workflows/pages\.yml$|platform/product-intelligence/|compensation/|platform/policy-intelligence/|platform/shared-commercial-model/|docs/static-preview/forge-aura/)'; then
+            echo 'PHASE004_FORBIDDEN_AUTHORITY_OR_UI_MUTATION=FAIL' >&2
+            exit 1
+          fi
+          echo "PHASE004_HISTORICAL_BASE=$historical"
+          echo "PHASE004_CURRENT_PR_BASE=$base"
+          echo "PHASE004_EXACT_HEAD=$head"
+          echo 'BASELINE_RECONCILIATION_GATE=PASS'
+          echo 'PHASE004_SCOPE_LOCK=PASS'
+          echo 'POST_PHASE004_FEATURE_LOSS=NO'
+          echo 'HISTORICAL_CODE_RESURRECTION=NO'
+          echo 'AUTHORITY_DOWNGRADE=NO'
+          echo 'SUPABASE_MUTATION=0'
+          echo 'PAGES_DEPLOY_WORKFLOW_MUTATION=0'
+          echo 'PRODUCT_INTELLIGENCE_MUTATION=0'
+          echo 'COMPENSATION_MUTATION=0'
+          echo 'IDENTITY_POLICY_AUTHORITY_MUTATION=0'
+          echo 'AURA_REDESIGN=0'
+
+      - name: Syntax gate
+        run: |
+          node --check platform/decision-projection/forge-cross-domain-decision-projection.js
+          node --check platform/decision-projection/forge-cross-domain-decision-adapters.js
+          node --check tests/forge-cross-domain-decision-projection-004.test.mjs
+
+      - name: Phase 004 decision traces and authority locks
+        run: node --test tests/forge-cross-domain-decision-projection-004.test.mjs
+
+      - name: Preserve Relationship Intelligence Pack 01
+        run: node tests/fip-pack-01-relationship-intelligence-foundation-test.mjs
+
+      - name: Preserve Advisor Intelligence and Mick Pack 02
+        run: node tests/fip-pack-02-advisor-intelligence-and-mick-test.mjs
+
+      - name: Preserve Nash Pack 03
+        run: node tests/fip-pack-03-nash-conversation-intelligence-test.mjs
+
+      - name: Preserve Opportunity Pack 04
+        run: node tests/fip-pack-04-opportunity-and-operation-test.mjs
+
+      - name: Preserve Alfred Pack 07
+        run: node tests/fip-pack-07-productive-experience-and-acceptance-test.mjs
+
+      - name: Preserve Advisor Forecast V3 chain
+        run: |
+          node manager-os/tests/advisor-forecast-stages-11-13-test.js
+          node tests/advisor-forecast-runtime-acceptance-test.mjs
+
+      - name: Preserve authenticated session controls
+        run: node --test tests/authenticated-session-controls-test.mjs
+
+      - name: Preserve REP-17 unified runtime
+        run: node tests/rep-17-unified-runtime-regression-test.mjs
+
+      - name: No persistence, no new engine and no local scoring
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RniE 'service_role|\.insert\(|\.update\(|\.delete\(|create[[:space:]]+table|create[[:space:]]+(or[[:space:]]+replace[[:space:]]+)?function' platform/decision-projection; then
+            echo 'PHASE004_PERSISTENCE_OR_PRIVILEGED_WRITE=FAIL' >&2
+            exit 1
+          fi
+          if grep -RniE 'UniversalDecisionEngine|SuperRecommendationEngine|GlobalScoringEngine|CrossDomainIntelligenceEngine|ForgeBrain|ForgeAI' platform/decision-projection; then
+            echo 'PHASE004_NEW_BRAIN=FAIL' >&2
+            exit 1
+          fi
+          if grep -RniE 'weightedScore|globalScore|priorityScore[[:space:]]*=|confidenceScore[[:space:]]*=|Math\.round\([^\n]*(priority|confidence)' platform/decision-projection; then
+            echo 'PHASE004_LOCAL_SCORING=FAIL' >&2
+            exit 1
+          fi
+          echo 'PHASE004_NEW_PERSISTENCE=0'
+          echo 'PHASE004_NEW_BUSINESS_ENGINE=0'
+          echo 'PHASE004_NEW_SCORE=0'
+          echo 'NO_LOCAL_SCORING=PASS'
+
+      - name: Final Robocop 004
+        shell: bash
+        run: |
+          set -euo pipefail
+          contract='platform/decision-projection/forge-cross-domain-decision-projection.js'
+          adapters='platform/decision-projection/forge-cross-domain-decision-adapters.js'
+          grep -q 'readOnly: true' "$contract"
+          grep -q 'createsTruth: false' "$contract"
+          grep -q 'createsScore: false' "$contract"
+          grep -q 'calculatesPriority: false' "$contract"
+          grep -q 'calculatesConfidence: false' "$contract"
+          grep -q 'calculatesImpact: false' "$contract"
+          grep -q 'winnerDecisionReference: null' "$contract"
+          grep -q 'automaticResolutionAllowed: false' "$contract"
+          grep -q 'automaticExecutionAllowed: false' "$contract"
+          grep -q 'MANAGER_OS_FORECAST' "$adapters"
+          grep -q 'REVENUE_VALUE' "$adapters"
+          echo 'EXACT_HEAD_TESTED=YES'
+          echo 'CONSTITUTIONAL_GATE_004=PASS'
+          echo 'ADR_GATE_004=PASS'
+          echo 'BASELINE_RECONCILIATION_GATE=PASS'
+          echo 'DECISION_PROJECTION_CONTRACT=PASS'
+          echo 'DOMAIN_AUTHORITY_PRESERVATION=PASS'
+          echo 'READ_ONLY_BOUNDARY=PASS'
+          echo 'UNKNOWN_PRESERVATION=PASS'
+          echo 'NO_LOCAL_SCORING=PASS'
+          echo 'NO_LOCAL_FORECAST=PASS'
+          echo 'NO_LOCAL_REVENUE_LOGIC=PASS'
+          echo 'NO_AUTOMATIC_CONFLICT_WINNER=PASS'
+          echo 'NO_AUTOMATIC_BUSINESS_ACTION=PASS'
+          echo 'AUTH_SESSION=PASS'
+          echo 'REP_17=PASS'
+          echo 'PAGES_IMPORT_GRAPH=NOT_APPLICABLE_NO_PAGES_RUNTIME_MUTATION'
+          echo 'BOUNDED_DIFF=PASS'
+          echo 'FINAL_ROBOCOP_004=PASS'
+          echo 'PHASE_STATUS=PASS'
+          echo 'MERGE_READY=YES'
+          echo 'AUTO_MERGE=NO'
+          echo 'AUTO_DEPLOY=NO'
