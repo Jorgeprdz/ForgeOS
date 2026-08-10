@@ -28,6 +28,28 @@ function renderBoot(message) {
   root.setAttribute("aria-busy", "true");
   root.innerHTML = `<section class="aura-login" data-aura-auth-state="AUTH_LOADING"><div class="aura-loading"><div aria-hidden="true"></div><h1>${message}</h1><p>Forge verifica tu acceso seguro.</p></div></section>`;
 }
+const ROUTE_LABELS = Object.freeze({ inicio: "Inicio", actividad: "Actividad", cartera: "Cartera", comisiones: "Ingresos", cotizaciones: "Cotizaciones", pipeline: "Pipeline" });
+function routeLabel(route) {
+  return ROUTE_LABELS[route] || "este módulo";
+}
+function renderRouteLoading(currentShell, route) {
+  const label = routeLabel(route);
+  root.setAttribute("aria-busy", "true");
+  currentShell.main.dataset.auraRouteState = "LOADING";
+  currentShell.main.innerHTML = `<section class="aura-loading" data-aura-route-state="LOADING"><div aria-hidden="true"></div><h1>Cargando ${label}</h1><p>Conectando el runtime productivo.</p></section>`;
+}
+function routeDeadline(promise, route, phase, timeoutMs) {
+  let timer = null;
+  return Promise.race([
+    Promise.resolve(promise),
+    new Promise((_, reject) => {
+      timer = globalThis.setTimeout(() => {
+        const error = Object.assign(new Error(`AURA_ROUTE_${phase}_TIMEOUT`), { code: `AURA_ROUTE_${phase}_TIMEOUT`, route, phase });
+        reject(error);
+      }, timeoutMs);
+    }),
+  ]).finally(() => { if (timer !== null) globalThis.clearTimeout(timer); });
+}
 async function destroyActiveModule() {
   const current = activeModule;
   activeModule = null;
@@ -142,7 +164,7 @@ async function loadRouteFactory(route) {
     const module = await import("./quotes/quotes-module.js?v=aura-quotes-product-intelligence-001");
     return module.createQuotesModule;
   }
-  const module = await import("./recomposition/pipeline-consumer-bridge-008.js?v=forge-global-aura-recomposition-008");
+  const module = await import("./recomposition/pipeline-consumer-bridge-011b.js?v=aura-pipeline-route-recovery-011h");
   return module.createPipelineModule;
 }
 async function createRouteModule(route, currentShell, client, snapshot) {
@@ -162,10 +184,10 @@ async function createRouteModule(route, currentShell, client, snapshot) {
   return factory({ root: currentShell.main, client, globalState: currentShell.setGlobalState });
 }
 function renderRouteLoadFailure(currentShell, route) {
-  const labels = { inicio: "Inicio", actividad: "Actividad", cartera: "Cartera", comisiones: "Ingresos", cotizaciones: "Cotizaciones", pipeline: "Pipeline" };
-  const label = labels[route] || "este módulo";
+  const label = routeLabel(route);
   root.setAttribute("aria-busy", "false");
-  currentShell.main.innerHTML = `<section class="aura-login" data-aura-route-state="LOAD_ERROR"><div class="aura-loading"><h1>No pudimos cargar ${label}</h1><p>El resto de Forge sigue protegido. Recarga para obtener el runtime más reciente.</p><button type="button" data-aura-route-retry>Reintentar</button></div></section>`;
+  currentShell.main.dataset.auraRouteState = "LOAD_ERROR";
+  currentShell.main.innerHTML = `<section class="aura-login" data-aura-route-state="LOAD_ERROR"><div class="aura-loading"><h1>No pudimos cargar ${label}</h1><p>El resto de Forge sigue protegido. Reintenta para cargar un runtime limpio.</p><button type="button" data-aura-route-retry>Reintentar</button></div></section>`;
   currentShell.main.querySelector("[data-aura-route-retry]")?.addEventListener("click", () => router.navigate(route, { replace: true }));
   currentShell.setGlobalState(`No pudimos cargar ${label}.`, "error");
 }
@@ -212,25 +234,26 @@ async function mountRoute(route, snapshot) {
   await destroyActiveModule();
   const currentShell = ensureShell(snapshot);
   currentShell.setActiveRoute(route);
-  currentShell.main.replaceChildren();
-  const client = await auth.getClient();
-  if (route === "pipeline") ensureStylesheet("./pipeline/pipeline.css?v=aura-pipeline-ux-reconciliation-001", "pipeline");
-  if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
-  if (route === "cartera") {
-    ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
-    ensureStylesheet("./cartera/cartera-semantic-012.css?v=cartera-pdf-semantic-reconciliation-012", "cartera-semantic-012");
-  }
-  if (route === "comisiones") ensureStylesheet("./income/income.css?v=income-aura-ux-reconciliation-001", "comisiones");
-  if (route === "cotizaciones") ensureStylesheet("./quotes/quotes.css?v=aura-quotes-product-intelligence-001", "cotizaciones");
-  if (revision !== bootRevision) return;
+  renderRouteLoading(currentShell, route);
   try {
-    activeModule = await createRouteModule(route, currentShell, client, snapshot);
+    const client = await routeDeadline(auth.getClient(), route, "CLIENT", 8000);
+    if (route === "pipeline") ensureStylesheet("./pipeline/pipeline.css?v=aura-pipeline-ux-reconciliation-001", "pipeline");
+    if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
+    if (route === "cartera") {
+      ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
+      ensureStylesheet("./cartera/cartera-semantic-012.css?v=cartera-pdf-semantic-reconciliation-012", "cartera-semantic-012");
+    }
+    if (route === "comisiones") ensureStylesheet("./income/income.css?v=income-aura-ux-reconciliation-001", "comisiones");
+    if (route === "cotizaciones") ensureStylesheet("./quotes/quotes.css?v=aura-quotes-product-intelligence-001", "cotizaciones");
+    if (revision !== bootRevision) return;
+    activeModule = await routeDeadline(createRouteModule(route, currentShell, client, snapshot), route, "FACTORY", 12000);
     if (revision !== bootRevision) { await activeModule?.destroy?.(); activeModule = null; return; }
     activeRoute = route;
     await activeModule.mount();
     if (revision !== bootRevision) { await destroyActiveModule(); return; }
     renderRouteContext(currentShell.root, currentShell.main, route, router.context());
     root.setAttribute("aria-busy", "false");
+    currentShell.main.dataset.auraRouteState = "READY";
     currentShell.main.focus({ preventScroll: true });
   } catch (error) {
     activeModule = null;
