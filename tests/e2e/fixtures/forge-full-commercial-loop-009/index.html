@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es-MX" data-fixture-ready="false">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Forge Full Commercial Loop Acceptance 009</title>
+  <style>
+    :root { font-family: Inter, system-ui, sans-serif; color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f7f9; color: #18191b; }
+    main { width: min(1180px, 100%); margin: 0 auto; padding: 24px 18px 96px; }
+    header { margin-bottom: 20px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.55rem, 4vw, 2.2rem); }
+    p { margin: 6px 0; line-height: 1.45; }
+    .context { padding: 14px; border: 1px solid #d8dbe0; border-radius: 16px; background: white; margin: 16px 0; overflow-wrap: anywhere; }
+    .loop { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .stage { min-width: 0; padding: 16px; border: 1px solid #d8dbe0; border-radius: 18px; background: white; }
+    .stage strong { display: block; font-size: 1rem; margin-bottom: 8px; }
+    .state { display: inline-block; padding: 4px 8px; border: 1px solid currentColor; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+    .provenance { margin-top: 10px; font-size: .78rem; overflow-wrap: anywhere; }
+    .boundary { margin-top: 18px; padding: 14px; border: 1px dashed #9399a1; border-radius: 16px; }
+    @media (max-width: 800px) { .loop { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 480px) { main { padding: 18px 12px 120px; } .loop { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<main data-loop-ready>
+  <header>
+    <h1>Full Commercial Loop 009</h1>
+    <p>Fixture de aceptación de sólo lectura. No crea verdad ni ejecuta acciones comerciales.</p>
+  </header>
+
+  <section class="context" aria-label="Contexto de navegación">
+    <strong>Contexto gobernado</strong>
+    <p data-context-origin></p>
+    <p data-context-entity></p>
+    <p data-context-person></p>
+  </section>
+
+  <section class="loop" aria-label="Loop comercial completo">
+    <article class="stage" data-loop-stage="PROSPECT" data-entity-reference="prospect:009">
+      <strong>Prospect</strong><span class="state">UNRESOLVED</span>
+      <p>Prospect ≠ CommercialPerson hasta decisión gobernada.</p>
+      <div class="provenance" data-provenance>PIPELINE_PROSPECT_AUTHORITY · prospect:009</div>
+    </article>
+    <article class="stage" data-loop-stage="CONTACT">
+      <strong>Contact</strong><span class="state">CONFIRMED_EVENT</span>
+      <p>Hecho FES; no implica cita automática.</p>
+      <div class="provenance" data-provenance>FES_ACTIVITY_EVENT_LEDGER · activity:contact:009</div>
+    </article>
+    <article class="stage" data-loop-stage="APPOINTMENT">
+      <strong>Appointment</strong><span class="state">CONFIRMED_EVENT</span>
+      <p>Evento/compromiso explícito; no fabrica Quote.</p>
+      <div class="provenance" data-provenance>FES_ACTIVITY_EVENT_LEDGER · activity:appointment:009</div>
+    </article>
+    <article class="stage" data-loop-stage="QUOTE">
+      <strong>Quote</strong><span class="state">ACCEPTED_QUOTE</span>
+      <p>Accepted Quote conserva Product Intelligence y sigue siendo ≠ Policy.</p>
+      <div class="provenance" data-provenance>QUOTE_PERSISTENCE_AUTHORITY · quote:009</div>
+    </article>
+    <article class="stage" data-loop-stage="POLICY">
+      <strong>Policy</strong><span class="state">ISSUED</span>
+      <p>Policy Truth de Cartera; emisión ≠ payment.</p>
+      <div class="provenance" data-provenance>CARTERA_POLICY_AUTHORITY · policy:009</div>
+    </article>
+    <article class="stage" data-loop-stage="PAYMENT">
+      <strong>Payment</strong><span class="state">CONFIRMED_PREMIUM</span>
+      <p>Pago de prima confirmado; ≠ comisión pagada al asesor.</p>
+      <div class="provenance" data-provenance>POLICY_PAYMENT_RECONCILIATION_030C · payment:009</div>
+    </article>
+    <article class="stage" data-loop-stage="COMMISSION">
+      <strong>Commission</strong><span class="state">EARNED</span>
+      <p>Interpretación canónica con reglas. PAID queda UNKNOWN sin payout evidence.</p>
+      <div class="provenance" data-provenance>COMPENSATION_INTELLIGENCE · compensation:009</div>
+    </article>
+    <article class="stage" data-loop-stage="RENEWAL">
+      <strong>Renewal</strong><span class="state" data-renewal-state>EXPECTED</span>
+      <p>Expected renewal sigue expectativa hasta evidencia generada.</p>
+      <div class="provenance" data-provenance>ADVISOR_COMPENSATION_FORWARD_SIGNAL · renewal:009</div>
+    </article>
+  </section>
+
+  <section class="boundary" aria-label="Boundaries">
+    <strong>Human decision boundary</strong>
+    <p data-human-decision>RECOMMENDATION_IS_NOT_HUMAN_DECISION · AUTONOMOUS_EXECUTION=0</p>
+    <p data-tenant-boundary>TENANT_ISOLATION=PASS_REQUIRED · RLS_BOUNDARY=PASS_REQUIRED</p>
+    <p data-paid-boundary>PREMIUM_PAYMENT_IS_NOT_ADVISOR_PAYOUT</p>
+  </section>
+</main>
+<script>
+  const params = new URLSearchParams(location.search);
+  const origin = params.get("origin") || "DIRECT_ROUTE";
+  const entity = params.get("entity") || "prospect:009";
+  const person = params.get("person") || "UNRESOLVED";
+  document.querySelector("[data-context-origin]").textContent = `origin=${origin}`;
+  document.querySelector("[data-context-entity]").textContent = `entity=${entity}`;
+  document.querySelector("[data-context-person]").textContent = `person=${person}`;
+  document.documentElement.dataset.fixtureReady = "true";
+</script>
+</body>
+</html>
