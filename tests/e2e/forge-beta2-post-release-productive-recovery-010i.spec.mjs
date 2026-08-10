@@ -40,7 +40,9 @@ test('010I confirmed review recovery shows one canonical Policy, recovered evide
   const errors = await ready(page);
 
   const cartera = page.locator('#cartera-root');
-  await expect(cartera.getByText('1 Pólizas')).toBeVisible();
+  const policyMetric = cartera.locator('.cartera-metric').filter({ hasText: 'Pólizas' });
+  await expect(policyMetric.locator('span')).toHaveText('Pólizas');
+  await expect(policyMetric.locator('strong')).toHaveText('1');
   await expect(cartera.getByText('Evidencia pendiente')).toHaveCount(0);
   await expect(cartera.locator('.cartera-directory > header > span')).toHaveText('1 persona · 1 póliza');
 
