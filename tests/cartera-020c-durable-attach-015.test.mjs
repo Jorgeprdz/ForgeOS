@@ -4,6 +4,9 @@ import { readFile } from 'node:fs/promises';
 
 const migration = await readFile(new URL('../supabase/migrations/20260809000200_cartera020c_durable_attach_pipeline_person.sql', import.meta.url), 'utf8');
 const adapter = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', import.meta.url), 'utf8');
+const adapterV11 = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js', import.meta.url), 'utf8');
+const adapterV12 = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v12.js', import.meta.url), 'utf8');
+const adapterV13 = await readFile(new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js', import.meta.url), 'utf8');
 const index = await readFile(new URL('../docs/static-preview/forge-aura/index.html', import.meta.url), 'utf8');
 
 test('020C durable attach rebuilds identity from succeeded durable receipts and server-binds authorization digest', () => {
@@ -43,9 +46,11 @@ test('v10 resumes an already IDENTITY_CONFIRMED review instead of replaying iden
   assert.match(adapter, /target\.rpc\(ATTACH_DURABLE_RPC/);
 });
 
-test('Aura productive import map routes old Cartera v9 dependency to v10 with a new cache boundary', () => {
-  assert.match(index, /cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh/);
-  assert.match(index, /cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
-  assert.match(index, /cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
+test('Aura productive import map reaches durable v10 through the current v13 adapter chain', () => {
+  assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
+  assert.match(index, /cartera-module-v9\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
+  assert.match(adapterV13, /cartera-adapter-pages-v12\.js\?v=forge-aura-conversation-cartera-011a/);
+  assert.match(adapterV12, /cartera-adapter-pages-v11\.js\?v=forge-beta2-post-release-recovery-010i/);
+  assert.match(adapterV11, /cartera-adapter-pages-v10\.js\?v=forge-beta2-post-release-recovery-010i/);
 });

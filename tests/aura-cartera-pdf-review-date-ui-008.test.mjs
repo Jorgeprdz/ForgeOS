@@ -6,18 +6,24 @@ const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4-r1.js', 'utf8
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 const bootstrap = fs.readFileSync('docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js', 'utf8');
 const moduleV5 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5.js', 'utf8');
+const v13 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js', 'utf8');
+const v12 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v12.js', 'utf8');
+const v11 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js', 'utf8');
 const v10 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js', 'utf8');
 const v9 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v9.js', 'utf8');
 const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v8.js', 'utf8');
 const v7 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js', 'utf8');
 const semantic = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js', 'utf8');
 
-test('canonical Aura r1 maps inherited Cartera specifier to current durable confirmation boundary', () => {
+test('canonical Aura r1 maps inherited Cartera specifier through current v13 chain to durable confirmation boundary', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
-  assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v10\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v5\.js\?v=cartera-020c-policy-attach-pipeline-person-015"/);
-  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001/);
+  assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v9\.js\?v=forge-aura-live-acceptance-journal-cartera-011e"/);
+  assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
   assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
+  assert.match(v13, /cartera-adapter-pages-v12\.js/);
+  assert.match(v12, /cartera-adapter-pages-v11\.js/);
+  assert.match(v11, /cartera-adapter-pages-v10\.js/);
   assert.match(v10, /cartera-adapter-pages-v9\.js\?base=cartera-020c-policy-attach-pipeline-person-015/);
 });
 
