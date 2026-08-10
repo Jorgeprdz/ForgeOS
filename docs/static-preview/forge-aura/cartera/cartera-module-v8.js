@@ -80,7 +80,8 @@ export function createCarteraModule({
     const directory = root.querySelector('.cartera-directory');
     if (!directory) return;
     const headerCopy = directory.querySelector(':scope > header p:not(.cartera-eyebrow)');
-    if (headerCopy) headerCopy.textContent = 'Personas como centro de relación; pólizas y cuentas vinculadas aparecen dentro de su contexto cuando existe una relación confirmada.';
+    const desiredCopy = 'Personas como centro de relación; pólizas y cuentas vinculadas aparecen dentro de su contexto cuando existe una relación confirmada.';
+    if (headerCopy && headerCopy.textContent !== desiredCopy) headerCopy.textContent = desiredCopy;
   }
 
   async function decorateDirectory() {
