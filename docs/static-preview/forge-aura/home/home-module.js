@@ -1,10 +1,8 @@
 import {
-  briefingFromStack,
   firstNameFor,
   formatLocalDay,
   formatLocalTime,
   greetingFor,
-  homeAttentionCount,
   mickHonestState,
   resolveBrowserTimeZone,
   rhythmFromStack,
@@ -38,11 +36,24 @@ function routeForWidget(widget) {
   if (family.includes("POLICY")) return "cartera";
   if (family.includes("ACTIVITY") || family.includes("MONTHLY_POLICY_GOAL")) return "actividad";
   if (family.includes("INCOME")) return "comisiones";
-  if (family.includes("OPPORTUNITY")) return "pipeline";
+  if (family.includes("OPPORTUNITY") || family.includes("FOLLOW_UP") || family.includes("AGENDA")) return "pipeline";
   return "inicio";
 }
 
-function stateBlock(title, detail, state = "SOURCE_UNAVAILABLE") {
+function widgetForAttention(snapshot, attention) {
+  const sourceReference = attention?.sourceReference;
+  const candidates = [
+    ...(Array.isArray(snapshot?.priority?.value?.visible) ? snapshot.priority.value.visible : []),
+    ...(Array.isArray(snapshot?.priority?.value?.inventory) ? snapshot.priority.value.inventory : []),
+  ];
+  return candidates.find(widget => widget?.widgetId === sourceReference) || null;
+}
+
+function routeForAttention(snapshot, attention) {
+  return routeForWidget(widgetForAttention(snapshot, attention));
+}
+
+function stateBlock(title, detail, state = "UNKNOWN") {
   return `<div class="home-state" data-state="${esc(state)}"><strong>${esc(title)}</strong><span>${esc(detail)}</span></div>`;
 }
 
@@ -134,33 +145,69 @@ function renderMick(snapshot) {
   </div>`;
 }
 
+function confidenceLabel(attention) {
+  return attention?.confidence?.value || "No informada";
+}
+
 function renderBriefing(snapshot) {
-  const briefing = briefingFromStack(snapshot.priority.value, snapshot.agenda.value);
-  const widget = snapshot.priority.value?.primary || null;
-  const route = widget ? routeForWidget(widget) : "pipeline";
-  return `<article class="home-alfred-card" data-home-briefing-source="${esc(briefing.source)}" data-state="${esc(briefing.state)}">
+  const orchestration = snapshot.attention?.value || null;
+  const attention = orchestration?.items?.[0] || null;
+  if (!attention) {
+    const state = snapshot.attention?.state || "UNKNOWN";
+    const empty = state === "EMPTY";
+    return `<article class="home-alfred-card" data-home-briefing-source="FORGE_HOME_ATTENTION_ORCHESTRATION_007" data-state="${esc(state)}">
+      <div class="home-alfred-mark" aria-hidden="true">✦</div>
+      <div class="home-alfred-copy">
+        <p class="home-mini-label">ALFRED</p>
+        <h2>${empty ? "No hay una señal gobernada que exija atención" : "No hay una siguiente acción confiable todavía"}</h2>
+        <p>${empty ? "Decision Projection no entregó elementos activos en la composición actual." : "Forge conservará la incertidumbre visible; no fabricará una prioridad, recomendación ni acción para llenar Inicio."}</p>
+        <div class="home-alfred-actions"><details><summary>Ver por qué</summary><p>Estado de atención: ${esc(state)}.</p>${snapshot.attention?.error ? `<p>${esc(snapshot.attention.error.code)}</p>` : ""}</details></div>
+      </div>
+    </article>`;
+  }
+
+  const route = routeForAttention(snapshot, attention);
+  const action = attention.recommendedHumanAction;
+  return `<article class="home-alfred-card" data-home-briefing-source="FORGE_HOME_ATTENTION_ORCHESTRATION_007" data-decision-reference="${esc(attention.decisionReference)}" data-state="${esc(orchestration.state)}">
     <div class="home-alfred-mark" aria-hidden="true">✦</div>
     <div class="home-alfred-copy">
       <p class="home-mini-label">ALFRED</p>
-      <h2>${esc(briefing.title)}</h2>
-      <p>${esc(briefing.detail)}</p>
+      <h2>${esc(attention.title)}</h2>
+      <p>${esc(attention.whyNow || attention.reason)}</p>
       <div class="home-alfred-actions">
-        <button type="button" class="aura-primary" data-home-route="${esc(route)}">${esc(briefing.actionLabel)}</button>
-        <details><summary>Ver por qué</summary><p>Fuente de prioridad: ${esc(briefing.source)}.</p>${briefing.sourceAuthorities.length ? `<p>Authorities: ${esc(briefing.sourceAuthorities.join(" · "))}</p>` : ""}${briefing.uncertainty.length ? `<p>Incertidumbre: ${esc(briefing.uncertainty.join(" · "))}</p>` : ""}</details>
+        ${action ? `<button type="button" class="aura-primary" data-home-route="${esc(route)}">${esc(action.label)}</button>` : ""}
+        <details><summary>Ver por qué</summary>
+          <p>${esc(attention.reason)}</p>
+          <p><b>Verdad:</b> ${esc(attention.truthState)} · <b>Fuente:</b> ${esc(attention.sourceAuthority || "No informada")}</p>
+          <p><b>Confianza:</b> ${esc(confidenceLabel(attention))}</p>
+          ${attention.limitations?.length ? `<p><b>Limitaciones:</b> ${esc(attention.limitations.join(" · "))}</p>` : ""}
+          ${attention.asOf ? `<p><b>As of:</b> ${esc(attention.asOf)}</p>` : ""}
+        </details>
       </div>
     </div>
   </article>`;
 }
 
+function attentionSummary(snapshot) {
+  const orchestration = snapshot.attention?.value;
+  const state = snapshot.attention?.state || "UNKNOWN";
+  if (!orchestration || state === "UNKNOWN" || state === "ERROR") {
+    return "Forge no puede confirmar cuántas señales requieren atención con la evidencia disponible.";
+  }
+  const count = orchestration.items?.length || 0;
+  if (state === "EMPTY" && count === 0) return "Decision Projection confirmó que no hay señales activas en la composición actual.";
+  return `${count} ${count === 1 ? "señal gobernada requiere" : "señales gobernadas requieren"} tu revisión.`;
+}
+
 function renderReady(root, snapshot, user, timeZone, now) {
-  const count = homeAttentionCount({ agenda: snapshot.agenda.value, radar: snapshot.radar.value });
-  root.innerHTML = `<section class="home-aura" data-home-state="READY" data-home-timezone="${esc(timeZone)}">
+  const state = snapshot.attention?.state || "UNKNOWN";
+  root.innerHTML = `<section class="home-aura" data-home-state="${esc(state)}" data-home-timezone="${esc(timeZone)}" data-home-attention-contract="FHAO-007-001">
     <header class="home-header">
       <div>
         <p class="home-context-line">${esc(greetingFor(now, timeZone))}, ${esc(firstNameFor(user))}</p>
         <h1>Mi día</h1>
         <p class="home-date">${esc(formatLocalDay(now, timeZone))}</p>
-        <p class="home-attention-summary">${count === null ? "Conectando señales para saber qué requiere atención." : count === 0 ? "No hay señales urgentes confirmadas en las fuentes conectadas." : `${esc(count)} ${count === 1 ? "cosa requiere" : "cosas requieren"} atención en las fuentes conectadas.`}</p>
+        <p class="home-attention-summary">${esc(attentionSummary(snapshot))}</p>
       </div>
       <button type="button" class="home-refresh" data-home-refresh aria-label="Actualizar Mi Día">Actualizar</button>
     </header>
@@ -187,7 +234,7 @@ function renderReady(root, snapshot, user, timeZone, now) {
       ${renderMick(snapshot)}
     </section>
 
-    <p class="home-truth-note">Inicio es una proyección. No crea tareas, no confirma pagos, no recalcula métricas y no ejecuta acciones sensibles sin tu revisión.</p>
+    <p class="home-truth-note">Inicio transporta Decision Projection → Attention. No crea tareas, no converge identidades, no confirma pagos, no recalcula métricas y no ejecuta acciones sensibles sin tu revisión.</p>
   </section>`;
 }
 
@@ -213,15 +260,15 @@ export function createHomeModule({ root, client, user, globalState, onNavigate }
   function renderLoading(reason = "Conectando tu operación") {
     root.innerHTML = `<section class="home-aura" data-home-state="LOADING" aria-busy="true">
       <header class="home-header"><div><p class="home-context-line">${esc(greetingFor(new Date(), timeZone))}, ${esc(firstNameFor(user))}</p><h1>Mi día</h1><p class="home-date">${esc(formatLocalDay(new Date(), timeZone))}</p></div></header>
-      ${stateBlock(reason, "Forge está consultando autoridades productivas; no mostrará datos de ejemplo.", "LOADING")}
+      ${stateBlock(reason, "Forge está consultando autoridades productivas y Decision Projection; no mostrará datos de ejemplo.", "LOADING")}
     </section>`;
   }
 
   function renderFailure(error) {
     const session = String(error?.code || error?.message || "").includes("SESSION");
-    root.innerHTML = `<section class="home-aura" data-home-state="${session ? "SESSION_REQUIRED" : "SOURCE_UNAVAILABLE"}">
+    root.innerHTML = `<section class="home-aura" data-home-state="ERROR">
       <header class="home-header"><div><p class="home-context-line">${esc(greetingFor(new Date(), timeZone))}, ${esc(firstNameFor(user))}</p><h1>Mi día</h1><p class="home-date">${esc(formatLocalDay(new Date(), timeZone))}</p></div></header>
-      ${stateBlock(session ? "Tu sesión cambió" : "No pudimos preparar Mi Día", session ? "Vuelve a autenticarte antes de consultar datos privados." : "El fallo quedó contenido. No mostraremos ceros, prioridades ni recomendaciones inventadas.", session ? "SESSION_REQUIRED" : "SOURCE_UNAVAILABLE")}
+      ${stateBlock(session ? "Tu sesión cambió" : "No pudimos preparar Mi Día", session ? "Vuelve a autenticarte antes de consultar datos privados." : "El fallo quedó contenido. No mostraremos ceros, prioridades ni recomendaciones inventadas.", "ERROR")}
       <button type="button" class="aura-secondary home-retry" data-home-refresh>Reintentar</button>
     </section>`;
   }
@@ -325,7 +372,10 @@ export function createHomeModule({ root, client, user, globalState, onNavigate }
         timeZone,
         generatedAt: lastSnapshot?.generatedAt || null,
         advisorId: lastSnapshot?.advisorId || null,
+        attentionState: lastSnapshot?.attention?.state || null,
+        attentionContract: lastSnapshot?.attention?.value?.contractVersion || null,
         productWrites: 0,
+        homeDomainWrites: 0,
       });
     },
   });
