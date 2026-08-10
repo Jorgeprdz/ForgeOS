@@ -17,7 +17,6 @@ const candidateSeed = require('../compensation/advisor/rules/rule-data/smnyl-adv
 const CANDIDATE_RULE_PACK = buildAdvisorCompensationCandidateRulePack(candidateSeed);
 const PRODUCT_IDENTITIES = CANDIDATE_RULE_PACK.productIdentities;
 const ADVISOR = '11111111-1111-4111-8111-111111111111';
-const OTHER = '22222222-2222-4222-8222-222222222222';
 const NOW = '2026-08-10T18:00:00.000Z';
 
 function context(overrides = {}) {
@@ -77,6 +76,7 @@ function canonicalStage030Payload(input = context()) {
     canonicalPaymentEvent: {
       advisorId: input.advisorId,
       paymentEventReference: input.paymentEventReference,
+      policyReference: input.policy.policyReference,
       confirmationState: input.payment.confirmationState,
       paymentEvidenceReference: input.payment.paymentEvidenceReference,
       paymentAmount: input.payment.paymentAmount,
@@ -258,6 +258,7 @@ const serverOrchestrator = fs.readFileSync(path.join(ROOT, 'compensation/advisor
 // One productive orchestrator only; old duplicate was removed during reconciliation.
 assert.equal(fs.existsSync(path.join(ROOT, 'compensation/advisor/orchestration/advisor-compensation-productive-handoff-011d.cjs')), false);
 assert.match(serverOrchestrator, /orchestrateAdvisorCompensationHandoff/);
+assert.match(serverOrchestrator, /policyReference,/);
 
 // CP5.3/4/5 server boundary handles malformed ref, missing auth and owner mismatch explicitly.
 assert.match(edge, /PAYMENT_EVENT_REFERENCE_INVALID/);
