@@ -102,6 +102,7 @@ The bounded hotfix performs only the canonical presentation cutover:
    - changes the public root target from `static-preview/forge-alive/` to `static-preview/forge-aura/`;
    - preserves query parameters and fragment;
    - defaults to `route=inicio` only when neither `route` nor `nav` is supplied;
+   - preserves the governed `auth_return` cache-bust contract (`v=auth-<auth_return>`) on relogin;
    - retains legacy service-worker/cache retirement;
    - removes the stale `canonical-production-20260804` identity.
 
@@ -114,7 +115,13 @@ The bounded hotfix performs only the canonical presentation cutover:
    - requires Aura index/bootstrap/auth/shell assets in the Pages artifact;
    - validates root -> Aura and rejects the old root -> Forge Alive target.
 
-3. Hotfix-only acceptance files
+3. `tests/auth-relogin-canonical-return-test.mjs`
+   - updates the inherited root-entry expectation from Forge Alive to Forge Aura;
+   - preserves OAuth parameters, route, hash and `auth_return` versioning assertions;
+   - reclassifies Forge Alive auth assertions as shared-runtime compatibility rather than canonical presentation authority;
+   - changes no productive auth implementation.
+
+4. Hotfix-only acceptance files
    - static contract test;
    - Pages-artifact Playwright config;
    - desktop/mobile/deep-route browser acceptance;
@@ -127,6 +134,7 @@ The bounded hotfix performs only the canonical presentation cutover:
 index.html
 .github/workflows/pages.yml
 .github/workflows/forge-beta2-canonical-aura-cutover-010h.yml
+tests/auth-relogin-canonical-return-test.mjs
 tests/forge-beta2-canonical-aura-cutover-010h.test.mjs
 tests/aura010h-playwright.config.mjs
 tests/e2e/forge-beta2-canonical-aura-cutover-010h.spec.mjs
@@ -144,6 +152,7 @@ Aura's existing router and auth implementation remain the authority:
 - callback preserves `return_route`;
 - session restore remains `createAuraAuth().restore()`;
 - logout remains the existing Aura auth flow;
+- root relogin keeps `auth_return` cache-bust versioning;
 - no Supabase configuration or auth semantics are changed.
 
 Expected governing acceptance:
@@ -173,6 +182,8 @@ COMMERCIAL_LOOP_SMOKE=PASS
 ```
 
 ## Pages artifact acceptance
+
+The governing CI builds `_site` using the production Pages builder with `DEMO_MODE=false`, the canonical public Supabase project hostname and a non-secret synthetic CI key. This satisfies the production-mode public-config validator without reading or changing production secrets.
 
 Expected:
 
@@ -216,6 +227,15 @@ RUNTIME_ERRORS=0
 CRITICAL_404=0
 RESPONSIVE_ACCEPTANCE=PASS
 ```
+
+## First governing run diagnosis
+
+Initial exact-head run `31358002396` correctly blocked the hotfix before merge. Authority, bounded static contracts and commercial-loop smoke passed. Two CI-contract mismatches were found:
+
+1. inherited `auth-relogin-canonical-return-test.mjs` still expected the public root to resolve to Forge Alive;
+2. the 010H Pages harness generated `DEMO_MODE=true` while the production validator correctly expects `false` unless explicitly told otherwise.
+
+Both were corrected inside the permitted acceptance/release boundary. No productive auth, domain or data mutation was introduced. Any result from run `31358002396` is stale after these corrections; only a new exact-final-HEAD run may unlock merge.
 
 ## Mutation seal
 
