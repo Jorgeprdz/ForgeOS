@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Forge Aura Conversation + Cartera 011A</title>
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/pipeline/pipeline.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-semantic-012.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-mobile-contract-010j.css">
+  <link rel="stylesheet" href="/docs/static-preview/forge-aura/cartera/cartera-relational-011a.css">
+  <style>
+    html,body{margin:0;min-height:100%;background:#f4f5fb;font-family:Inter,system-ui,sans-serif;color:#172033}
+    .fixture{display:grid;gap:28px;padding:16px;max-width:1180px;margin:0 auto}.fixture-block{min-width:0}.fixture-block>h1{font-size:13px;color:#6555e8;margin:0 0 10px;text-transform:uppercase;letter-spacing:.08em}
+  </style>
+</head>
+<body>
+  <main class="fixture">
+    <section class="fixture-block"><h1>Cartera 011A</h1><div id="cartera-root"></div></section>
+    <section class="fixture-block"><h1>Pipeline 011A</h1><div id="pipeline-root"></div></section>
+  </main>
+  <script type="module">
+    import { createCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module-v8.js?v=forge-aura-conversation-cartera-011a';
+    import { createPipelineModule } from '/docs/static-preview/forge-aura/pipeline/pipeline-module-v2.js?v=forge-aura-conversation-workspace-011a';
+
+    const USER_ID='00000000-0000-4000-8000-000000000111';
+    const PROSPECT_ID='11111111-1111-4111-8111-111111111111';
+    const PERSON_ID='22222222-2222-4222-8222-222222222222';
+    const PERSON_REFERENCE='person:cartera:'+'a'.repeat(40);
+    const POLICY_ID='33333333-3333-4333-8333-333333333333';
+    const POLICY_REFERENCE='policy:cartera:'+'a'.repeat(40);
+    const POLICY_VERSION_ID='44444444-4444-4444-8444-444444444444';
+    const EVIDENCE_ID='55555555-5555-4555-8555-555555555555';
+    const PHONE='+525500001234';
+
+    const confirmed=value=>({candidateValue:value,confirmedValue:value,decision:'ACCEPT'});
+    const fieldClaims={productName:confirmed('IMAGINA SER 65 - 15 PAGOS UDI'),policyNumber:confirmed('VI0003006169')};
+
+    const tables={
+      prospects:[{
+        id:PROSPECT_ID,full_name:'ADRIAN ORTIZ GARCIA',display_name:'ADRIAN ORTIZ GARCIA',alias:null,status:'contacted',
+        source:'Referido',source_type:'referral',source_value:'Referido',initial_context:'Contexto privado que nunca debe llegar al provider.',
+        phone_normalized:PHONE,whatsapp_normalized:null,phone:PHONE,whatsapp:null,next_action_at:null,next_action_type:null,
+        created_at:'2026-08-08T12:00:00Z',updated_at:'2026-08-09T23:30:00Z',archived_at:null,
+      }],
+      prospect_commercial_timeline:[],
+      commercial_people:[{
+        id:PERSON_ID,person_reference:PERSON_REFERENCE,display_name:'ADRIAN ORTIZ GARCIA',preferred_name:'Adrian Ortiz Garcia',normalized_name:'adrian ortiz garcia',
+        verified_phone:PHONE,verified_email:null,lifecycle_state:'CONFIRMED',privacy_classification:'PRIVATE',archived_at:null,
+      }],
+      commercial_source_identity_links:[{
+        person_id:PERSON_ID,source_domain:'PIPELINE',source_identity_type:'PROSPECT',source_record_reference:PROSPECT_ID,prospect_id:PROSPECT_ID,
+        match_status:'LINK_CONFIRMED',effective_to:null,
+      }],
+      commercial_accounts:[],
+      commercial_account_memberships:[],
+      canonical_policies:[{
+        id:POLICY_ID,policy_reference:POLICY_REFERENCE,carrier_reference:'carrier:smnyl',policy_number:'VI0003006169',
+        product_reference:'product:imagina-ser-65-15-pagos-udi',issue_date:'2026-08-05',effective_from:'2026-08-05T06:00:00Z',effective_to:'2053-08-05T06:00:00Z',
+        status_value:'ACTIVE',status_source:'EVIDENCE',status_as_of:'2026-08-09T23:40:00Z',currency:'UDI',premium_amount:null,payment_frequency:'MONTHLY',sum_insured:null,
+        completeness_state:'COMPLETE',freshness_state:'CURRENT',conflict_state:'CLEAR',current_version:1,created_at:'2026-08-09T23:40:00Z',updated_at:'2026-08-09T23:40:00Z',archived_at:null,
+      }],
+      policy_versions:[{
+        id:POLICY_VERSION_ID,policy_id:POLICY_ID,policy_version_reference:'POLICY_VERSION:'+'b'.repeat(40),version_number:1,facts:{},evidence_version_id:EVIDENCE_ID,confirmed_at:'2026-08-09T23:40:00Z',
+      }],
+      policy_evidence_versions:[{
+        id:EVIDENCE_ID,evidence_version_reference:'EVIDENCE_VERSION:'+'c'.repeat(64),policy_id:POLICY_ID,document_hash:'d'.repeat(64),source_type:'CARTERA020B_POLICY_PACKET',
+        observed_at:'2026-08-09T23:39:00Z',verification_state:'CONFIRMED',field_claims:fieldClaims,provenance:{},created_at:'2026-08-09T23:40:00Z',
+      }],
+      cartera020b_policy_evidence_packets:[],
+    };
+
+    const roles=[
+      {policy_role_reference:'ROLE:OWNER',policy_id:POLICY_ID,participant_person_id:PERSON_ID,participant_account_id:null,role_type:'POLICY_OWNER',confirmation_state:'CONFIRMED',privacy_classification:'PRIVATE',visibility_scope:'POLICY_TEAM',effective_from:'2026-08-05T06:00:00Z',effective_to:null},
+      {policy_role_reference:'ROLE:INSURED',policy_id:POLICY_ID,participant_person_id:PERSON_ID,participant_account_id:null,role_type:'INSURED',confirmation_state:'CONFIRMED',privacy_classification:'PRIVATE',visibility_scope:'POLICY_TEAM',effective_from:'2026-08-05T06:00:00Z',effective_to:null},
+    ];
+
+    const trace=window.__FORGE_011A_TRACE__={opens:[],providerRequests:[],rpc:[],timelineAppends:[]};
+    window.open=(url)=>{trace.opens.push(String(url));return null;};
+
+    function rows(table,filters,inFilters){
+      return (tables[table]||[]).filter(row=>
+        Object.entries(filters).every(([key,value])=>row[key]===value)
+        && Object.entries(inFilters).every(([key,values])=>values.map(String).includes(String(row[key])))
+      );
+    }
+    function query(table){
+      const filters={},inFilters={};let limitValue=null;let proxy;
+      const current=()=>{const result=rows(table,filters,inFilters);return limitValue==null?result:result.slice(0,limitValue);};
+      proxy=new Proxy({}, {get(_target,property){
+        if(property==='then')return(resolve,reject)=>Promise.resolve({data:structuredClone(current()),error:null}).then(resolve,reject);
+        if(property==='select')return()=>proxy;
+        if(property==='eq')return(key,value)=>{filters[key]=value;return proxy;};
+        if(property==='is')return(key,value)=>{filters[key]=value;return proxy;};
+        if(property==='in')return(key,values)=>{inFilters[key]=Array.isArray(values)?values:[];return proxy;};
+        if(property==='order')return()=>proxy;
+        if(property==='limit')return value=>{limitValue=Number(value);return proxy;};
+        if(property==='lt')return()=>proxy;
+        if(property==='single')return async()=>{const row=current()[0]||null;return{data:row?structuredClone(row):null,error:row?null:{message:'NOT_FOUND',code:'PGRST116'}};};
+        if(property==='maybeSingle')return async()=>({data:current()[0]?structuredClone(current()[0]):null,error:null});
+        return()=>proxy;
+      }});
+      return proxy;
+    }
+
+    function providerEnvelope(){
+      return {
+        resultState:'SUCCESS',
+        draftCandidate:{
+          text:'Hola, Adrian. Te escribo para dar seguimiento. ¿Te parece bien continuar por aquí?',
+          rawText:'Hola, Adrian. Te escribo para dar seguimiento. ¿Te parece bien continuar por aquí?',
+          reviewRequired:true,humanApprovalRequired:true,approved:false,sent:false,sendsMessage:false,notSendable:true,sourceMutable:false,providerId:'gemini',
+        },
+        metadata:{providerId:'gemini',modelId:'fixture-language-renderer',generationMode:'fixture',generatedAt:new Date().toISOString(),externalProviderEnabled:true,deterministicFallbackRequired:true},
+        error:null,persistencePerformed:false,pipelineMutationPerformed:false,timelineEventCreated:false,nbaExecuted:false,taskCreated:false,calendarEventCreated:false,
+        whatsappOpened:false,messageSent:false,externalActionPerformed:false,humanApprovalRequired:true,approved:false,sent:false,
+      };
+    }
+
+    const client={
+      auth:{
+        async getUser(){return{data:{user:{id:USER_ID}},error:null};},
+        async getSession(){return{data:{session:{access_token:'TEST'}},error:null};},
+      },
+      from(table){return query(table);},
+      functions:{
+        async invoke(name,options={}){
+          if(name==='nash-draft-provider'){
+            trace.providerRequests.push(structuredClone(options.body));
+            return {data:providerEnvelope(),error:null};
+          }
+          return {data:null,error:{message:'UNEXPECTED_FUNCTION'}};
+        },
+      },
+      async rpc(name,args={}){
+        trace.rpc.push(name);
+        if(name==='forge_cartera010b_list_general_policy_roles')return{data:structuredClone(roles),error:null};
+        if(name==='forge_cartera030d_list_policy_payment_calendar')return{data:{sourceState:'CONNECTED',summary:{confirmationRequired:0},items:[]},error:null};
+        if(name==='forge_cartera050_list_future_radar')return{data:{sourceState:'CONNECTED',items:[]},error:null};
+        if(name==='forge_policy_intelligence_read_policy_coverages')return{data:{sourceState:'CONNECTED',items:[]},error:null};
+        if(name==='forge_cartera040_list_relationship_brief')return{data:{items:[]},error:null};
+        if(name==='forge_cartera060_list_relationship_growth_reviews')return{data:{items:[]},error:null};
+        if(name==='forge_nfast08_append_prospect_timeline_event'){
+          trace.timelineAppends.push(structuredClone(args));
+          const row={
+            id:'66666666-6666-4666-8666-666666666666',prospect_id:args.p_prospect_id,event_type:args.p_event_type,event_source:'ADVISOR_DECLARATION',
+            source_record_reference:args.p_source_record_reference,occurred_at:args.p_occurred_at,recorded_at:args.p_occurred_at,payload:args.p_payload,
+            evidence_references:args.p_evidence_references,contract_version:'NFAST-08.1',privacy_classification:'ADVISOR_PRIVATE_MINIMIZED',retention_policy:'NO_AUTOMATIC_DELETION_PENDING_POLICY',
+          };
+          tables.prospect_commercial_timeline.unshift(row);
+          return{data:row,error:null};
+        }
+        return{data:[],error:null};
+      },
+    };
+
+    const carteraModule=createCarteraModule({root:document.querySelector('#cartera-root'),client,windowRef:window});
+    const pipelineModule=createPipelineModule({root:document.querySelector('#pipeline-root'),client,windowRef:window});
+    await carteraModule.mount();
+    await pipelineModule.mount();
+    window.__FORGE_011A_MODULES__={carteraModule,pipelineModule};
+    document.documentElement.dataset.forge011a='READY';
+  </script>
+</body>
+</html>

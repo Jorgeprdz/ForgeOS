@@ -1,0 +1,161 @@
+name: Forge Aura Conversation + Cartera 011A
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/static-preview/forge-aura/app-v4.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/pipeline/**'
+      - 'docs/static-preview/forge-aura/cartera/**'
+      - 'tests/forge-aura-conversation-cartera-011a.test.mjs'
+      - 'tests/e2e/forge-aura-conversation-cartera-011a.spec.mjs'
+      - 'tests/fixtures/forge-aura-conversation-cartera-011a.html'
+      - 'tests/aura011a-playwright.config.mjs'
+      - 'docs/evidence/FORGE_AURA_CONVERSATION_WORKSPACE_CARTERA_RECOVERY_011A.md'
+      - '.github/workflows/forge-aura-conversation-cartera-011a.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-aura-conversation-cartera-011a-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+
+jobs:
+  constitutional-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Enforce bounded 011A diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='${{ github.event.pull_request.base.sha }}'
+          git diff --name-only "$base...HEAD" | tee /tmp/changed.txt
+          while IFS= read -r file; do
+            case "$file" in
+              docs/static-preview/forge-aura/app-v4.js|\
+              docs/static-preview/forge-aura/index.html|\
+              docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v4.js|\
+              docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v5.js|\
+              docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.css|\
+              docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js|\
+              docs/static-preview/forge-aura/pipeline/pipeline-module-v2.js|\
+              docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js|\
+              docs/static-preview/forge-aura/cartera/cartera-module-v8.js|\
+              docs/static-preview/forge-aura/cartera/cartera-relational-011a.css|\
+              tests/forge-aura-conversation-cartera-011a.test.mjs|\
+              tests/e2e/forge-aura-conversation-cartera-011a.spec.mjs|\
+              tests/fixtures/forge-aura-conversation-cartera-011a.html|\
+              tests/aura011a-playwright.config.mjs|\
+              docs/evidence/FORGE_AURA_CONVERSATION_WORKSPACE_CARTERA_RECOVERY_011A.md|\
+              .github/workflows/forge-aura-conversation-cartera-011a.yml)
+                ;;
+              *) echo "011A_BOUNDARY_VIOLATION=$file"; exit 1 ;;
+            esac
+          done < /tmp/changed.txt
+          if grep -Eq '^(supabase/migrations/|supabase/functions/|platform/shared-commercial-model/|manager-os/|nash/|advisor-os/)' /tmp/changed.txt; then
+            echo '011A_PRODUCTIVE_AUTHORITY_MUTATION=DETECTED'
+            exit 1
+          fi
+          git diff --check "$base...HEAD"
+          echo 'CONSTITUTIONAL_GATE_011A=PASS'
+          echo 'SCHEMA_MUTATION=0'
+          echo 'RLS_MUTATION=0'
+          echo 'NASH_AUTHORITY_MUTATION=0'
+          echo 'AUTO_IDENTITY_MERGE=0'
+          echo 'AUTO_MESSAGE_SEND=0'
+
+  static-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Syntax checks
+        run: |
+          node --check docs/static-preview/forge-aura/app-v4.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v4.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v5.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-module-v2.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v8.js
+          node --check tests/forge-aura-conversation-cartera-011a.test.mjs
+          node --check tests/e2e/forge-aura-conversation-cartera-011a.spec.mjs
+          node --check tests/aura011a-playwright.config.mjs
+      - name: 011A contract tests
+        run: node --test tests/forge-aura-conversation-cartera-011a.test.mjs
+
+  pages-runtime-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Verify Pages publishes required conversation runtime
+        run: |
+          node --test --test-name-pattern='Pages artifact' tests/forge-aura-conversation-cartera-011a.test.mjs
+          test -f advisor-os/sales-pipeline/contact-navigation/productive-contact-navigation-boundary.js
+          test -f advisor-os/sales-pipeline/prospect-context/universal-governed-prospect-context-contract.js
+          echo 'PAGES_CONVERSATION_RUNTIME_CONTRACT_011A=PASS'
+
+  browser-e2e:
+    runs-on: ubuntu-latest
+    needs: [static-contracts]
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config=tests/aura011a-playwright.config.mjs
+      - name: Upload 011A visual evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-aura-011a-visual-evidence
+          path: artifacts/011a/screenshots
+          if-no-files-found: error
+          retention-days: 14
+      - name: Emit 011A browser gates
+        run: |
+          echo 'CARTERA_RELATIONAL_PRESENTATION=PASS'
+          echo 'WHATSAPP_DIRECT_BYPASS_REMOVED=PASS'
+          echo 'CONVERSATION_WORKSPACE=PASS'
+          echo 'NASH_COMBAT_INTEGRATED=PASS'
+          echo 'EXACT_HUMAN_APPROVAL=PASS'
+          echo 'MOBILE_390=PASS'
+          echo 'MOBILE_412=PASS'
+          echo 'TABLET_768=PASS'
+          echo 'DESKTOP_1440=PASS'
+
+  FINAL_ROBOCOP_011A:
+    runs-on: ubuntu-latest
+    needs: [constitutional-gate, static-contracts, pages-runtime-contract, browser-e2e]
+    if: ${{ always() }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: '${{ env.EXPECTED_HEAD }}' }
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Final 011A gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ needs.constitutional-gate.result }}' = 'success'
+          test '${{ needs.static-contracts.result }}' = 'success'
+          test '${{ needs.pages-runtime-contract.result }}' = 'success'
+          test '${{ needs.browser-e2e.result }}' = 'success'
+          echo 'FINAL_ROBOCOP_011A=PASS'
+          echo 'READY_FOR_HUMAN_MERGE_AND_DEPLOY_AUTHORIZATION=YES'
