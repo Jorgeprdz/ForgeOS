@@ -1,14 +1,14 @@
 import {
   installAdvisorCompensationSupabaseProvider100,
-} from "../../advisor-os/compensation/advisor-compensation-supabase-provider-100.js";
+} from "../../../advisor-os/compensation/advisor-compensation-supabase-provider-100.js";
 import {
   createAdvisorCompensationIncomeWidgetLoader080,
-} from "../../advisor-os/forge-alive/smart-widgets/advisor-compensation-income-widget-source-080.js";
+} from "../../../advisor-os/forge-alive/smart-widgets/advisor-compensation-income-widget-source-080.mjs";
 import {
   composeMickGoalGapCoach,
   MICK_GOAL_GAP_COACH_BOUNDARIES,
   MICK_GOAL_GAP_COACH_VERSION,
-} from "../../advisor-os/forge-alive/forecast/mick-goal-gap-coach.js";
+} from "../../../advisor-os/forge-alive/forecast/mick-goal-gap-coach.mjs";
 
 const COACH_STATE = Symbol.for("forge.home.mick-goal-gap-coach.v1");
 const GOAL_REASON_PREFIX = "HOME_MONTHLY_GOALS_V2:";

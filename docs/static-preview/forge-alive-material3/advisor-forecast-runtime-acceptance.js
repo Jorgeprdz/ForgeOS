@@ -67,11 +67,11 @@ let modulesPromise = null;
 async function loadRuntimeModules() {
   if (modulesPromise) return modulesPromise;
   modulesPromise = Promise.all([
-    import(new URL("advisor-forecast-smart-widget.js", SMART_WIDGET_BASE)),
-    import(new URL("productive-smart-widget-orchestrator.js", SMART_WIDGET_BASE)),
-    import(new URL("productive-smart-widget-contract.js", SMART_WIDGET_BASE)),
-    import(new URL("advisor-forecast-navigation.js", NAVIGATION_BASE)),
-    import(new URL("advisor-forecast-activity-handoff.js", ACTIVITY_BASE)),
+    import(new URL("advisor-forecast-smart-widget.mjs", SMART_WIDGET_BASE)),
+    import(new URL("productive-smart-widget-orchestrator.mjs", SMART_WIDGET_BASE)),
+    import(new URL("productive-smart-widget-contract.mjs", SMART_WIDGET_BASE)),
+    import(new URL("advisor-forecast-navigation.mjs", NAVIGATION_BASE)),
+    import(new URL("advisor-forecast-activity-handoff.mjs", ACTIVITY_BASE)),
     import("./pipeline-productive-intelligence-adapter.js?v=af-runtime-acceptance-001"),
     import("./advisor-forecast-detail-screen.js?v=af-runtime-acceptance-001"),
   ]).then(([forecastWidget, orchestrator, contract, navigation, activityHandoff, pipeline, detail]) => Object.freeze({
