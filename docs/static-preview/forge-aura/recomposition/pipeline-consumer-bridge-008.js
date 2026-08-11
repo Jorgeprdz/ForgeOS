@@ -1,5 +1,9 @@
 import { createPipelineModule as createBasePipelineModule } from "../pipeline/pipeline-module.js";
 import { createPipelineAdapter } from "../pipeline/pipeline-adapter.js";
+import {
+  hasUsableRelationshipContext,
+  relationshipContextHtml,
+} from "./pipeline-crs10-context-presentation-013.js?v=forge-beta2-013-crs10-context";
 
 const WRAPPER_ID = "FORGE_GLOBAL_AURA_PIPELINE_CONSUMER_BRIDGE_008";
 
@@ -15,27 +19,58 @@ function reasonsHtml(reasons = []) {
   return reasons.map(reason => `<li>${esc(reason)}</li>`).join("");
 }
 
-function projectionsHtml(projections = []) {
+function technicalContextHtml(context = {}) {
+  const sourceAuthorities = context?.provenance?.sourceAuthorities || [];
+  return `
+    <details class="aura-technical-disclosure" data-pipeline-context-technical>
+      <summary>Información técnica</summary>
+      <dl class="aura-detail">
+        <div><dt>Consumer</dt><dd>${esc(context?.consumerId || "FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A")}</dd></div>
+        <div><dt>Estado</dt><dd>${esc(context?.state || "unavailable")}</dd></div>
+        <div><dt>Identidad</dt><dd>${esc(context?.identityState || "UNKNOWN")}</dd></div>
+        <div><dt>CommercialPerson</dt><dd>${esc(context?.personReference || "No vinculada")}</dd></div>
+        <div><dt>Opportunity authority</dt><dd>${esc(context?.opportunityAuthorityState || "UNKNOWN")}</dd></div>
+        <div><dt>Fuentes</dt><dd>${esc(sourceAuthorities.join(" · ") || "No disponibles")}</dd></div>
+      </dl>
+      <h4>Limitaciones y degradaciones</h4>
+      <ul>${reasonsHtml(context?.degradedReasons)}</ul>
+      <p>Prospect ≠ CommercialPerson. Recomendación ≠ decisión humana. Esta vista es read-only y no ejecuta acciones.</p>
+    </details>
+  `;
+}
+
+function projectionTechnicalHtml(item = {}) {
+  return `
+    <details class="aura-technical-disclosure" data-pipeline-projection-technical>
+      <summary>Información técnica</summary>
+      <dl class="aura-detail">
+        <div><dt>Estado de verdad</dt><dd>${esc(item.truthState || "UNKNOWN")}</dd></div>
+        <div><dt>Autoridades fuente</dt><dd>${esc((item.provenance?.sourceAuthorities || []).join(" · ") || "No informadas")}</dd></div>
+        <div><dt>Decisión humana requerida</dt><dd>${item.humanDecisionRequired === false ? "No informada" : "Sí"}</dd></div>
+        <div><dt>Referencia</dt><dd>${esc(item.decisionReference || "No informada")}</dd></div>
+      </dl>
+    </details>
+  `;
+}
+
+function projectionsHtml(projections = [], { relationshipAvailable = false } = {}) {
   if (!Array.isArray(projections) || !projections.length) {
+    if (relationshipAvailable) return "";
     return `
       <section class="aura-inline-empty" data-aura-governed-projections="EMPTY">
-        <h3>Sin proyecciones autorizadas para este prospecto</h3>
-        <p>Forge no fabricará una recomendación para llenar este espacio. Los hechos operativos del registro siguen disponibles por separado.</p>
+        <h3>Sin información adicional para decidir</h3>
+        <p>Forge no encontró una recomendación respaldada por las fuentes disponibles. Los datos del prospecto siguen visibles para que tú decidas el siguiente paso.</p>
       </section>
     `;
   }
 
   return `<div class="aura-governed-projection-list">${projections.map(item => `
     <article class="aura-governed-projection" data-decision-reference="${esc(item.decisionReference)}">
-      <p class="aura-eyebrow">${esc(item.domain || item.family || "DECISIÓN")}</p>
-      <h3>${esc(item.title || "Proyección gobernada")}</h3>
-      <p>${esc(item.whyNow || item.reason || "Sin explicación adicional.")}</p>
-      <dl class="aura-detail">
-        <div><dt>Estado de verdad</dt><dd>${esc(item.truthState || "UNKNOWN")}</dd></div>
-        <div><dt>Autoridad</dt><dd>${esc((item.provenance?.sourceAuthorities || []).join(" · ") || "No informada")}</dd></div>
-        <div><dt>Decisión humana</dt><dd>${item.humanDecisionRequired === false ? "No informada" : "Requerida"}</dd></div>
-      </dl>
-      ${item.recommendedAction?.label ? `<p><strong>Acción publicada por la autoridad:</strong> ${esc(item.recommendedAction.label)}. No se ejecutó automáticamente.</p>` : ""}
+      <p class="aura-eyebrow">${esc(item.domain || item.family || "CONTEXTO")}</p>
+      <h3>${esc(item.title || "Información para revisar")}</h3>
+      <p>${esc(item.whyNow || item.reason || "Forge no tiene una explicación adicional para esta señal.")}</p>
+      ${item.recommendedAction?.label ? `<p><strong>Posible siguiente paso:</strong> ${esc(item.recommendedAction.label)}. Tú decides si hacerlo.</p>` : ""}
+      ${projectionTechnicalHtml(item)}
     </article>
   `).join("")}</div>`;
 }
@@ -73,17 +108,17 @@ export function createPipelineModule(options = {}) {
     layer.className = "aura-dialog-layer";
     layer.dataset.auraGovernedContextDialog = "true";
     layer.innerHTML = `
-      <button class="aura-scrim" type="button" data-close-governed-context aria-label="Cerrar contexto gobernado"></button>
+      <button class="aura-scrim" type="button" data-close-governed-context aria-label="Cerrar contexto"></button>
       <section class="aura-dialog aura-governed-dialog" role="dialog" aria-modal="true" aria-labelledby="aura-governed-context-title" tabindex="-1">
         <header>
           <div>
-            <p class="aura-eyebrow">AUTORIDAD CONECTADA</p>
-            <h2 id="aura-governed-context-title">Contexto gobernado del prospecto</h2>
+            <p class="aura-eyebrow">CONTEXTO PARA DECIDIR</p>
+            <h2 id="aura-governed-context-title">Lo que Forge puede explicar de este prospecto</h2>
           </div>
           <button type="button" data-close-governed-context aria-label="Cerrar">×</button>
         </header>
         <div class="aura-dialog__body" data-governed-context-body aria-busy="true">
-          <div class="aura-loading aura-loading--inline"><div aria-hidden="true"></div><p>Consultando CRS-03 y FCDP-004-001…</p></div>
+          <div class="aura-loading aura-loading--inline"><div aria-hidden="true"></div><p>Revisando la información disponible…</p></div>
         </div>
       </section>
     `;
@@ -103,29 +138,26 @@ export function createPipelineModule(options = {}) {
 
     const body = layer.querySelector("[data-governed-context-body]");
     const currentDialog = layer;
-    Promise.resolve(adapter?.intelligence?.(prospectId, { projections: [] }))
+    Promise.resolve(adapter.intelligence(prospectId, { projections: [] }))
       .then(context => {
         if (activeDialog !== currentDialog) return;
-        const sourceAuthorities = context?.provenance?.sourceAuthorities || [];
         body.setAttribute("aria-busy", "false");
+        const relationshipComposition = context?.relationshipIntelligence || null;
+        const relationshipAvailable = Boolean(relationshipComposition);
+        const projectionAvailable = Array.isArray(context?.projections) && context.projections.length > 0;
+        const available = relationshipAvailable || projectionAvailable;
         body.innerHTML = `
           <section class="aura-governed-context-summary" data-consumer-state="${esc(context?.state || "unavailable")}">
-            <p>Pipeline consume la autoridad existente; Aura no calcula score, prioridad, confianza ni impacto.</p>
-            <dl class="aura-detail">
-              <div><dt>Consumer</dt><dd>${esc(context?.consumerId || "FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A")}</dd></div>
-              <div><dt>Estado</dt><dd>${esc(context?.state || "unavailable")}</dd></div>
-              <div><dt>Identidad</dt><dd>${esc(context?.identityState || "UNKNOWN")}</dd></div>
-              <div><dt>CommercialPerson</dt><dd>${esc(context?.personReference || "No vinculada")}</dd></div>
-              <div><dt>Opportunity authority</dt><dd>${esc(context?.opportunityAuthorityState || "UNKNOWN")}</dd></div>
-              <div><dt>Fuentes</dt><dd>${esc(sourceAuthorities.join(" · ") || "No disponibles")}</dd></div>
-            </dl>
-            <details>
-              <summary>Limitaciones y degradaciones</summary>
-              <ul>${reasonsHtml(context?.degradedReasons)}</ul>
-            </details>
+            <h3>${available ? "Forge encontró contexto adicional" : "Forge no encontró contexto adicional disponible"}</h3>
+            <p>${available
+              ? "Esta información complementa el registro del prospecto. Revísala antes de decidir qué hacer; Forge no ejecutará ninguna acción por ti."
+              : "Puedes seguir trabajando con los datos del prospecto. Forge no va a inventar una recomendación para llenar lo que falta."}</p>
+            ${technicalContextHtml(context)}
           </section>
-          ${projectionsHtml(context?.projections)}
-          <p class="aura-notice">Prospect ≠ CommercialPerson. Recomendación ≠ decisión humana. Este diálogo es read-only y no ejecuta acciones.</p>
+          ${relationshipContextHtml(relationshipComposition)}
+          ${projectionsHtml(context?.projections, {
+            relationshipAvailable: hasUsableRelationshipContext(relationshipComposition),
+          })}
         `;
       })
       .catch(error => {
@@ -133,9 +165,12 @@ export function createPipelineModule(options = {}) {
         body.setAttribute("aria-busy", "false");
         body.innerHTML = `
           <section class="aura-inline-empty" data-aura-governed-projections="UNAVAILABLE">
-            <h3>La autoridad de contexto no respondió</h3>
-            <p>${esc(error?.code || error?.message || "PIPELINE_INTELLIGENCE_SOURCE_UNAVAILABLE")}</p>
-            <p>Forge conserva el estado como desconocido; no lo sustituye con una recomendación local.</p>
+            <h3>No pudimos consultar el contexto adicional</h3>
+            <p>Puedes seguir usando los datos del prospecto y volver a intentarlo después. Forge no sustituirá la información faltante con una recomendación inventada.</p>
+            <details class="aura-technical-disclosure" data-pipeline-context-technical>
+              <summary>Información técnica</summary>
+              <p>${esc(error?.code || error?.message || "PIPELINE_INTELLIGENCE_SOURCE_UNAVAILABLE")}</p>
+            </details>
           </section>
         `;
       });
@@ -151,8 +186,8 @@ export function createPipelineModule(options = {}) {
     if (headerCopy && headerCopy.dataset.aura008Normalized !== "true") {
       headerCopy.dataset.aura008Normalized = "true";
       headerCopy.textContent = headerCopy.textContent
-        .replace(/(\d+) requieren atención/, "$1 con hechos operativos por revisar")
-        .replace("sin señales prioritarias verificadas", "sin hechos operativos destacados");
+        .replace(/(\d+) requieren atención/, "$1 con datos por revisar")
+        .replace("sin señales prioritarias verificadas", "sin pendientes destacados");
     }
 
     const attention = root.querySelector("[data-attention-layer]");
@@ -161,11 +196,11 @@ export function createPipelineModule(options = {}) {
       const eyebrow = attention.querySelector(".aura-eyebrow");
       const title = attention.querySelector("h2");
       const copy = attention.querySelector("header p:not(.aura-eyebrow)");
-      if (eyebrow) eyebrow.textContent = "CONTEXTO OPERATIVO";
+      if (eyebrow) eyebrow.textContent = "PARA REVISAR";
       if (title) title.textContent = attention.querySelector("[data-priority-kind]")
-        ? "Hechos del registro que conviene revisar"
-        : "Sin hechos operativos destacados";
-      if (copy) copy.textContent = "Estas señales se derivan de fechas, Timeline y campos del registro. Son contexto operativo, no score, ranking comercial ni autoridad de decisión.";
+        ? "Datos del registro que conviene revisar"
+        : "Sin pendientes destacados";
+      if (copy) copy.textContent = "Estas señales salen de fechas, actividad y datos ya registrados. Te ayudan a revisar el Pipeline, pero no deciden por ti.";
       attention.querySelectorAll("[data-priority-kind]").forEach(card => {
         card.dataset.operationalFactKind = card.dataset.priorityKind || "";
       });
@@ -176,14 +211,22 @@ export function createPipelineModule(options = {}) {
       node.dataset.aura008Context = "true";
       const record = node.closest("[data-record-id]");
       const id = record?.dataset.recordId || "";
-      node.innerHTML = `
+      const intelligenceCapability = adapter?.capabilities?.intelligenceAvailable;
+      const actionable = Boolean(id && adapter?.intelligence && intelligenceCapability !== false);
+      node.dataset.pipelineContextActionable = String(actionable);
+      node.innerHTML = actionable ? `
         <div>
-          <span>Contexto de decisión</span>
-          <p>Aura no presenta una “siguiente mejor acción” calculada localmente como verdad gobernada.</p>
+          <span>Contexto para decidir</span>
+          <p>Forge puede mostrarte información adicional antes de que elijas el siguiente paso.</p>
         </div>
         <button type="button" data-pipeline-governed-context data-id="${esc(id)}">
-          Ver contexto gobernado
+          Ver contexto
         </button>
+      ` : `
+        <div>
+          <span>Contexto para decidir</span>
+          <p>No hay contexto adicional disponible para este registro. Puedes seguir con los datos visibles del prospecto.</p>
+        </div>
       `;
     });
 
@@ -194,7 +237,7 @@ export function createPipelineModule(options = {}) {
     const sort = root.querySelector('[data-filter="sort"]');
     if (sort) {
       const priority = [...sort.options].find(option => option.value === "priority");
-      if (priority && priority.textContent !== "Orden local heredado (no autoridad)") priority.textContent = "Orden local heredado (no autoridad)";
+      if (priority && priority.textContent !== "Orden anterior") priority.textContent = "Orden anterior";
       if (sort.value === "priority" && sort.dataset.aura008SortNormalized !== "true") {
         sort.dataset.aura008SortNormalized = "true";
         queueMicrotask(() => {
@@ -208,9 +251,9 @@ export function createPipelineModule(options = {}) {
     const quick = root.querySelector('[data-filter="quick"]');
     if (quick) {
       const label = quick.closest("label")?.querySelector("span");
-      if (label && label.textContent !== "Hechos") label.textContent = "Hechos";
+      if (label && label.textContent !== "Pendientes") label.textContent = "Pendientes";
       const attentionOption = [...quick.options].find(option => option.value === "attention");
-      if (attentionOption && attentionOption.textContent !== "Con hechos operativos") attentionOption.textContent = "Con hechos operativos";
+      if (attentionOption && attentionOption.textContent !== "Con datos por revisar") attentionOption.textContent = "Con datos por revisar";
     }
   }
 
@@ -228,11 +271,7 @@ export function createPipelineModule(options = {}) {
     event.preventDefault();
     event.stopImmediatePropagation();
     const id = button.dataset.id;
-    if (!id) return;
-    if (!adapter?.intelligence) {
-      button.setAttribute("aria-disabled", "true");
-      return;
-    }
+    if (!id || !adapter?.intelligence) return;
     renderContextDialog(button, id);
   }, { capture: true, signal: events.signal });
 
@@ -271,6 +310,8 @@ export function createPipelineModule(options = {}) {
       return Object.freeze({
         wrapperId: WRAPPER_ID,
         intelligenceConsumerConnected: Boolean(adapter?.intelligence),
+        relationshipIntelligencePresented: Boolean(adapter?.capabilities?.relationshipIntelligenceAvailable),
+        existingCarteraIntelligenceReused: Boolean(adapter?.capabilities?.existingCarteraIntelligenceReused),
         localNbaPresentedAsAuthority: false,
         createsTruth: false,
         createsScore: false,

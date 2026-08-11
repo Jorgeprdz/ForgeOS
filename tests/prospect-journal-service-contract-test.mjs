@@ -17,7 +17,34 @@ test("journal entry validation bounds text and capture origin", () => {
   assert.throws(() => service.validateEntry({ content: "x".repeat(4001) }), error => error.code === "VALIDATION_ERROR");
 });
 
-test("journal persistence confirmation requires exact read-after-write", () => {
+test("journal write receipt requires exact server-returned row", () => {
+  const expected = { content: "Nota", captureMethod: "text" };
+  const created = {
+    id: "entry-1",
+    prospectId: "prospect-1",
+    advisorId: "advisor-1",
+    content: "Nota",
+    captureMethod: "text",
+    source: "PIPELINE_CONTEXT",
+  };
+  assert.equal(service.assertWriteReceipt({
+    created,
+    expected,
+    prospectId: "prospect-1",
+    advisorId: "advisor-1",
+  }), created);
+  assert.throws(
+    () => service.assertWriteReceipt({
+      created: { ...created, content: "Otra" },
+      expected,
+      prospectId: "prospect-1",
+      advisorId: "advisor-1",
+    }),
+    error => error.code === "PROSPECT_JOURNAL_WRITE_RECEIPT_MISMATCH",
+  );
+});
+
+test("journal persistence confirmation can independently verify exact read-after-write", () => {
   const created = { id: "entry-1", prospectId: "prospect-1" };
   const expected = { content: "Nota", captureMethod: "text" };
   const confirmed = { ...created, ...expected };
@@ -26,6 +53,45 @@ test("journal persistence confirmation requires exact read-after-write", () => {
     () => service.assertConfirmedEntry({ created, confirmed: { ...confirmed, content: "Vieja" }, expected }),
     error => error.code === "PROSPECT_JOURNAL_PERSISTENCE_MISMATCH",
   );
+});
+
+test("appendEntry does not make a follow-up read part of the write promise", async () => {
+  let tableCalls = 0;
+  const returnedRow = {
+    id: "entry-013",
+    advisor_id: "advisor-013",
+    prospect_id: "prospect-013",
+    content: "Nota separada de lectura",
+    capture_method: "text",
+    source: "PIPELINE_CONTEXT",
+    created_by: "advisor-013",
+    created_at: "2026-08-10T21:40:00.000Z",
+  };
+  const insertBuilder = {
+    insert(row) {
+      assert.equal(row.prospect_id, "prospect-013");
+      return this;
+    },
+    select() { return this; },
+    async single() { return { data: returnedRow, error: null }; },
+  };
+  const client = {
+    auth: {
+      async getUser() { return { data: { user: { id: "advisor-013" } }, error: null }; },
+    },
+    from(table) {
+      tableCalls += 1;
+      assert.equal(table, "prospect_journal_entries");
+      return insertBuilder;
+    },
+  };
+  const journal = service.create(client);
+  const entry = await journal.appendEntry("prospect-013", {
+    content: "Nota separada de lectura",
+    captureMethod: "text",
+  });
+  assert.equal(entry.id, "entry-013");
+  assert.equal(tableCalls, 1, "appendEntry must not issue a second table read");
 });
 
 test("journal migration is append-only, owner scoped, and timeline linked", async () => {

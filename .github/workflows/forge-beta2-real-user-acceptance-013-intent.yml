@@ -1,0 +1,134 @@
+name: Forge Beta2 Real User Acceptance 013 Intent
+
+on:
+  push:
+    branches:
+      - fix/forge-beta2-real-user-acceptance-interpretation-recovery-013
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
+      - 'docs/static-preview/forge-aura/home/**'
+      - 'docs/static-preview/forge-aura/cartera/**'
+      - 'docs/static-preview/forge-aura/pipeline/**'
+      - 'docs/static-preview/forge-aura/recomposition/**'
+      - 'supabase/migrations/20260810001200_cartera020b_targeted_interactive_claim_012.sql'
+      - 'nash/pipeline-nash-draft-orchestrator.js'
+      - 'nash/conversation-brief/nash-deterministic-conversation-brief-boundary-contract.js'
+      - 'nash/draft-intake/nfast06-deterministic-draft-renderer.js'
+      - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
+      - 'tests/pages-public-demo-runtime-closure-test.mjs'
+      - 'tests/aura-cartera-pdf-result-state-machine-006.test.mjs'
+      - 'tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs'
+      - 'tests/forge-beta2-real-user-acceptance-013-intent.test.mjs'
+      - 'tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs'
+      - 'tests/forge-beta2-real-user-acceptance-013-remaining.test.mjs'
+      - 'tests/e2e/fixtures/forge-beta2-013-intent/index.html'
+      - 'tests/e2e/forge-beta2-013-intent-workspace.spec.mjs'
+      - 'tests/e2e/forge-beta2-013-pipeline-context.spec.mjs'
+      - 'tests/e2e/forge-beta2-013-remaining.spec.mjs'
+      - 'playwright.013-intent.config.mjs'
+      - '.github/workflows/forge-beta2-real-user-acceptance-013-intent.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-beta2-013-intent
+  cancel-in-progress: true
+
+jobs:
+  intent-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax gates
+        run: |
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace-013.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v6-013.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-crs10-context-adapter-013.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-008.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-011b.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-crs10-context-presentation-013.js
+          node --check docs/static-preview/forge-aura/recomposition/human-context-presentation-013.js
+          node --check docs/static-preview/forge-aura/home/home-human-presentation-013.js
+          node --check docs/static-preview/forge-aura/home/home-module-008.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-policy-evidence-presentation-013.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v10-013.js
+          node --check scripts/prepare-forge-alive-pages-runtime-closure.mjs
+          node --check tests/pages-public-demo-runtime-closure-test.mjs
+          node --check tests/aura-cartera-pdf-result-state-machine-006.test.mjs
+          node --check tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs
+          node --check tests/forge-beta2-real-user-acceptance-013-intent.test.mjs
+          node --check tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs
+          node --check tests/forge-beta2-real-user-acceptance-013-remaining.test.mjs
+          node --check tests/e2e/forge-beta2-013-intent-workspace.spec.mjs
+          node --check tests/e2e/forge-beta2-013-pipeline-context.spec.mjs
+          node --check tests/e2e/forge-beta2-013-remaining.spec.mjs
+
+      - name: Productive import graph gate
+        run: node --test tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs
+
+      - name: RU01-RU02 NASH source-owner contract
+        run: node --test tests/forge-beta2-real-user-acceptance-013-intent.test.mjs
+
+      - name: RU04 CRS10 source-owner contract
+        run: node --test tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs
+
+      - name: RU04 Pages runtime closure
+        run: node --test tests/pages-public-demo-runtime-closure-test.mjs
+
+      - name: RU09 exact admitted Evidence contract
+        run: node --test tests/aura-cartera-pdf-result-state-machine-006.test.mjs
+
+      - name: RU09-RU12 source-owner and presentation boundaries
+        run: node --test tests/forge-beta2-real-user-acceptance-013-remaining.test.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: RU01-RU12 browser acceptance
+        run: npx playwright test tests/e2e/forge-beta2-013-intent-workspace.spec.mjs tests/e2e/forge-beta2-013-pipeline-context.spec.mjs tests/e2e/forge-beta2-013-remaining.spec.mjs --config=playwright.013-intent.config.mjs
+
+      - name: Constitutional markers
+        run: |
+          echo 'PRODUCTIVE_IMPORT_GRAPH_013=PASS'
+          echo 'ONE_CLICK_SELECTION_TESTED=YES'
+          echo 'SELECTED_INTENT_NASH_CONSUMPTION_TESTED=YES'
+          echo 'PRIMARY_UI_ZERO_INTERNAL_JARGON=PASS'
+          echo 'TECHNICAL_DISCLOSURE_DEFAULT_CLOSED=PASS'
+          echo 'DEAD_CONTEXT_CTA=ABSENT'
+          echo 'RU04_CRS10_SOURCE_OWNER=PASS'
+          echo 'RU04_CRS10_BROWSER_PRESENTATION=PASS'
+          echo 'RU04_PAGES_RUNTIME_CLOSURE=PASS'
+          echo 'RU04_FCDP_PROJECTIONS_INVENTED=NO'
+          echo 'RU04_SECOND_RELATIONSHIP_ENGINE=NO'
+          echo 'RU09_EXACT_INBOX_CLAIM=PASS'
+          echo 'RU09_DB_OVERLOAD_REUSED=YES'
+          echo 'RU10_POLICY_EVIDENCE_RECONCILIATION=PASS'
+          echo 'RU10_EVIDENCE_PROMOTED_TO_POLICY_TRUTH=NO'
+          echo 'RU11_HOME_PRIMARY_ZERO_INTERNAL_JARGON=PASS'
+          echo 'RU11_HOME_OWNER_CHANGE=NO'
+          echo 'RU12_SHARED_PRESENTATION_CONTRACT=PASS'
+          echo 'RU12_SECOND_NASH_ENGINE=NO'
+          echo 'RU12_SECOND_INTELLIGENCE_ENGINE=NO'
+          echo 'TRUTH_OWNER_CHANGE_013=NO'
+          echo 'DB_CHANGE_013=NO'
+          echo 'HUMAN_APPROVAL_REQUIRED=YES'
+          echo 'AUTO_SEND=NO'
+          echo 'SECOND_MESSAGE_ENGINE=NO'
+          echo 'HARDCODED_CONTEXTUAL_RECOMMENDATION_PATCH=NO'

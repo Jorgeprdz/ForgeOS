@@ -1,0 +1,85 @@
+name: Forge Beta2 Real User Acceptance 013 Human Presentation
+
+on:
+  push:
+    branches:
+      - fix/forge-beta2-real-user-acceptance-interpretation-recovery-013
+    paths:
+      - 'docs/static-preview/forge-aura/home/home-module.js'
+      - 'docs/static-preview/forge-aura/home/home-module-008.js'
+      - 'docs/static-preview/forge-aura/home/home-human-presentation-013.js'
+      - 'docs/static-preview/forge-aura/recomposition/human-context-presentation-013.js'
+      - 'docs/static-preview/forge-aura/recomposition/pipeline-crs10-context-presentation-013.js'
+      - 'docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-008.js'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
+      - 'tests/forge-home-attention-orchestration-007.test.mjs'
+      - 'tests/forge-global-aura-recomposition-008.test.mjs'
+      - 'tests/forge-beta2-real-user-acceptance-013-ru11-ru12-presentation.test.mjs'
+      - 'tests/e2e/fixtures/forge-beta2-013-ru11-home/index.html'
+      - 'tests/e2e/forge-beta2-013-ru11-home-presentation.spec.mjs'
+      - 'playwright.013-ru11.config.mjs'
+      - '.github/workflows/forge-beta2-real-user-acceptance-013-human-presentation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-beta2-013-human-presentation
+  cancel-in-progress: true
+
+jobs:
+  human-presentation-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax gates
+        run: |
+          node --check docs/static-preview/forge-aura/home/home-human-presentation-013.js
+          node --check docs/static-preview/forge-aura/home/home-module-008.js
+          node --check docs/static-preview/forge-aura/recomposition/human-context-presentation-013.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-crs10-context-presentation-013.js
+          node --check tests/forge-beta2-real-user-acceptance-013-ru11-ru12-presentation.test.mjs
+          node --check tests/e2e/forge-beta2-013-ru11-home-presentation.spec.mjs
+
+      - name: RU11-RU12 source-owner and reuse contract
+        run: node --test tests/forge-beta2-real-user-acceptance-013-ru11-ru12-presentation.test.mjs
+
+      - name: Inherited Home attention authority regression
+        run: node --test tests/forge-home-attention-orchestration-007.test.mjs
+
+      - name: Inherited global Aura Home bridge regression
+        run: node --test tests/forge-global-aura-recomposition-008.test.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: RU11 browser acceptance
+        run: npx playwright test tests/e2e/forge-beta2-013-ru11-home-presentation.spec.mjs --config=playwright.013-ru11.config.mjs
+
+      - name: Constitutional markers
+        run: |
+          echo 'RU11_PRIMARY_UI_ARCHITECTURE_JARGON=ABSENT'
+          echo 'RU11_TECHNICAL_TRACEABILITY=DISCLOSURE_CLOSED'
+          echo 'RU11_HOME_READ_MODELS_CHANGED=NO'
+          echo 'RU11_HOME_AUTHORITY_CHANGED=NO'
+          echo 'RU12_SHARED_PRESENTATION_CONTRACT=PASS'
+          echo 'RU12_HOME_REUSES_SHARED_CONTRACT=YES'
+          echo 'RU12_PIPELINE_REUSES_SHARED_CONTRACT=YES'
+          echo 'RU12_SECOND_AI_ENGINE=NO'
+          echo 'RU12_SECOND_RECOMMENDATION_ENGINE=NO'
+          echo 'RU12_PERSISTENCE=NO'

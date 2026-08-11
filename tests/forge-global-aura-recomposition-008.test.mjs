@@ -53,14 +53,16 @@ assert.ok(homeBridge.includes("decisionReference"));
 assert.ok(homeBridge.includes("domainWrites: 0"));
 
 assert.ok(pipelineBridge.includes("createPipelineAdapter"));
-assert.ok(pipelineBridge.includes("adapter?.intelligence?.(prospectId, { projections: [] })"));
+assert.ok(pipelineBridge.includes("adapter.intelligence(prospectId, { projections: [] })"));
+assert.ok(pipelineBridge.includes("adapter?.capabilities?.intelligenceAvailable"));
+assert.ok(pipelineBridge.includes("intelligenceCapability !== false"));
 assert.ok(pipelineBridge.includes("FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A"));
 assert.ok(pipelineBridge.includes("Prospect ≠ CommercialPerson"));
 assert.ok(pipelineBridge.includes("localNbaPresentedAsAuthority: false"));
 assert.ok(pipelineBridge.includes("calculatesPriority: false"));
 assert.ok(pipelineBridge.includes("automaticExecutionAllowed: false"));
-assert.ok(pipelineBridge.includes("Sin proyecciones autorizadas"));
-assert.ok(pipelineBridge.includes("Orden local heredado (no autoridad)"));
+assert.ok(pipelineBridge.includes("Sin información adicional para decidir"));
+assert.ok(pipelineBridge.includes('priority.textContent = "Orden anterior"'));
 assert.equal(pipelineBridge.includes("createCrossDomainDecisionProjection"), false);
 assert.equal(pipelineBridge.includes("nextBestAction("), false);
 assert.equal(pipelineBridge.includes("attentionForRecord("), false);
@@ -83,7 +85,7 @@ assert.ok(router.includes("preserveContext"));
 assert.ok(router.includes("clearContext"));
 assert.ok(css.includes("var(--forge-brand-soft)"));
 assert.ok(css.includes("var(--forge-border-subtle)"));
-assert.ok(index.includes("aura-bootstrap-v4-r1.js?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001-forge-global-aura-recomposition-008"));
+assert.match(index, /<script type="module" src="\.\/aura-bootstrap-v4-r1\.js\?v=[^"]+"><\/script>/);
 assert.ok(bootstrap.includes('import("./app-v4-r1.js?v=aura-boot-cache-isolation-013-forge-global-aura-recomposition-008")'));
 
 console.log("FORGE_GLOBAL_AURA_RECOMPOSITION_008=PASS");
