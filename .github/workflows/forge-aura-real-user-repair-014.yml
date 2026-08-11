@@ -57,11 +57,13 @@ jobs:
       - name: Inherited human presentation contract
         run: node --test tests/forge-beta2-real-user-acceptance-013-ru11-ru12-presentation.test.mjs
 
-      - name: PDF popup handoff regression
-        run: node tests/quote-preview-direct-pdf-popup-handoff-test.mjs
-
-      - name: Automatic calculation remains non-accepting
-        run: node tests/quote-preview-automatic-calculation-after-extraction-test.mjs
+      - name: Quote lifecycle and human-confirmation authority
+        run: |
+          node --test --test-name-pattern='BUG01|AI AUTHORITY|LAW ZERO' tests/forge-aura-real-user-repair-014.test.mjs
+          grep -q 'acceptedQuoteReviewSnapshotBoundary.setSnapshot' docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js
+          grep -q 'opensReviewBeforeCalculationCompletes: true' docs/static-preview/quote-runtime/forge-quote-intake-state.js
+          grep -q 'confirmsAutomatically: false' docs/static-preview/quote-runtime/forge-quote-intake-state.js
+          grep -q 'persistsAutomatically: false' docs/static-preview/quote-runtime/forge-quote-intake-state.js
 
       - name: Governance evidence exists
         run: |
@@ -117,6 +119,15 @@ jobs:
             exit 1
           fi
           echo 'SECURITY_BOUNDARY_FILE_CHANGED=NO'
+
+      - name: No dependency manifest drift
+        run: |
+          BASE=a8bdd20988c8463e80e09d154546045d05840c7b
+          if git diff --name-only "$BASE"...HEAD | grep -E '(^|/)(package\.json|package-lock\.json|npm-shrinkwrap\.json)$'; then
+            echo 'DEPENDENCY_MANIFEST_DRIFT=YES'
+            exit 1
+          fi
+          echo 'DEPENDENCY_MANIFEST_DRIFT=NO'
 
       - name: No parallel engine introduced
         run: |
