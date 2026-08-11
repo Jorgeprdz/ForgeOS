@@ -21,7 +21,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    serviceWorkers: 'block',
+    serviceWorkers: 'allow',
   },
   webServer: {
     command: 'npm run serve:e2e',
