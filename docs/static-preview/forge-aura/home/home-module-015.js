@@ -264,7 +264,7 @@ function createGoalDialog(doc, snapshot, onSaved) {
         <form data-goal-form-015 novalidate>
           <div class="commercial-goal-dialog-015__step" data-goal-step="1">
             <p><strong>1 de 4 · Ingreso del mes</strong></p><p>¿Cuánto quieres generar este mes?</p>
-            <label>Meta mensual de ingreso<input type="number" min="1" max="100000000" step="1000" inputmode="decimal" name="targetMonthlyIncomeMxn" value="${escapeHtml(monthlyIncome)}" required></label>
+            <label>Meta mensual de ingreso<input type="number" min="1" max="100000000" step="1" inputmode="decimal" name="targetMonthlyIncomeMxn" value="${escapeHtml(monthlyIncome)}" required></label>
           </div>
           <div class="commercial-goal-dialog-015__step" data-goal-step="2" hidden>
             <p><strong>2 de 4 · Pólizas del mes</strong></p><p>¿Cuántas pólizas confirmadas quieres lograr este mes?</p>
@@ -272,7 +272,7 @@ function createGoalDialog(doc, snapshot, onSaved) {
           </div>
           <div class="commercial-goal-dialog-015__step" data-goal-step="3" hidden>
             <p><strong>3 de 4 · Ingreso del año</strong></p><p>¿Cuánto quieres generar en el año?</p>
-            <label>Meta anual de ingreso<input type="number" min="1" max="1200000000" step="1000" inputmode="decimal" name="targetAnnualIncomeMxn" value="${escapeHtml(annualIncome)}" required></label>
+            <label>Meta anual de ingreso<input type="number" min="1" max="1200000000" step="1" inputmode="decimal" name="targetAnnualIncomeMxn" value="${escapeHtml(annualIncome)}" required></label>
             <span class="commercial-goal-dialog-015__hint">Puedes usar 12 veces tu meta mensual como punto de partida y editarla.</span>
           </div>
           <div class="commercial-goal-dialog-015__step" data-goal-step="4" hidden>
@@ -421,6 +421,7 @@ export function createHomeModule(options = {}) {
     }
     root.dataset.commercialCompass015 = PHASE;
     root.dataset.commercialCompass015Reason = reason;
+    windowRef.dispatchEvent(new CustomEvent('forge:commercial-compass-rendered', { detail: { phase: PHASE, reason, mode } }));
   }
 
   function scheduleBurst(reason = 'interaction') {
