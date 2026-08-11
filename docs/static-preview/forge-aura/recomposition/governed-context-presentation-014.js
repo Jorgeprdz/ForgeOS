@@ -22,8 +22,20 @@ function installStyle() {
   document.head.append(style);
 }
 
+function collapseRepeatedSummary(layer) {
+  const body = layer.querySelector('[data-governed-context-body]');
+  if (!body) return;
+  const relationship = body.querySelector('[data-pipeline-relationship-context="AVAILABLE"]');
+  const projections = body.querySelector('.aura-governed-projection-list');
+  const outer = body.querySelector('.aura-governed-context-summary[data-consumer-state]');
+  if (outer && (relationship || projections)) {
+    outer.hidden = true;
+    outer.dataset.redundantSummary014 = 'true';
+  }
+}
+
 function reconcileLayer(layer) {
-  if (!layer || layer.dataset.realUserPresentation014 === 'true') return;
+  if (!layer) return;
   layer.dataset.realUserPresentation014 = 'true';
 
   layer.querySelectorAll('.aura-technical-disclosure,[data-pipeline-context-technical],[data-pipeline-projection-technical]').forEach(node => {
@@ -56,6 +68,8 @@ function reconcileLayer(layer) {
       node.textContent = text(node.textContent).replace(/;?\s*Forge no ejecutará ninguna acción por ti\.?/i, '.');
     }
   });
+
+  collapseRepeatedSummary(layer);
 }
 
 function reconcile() {
@@ -66,6 +80,6 @@ installStyle();
 const Observer = globalThis.MutationObserver;
 if (Observer) {
   const observer = new Observer(reconcile);
-  observer.observe(document.body, { childList: true, subtree: true });
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
 }
 reconcile();
