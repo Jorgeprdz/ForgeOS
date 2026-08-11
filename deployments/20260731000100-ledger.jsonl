@@ -1,4 +1,4 @@
-{"timestamp":"2026-07-31T19:16:43.737Z","name":"predeployment_inventory","status":"PASS","state":"COMPLETE","projectRef":"rmlxigxysujsuwzgoimv"}
-{"timestamp":"2026-07-31T19:16:43.738Z","name":"migration_already_satisfied","status":"PASS","migration":"20260731000100"}
-{"timestamp":"2026-07-31T19:16:43.979Z","name":"postdeployment_security_inventory","status":"PASS","projectRef":"rmlxigxysujsuwzgoimv","checks":["journal_exists","journal_columns_complete","journal_rls","journal_append_trigger","journal_timeline_trigger","journal_select_policy","journal_insert_policy","journal_no_mutation_policy","journal_select_grant","journal_insert_grant","journal_no_mutation_grant"]}
-{"timestamp":"2026-07-31T19:16:46.306Z","name":"migration_history","status":"PASS","migration":"20260731000100"}
+{"timestamp":"2026-08-11T05:39:31.906Z","name":"predeployment_inventory","status":"PASS","state":"COMPLETE","projectRef":"rmlxigxysujsuwzgoimv"}
+{"timestamp":"2026-08-11T05:39:31.906Z","name":"migration_already_satisfied","status":"PASS","migration":"20260731000100"}
+{"timestamp":"2026-08-11T05:39:32.514Z","name":"postdeployment_security_inventory","status":"PASS","projectRef":"rmlxigxysujsuwzgoimv","checks":["journal_exists","journal_columns_complete","journal_rls","journal_append_trigger","journal_timeline_trigger","journal_select_policy","journal_insert_policy","journal_no_mutation_policy","journal_select_grant","journal_insert_grant","journal_no_mutation_grant"]}
+{"timestamp":"2026-08-11T05:39:34.274Z","name":"migration_history","status":"PASS","migration":"20260731000100"}
