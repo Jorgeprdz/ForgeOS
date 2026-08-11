@@ -60,7 +60,7 @@ test('BUG07 presentation exposes the requested five-step commercial flow', () =>
     assert.ok(pipeline014.includes(label), label);
   }
   assert.match(pipeline014, /FORGE_AURA_MESSAGE_FLOW_014B/);
-  assert.match(pipeline014, /data\.conversationFlowState014/);
+  assert.match(pipeline014, /dataset\.conversationFlowState014/);
 });
 
 test('BUG07 primary objective stays governed while chips and tone move out of the main hierarchy', () => {
