@@ -109,7 +109,7 @@ function actionLabel(type) {
     PRESENTATIONS: 'Presentaciones',
     APPLICATIONS: 'Solicitudes',
     POLICIES: 'Pólizas',
-  })[String(type || '').toUpperCase()] || text(type || 'Actividad');
+  })[String(type || '').toUpperCase()] || 'Actividad';
 }
 
 function renderActivityGuidance() {
@@ -142,7 +142,8 @@ function commercialQuestion(raw) {
   const value = normalize(raw);
   if (!value) return null;
   if (/\b(cuantas|cuantos)\s+polizas\b/.test(value) || /\bpolizas\s+llevo\b/.test(value)) return 'POLICIES';
-  if (/\b(pipeline|podria ingresar|podria ganar|escenario)\b/.test(value) && /\b(ingres|gan|pipeline)\b/.test(value)) return 'PIPELINE';
+  const pipelineEconomic = /\bpipeline\b/.test(value) && /\b(ingreso|ingresar|ingresaria|ganar|ganaria|ganancia|economico|economica|escenario)\b/.test(value);
+  if (pipelineEconomic) return 'PIPELINE';
   if (/\b(que debo hacer hoy|que hago hoy|actividad necesito|cuanta actividad|necesito hacer)\b/.test(value)) return 'ACTIVITY';
   if (/\b(ritmo|voy en ritmo|adelantado|atrasado)\b/.test(value)) return 'RHYTHM';
   if (/\b(que me falta|cuanto me falta|brecha|gap)\b/.test(value)) return 'GAP';
