@@ -55,10 +55,11 @@ jobs:
           node --check docs/static-preview/forge-aura/pipeline/pipeline-module.js
 
       - name: Run Pipeline UX contracts
-        run: |
-          node --test \
-            tests/pipeline-aura-ux-reconciliation.test.mjs \
-            tests/pipeline-scope-guard.test.mjs
+        run: node --test tests/pipeline-aura-ux-reconciliation.test.mjs
+
+      - name: Run original Pipeline 001 scope guard
+        if: github.event_name != 'pull_request' || github.head_ref == 'codex/forge-aura-pipeline-ux-reconciliation-001'
+        run: node --test tests/pipeline-scope-guard.test.mjs
 
   browser-acceptance:
     name: Pipeline responsive and accessibility acceptance

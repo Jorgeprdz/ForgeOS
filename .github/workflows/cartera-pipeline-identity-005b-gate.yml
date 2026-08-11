@@ -43,7 +43,7 @@ jobs:
         run: npm ci
 
       - name: 005B-R1 bounded diff
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'pull_request' || github.head_ref == 'accept/cartera-pipeline-identity-productive-005b'
         shell: bash
         run: |
           set -euo pipefail

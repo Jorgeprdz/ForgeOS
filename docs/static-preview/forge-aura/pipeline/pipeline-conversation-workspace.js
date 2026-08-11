@@ -16,7 +16,7 @@ function displayDate(value, fallback = 'Sin fecha confirmada') {
 
 function allowedGoals(card, options) {
   const available = options?.goals || {};
-  const allowed = ['first_contact', 'follow_up', 'reactivation'];
+  const allowed = ['first_contact', 'follow_up', 'reactivation', 'collection', 'application_signature', 'custom'];
   return allowed.filter(key => available[key]).map(key => [key, available[key]]);
 }
 
@@ -28,6 +28,21 @@ function defaultGoal(card) {
 
 function optionHtml(entries, selected) {
   return entries.map(([value, label]) => `<option value="${e(value)}" ${value === selected ? 'selected' : ''}>${e(label)}</option>`).join('');
+}
+
+function advisorComponents(value) {
+  return String(value || '')
+    .split(/\r?\n|\s+\+\s+/)
+    .map(item => item.trim())
+    .filter(Boolean)
+    .slice(0, 6);
+}
+
+function safeConversationError(error, fallback) {
+  const code = text(error?.code || error?.message || '');
+  if (/AUTH|JWT|SESSION/i.test(code)) return 'Tu sesión cambió o expiró. Inicia sesión nuevamente.';
+  if (/FETCH|NETWORK|TIMEOUT|UNAVAILABLE/i.test(code)) return 'La fuente de inteligencia no respondió en este momento. Puedes reintentar.';
+  return fallback;
 }
 
 function displayValue(value) {
@@ -63,7 +78,7 @@ export function createConversationWorkspaceController({
       node.dataset.tone = tone;
       node.textContent = message || '';
     }
-    if (message) globalState?.(message, tone === 'error' ? 'error' : 'status');
+    if (!node && message) globalState?.(message, tone === 'error' ? 'error' : 'status');
   }
 
   function setTab(state, name) {
@@ -122,6 +137,11 @@ export function createConversationWorkspaceController({
     const button = state.layer.querySelector('[data-generate-draft]');
     const goal = state.layer.querySelector('[data-message-goal]')?.value || 'follow_up';
     const style = state.layer.querySelector('[data-message-style]')?.value || 'professional';
+    const components = advisorComponents(state.layer.querySelector('[data-message-components]')?.value);
+    if (goal === 'custom' && !components.length) {
+      announce(state, 'Describe qué necesitas que incluya el mensaje antes de generar la sugerencia.', 'warning');
+      return;
+    }
     button.disabled = true;
     button.textContent = 'Generando…';
     invalidateApproval(state);
@@ -131,6 +151,7 @@ export function createConversationWorkspaceController({
         goal,
         style,
         combat: state.reviewedCombat,
+        advisorComponents: components,
       });
       state.prepared = prepared;
       const draft = state.layer.querySelector('[data-draft]');
@@ -148,7 +169,11 @@ export function createConversationWorkspaceController({
       prepared.status === 'BLOCKED' ? 'error' : 'success');
     } catch (error) {
       state.prepared = null;
-      announce(state, `No pudimos preparar la sugerencia: ${text(error?.code || error?.message || 'error desconocido')}.`, 'error');
+      const code = text(error?.code || error?.message || 'UNKNOWN');
+      const notice = state.layer.querySelector('[data-conversation-notice]');
+      if (notice) notice.dataset.errorCode = code;
+      console.error('AURA_CONVERSATION_DRAFT_FAILED', code);
+      announce(state, safeConversationError(error, 'No pudimos preparar la sugerencia. Reintenta sin cerrar este espacio.'), 'error');
     } finally {
       button.disabled = false;
       button.textContent = 'Generar sugerencia';
@@ -304,6 +329,7 @@ export function createConversationWorkspaceController({
               <label>Objetivo<select data-message-goal>${optionHtml(goals, initialGoal)}</select></label>
               <label>Tono<select data-message-style>${optionHtml(styles, 'professional')}</select></label>
             </div>
+            <label class="aura-conversation__components"><span data-message-components-label>Componentes adicionales (opcional)</span><textarea data-message-components rows="3" maxlength="900" placeholder="Ej. pedir comprobante de pago&#10;recordar fecha límite"></textarea></label>
             <div class="aura-conversation__action-row"><button class="aura-conversation__primary" type="button" data-generate-draft>Generar sugerencia</button></div>
             <div class="aura-conversation__draft" data-draft-block hidden>
               <div class="aura-conversation__draft-header"><strong>Sugerencia de Forge</strong><span class="aura-conversation__source" data-draft-source></span></div>
@@ -348,6 +374,11 @@ export function createConversationWorkspaceController({
     doc.body.style.overflow = 'hidden';
     doc.documentElement.setAttribute('data-aura-conversation-open', 'true');
     bind(state);
+    const goalSelect = layer.querySelector('[data-message-goal]');
+    const componentLabel = layer.querySelector('[data-message-components-label]');
+    const syncComponentLabel = () => { if (componentLabel) componentLabel.textContent = goalSelect?.value === 'custom' ? '¿Qué necesitas que incluya el mensaje?' : 'Componentes adicionales (opcional)'; };
+    goalSelect?.addEventListener('change', syncComponentLabel);
+    syncComponentLabel();
     queueMicrotask(() => layer.querySelector('[data-message-goal]')?.focus());
   }
 

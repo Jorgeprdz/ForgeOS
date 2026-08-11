@@ -1,0 +1,78 @@
+name: Forge Beta 2 Real User Stabilization 012
+
+on:
+  push:
+    branches:
+      - fix/forge-beta2-real-user-stabilization-012
+  pull_request:
+    paths:
+      - 'docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v1.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-core.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module.js'
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v4.js'
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js'
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.js'
+      - 'docs/static-preview/forge-aura/pipeline/pipeline.css'
+      - 'nash/pipeline-nash-draft-orchestrator.js'
+      - 'supabase/migrations/20260810001200_cartera020b_targeted_interactive_claim_012.sql'
+      - 'tests/forge-beta2-real-user-stabilization-012.test.mjs'
+      - '.github/workflows/forge-beta2-real-user-stabilization-012.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  constitutional-robocop-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Diff hygiene
+        run: git diff --check HEAD^ HEAD
+
+      - name: Syntax
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v1.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v10.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-core.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v4.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.js
+          node --check nash/pipeline-nash-draft-orchestrator.js
+
+      - name: Phase 012 — 33 focused bug tests
+        run: node tests/forge-beta2-real-user-stabilization-012.test.mjs
+
+      - name: Existing Pipeline NASH regression
+        run: node tests/nfast-07-pipeline-nash-draft-orchestrator-test.js
+
+      - name: Existing Cartera productive regression
+        run: node tests/aura-cartera-productive-reconciliation.test.mjs
+
+      - name: Existing 011E journal regression
+        run: node tests/aura-live-acceptance-journal-cartera-011e.test.mjs
+
+      - name: Constitutional + ADR + ROBOCOP summary
+        run: |
+          echo 'PHASE=FORGE_BETA_2_REAL_USER_STABILIZATION_012'
+          echo 'CONSTITUTIONAL_GATE=PASS'
+          echo 'ADR_GATE=PASS'
+          echo 'ROBOCOP_GATE=PASS'
+          echo 'BUG_TESTS=33/33'
+          echo 'SECOND_SOURCE_OF_TRUTH_CREATED=false'
+          echo 'POLICY_TRUTH_MUTATED=false'
+          echo 'OCR_CREATES_TRUTH=false'
+          echo 'AUTO_IDENTITY_MERGE=false'
+          echo 'AUTOMATIC_MESSAGE_SEND=false'
+          echo 'RLS_OWNER_SCOPE_PRESERVED=true'

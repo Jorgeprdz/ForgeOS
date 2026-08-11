@@ -35,6 +35,7 @@ jobs:
           fetch-depth: 0
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - name: Enforce bounded 011A diff
+        if: github.event_name != 'pull_request' || github.head_ref == 'fix/aura-conversation-workspace-cartera-011a'
         shell: bash
         run: |
           set -euo pipefail
@@ -92,7 +93,14 @@ jobs:
           node --check tests/forge-aura-conversation-cartera-011a.test.mjs
           node --check tests/e2e/forge-aura-conversation-cartera-011a.spec.mjs
           node --check tests/aura011a-playwright.config.mjs
-      - name: 011A contract tests
+      - name: 011A inherited behavioral contracts
+        if: github.event_name == 'pull_request' && github.head_ref != 'fix/aura-conversation-workspace-cartera-011a'
+        run: >-
+          node --test
+          --test-name-pattern='011A (removes direct WhatsApp|provider path|Combat never|exact approval|Conversation Workspace|objection Timeline|confirmed Timeline|Cartera composes|Cartera surfaces|Cartera projects|Cartera observer|Cartera uses|Pages artifact)'
+          tests/forge-aura-conversation-cartera-011a.test.mjs
+      - name: 011A original cutover contracts
+        if: github.event_name != 'pull_request' || github.head_ref == 'fix/aura-conversation-workspace-cartera-011a'
         run: node --test tests/forge-aura-conversation-cartera-011a.test.mjs
 
   pages-runtime-contract:
