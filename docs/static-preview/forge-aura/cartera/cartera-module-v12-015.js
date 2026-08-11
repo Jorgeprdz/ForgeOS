@@ -72,6 +72,7 @@ function beginPdfRun(file, windowRef) {
     mimeType: String(file?.type || ''),
     startedAt: new Date().toISOString(),
     T0: now(windowRef),
+    T0Ms: 0,
     T0Meaning: 'file_selected',
     T1Meaning: 'client_validation_passed',
     T2Meaning: 'processing_surface_visible',
