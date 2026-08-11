@@ -23,7 +23,7 @@ test('desktop home, attention, panorama and protected beneficiary projection', a
   await page.setViewportSize({ width: 1440, height: 900 });
   await ready(page);
   await expect(page.getByRole('heading', { name: '¿Cómo está mi cartera?' })).toBeVisible();
-  await expect(page.locator('.cartera-attention-item')).toHaveCount(3);
+  await expect(page.locator('.cartera-attention-item')).toHaveCount(2);
   await expect(page.getByText('Pagos por revisar')).toBeVisible();
   await expect(page.getByRole('button', { name: /Agregar póliza/ })).toBeVisible();
   await expect(page.locator('body')).not.toContainText('RESTRICTED_SYNTHETIC_VALUE');
@@ -42,7 +42,7 @@ test('tablet home preserves hierarchy instead of compressing desktop', async ({ 
   await page.setViewportSize({ width: 834, height: 1112 });
   await ready(page);
   await expect(page.getByRole('heading', { name: '¿Cómo está mi cartera?' })).toBeVisible();
-  await expect(page.locator('.cartera-attention-item')).toHaveCount(3);
+  await expect(page.locator('.cartera-attention-item')).toHaveCount(2);
   expect(await noHorizontalOverflow(page)).toBeTruthy();
   await shot(page, '03-cartera-home-tablet');
 });
@@ -100,13 +100,13 @@ test('Policy Workspace renders multiple independent coverages and honest unknown
   await shot(page, '07-policy-workspace-multi-coverage');
 });
 
-test('Person Workspace composes relationship context without technical subsystem navigation', async ({ page }) => {
+test('Relationship workspace composes useful context without technical subsystem navigation', async ({ page }) => {
   await page.setViewportSize({ width: 834, height: 1194 });
   await ready(page);
   await page.locator('[data-directory-kind="PERSON"]').click();
-  await expect(page.getByText('PERSON WORKSPACE')).toBeVisible();
+  await expect(page.getByText('RELACIÓN COMERCIAL')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Relación' })).toBeVisible();
-  await expect(page.getByText(/Candidatos de relación no equivalen a oportunidad/)).toBeVisible();
+  await expect(page.getByText(/Información confirmada que te ayuda a dar continuidad/)).toBeVisible();
   await expect(page.locator('body')).not.toContainText(/Relationship Memory 040|Growth 060|Capital 090/);
   await shot(page, '08-person-workspace');
 });
@@ -124,7 +124,7 @@ test('empty state tells the advisor what to do next', async ({ page }) => {
 test('attention state remains capped, explanatory and non-automatic', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await ready(page);
-  await expect(page.locator('.cartera-attention-item')).toHaveCount(3);
+  await expect(page.locator('.cartera-attention-item')).toHaveCount(2);
   await expect(page.getByText(/Ninguna acción se ejecuta automáticamente/)).toBeVisible();
   await shot(page, '10-attention-state');
 });
@@ -144,7 +144,7 @@ test('prefers-reduced-motion retains the same information hierarchy', async ({ p
   await page.setViewportSize({ width: 1280, height: 800 });
   await ready(page);
   await expect(page.getByRole('heading', { name: '¿Cómo está mi cartera?' })).toBeVisible();
-  await expect(page.locator('.cartera-attention-item')).toHaveCount(3);
+  await expect(page.locator('.cartera-attention-item')).toHaveCount(2);
   await expect(page.getByRole('button', { name: /Agregar póliza/ })).toBeVisible();
   await shot(page, '12-reduced-motion');
 });
