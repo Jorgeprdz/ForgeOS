@@ -7,6 +7,7 @@ const paths = Object.freeze({
   index: 'docs/static-preview/forge-aura/index.html',
   home: 'docs/static-preview/forge-aura/home/home-module-015.js',
   homeAdapter: 'docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js',
+  consumer: 'docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js',
   pipeline: 'docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-015.js',
   workspace: 'docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js',
   cartera: 'docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js',
@@ -33,6 +34,7 @@ function excludes(source, value, message = `expected source to exclude ${value}`
 // Production entrypoint must resolve all 015 boundaries.
 includes(files.index, './home/home-module-015.js?v=forge-commercial-compass-015', 'Home 015 must be the productive route');
 includes(files.index, './home/home-adapter-pages-v3-015.js?v=forge-commercial-compass-015', 'Home adapter 015 must be productive');
+includes(files.index, './home/commercial-compass-consumer-015.js?v=forge-commercial-compass-015', 'Forecast/Alfred consumer 015 must be productive');
 includes(files.index, './recomposition/pipeline-consumer-bridge-015.js?v=forge-commercial-compass-015', 'Pipeline 015 must be productive');
 includes(files.index, './cartera/cartera-module-v12-015.js?v=forge-commercial-compass-015', 'Cartera 015 must be productive');
 excludes(files.index, 'pipeline-consumer-bridge-014.js', 'Pipeline 014 observer bridge must not remain in productive import map');
@@ -93,6 +95,22 @@ includes(files.homeAdapter, 'confirmedIncomeIncludesPipeline: false');
 excludes(files.homeAdapter, 'initial + renewal + bonus', 'Home must not reimplement compensation arithmetic');
 includes(files.incomeCore, 'pipelineScenario', 'Income owner must keep Pipeline as a scenario');
 includes(files.incomeCore, 'combinedScenario', 'Income owner must own combined scenario projection');
+
+// CC-11/CC-13: Forecast activity and Alfred are read-only consumers of existing authorities.
+includes(files.consumer, 'ForgeAdvisorForecastRuntimeAcceptance?.getReadModel?.()', 'Consumer must read the existing Advisor Forecast read model');
+includes(files.consumer, 'ADVISOR_FORECAST_ACTIVITY_REQUIREMENT');
+includes(files.consumer, 'Necesito más historial para estimar cuánta actividad necesitas.');
+includes(files.consumer, 'requirement?.status === \'READY\'');
+includes(files.consumer, 'COMMERCIAL_COMPASS_015_READ_ONLY');
+includes(files.consumer, 'pipelineEconomic', 'Pipeline must only be intercepted for explicit economic questions');
+includes(files.consumer, "if (pipelineEconomic) return 'PIPELINE';");
+includes(files.consumer, "return null;", 'Non-commercial Alfred queries must fall through to Command OS');
+includes(files.consumer, 'No se crea ninguna tarea sin tu confirmación.');
+includes(files.consumer, 'mutationObservers: 0');
+excludes(files.consumer, 'new MutationObserver', 'Consumer must not add observer loops');
+excludes(files.consumer, '.from(', 'Consumer must not read domain tables directly');
+excludes(files.consumer, '.rpc(', 'Consumer must not call domain RPCs directly');
+excludes(files.consumer, 'functions.invoke', 'Commercial answers must not depend on a generative provider');
 
 // WA must be bounded and expose all required human goals without observer loops.
 excludes(files.pipeline, 'new MutationObserver', 'Phase 015 Pipeline bridge must not instantiate MutationObserver');
