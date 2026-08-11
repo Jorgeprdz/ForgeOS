@@ -9,13 +9,16 @@ on:
       - 'docs/static-preview/forge-aura/app-v4-r1.js'
       - 'docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace-013.js'
       - 'docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v6-013.js'
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-crs10-context-adapter-013.js'
       - 'docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-008.js'
       - 'docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-011b.js'
+      - 'docs/static-preview/forge-aura/recomposition/pipeline-crs10-context-presentation-013.js'
       - 'nash/pipeline-nash-draft-orchestrator.js'
       - 'nash/conversation-brief/nash-deterministic-conversation-brief-boundary-contract.js'
       - 'nash/draft-intake/nfast06-deterministic-draft-renderer.js'
       - 'tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs'
       - 'tests/forge-beta2-real-user-acceptance-013-intent.test.mjs'
+      - 'tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs'
       - 'tests/e2e/fixtures/forge-beta2-013-intent/index.html'
       - 'tests/e2e/forge-beta2-013-intent-workspace.spec.mjs'
       - 'tests/e2e/forge-beta2-013-pipeline-context.spec.mjs'
@@ -53,10 +56,13 @@ jobs:
         run: |
           node --check docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace-013.js
           node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v6-013.js
+          node --check docs/static-preview/forge-aura/pipeline/pipeline-crs10-context-adapter-013.js
           node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-008.js
           node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-011b.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-crs10-context-presentation-013.js
           node --check tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs
           node --check tests/forge-beta2-real-user-acceptance-013-intent.test.mjs
+          node --check tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs
           node --check tests/e2e/forge-beta2-013-intent-workspace.spec.mjs
           node --check tests/e2e/forge-beta2-013-pipeline-context.spec.mjs
 
@@ -66,10 +72,13 @@ jobs:
       - name: RU01-RU02 NASH source-owner contract
         run: node --test tests/forge-beta2-real-user-acceptance-013-intent.test.mjs
 
+      - name: RU04 CRS10 source-owner contract
+        run: node --test tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs
+
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: RU01-RU02-RU03-RU06-RU07 browser acceptance
+      - name: RU01-RU02-RU03-RU04-RU06-RU07 browser acceptance
         run: npx playwright test tests/e2e/forge-beta2-013-intent-workspace.spec.mjs tests/e2e/forge-beta2-013-pipeline-context.spec.mjs --config=playwright.013-intent.config.mjs
 
       - name: Constitutional markers
@@ -80,6 +89,10 @@ jobs:
           echo 'PRIMARY_UI_ZERO_INTERNAL_JARGON=PASS'
           echo 'TECHNICAL_DISCLOSURE_DEFAULT_CLOSED=PASS'
           echo 'DEAD_CONTEXT_CTA=ABSENT'
+          echo 'RU04_CRS10_SOURCE_OWNER=PASS'
+          echo 'RU04_CRS10_BROWSER_PRESENTATION=PASS'
+          echo 'RU04_FCDP_PROJECTIONS_INVENTED=NO'
+          echo 'RU04_SECOND_RELATIONSHIP_ENGINE=NO'
           echo 'HUMAN_APPROVAL_REQUIRED=YES'
           echo 'AUTO_SEND=NO'
           echo 'SECOND_MESSAGE_ENGINE=NO'
