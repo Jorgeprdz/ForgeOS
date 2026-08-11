@@ -55,9 +55,23 @@ async function mountConsumer(page, forecastMode = 'ready') {
   }, forecastMode);
 }
 
-async function mountPipeline(page) {
+async function mountPipeline(page, { productiveWorkspace = false } = {}) {
+  if (productiveWorkspace) {
+    await patchRealModule(page, {
+      routeGlob: '**/docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-015.js*',
+      sourcePath: 'docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-015.js',
+      replacements: [[
+        "import { createConversationWorkspaceController } from '../pipeline/pipeline-conversation-workspace.js?v=forge-commercial-compass-015-owner';",
+        "import { createConversationWorkspaceController } from '/docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js?forge-commercial-compass-015r-evidence';",
+      ]],
+    });
+  }
   await page.goto(fixture);
   await page.evaluate(async () => {
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = '/docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.css?v=015r';
+    document.head.append(stylesheet);
     const NativeObserver = window.MutationObserver;
     window.__observerInstances015 = 0;
     window.MutationObserver = class extends NativeObserver {
@@ -100,6 +114,70 @@ async function mountCartera(page) {
     await module.mount();
     window.__cartera015 = module;
   });
+}
+
+async function mountCarteraRelationshipEvidence(page) {
+  await patchRealModule(page, {
+    routeGlob: '**/docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js*',
+    sourcePath: 'docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js',
+    replacements: [[
+      "import { createCarteraModule as createBaseCarteraModule } from './cartera-module-v10-013.js?v=forge-commercial-compass-015-base';",
+      "import { createCarteraModule as createBaseCarteraModule } from '/docs/static-preview/forge-aura/cartera/cartera-module.js?forge-commercial-compass-015r-evidence';",
+    ]],
+  });
+  await patchRealModule(page, {
+    routeGlob: '**/docs/static-preview/forge-aura/cartera/cartera-module.js?forge-commercial-compass-015r-evidence',
+    sourcePath: 'docs/static-preview/forge-aura/cartera/cartera-module.js',
+    replacements: [[
+      "import {createCarteraAdapter} from './cartera-adapter-pages-v1.js';",
+      "import {createCarteraAdapter} from '/tests/e2e/fixtures/forge-commercial-compass-015/cartera-base-stub.js?relationship-evidence';",
+    ]],
+  });
+  await page.goto(fixture);
+  await page.evaluate(async () => {
+    for (const href of [
+      '/docs/static-preview/forge-aura/cartera/cartera.css?v=015r',
+      '/docs/static-preview/forge-aura/cartera/cartera-relational-011b.css?v=015r',
+    ]) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.append(link);
+    }
+    const root = document.querySelector('#root');
+    const { createCarteraModule } = await import(`/docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js?relationship015r=${Date.now()}`);
+    const module = createCarteraModule({ root, client: {}, windowRef: window });
+    await module.mount();
+    window.__carteraRelationship015r = module;
+  });
+  await page.locator('[data-directory-kind="PERSON"]').click();
+  await expect(page.locator('[data-person-section="relationship"]')).toBeVisible();
+}
+
+async function mountRealWorkspace(page) {
+  await page.goto(fixture);
+  await page.evaluate(async () => {
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = '/docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.css?v=015r';
+    document.head.append(stylesheet);
+    const { createConversationWorkspaceController } = await import('/docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js?accept015r=1');
+    const root = document.querySelector('#root');
+    const adapter = {
+      messageOptions: () => ({ goals: { follow_up: 'Seguimiento', reactivation: 'Retomar conversación' }, styles: { professional: 'Profesional' } }),
+      prepareMessage: async (_card, input) => ({ status: 'READY', candidate: { rawText: `Hola, seguimiento ${input.goal}` }, sourceMode: 'DETERMINISTIC' }),
+      approveExactDraft: async (card, _prepared, value) => ({ approved: true, whatsappUrl: `https://wa.me/5215555555555?text=${encodeURIComponent(value)}&prospect=${card.id}` }),
+      analyzeCombat: async () => ({}), reviewCombat: value => value, registerObjection: async () => ({}),
+    };
+    const controller = createConversationWorkspaceController({ root, windowRef: window });
+    const trigger = document.createElement('button');
+    trigger.textContent = 'WhatsApp';
+    root.append(trigger);
+    window.__workspace015r = { controller, adapter, trigger };
+    window.__open015r = id => controller.open({ card: { id, fullName: `Prospecto ${id}`, status: 'active' }, adapter, trigger });
+    window.__open015r('A');
+  });
+  await page.waitForFunction(() => [...document.styleSheets].some(sheet => String(sheet.href || '').includes('pipeline-conversation-workspace.css')));
 }
 
 test('CC-01 browser: Commercial Compass makes META -> GAP -> OPORTUNIDAD -> ACCION legible', async ({ page }, testInfo) => {
@@ -222,6 +300,55 @@ test('WA-01 browser: real bridge 015 adds all goals, humanizes the workspace and
   expect(await page.evaluate(() => window.__pipeline015.diagnostics().mutationObservers)).toBe(0);
 });
 
+test('WA-015R browser: open three times, optional section singleton, prospect switch, navigate away and return', async ({ page }) => {
+  await mountPipeline(page);
+  for (let index = 0; index < 3; index += 1) {
+    await page.getByRole('button', { name: 'WhatsApp' }).click();
+    const layer = page.locator('[data-aura-conversation-workspace]');
+    await expect(layer).toBeVisible();
+    await page.waitForTimeout(250);
+    await expect(layer.locator('[data-conversation-flow-015]')).toHaveCount(1);
+    await expect(layer.locator('[data-message-adjustments-015]')).toHaveCount(1);
+    await page.evaluate(() => window.__pipeline015.unmount());
+    await page.evaluate(() => window.__pipeline015.mount());
+  }
+  await page.getByRole('button', { name: 'WhatsApp' }).click();
+  await expect(page.locator('[data-aura-conversation-workspace] [data-conversation-flow-015]')).toHaveCount(1);
+});
+
+test('WA-015R browser: preapproval, exact approval, edit and objective changes are governed', async ({ page }, testInfo) => {
+  await mountPipeline(page, { productiveWorkspace: true });
+  await page.getByRole('button', { name: 'WhatsApp' }).click();
+  const layer = page.locator('[data-aura-conversation-workspace]');
+  const open = layer.locator('[data-open-whatsapp]');
+  await expect(layer.locator('[data-conversation-flow-015]')).toHaveCount(1);
+  await expect(layer.locator('[data-message-adjustments-015]')).toHaveCount(1);
+  await expect(open).toBeDisabled();
+  await page.screenshot({ path: `artifacts/forge-whatsapp-preapproval-015r-${testInfo.project.name}.png` });
+  await layer.locator('[data-generate-draft]').click();
+  await layer.locator('[data-approve-draft]').click();
+  await expect(open).toBeEnabled();
+  await page.screenshot({ path: `artifacts/forge-whatsapp-approved-015r-${testInfo.project.name}.png` });
+  await layer.locator('[data-draft]').fill('Texto editado después de aprobar');
+  await expect(open).toBeDisabled();
+  await page.screenshot({ path: `artifacts/forge-whatsapp-after-edit-015r-${testInfo.project.name}.png` });
+  await layer.locator('[data-generate-draft]').click();
+  await layer.locator('[data-approve-draft]').click();
+  await layer.locator('[data-message-goal]').selectOption('reactivation');
+  await expect(open).toBeDisabled();
+  await page.evaluate(() => {
+    window.__PIPELINE_CARDS_015.push({ id: 'p015-b', fullName: 'Prospecto B', status: 'contacted', stageLabel: 'Contactado' });
+    const trigger = document.createElement('button');
+    trigger.dataset.action = 'whatsapp';
+    trigger.dataset.id = 'p015-b';
+    trigger.textContent = 'WhatsApp B';
+    document.querySelector('#root').append(trigger);
+    trigger.click();
+  });
+  await expect(page.locator('[data-open-whatsapp]')).toBeDisabled();
+  await expect(page.locator('[data-aura-conversation-workspace]')).toContainText('Prospecto B');
+});
+
 test('PDF-02 browser: review body scrolls on mobile and Guardar poliza remains reachable', async ({ page }, testInfo) => {
   await mountCartera(page);
   await expect(page.getByRole('heading', { name: 'Póliza' })).toBeVisible();
@@ -253,4 +380,26 @@ test('PDF-02 browser: review body scrolls on mobile and Guardar poliza remains r
   expect(perf.active.T6Ms).toBeGreaterThanOrEqual(0);
   expect(perf.active.T7Ms).toBeGreaterThanOrEqual(0);
   await page.screenshot({ path: `artifacts/forge-pdf-review-015-${testInfo.project.name}.png`, fullPage: true });
+});
+
+test('CARTERA-015R browser: Relation and History reuse confirmed Pipeline context without invention', async ({ page }, testInfo) => {
+  await mountCarteraRelationshipEvidence(page);
+  const root = page.locator('#root');
+  const relation = root.locator('[data-person-section="relationship"]');
+  await expect(relation).toContainText('Enviar comparativo acordado en la llamada.');
+  await expect(relation).toContainText('Prefiere revisar alternativas por la tarde.');
+  await expect(relation).not.toContainText(/canonical|read-model|memoria relacional|fuente conectada/i);
+  await page.getByRole('tab', { name: 'Relación' }).click();
+  await relation.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: `artifacts/forge-cartera-relation-015r-${testInfo.project.name}.png` });
+
+  const history = root.locator('[data-person-section="history"]');
+  await page.getByRole('tab', { name: 'Historial' }).click();
+  await expect(history).toContainText('Conversación de seguimiento registrada.');
+  await expect(history).toContainText('Se acordó enviar el comparativo.');
+  await expect(history).toContainText('Revisión anual confirmada.');
+  await expect(history.locator('.cartera-directory-row')).toHaveCount(3);
+  await expect(history).not.toContainText(/canonical|read-model|memoria relacional|fuente conectada/i);
+  await history.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: `artifacts/forge-cartera-history-015r-${testInfo.project.name}.png` });
 });

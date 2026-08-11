@@ -174,3 +174,30 @@ test('BUG03/06 CRS10 context preserves meaning and uncertainty without repeated 
   expect(visible).not.toMatch(/CRS-10|CARTERA050|CARTERA100|relationshipScore|priorityScore|NO_AUTHORIZED_PROJECTIONS|CommercialPerson|source-owner|evidencia/i);
   expect((visible.match(/Seguimiento con esta persona/g) || []).length).toBe(1);
 });
+
+test('015R decision context shows one concise conclusion for each governed state', async ({ page }) => {
+  for (const scenario of [
+    { mode: 'projection', state: 'CONTEXT_SUFFICIENT', file: 'sufficient', conclusion: 'Conviene revisar el contexto familiar', action: 'Revisar la información antes de contactar' },
+    { mode: 'relationship', state: 'CONTEXT_INCOMPLETE_BUT_ACTIONABLE', file: 'incomplete-actionable', conclusion: 'Falta completar una parte del contexto', action: 'Completar información' },
+    { mode: 'empty', state: 'CONTEXT_INSUFFICIENT', file: 'insufficient', conclusion: 'No tengo suficiente información para recomendar el siguiente paso todavía.', action: 'Completar información' },
+  ]) {
+    await mount(page, { intelligence: scenario.mode });
+    await page.locator('[data-record-id="p-context-013"] [data-pipeline-governed-context]').click();
+    const dialog = page.locator('[data-aura-governed-context-dialog]');
+    const summary = dialog.locator(`[data-consumer-state="${scenario.state}"]`);
+    await expect(summary).toBeAttached();
+    if (scenario.state === 'CONTEXT_SUFFICIENT') await expect(summary).toBeHidden();
+    else await expect(summary).toBeVisible();
+    await expect(dialog).toContainText(scenario.conclusion);
+    await expect(dialog).toContainText(scenario.action);
+    await expect(dialog.locator('[data-pipeline-context-technical]')).toBeHidden();
+    const visible = await dialog.innerText();
+    expect(visible).not.toMatch(/read-model|canonical|CommercialPerson|sourceAuthorities|truthState|FORGE_PIPELINE/i);
+    if (scenario.state === 'CONTEXT_INSUFFICIENT') {
+      expect((visible.match(/suficiente información/gi) || []).length).toBe(1);
+      await expect(dialog.locator('[data-aura-governed-projections="EMPTY"]')).toHaveCount(0);
+    }
+    await dialog.locator('.aura-governed-dialog').screenshot({ path: `artifacts/forge-decision-context-015r-${scenario.file}.png` });
+    await page.getByRole('button', { name: 'Cerrar', exact: true }).click();
+  }
+});
