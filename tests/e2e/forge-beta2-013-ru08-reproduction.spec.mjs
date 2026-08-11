@@ -88,12 +88,43 @@ async function archiveFixture() {
   expect(archived.error, 'RU08_FIXTURE_ARCHIVE').toBeNull();
 }
 
+async function installAuthIsolationShim(page) {
+  // Phase 013 does not authorize an Auth rewrite. Current Aura disables the
+  // login inputs before constructing FormData, which strips email/password.
+  // This test-only shim makes FormData observe the already-entered controls so
+  // RU08 can be reached without changing productive Auth runtime.
+  await page.addInitScript(() => {
+    const NativeFormData = window.FormData;
+    window.FormData = new Proxy(NativeFormData, {
+      construct(Target, args, NewTarget) {
+        const form = args[0];
+        const toggled = [];
+        if (form instanceof HTMLFormElement) {
+          for (const element of form.elements) {
+            if (element?.name && element.disabled) {
+              element.disabled = false;
+              toggled.push(element);
+            }
+          }
+        }
+        try {
+          return Reflect.construct(Target, args, NewTarget);
+        } finally {
+          toggled.forEach(element => { element.disabled = true; });
+        }
+      },
+    });
+  });
+}
+
 async function loginAura(page) {
+  await installAuthIsolationShim(page);
   await page.goto('/docs/static-preview/forge-aura/index.html?route=pipeline');
   await expect(page.locator('[data-aura-login-form]')).toBeVisible();
   await page.locator('input[name="email"]').fill(EMAIL_A);
   await page.locator('input[name="password"]').fill(process.env.FORGE_ACCEPTANCE_A_PASSWORD);
   await page.getByRole('button', { name: 'Iniciar sesión' }).click();
+  await expect(page.locator('[data-aura-auth-error]')).toBeHidden();
   await expect(page.locator('[data-aura-login-form]')).toHaveCount(0);
   await expect(page.locator(`[data-record-id="${prospectId}"]`).first()).toBeVisible();
 }
