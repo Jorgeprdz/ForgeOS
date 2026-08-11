@@ -37,6 +37,7 @@ jobs:
         run: |
           node --check docs/static-preview/forge-aura/home/home-module-015.js
           node --check docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
+          node --check docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js
           node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-015.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js
           node --check tests/forge-commercial-compass-015-contract-test.mjs
@@ -59,6 +60,7 @@ jobs:
         run: |
           grep -q 'home/home-module-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
           grep -q 'home/home-adapter-pages-v3-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
+          grep -q 'home/commercial-compass-consumer-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
           grep -q 'pipeline-consumer-bridge-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
           grep -q 'cartera-module-v12-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
           ! grep -q 'pipeline-consumer-bridge-014.js' docs/static-preview/forge-aura/index.html
@@ -137,6 +139,9 @@ jobs:
           grep -q "sourceOwner: 'PRODUCTION_EVENTS'" docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
           grep -q "source: 'COMPENSATION_INTELLIGENCE'" docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
           grep -q "pipelineIsConfirmedIncome: false" docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
+          grep -q "ForgeAdvisorForecastRuntimeAcceptance?.getReadModel?.()" docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js
+          grep -q "COMMERCIAL_COMPASS_015_READ_ONLY" docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js
+          grep -q "mutationObservers: 0" docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js
           grep -q "mutationObservers: 0" docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-015.js
           grep -q "newMutationObservers: 0" docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js
       - name: Constitutional closure markers
@@ -146,6 +151,8 @@ jobs:
           echo 'GOALS_AUTHORITY_GATE=PASS'
           echo 'PRODUCTION_EVENTS_GATE=PASS'
           echo 'COMPENSATION_AUTHORITY_GATE=PASS'
+          echo 'ADVISOR_FORECAST_CONSUMER_GATE=PASS'
+          echo 'ALFRED_READ_ONLY_GATE=PASS'
           echo 'PIPELINE_SCENARIO_SEPARATION_GATE=PASS'
           echo 'WA_BOUNDED_RECONCILIATION_GATE=PASS'
           echo 'PDF_MOBILE_GEOMETRY_GATE=PASS'
