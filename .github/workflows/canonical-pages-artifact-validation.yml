@@ -101,6 +101,7 @@ jobs:
       - name: Validate canonical-only artifact and static module graph
         env:
           EXPECTED_DEMO_MODE: 'true'
+          FORGE_SKIP_PAGES_RUNTIME_PREPARATION: 'true'
         run: |
           node /tmp/validate-canonical.cjs
           node scripts/validate-pages-public-config.mjs _site/env.js

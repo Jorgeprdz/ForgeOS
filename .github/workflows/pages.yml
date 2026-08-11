@@ -374,6 +374,7 @@ jobs:
       - name: Validate canonical-only Pages artifact
         env:
           EXPECTED_COMMIT_SHA: ${{ github.sha }}
+          FORGE_SKIP_PAGES_RUNTIME_PREPARATION: 'true'
         run: |
           node scripts/validate-pages-public-config.mjs _site/env.js
           node - <<'EOF'
