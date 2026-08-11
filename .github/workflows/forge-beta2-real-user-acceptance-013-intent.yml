@@ -16,6 +16,8 @@ on:
       - 'nash/pipeline-nash-draft-orchestrator.js'
       - 'nash/conversation-brief/nash-deterministic-conversation-brief-boundary-contract.js'
       - 'nash/draft-intake/nfast06-deterministic-draft-renderer.js'
+      - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
+      - 'tests/pages-public-demo-runtime-closure-test.mjs'
       - 'tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs'
       - 'tests/forge-beta2-real-user-acceptance-013-intent.test.mjs'
       - 'tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs'
@@ -60,6 +62,8 @@ jobs:
           node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-008.js
           node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-011b.js
           node --check docs/static-preview/forge-aura/recomposition/pipeline-crs10-context-presentation-013.js
+          node --check scripts/prepare-forge-alive-pages-runtime-closure.mjs
+          node --check tests/pages-public-demo-runtime-closure-test.mjs
           node --check tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs
           node --check tests/forge-beta2-real-user-acceptance-013-intent.test.mjs
           node --check tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs
@@ -74,6 +78,9 @@ jobs:
 
       - name: RU04 CRS10 source-owner contract
         run: node --test tests/forge-beta2-real-user-acceptance-013-ru04-crs10.test.mjs
+
+      - name: RU04 Pages runtime closure
+        run: node --test tests/pages-public-demo-runtime-closure-test.mjs
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -91,6 +98,7 @@ jobs:
           echo 'DEAD_CONTEXT_CTA=ABSENT'
           echo 'RU04_CRS10_SOURCE_OWNER=PASS'
           echo 'RU04_CRS10_BROWSER_PRESENTATION=PASS'
+          echo 'RU04_PAGES_RUNTIME_CLOSURE=PASS'
           echo 'RU04_FCDP_PROJECTIONS_INVENTED=NO'
           echo 'RU04_SECOND_RELATIONSHIP_ENGINE=NO'
           echo 'HUMAN_APPROVAL_REQUIRED=YES'
