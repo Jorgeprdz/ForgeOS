@@ -1,8 +1,28 @@
 import { expect, test } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 const fixture = '/tests/e2e/fixtures/forge-commercial-compass-015/index.html';
 
+async function patchRealModule(page, { routeGlob, sourcePath, replacements }) {
+  let source = await readFile(new URL(`../../${sourcePath}`, import.meta.url), 'utf8');
+  for (const [from, to] of replacements) {
+    if (!source.includes(from)) throw new Error(`PHASE015_HARNESS_IMPORT_NOT_FOUND:${sourcePath}:${from}`);
+    source = source.replace(from, to);
+  }
+  await page.route(routeGlob, async route => {
+    await route.fulfill({ status: 200, contentType: 'application/javascript; charset=utf-8', body: source });
+  });
+}
+
 async function mountHome(page, mode = 'ready') {
+  await patchRealModule(page, {
+    routeGlob: '**/docs/static-preview/forge-aura/home/home-module-015.js*',
+    sourcePath: 'docs/static-preview/forge-aura/home/home-module-015.js',
+    replacements: [[
+      "import { createHomeModule as createBaseHomeModule } from './home-module-008.js?v=forge-commercial-compass-015-base';",
+      "import { createHomeModule as createBaseHomeModule } from '/tests/e2e/fixtures/forge-commercial-compass-015/home-base-stub.js';",
+    ]],
+  });
   await page.goto(fixture);
   await page.evaluate(async mode => {
     window.__HOME_MODE_015 = mode;
@@ -35,6 +55,14 @@ async function mountPipeline(page) {
 }
 
 async function mountCartera(page) {
+  await patchRealModule(page, {
+    routeGlob: '**/docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js*',
+    sourcePath: 'docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js',
+    replacements: [[
+      "import { createCarteraModule as createBaseCarteraModule } from './cartera-module-v10-013.js?v=forge-commercial-compass-015-base';",
+      "import { createCarteraModule as createBaseCarteraModule } from '/tests/e2e/fixtures/forge-commercial-compass-015/cartera-base-stub.js';",
+    ]],
+  });
   await page.goto(fixture);
   await page.evaluate(async () => {
     const root = document.querySelector('#root');
