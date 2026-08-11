@@ -1,5 +1,9 @@
 import { createPipelineModule as createBasePipelineModule } from "../pipeline/pipeline-module.js";
 import { createPipelineAdapter } from "../pipeline/pipeline-adapter.js";
+import {
+  hasUsableRelationshipContext,
+  relationshipContextHtml,
+} from "./pipeline-crs10-context-presentation-013.js?v=forge-beta2-013-crs10-context";
 
 const WRAPPER_ID = "FORGE_GLOBAL_AURA_PIPELINE_CONSUMER_BRIDGE_008";
 
@@ -49,8 +53,9 @@ function projectionTechnicalHtml(item = {}) {
   `;
 }
 
-function projectionsHtml(projections = []) {
+function projectionsHtml(projections = [], { relationshipAvailable = false } = {}) {
   if (!Array.isArray(projections) || !projections.length) {
+    if (relationshipAvailable) return "";
     return `
       <section class="aura-inline-empty" data-aura-governed-projections="EMPTY">
         <h3>Sin información adicional para decidir</h3>
@@ -137,7 +142,10 @@ export function createPipelineModule(options = {}) {
       .then(context => {
         if (activeDialog !== currentDialog) return;
         body.setAttribute("aria-busy", "false");
-        const available = context?.state && context.state !== "unavailable";
+        const relationshipComposition = context?.relationshipIntelligence || null;
+        const relationshipAvailable = Boolean(relationshipComposition);
+        const projectionAvailable = Array.isArray(context?.projections) && context.projections.length > 0;
+        const available = relationshipAvailable || projectionAvailable;
         body.innerHTML = `
           <section class="aura-governed-context-summary" data-consumer-state="${esc(context?.state || "unavailable")}">
             <h3>${available ? "Forge encontró contexto adicional" : "Forge no encontró contexto adicional disponible"}</h3>
@@ -146,7 +154,10 @@ export function createPipelineModule(options = {}) {
               : "Puedes seguir trabajando con los datos del prospecto. Forge no va a inventar una recomendación para llenar lo que falta."}</p>
             ${technicalContextHtml(context)}
           </section>
-          ${projectionsHtml(context?.projections)}
+          ${relationshipContextHtml(relationshipComposition)}
+          ${projectionsHtml(context?.projections, {
+            relationshipAvailable: hasUsableRelationshipContext(relationshipComposition),
+          })}
         `;
       })
       .catch(error => {
@@ -200,7 +211,8 @@ export function createPipelineModule(options = {}) {
       node.dataset.aura008Context = "true";
       const record = node.closest("[data-record-id]");
       const id = record?.dataset.recordId || "";
-      const actionable = Boolean(id && adapter?.intelligence);
+      const intelligenceCapability = adapter?.capabilities?.intelligenceAvailable;
+      const actionable = Boolean(id && adapter?.intelligence && intelligenceCapability !== false);
       node.dataset.pipelineContextActionable = String(actionable);
       node.innerHTML = actionable ? `
         <div>
@@ -298,6 +310,8 @@ export function createPipelineModule(options = {}) {
       return Object.freeze({
         wrapperId: WRAPPER_ID,
         intelligenceConsumerConnected: Boolean(adapter?.intelligence),
+        relationshipIntelligencePresented: Boolean(adapter?.capabilities?.relationshipIntelligenceAvailable),
+        existingCarteraIntelligenceReused: Boolean(adapter?.capabilities?.existingCarteraIntelligenceReused),
         localNbaPresentedAsAuthority: false,
         createsTruth: false,
         createsScore: false,
