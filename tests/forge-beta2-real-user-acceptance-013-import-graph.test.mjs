@@ -5,10 +5,13 @@ import { readFile } from 'node:fs/promises';
 const read = async path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
 test('productive Aura import graph reaches 013 pipeline intent and interpretation owners', async () => {
-  const [index, app, bridge] = await Promise.all([
+  const [index, app, bridge, pagesV6, crs10Adapter, crs10Presentation] = await Promise.all([
     read('docs/static-preview/forge-aura/index.html'),
     read('docs/static-preview/forge-aura/app-v4-r1.js'),
     read('docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-011b.js'),
+    read('docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v6-013.js'),
+    read('docs/static-preview/forge-aura/pipeline/pipeline-crs10-context-adapter-013.js'),
+    read('docs/static-preview/forge-aura/recomposition/pipeline-crs10-context-presentation-013.js'),
   ]);
 
   assert.match(app, /\.\/recomposition\/pipeline-consumer-bridge-008\.js\?v=forge-global-aura-recomposition-008/);
@@ -20,4 +23,21 @@ test('productive Aura import graph reaches 013 pipeline intent and interpretatio
   assert.match(bridge, /pipeline-conversation-workspace-013\.js/);
   assert.doesNotMatch(bridge, /pipeline-adapter-pages-v5\.js/);
   assert.doesNotMatch(bridge, /pipeline-conversation-workspace\.js\?v=forge-aura-production-entrypoint-hotfix-011b/);
+
+  assert.match(pagesV6, /pipeline-crs10-context-adapter-013\.js/);
+  assert.match(pagesV6, /relationshipIntelligenceAvailable/);
+  assert.match(pagesV6, /existingCarteraIntelligenceReused/);
+  assert.match(crs10Adapter, /pipeline-domain-intelligence-consumer\.js/);
+  assert.match(crs10Adapter, /crs-10-existing-relationship-intelligence-service\.js/);
+  assert.match(crs10Adapter, /crs-03-pipeline-person-convergence-service\.js/);
+  assert.match(crs10Adapter, /relationshipIntelligenceState: 'AVAILABLE'/);
+  assert.doesNotMatch(crs10Adapter, /deriveRelationshipFoundationSignals|createFipPack01Foundation|relationshipScore|priorityScore|purchaseProbability/);
+
+  assert.match(crs10Presentation, /item\.summary/);
+  assert.match(crs10Presentation, /item\.uncertainty/);
+  assert.match(crs10Presentation, /item\.smallestUsefulAction/);
+  assert.match(crs10Presentation, /item\.evidenceCount/);
+  assert.match(crs10Presentation, /item\.deepLink/);
+  assert.match(crs10Presentation, /Contexto del asesor/);
+  assert.doesNotMatch(crs10Presentation, /calculateScore|derivePriority|autoContact|autoSend/);
 });
