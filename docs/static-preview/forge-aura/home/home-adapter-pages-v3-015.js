@@ -208,12 +208,13 @@ function incomeSnapshot(projected) {
   const combined = projected?.combinedScenario || {};
   const annual = projected?.annual || {};
   return freeze({
+    state: String(projected?.state || 'UNKNOWN').toUpperCase(),
     monthlyEstimatedIncomeMxn: Number.isFinite(Number(generated.value)) ? Number(generated.value) : null,
     monthlyPipelineScenarioMxn: Number.isFinite(Number(pipeline.value)) ? Number(pipeline.value) : null,
     monthlyCombinedScenarioMxn: Number.isFinite(Number(combined.value)) ? Number(combined.value) : null,
     annualEstimatedIncomeMxn: Number.isFinite(Number(annual.generatedYtd)) ? Number(annual.generatedYtd) : null,
     annualState: annual.state || 'UNKNOWN',
-    generatedBreakdown: generated.known === true ? freeze({ initial: generated.initial, renewal: generated.renewal, bonus: generated.bonus }) : null,
+    generatedBreakdown: generated.evidenceState === 'EARNED' ? freeze({ initial: generated.initial, renewal: generated.renewal, bonus: generated.bonus }) : null,
     pipelineOpportunityCount: Number.isFinite(Number(pipeline.count)) ? Number(pipeline.count) : null,
     source: 'COMPENSATION_INTELLIGENCE',
     safeguards: freeze({ confirmedIncomeIncludesPipeline: false, paidTruthCreated: false, scenarioIsGuarantee: false }),
@@ -342,8 +343,8 @@ export async function createHomePagesAdapter(options = {}) {
       sourceStates.production = policyResult.ok ? (policyResult.value.sourceComplete ? 'READY' : 'PARTIAL') : 'UNAVAILABLE';
       const income = incomeResult.ok
         ? incomeSnapshot(incomeResult.value)
-        : freeze({ monthlyEstimatedIncomeMxn: null, monthlyPipelineScenarioMxn: null, monthlyCombinedScenarioMxn: null, annualEstimatedIncomeMxn: null, annualState: 'UNAVAILABLE', generatedBreakdown: null, pipelineOpportunityCount: null, source: 'COMPENSATION_INTELLIGENCE', safeguards: freeze({ confirmedIncomeIncludesPipeline: false }) });
-      sourceStates.income = incomeResult.ok ? 'READY' : 'UNAVAILABLE';
+        : freeze({ state: 'UNAVAILABLE', monthlyEstimatedIncomeMxn: null, monthlyPipelineScenarioMxn: null, monthlyCombinedScenarioMxn: null, annualEstimatedIncomeMxn: null, annualState: 'UNAVAILABLE', generatedBreakdown: null, pipelineOpportunityCount: null, source: 'COMPENSATION_INTELLIGENCE', safeguards: freeze({ confirmedIncomeIncludesPipeline: false }) });
+      sourceStates.income = incomeResult.ok ? income.state : 'UNAVAILABLE';
 
       const commercialCompass = buildCompass({ goals, production, income, asOf, sourceStates });
       globalThis[HANDOFF] = Object.freeze({
