@@ -28,25 +28,7 @@ async function loadAuthorities() {
       intelligenceUnavailableReason = error?.code || error?.message || "PIPELINE_INTELLIGENCE_DEPENDENCY_UNAVAILABLE";
     }
 
-    let relationshipIntelligenceFactory = null;
-    let relationshipIntelligenceUnavailableReason = null;
-    try {
-      const relationshipModule = await import(
-        authority("advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js").href
-      );
-      relationshipIntelligenceFactory = relationshipModule.createCrs10ExistingRelationshipIntelligenceService;
-      if (typeof relationshipIntelligenceFactory !== "function") {
-        throw new Error("CRS10_RELATIONSHIP_INTELLIGENCE_FACTORY_UNAVAILABLE");
-      }
-    } catch (error) {
-      relationshipIntelligenceUnavailableReason = error?.code || error?.message || "CRS10_RELATIONSHIP_INTELLIGENCE_UNAVAILABLE";
-    }
-
-    return Object.freeze({
-      intelligenceUnavailableReason,
-      relationshipIntelligenceFactory,
-      relationshipIntelligenceUnavailableReason,
-    });
+    return Object.freeze({ intelligenceUnavailableReason });
   })();
   return loadedPromise;
 }
@@ -119,16 +101,6 @@ export async function createPipelineAdapter({ client } = {}) {
     }
   }
 
-  let relationshipIntelligenceService = null;
-  let relationshipIntelligenceUnavailableReason = authorityState.relationshipIntelligenceUnavailableReason;
-  if (!relationshipIntelligenceUnavailableReason && authorityState.relationshipIntelligenceFactory) {
-    try {
-      relationshipIntelligenceService = authorityState.relationshipIntelligenceFactory({ client });
-    } catch (error) {
-      relationshipIntelligenceUnavailableReason = error?.code || error?.message || "CRS10_RELATIONSHIP_INTELLIGENCE_UNAVAILABLE";
-    }
-  }
-
   const capabilities = Object.freeze({
     createProspect: typeof service.createProspect === "function",
     importProspects: false,
@@ -137,7 +109,6 @@ export async function createPipelineAdapter({ client } = {}) {
     contactAvailable: false,
     personConvergenceAvailable: Boolean(intelligenceConsumer),
     intelligenceAvailable: Boolean(intelligenceConsumer),
-    relationshipIntelligenceAvailable: Boolean(relationshipIntelligenceService),
   });
 
   let records = [];
@@ -239,9 +210,6 @@ export async function createPipelineAdapter({ client } = {}) {
         prospectReference: id || null,
         personReference: null,
         projections: Object.freeze([]),
-        relationshipIntelligence: null,
-        relationshipIntelligenceState: "unavailable",
-        relationshipIntelligenceUnavailableReason,
         degradedReasons: Object.freeze([
           intelligenceUnavailableReason || "PIPELINE_INTELLIGENCE_CONSUMER_UNAVAILABLE",
         ]),
@@ -253,46 +221,7 @@ export async function createPipelineAdapter({ client } = {}) {
         }),
       });
     }
-
-    const context = await intelligenceConsumer.getProspectDecisionContext(id, options);
-    if (!context?.personReference) {
-      return Object.freeze({
-        ...context,
-        relationshipIntelligence: null,
-        relationshipIntelligenceState: "not_linked",
-        relationshipIntelligenceUnavailableReason: null,
-      });
-    }
-
-    if (!relationshipIntelligenceService) {
-      return Object.freeze({
-        ...context,
-        relationshipIntelligence: null,
-        relationshipIntelligenceState: "unavailable",
-        relationshipIntelligenceUnavailableReason:
-          relationshipIntelligenceUnavailableReason || "CRS10_RELATIONSHIP_INTELLIGENCE_UNAVAILABLE",
-      });
-    }
-
-    try {
-      const relationshipIntelligence = await relationshipIntelligenceService.loadRelationshipIntelligence({
-        personReference: context.personReference,
-      });
-      return Object.freeze({
-        ...context,
-        relationshipIntelligence,
-        relationshipIntelligenceState: "available",
-        relationshipIntelligenceUnavailableReason: null,
-      });
-    } catch (error) {
-      return Object.freeze({
-        ...context,
-        relationshipIntelligence: null,
-        relationshipIntelligenceState: "degraded",
-        relationshipIntelligenceUnavailableReason:
-          error?.code || error?.message || "CRS10_RELATIONSHIP_INTELLIGENCE_READ_FAILED",
-      });
-    }
+    return intelligenceConsumer.getProspectDecisionContext(id, options);
   }
 
   function whatsappUrl(record, text = "") {
@@ -307,7 +236,6 @@ export async function createPipelineAdapter({ client } = {}) {
     service,
     timelineService,
     intelligenceConsumer,
-    relationshipIntelligenceService,
     capabilities,
     reload,
     create,
