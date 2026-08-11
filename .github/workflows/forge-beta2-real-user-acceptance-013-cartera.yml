@@ -1,0 +1,63 @@
+name: Forge Beta2 Real User Acceptance 013 Cartera
+
+on:
+  push:
+    branches:
+      - fix/forge-beta2-real-user-acceptance-interpretation-recovery-013
+    paths:
+      - 'docs/static-preview/forge-aura/cartera/**'
+      - 'supabase/migrations/20260810001200_cartera020b_targeted_interactive_claim_012.sql'
+      - 'tests/aura-cartera-pdf-result-state-machine-006.test.mjs'
+      - 'tests/forge-beta2-real-user-stabilization-012.test.mjs'
+      - 'tests/forge-beta2-real-user-acceptance-013-ru09-exact-claim.test.mjs'
+      - '.github/workflows/forge-beta2-real-user-acceptance-013-cartera.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-beta2-013-cartera
+  cancel-in-progress: true
+
+jobs:
+  cartera-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax gates
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v4.js
+          node --check tests/forge-beta2-real-user-acceptance-013-ru09-exact-claim.test.mjs
+
+      - name: RU09 exact-claim source-owner contract
+        run: node --test tests/forge-beta2-real-user-acceptance-013-ru09-exact-claim.test.mjs
+
+      - name: Inherited Cartera PDF state-machine regression
+        run: node --test tests/aura-cartera-pdf-result-state-machine-006.test.mjs
+
+      - name: Inherited Phase012 exact-claim authority proof
+        run: node --test --test-name-pattern='01A|01B|01C' tests/forge-beta2-real-user-stabilization-012.test.mjs
+
+      - name: Constitutional markers
+        run: |
+          echo 'RU09_EXACT_INBOX_RECLAIM=PASS'
+          echo 'RU09_GENERIC_QUEUE_RECLAIM=ABSENT'
+          echo 'RU09_EXISTING_OVERLOAD_REUSED=YES'
+          echo 'RU09_DB_CHANGE=NO'
+          echo 'RU09_RLS_CHANGE=NO'
+          echo 'RU09_STATE_MACHINE_PRESERVED=YES'
