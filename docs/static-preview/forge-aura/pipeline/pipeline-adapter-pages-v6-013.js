@@ -1,4 +1,5 @@
 import { createPipelineAdapter as createPreviousAdapter } from './pipeline-adapter-pages-v5.js?v=forge-beta2-013-intent-base';
+import { createPipelineCrs10ContextAdapter } from './pipeline-crs10-context-adapter-013.js?v=forge-beta2-013-crs10-context';
 
 function text(value) {
   return String(value ?? '').trim();
@@ -49,11 +50,55 @@ function truthfulFallbackExplanation(prepared, selectedIntent) {
   return `Forge conservó el objetivo “${selectedIntent}”, pero el contexto verificado no alcanzó para construir una sugerencia segura. Revisa la información disponible antes de continuar.`;
 }
 
+function unavailableIntelligence(prospectReference, reason) {
+  return freeze({
+    consumerId: 'FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A',
+    state: 'unavailable',
+    prospectReference: prospectReference || null,
+    personReference: null,
+    identityState: 'UNKNOWN',
+    opportunityAuthorityState: 'UNKNOWN',
+    projections: [],
+    relationshipIntelligence: null,
+    relationshipIntelligenceState: 'UNAVAILABLE',
+    provenance: { sourceAuthorities: [] },
+    degradedReasons: [reason || 'PIPELINE_CRS10_CONTEXT_UNAVAILABLE'],
+    boundaries: {
+      readOnly: true,
+      createsTruth: false,
+      createsScore: false,
+      calculatesPriority: false,
+      automaticExecutionAllowed: false,
+      identityMutationAllowed: false,
+      relationshipMutationAllowed: false,
+      persistenceAllowed: false,
+    },
+  });
+}
+
 export async function createPipelineAdapter(options = {}) {
   const adapter = await createPreviousAdapter(options);
+  let contextAdapter = null;
+  let contextUnavailableReason = null;
+  try {
+    contextAdapter = await createPipelineCrs10ContextAdapter({ client: options.client });
+  } catch (error) {
+    contextUnavailableReason = error?.code || error?.message || 'PIPELINE_CRS10_CONTEXT_UNAVAILABLE';
+  }
 
   return Object.freeze({
     ...adapter,
+    capabilities: Object.freeze({
+      ...(adapter.capabilities || {}),
+      intelligenceAvailable: Boolean(contextAdapter),
+      relationshipIntelligenceAvailable: Boolean(contextAdapter),
+      existingCarteraIntelligenceReused: Boolean(contextAdapter),
+      secondRelationshipEngine: false,
+    }),
+    async intelligence(prospectReference, request = {}) {
+      if (!contextAdapter) return unavailableIntelligence(prospectReference, contextUnavailableReason);
+      return contextAdapter.intelligence(prospectReference, request);
+    },
     async prepareMessage(card, request = {}) {
       const selectedIntent = text(request.goal || 'first_contact');
       const prepared = await adapter.prepareMessage(card, request);
