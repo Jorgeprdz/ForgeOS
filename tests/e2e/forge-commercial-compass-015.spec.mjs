@@ -35,6 +35,32 @@ async function mountHome(page, mode = 'ready') {
   }, mode);
 }
 
+async function mountConsumer(page, forecastState = 'ready') {
+  await page.evaluate(async forecastState => {
+    const sheet = document.createElement('section');
+    sheet.dataset.forgeAlfredSheet = 'true';
+    sheet.innerHTML = '<div class="sheet-panel"><section class="alfred-command-response" data-alfred-command-response hidden></section><label class="alfred-input"><input aria-label="Alfred"><button type="button">Enviar</button></label></div>';
+    document.body.append(sheet);
+    window.ForgeAdvisorForecastRuntimeAcceptance = Object.freeze({
+      getReadModel() {
+        if (forecastState !== 'ready') return { activityRequirement: { status: 'INSUFFICIENT_DATA', recommendedActions: [] } };
+        return {
+          activityRequirement: {
+            status: 'READY',
+            recommendedActions: [
+              { actionType: 'PROSPECTING_CONTACTS', requiredCount: 25 },
+              { actionType: 'APPOINTMENTS', requiredCount: 6 },
+              { actionType: 'PRESENTATIONS', requiredCount: 3 },
+            ],
+          },
+        };
+      },
+    });
+    await import(`/docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js?accept015=${Date.now()}`);
+    window.ForgeCommercialCompassConsumer015.reconcile();
+  }, forecastState);
+}
+
 async function mountPipeline(page) {
   await page.goto(fixture);
   await page.evaluate(async () => {
@@ -120,6 +146,58 @@ test('CC-02 browser: first-use goals flow is short, optional and annual policies
   await page.getByRole('button', { name: 'Guardar metas' }).click();
   await expect(page.locator('[data-commercial-compass-015]')).toHaveAttribute('data-compass-state', 'READY');
   await expect(page.locator('[data-commercial-compass-015]')).toContainText('100 pólizas');
+});
+
+test('CC-11 browser: activity guidance consumes Advisor Forecast and degrades without historical evidence', async ({ page }) => {
+  await mountHome(page, 'ready');
+  await mountConsumer(page, 'ready');
+  const guidance = page.locator('[data-commercial-activity-guidance-015]');
+  await expect(guidance).toBeVisible();
+  await expect(guidance).toHaveAttribute('data-activity-state', 'READY');
+  await expect(guidance).toContainText('Contactos: 25');
+  await expect(guidance).toContainText('Citas: 6');
+  await expect(guidance).toContainText('Presentaciones: 3');
+  await expect(guidance).toContainText('no crea tareas ni acciones automáticamente');
+
+  await page.evaluate(() => {
+    window.ForgeAdvisorForecastRuntimeAcceptance = Object.freeze({ getReadModel: () => ({ activityRequirement: { status: 'INSUFFICIENT_DATA', recommendedActions: [] } }) });
+    window.ForgeCommercialCompassConsumer015.reconcile();
+  });
+  await expect(guidance).toHaveAttribute('data-activity-state', 'INSUFFICIENT_DATA');
+  await expect(guidance).toContainText('Necesito más historial para estimar cuánta actividad necesitas.');
+});
+
+test('CC-13 browser: Alfred answers commercial progress from Compass without stealing Pipeline navigation', async ({ page }) => {
+  await mountHome(page, 'ready');
+  await mountConsumer(page, 'ready');
+  const input = page.getByRole('textbox', { name: 'Alfred' });
+  const send = page.getByRole('button', { name: 'Enviar' });
+  const response = page.locator('[data-alfred-command-response]');
+
+  await input.fill('¿Cómo voy?');
+  await send.click();
+  await expect(response).toContainText('Cómo vas este mes');
+  await expect(response).toContainText('4 de 10 pólizas');
+  await expect(response).toContainText('$42,000');
+
+  await input.fill('¿Qué me falta?');
+  await send.click();
+  await expect(response).toContainText('Te faltan 6 pólizas');
+  await expect(response).toContainText('$58,000');
+
+  await input.fill('¿Cuánto podría ingresar con Pipeline?');
+  await send.click();
+  await expect(response).toContainText('$86,000');
+  await expect(response).toContainText('potencial, no ingreso confirmado ni garantizado');
+
+  await input.fill('¿Qué debo hacer hoy?');
+  await send.click();
+  await expect(response).toContainText('Contactos 25');
+  await expect(response).toContainText('Citas 6');
+  await expect(response).toContainText('No se crea ninguna tarea sin tu confirmación');
+
+  expect(await page.evaluate(() => window.ForgeCommercialCompassConsumer015.classifyAlfredQuestion('Pipeline'))).toBeNull();
+  expect(await page.evaluate(() => window.ForgeCommercialCompassConsumer015.diagnostics().mutationObservers)).toBe(0);
 });
 
 test('WA-01 browser: real bridge 015 adds all goals, humanizes the workspace and creates zero observers', async ({ page }) => {
