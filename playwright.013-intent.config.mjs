@@ -5,7 +5,7 @@ const baseURL = process.env.FORGE_E2E_BASE_URL || `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: './tests/e2e',
-  testMatch: /forge-beta2-013-intent-workspace\.spec\.mjs/,
+  testMatch: /forge-beta2-013-(intent-workspace|pipeline-context)\.spec\.mjs/,
   fullyParallel: false,
   forbidOnly: true,
   retries: 0,
@@ -25,7 +25,7 @@ export default defineConfig({
   },
   webServer: {
     command: 'npm run serve:e2e',
-    url: `${baseURL}/docs/static-preview/forge-aura/index.html`,
+    url: `${baseURL}/tests/e2e/fixtures/forge-beta2-013-intent/index.html`,
     reuseExistingServer: false,
     timeout: 60_000,
     stdout: 'pipe',
