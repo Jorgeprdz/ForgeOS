@@ -51,6 +51,11 @@ includes(files.home, 'Ingreso estimado actual');
 includes(files.home, 'Escenario con Pipeline');
 includes(files.home, 'Meta del mes');
 includes(files.home, 'Todavía no hay suficiente historial confirmado para mostrar el ingreso anual.');
+includes(files.home, 'name="targetMonthlyIncomeMxn"', 'Monthly income goal input must remain present');
+includes(files.home, 'name="targetAnnualIncomeMxn"', 'Annual income goal input must remain present');
+includes(files.home, 'max="100000000" step="1" inputmode="decimal" name="targetMonthlyIncomeMxn"', 'Normal MXN monthly amounts must not be rejected by a misaligned step base');
+includes(files.home, 'max="1200000000" step="1" inputmode="decimal" name="targetAnnualIncomeMxn"', 'Normal MXN annual amounts must not be rejected by a misaligned step base');
+includes(files.home, "forge:commercial-compass-rendered", 'Home must announce bounded direct renders so consumers do not race timers');
 includes(files.home, 'newMutationObservers: 0', 'Home 015 must not add a MutationObserver');
 excludes(files.home, 'new MutationObserver', 'Home 015 must use direct/bounded rendering, not a new observer');
 excludes(files.home, 'new Observer(', 'Home 015 must not instantiate an Observer alias');
@@ -106,6 +111,8 @@ includes(files.consumer, 'pipelineEconomic', 'Pipeline must only be intercepted 
 includes(files.consumer, "if (pipelineEconomic) return 'PIPELINE';");
 includes(files.consumer, "return null;", 'Non-commercial Alfred queries must fall through to Command OS');
 includes(files.consumer, 'No se crea ninguna tarea sin tu confirmación.');
+includes(files.consumer, "setAttribute('data-commercial-activity-guidance-015', 'true')", 'Activity guidance must use the exact idempotent marker it queries');
+includes(files.consumer, "window.addEventListener('forge:commercial-compass-rendered'", 'Activity guidance must reconcile after bounded Home renders');
 includes(files.consumer, 'mutationObservers: 0');
 excludes(files.consumer, 'new MutationObserver', 'Consumer must not add observer loops');
 excludes(files.consumer, '.from(', 'Consumer must not read domain tables directly');
@@ -159,9 +166,15 @@ includes(files.workspace, 'windowRef.open', 'WhatsApp opening remains an explici
 // PDF mobile reachability + wording + instrumentation.
 excludes(files.cartera, 'new MutationObserver', 'Cartera 015 wrapper must not instantiate MutationObserver');
 excludes(files.cartera, 'new Observer(', 'Cartera 015 wrapper must not instantiate an Observer alias');
+includes(files.cartera, 'position:fixed!important;inset:0!important', 'PDF review layer must stay attached to the viewport');
+includes(files.cartera, 'max-width:100%!important;min-width:0!important', 'PDF dialog must be width-bounded');
 includes(files.cartera, 'min-height:0!important');
 includes(files.cartera, 'overflow-y:auto!important');
+includes(files.cartera, 'overflow-x:hidden!important');
 includes(files.cartera, 'position:sticky!important;bottom:0!important');
+includes(files.cartera, 'margin-inline:0!important', 'Sticky save region must not create horizontal overflow');
+excludes(files.cartera, 'margin-inline:-14px!important', 'Mobile save region must not widen the review surface');
+excludes(files.cartera, 'margin-inline:calc(-1 * clamp', 'Desktop save region must not widen the review surface');
 includes(files.cartera, 'Guardar póliza');
 includes(files.cartera, 'No encontramos información suficiente sobre las coberturas.');
 includes(files.cartera, 'Puedes revisarlas en el documento o agregarlas manualmente.');
