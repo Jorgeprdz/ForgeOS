@@ -21,7 +21,8 @@ assert.match(versioner, /smart-widget-productive-home-adapter\.css\?v=\$\{buildS
 assert.match(versioner, /cartera-module\.js\?v=\$\{buildSha\}/);
 assert.match(versioner, /cartera-document-intake\.js\?v=\$\{buildSha\}/);
 assert.match(versioner, /cartera-runtime-\$\{buildSha\}/);
-assert.match(versioner, /cartera-module-v9\\\.js/);
+assert.match(versioner, /auraCarteraMappingPattern/);
+assert.match(versioner, /auraCarteraEntrypoint/);
 assert.match(versioner, /aura-bootstrap-v4-r1\\\.js/);
 assert.match(versioner, /FORGE_PAGES_AURA_CARTERA_CACHE_CUTOVER=PASS/);
 assert.match(versioner, /FORGE_PAGES_CARTERA_CANONICAL_RUNTIME/);
@@ -65,11 +66,11 @@ try {
     writeFile(join(aura, "index.html"), [
       '<script type="importmap">',
       '{"imports":{',
-      '"./cartera/cartera-module.js?v=a":"./cartera/cartera-module-v9.js?v=forge-aura-live-acceptance-journal-cartera-011e",',
-      '"./cartera/cartera-module-v4.js?v=b":"./cartera/cartera-module-v9.js?v=forge-aura-live-acceptance-journal-cartera-011e"',
+      '"./cartera/cartera-module.js?v=a":"./cartera/cartera-module-v77-future.js?v=old-cache-key",',
+      '"./cartera/cartera-module-v4.js?v=b":"./cartera/cartera-module-v77-future.js?v=old-cache-key"',
       '}}',
       '</script>',
-      '<script type="module" src="./aura-bootstrap-v4-r1.js?v=forge-aura-live-acceptance-journal-cartera-011e"></script>',
+      '<script type="module" src="./aura-bootstrap-v4-r1.js?v=old-bootstrap-key"></script>',
       '',
     ].join("\n")),
   ]);
@@ -100,9 +101,9 @@ try {
   assert.match(cartera, new RegExp(`\\./cartera-runtime-${buildSha}/`));
   assert.doesNotMatch(cartera, /03bca89dba800f7bd5052d6e67caa29241271be0/);
   assert.doesNotMatch(cartera, /cartera-runtime-03bca89dba800f7bd5052d6e67caa29241271be0/);
-  assert.match(auraIndex, new RegExp(`cartera-module-v9\\.js\\?v=${buildSha}`));
+  assert.match(auraIndex, new RegExp(`cartera-module-v77-future\\.js\\?v=${buildSha}`));
   assert.match(auraIndex, new RegExp(`aura-bootstrap-v4-r1\\.js\\?v=${buildSha}`));
-  assert.doesNotMatch(auraIndex, /cartera-module-v9\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
+  assert.doesNotMatch(auraIndex, /cartera-module-v77-future\.js\?v=old-cache-key/);
 } finally {
   await rm(fixture, { recursive: true, force: true });
 }
