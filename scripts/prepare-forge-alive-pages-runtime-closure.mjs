@@ -24,11 +24,15 @@ export const FORGE_ALIVE_PAGES_RUNTIME_CLOSURE_ID =
 
 export const ROOT_RUNTIME_ENTRYPOINTS = Object.freeze([
   "advisor-os/sales-pipeline/productive-prospect-bootstrap.js",
+  "advisor-os/sales-pipeline/productive-prospect-service.js",
+  "platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js",
+  "platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js",
+  "platform/shared-commercial-model/crs-03-pipeline-person-convergence-contract.js",
+  "advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js",
+  "advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js",
   "advisor-os/quotes/printable/quote-printable-read-model-m05e005.js",
   "advisor-os/quotes/printable/quote-printable-pdf-generator-m05e005.js",
   "advisor-os/quotes/printable/quote-printable-document-composer-m05e005.js",
-  "platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js",
-  "platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js",
   "platform/shared-commercial-model/crs-07-application-policy-lineage-contract.js",
   "advisor-os/cartera/crs-07-application-policy-lineage-service.js",
   "platform/shared-commercial-model/crs-08-unified-person-timeline-contract.js",
@@ -295,6 +299,13 @@ export async function prepareForgeAlivePagesRuntimeClosure({
   const alfredRewrite = await rewriteAlfredCommandRuntime(resolvedSiteDir);
 
   const requiredPublishedFiles = [
+    "advisor-os/sales-pipeline/productive-prospect-service.js",
+    "platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js",
+    "platform/shared-commercial-model/crs-02-authoritative-domain-link-adapters.js",
+    "platform/shared-commercial-model/crs-03-pipeline-person-convergence-contract.js",
+    "advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js",
+    "advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js",
+    "platform/decision-projection/forge-cross-domain-decision-projection.js",
     "advisor-os/quotes/printable/quote-printable-read-model-m05e005.js",
     "platform/event-evidence/quote-lifecycle-supabase-service.js",
     "platform/event-evidence/prospect-quote-detail-projection.js",
