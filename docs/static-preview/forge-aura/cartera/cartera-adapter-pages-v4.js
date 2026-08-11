@@ -82,6 +82,7 @@ async function reclaimSameEvidence(client, command) {
   const claimed = await client.rpc(CLAIM_RPC, {
     p_worker_id: command.workerId,
     p_lease_seconds: LEASE_SECONDS,
+    p_inbox_reference: command.inboxReference,
   });
   if (claimed?.error) return claimed;
   if (claimed?.data?.status !== 'CLAIMED' || claimed?.data?.inboxReference !== command.inboxReference) {
