@@ -36,7 +36,7 @@ function collapseRepeatedSummary(layer) {
   const relationship = body.querySelector('[data-pipeline-relationship-context="AVAILABLE"]');
   const projections = body.querySelector('.aura-governed-projection-list');
   const outer = body.querySelector('.aura-governed-context-summary[data-consumer-state]');
-  if (!outer || (!relationship && !projections)) return false;
+  if (!outer || (!relationship && !projections) || outer.dataset.consumerState !== 'CONTEXT_SUFFICIENT') return false;
 
   let changed = false;
   if (!outer.hidden) {
