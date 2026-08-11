@@ -109,7 +109,7 @@ test("Pipeline 008 demotes local NBA and exposes advisor-facing governed context
   const dialog = page.locator("[data-aura-governed-context-dialog]");
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole("heading", { name: "Lo que Forge puede explicar de este prospecto" })).toBeVisible();
-  await expect(dialog).toContainText("No tengo suficiente información para recomendar el siguiente paso todavía.");
+  await expect(dialog).toContainText("Todavía no puedo recomendar un siguiente paso.");
   await expect(dialog.getByRole("button", { name: "Completar información", exact: true })).toHaveCount(1);
 
   await expect(dialog.getByText("FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A", { exact: true })).not.toBeVisible();

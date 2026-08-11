@@ -86,12 +86,12 @@ test('011A WhatsApp action opens Conversation Workspace, not wa.me, until exact 
   const workspace=page.locator('[data-aura-conversation-workspace="011A"]');
   await expect(workspace).toBeVisible();
   expect(await page.evaluate(()=>window.__FORGE_011A_TRACE__.opens.length)).toBe(0);
-  await expect(workspace.getByText('Preparar mensaje',{exact:true})).toBeVisible();
+  await expect(workspace.getByRole('heading',{name:/^Preparar mensaje para /})).toBeVisible();
   await expect(workspace.getByText('Contactado',{exact:true})).toBeVisible();
 
   await workspace.locator('[data-generate-draft]').click();
   await expect(workspace.locator('[data-draft-block]')).toBeVisible();
-  await expect(workspace.locator('[data-draft-source]')).toHaveText('Generado por IA');
+  await expect(workspace.locator('[data-draft-source]')).toHaveText('Borrador preparado');
   await expect(workspace.locator('[data-draft]')).toHaveValue(/dar seguimiento/i);
 
   const providerRequest=await page.evaluate(()=>window.__FORGE_011A_TRACE__.providerRequests.at(-1));
