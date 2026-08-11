@@ -105,8 +105,22 @@ if (!buildSha) {
   }
 
   let auraIndex = await readFile(auraIndexPath, "utf8");
-  const auraCarteraPattern = /\.\/cartera\/cartera-module-v9\.js\?v=[^"\s]+/g;
-  const auraBootstrapPattern = /\.\/aura-bootstrap-v4-r1\.js\?v=[^"\s]+/g;
+  const auraCarteraMappingPattern =
+    /"\.\/cartera\/cartera-module\.js\?v[^"]+"\s*:\s*"(?<target>\.\/cartera\/cartera-module-[^"?]+\.js)\?v[^"\s]+"/;
+  const auraCarteraMapping = auraIndex.match(auraCarteraMappingPattern);
+  const auraCarteraEntrypoint = auraCarteraMapping?.groups?.target || "";
+  const auraBootstrapPattern = /\.\/aura-bootstrap-v4-r1\.js\?v[^"\s]+/g;
+  if (!auraCarteraEntrypoint) {
+    throw new Error("FORGE_PAGES_AURA_CARTERA_VERSION_SOURCE_MISSING");
+  }
+  const escapedAuraCarteraEntrypoint = auraCarteraEntrypoint.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    "\\$&",
+  );
+  const auraCarteraPattern = new RegExp(
+    `${escapedAuraCarteraEntrypoint}\\?v[^"\\s]+`,
+    "g",
+  );
   const auraCarteraMatches = auraIndex.match(auraCarteraPattern) || [];
   const auraBootstrapMatches = auraIndex.match(auraBootstrapPattern) || [];
   if (!auraCarteraMatches.length) {
@@ -116,7 +130,7 @@ if (!buildSha) {
     throw new Error("FORGE_PAGES_AURA_BOOTSTRAP_VERSION_SOURCE_MISSING");
   }
   auraIndex = auraIndex
-    .replace(auraCarteraPattern, `./cartera/cartera-module-v9.js?v=${buildSha}`)
+    .replace(auraCarteraPattern, `${auraCarteraEntrypoint}?v=${buildSha}`)
     .replace(auraBootstrapPattern, `./aura-bootstrap-v4-r1.js?v=${buildSha}`);
   await writeFile(auraIndexPath, auraIndex);
 
@@ -151,13 +165,17 @@ if (!buildSha) {
   if (cartera.includes('sourceLayout ? "../../../" : "./cartera-runtime-03bca89dba800f7bd5052d6e67caa29241271be0/"')) {
     throw new Error("FORGE_PAGES_CARTERA_ROOT_RUNTIME_BINDING_LEAK");
   }
-  if (!versionedAuraIndex.includes(`./cartera/cartera-module-v9.js?v=${buildSha}`)) {
+  if (!versionedAuraIndex.includes(`${auraCarteraEntrypoint}?v=${buildSha}`)) {
     throw new Error("FORGE_PAGES_AURA_CARTERA_BUILD_VERSION_MISSING");
   }
   if (!versionedAuraIndex.includes(`./aura-bootstrap-v4-r1.js?v=${buildSha}`)) {
     throw new Error("FORGE_PAGES_AURA_BOOTSTRAP_BUILD_VERSION_MISSING");
   }
-  if (versionedAuraIndex.includes("cartera-module-v9.js?v=forge-aura-live-acceptance-journal-cartera-011e")) {
+  if (
+    versionedAuraIndex.includes(
+      `${auraCarteraEntrypoint}?v=forge-beta2-013-policy-evidence-presentation`,
+    )
+  ) {
     throw new Error("FORGE_PAGES_AURA_STALE_CARTERA_CACHE_KEY");
   }
 
