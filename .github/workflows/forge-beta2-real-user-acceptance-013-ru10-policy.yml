@@ -6,6 +6,7 @@ on:
       - fix/forge-beta2-real-user-acceptance-interpretation-recovery-013
     paths:
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v10-013.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-policy-evidence-presentation-013.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v7.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-module.js'
       - 'docs/static-preview/forge-aura/index.html'
@@ -45,6 +46,7 @@ jobs:
       - name: Syntax gates
         run: |
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v10-013.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-policy-evidence-presentation-013.js
           node --check tests/forge-beta2-real-user-acceptance-013-ru10-policy-evidence.test.mjs
           node --check tests/e2e/forge-beta2-013-ru10-policy-evidence.spec.mjs
 
