@@ -1,0 +1,23 @@
+name: Forge Pages Cache Versioning Post 013
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/forge-pages-transitive-cache-versioning.mjs'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/forge-pages-cartera-cache-versioning-post-013.test.mjs'
+      - '.github/workflows/forge-pages-cache-versioning-post-013.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run focused cache-versioning contract tests
+        run: node --test tests/forge-pages-cartera-cache-versioning-post-013.test.mjs
+      - name: Verify versioner syntax
+        run: node --check scripts/forge-pages-transitive-cache-versioning.mjs
