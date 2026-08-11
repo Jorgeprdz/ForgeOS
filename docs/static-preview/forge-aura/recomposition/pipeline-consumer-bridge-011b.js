@@ -1,6 +1,6 @@
 import { createPipelineModule as createGovernedPipelineBridge } from './pipeline-consumer-bridge-008.js?v=forge-aura-production-entrypoint-hotfix-011b-base';
-import { createPipelineAdapter as createConversationPipelineAdapter } from '../pipeline/pipeline-adapter-pages-v5.js?v=forge-aura-production-entrypoint-hotfix-011b';
-import { createConversationWorkspaceController } from '../pipeline/pipeline-conversation-workspace.js?v=forge-aura-production-entrypoint-hotfix-011b';
+import { createPipelineAdapter as createConversationPipelineAdapter } from '../pipeline/pipeline-adapter-pages-v6-013.js?v=forge-beta2-real-user-acceptance-013';
+import { createConversationWorkspaceController } from '../pipeline/pipeline-conversation-workspace-013.js?v=forge-beta2-real-user-acceptance-013';
 
 export function createPipelineModule(options = {}) {
   const { root, client, windowRef = window, globalState } = options;
