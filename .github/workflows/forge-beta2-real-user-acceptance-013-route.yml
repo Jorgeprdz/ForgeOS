@@ -11,7 +11,6 @@ on:
       - 'docs/static-preview/forge-aura/aura-shell.js'
       - 'docs/static-preview/forge-aura/recomposition/**'
       - 'docs/static-preview/forge-aura/pipeline/**'
-      - 'scripts/build-advisor-presentation-pages-runtime.mjs'
       - 'scripts/prepare-aura-home-pages-authorities.mjs'
       - 'tests/forge-beta2-real-user-acceptance-013-route-lifecycle.test.mjs'
       - 'tests/e2e/forge-beta2-013-route-lifecycle.spec.mjs'
@@ -58,13 +57,13 @@ jobs:
           node --check tests/forge-beta2-real-user-acceptance-013-route-lifecycle.test.mjs
           node --test tests/forge-beta2-real-user-acceptance-013-route-lifecycle.test.mjs
 
-      - name: Prepare productive Pages runtime graph
+      - name: Prepare Home authority closure required by productive Aura
         run: |
           set -euo pipefail
-          node scripts/build-advisor-presentation-pages-runtime.mjs
+          node scripts/prepare-aura-home-pages-authorities.mjs
           test -f docs/static-preview/forge-alive-material3/home-authorities/repo/advisor-os/next-action/agenda-read-model.js
           test -f docs/static-preview/forge-alive/home-authorities/repo/advisor-os/next-action/agenda-read-model.js
-          echo 'PRODUCTIVE_PAGES_RUNTIME_PREPARATION=PASS'
+          echo 'HOME_AUTHORITY_CLOSURE_PREPARATION=PASS'
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -157,7 +156,7 @@ jobs:
       - name: Constitutional markers
         if: success()
         run: |
-          echo 'PRODUCTIVE_PAGES_RUNTIME_PREPARATION=PASS'
+          echo 'HOME_AUTHORITY_CLOSURE_PREPARATION=PASS'
           echo 'ROUTER_RELOAD_USED=NO'
           echo 'FIFTY_TRANSITIONS_TESTED=YES'
           echo 'BACK_FORWARD_TESTED=YES'
