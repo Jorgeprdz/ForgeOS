@@ -67,11 +67,11 @@ test('010I confirmed review recovery shows one canonical Policy, recovered evide
   expect(errors.failed).toEqual([]);
 });
 
-test('010I genuinely pending Evidence opens the document review instead of the Policy opener', async ({ page }) => {
+test('010I pending document keeps one human review action instead of the Policy opener', async ({ page }) => {
   const errors = await ready(page, '?pending=1');
   const cartera = page.locator('#cartera-root');
 
-  await expect(cartera.getByText('Evidencia pendiente').first()).toBeVisible();
+  await expect(cartera.getByText('Documento por revisar').first()).toBeVisible();
   await expect(cartera.getByRole('button', { name: 'Revisar documento' })).toHaveCount(1);
   await cartera.getByRole('button', { name: 'Revisar documento' }).click();
 

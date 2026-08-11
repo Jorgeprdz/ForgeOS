@@ -31,7 +31,7 @@ test('010J real contract: one Home subject, no duplicate Policy attention, Pipel
   expect(await page.evaluate(()=>window.__RECOVERY_010J_TRACE__.homeGrouped)).toBe(1);
 
   const cartera=page.locator('#cartera-root');
-  await expect(cartera.locator('.cartera-attention-item')).toHaveCount(2);
+  await expect(cartera.locator('.cartera-attention-item')).toHaveCount(1);
   await expect(cartera.getByText('Evidencia pendiente')).toHaveCount(0);
   await expect(cartera.getByText('Persona · Pipeline vinculado')).toBeVisible();
 
