@@ -64,7 +64,13 @@ function installStyles(doc) {
     @media(max-width:760px){
       .aura-conversation-layer{padding:0;place-items:end center}
       .aura-conversation-layer .aura-conversation{width:100%;max-width:none;max-height:94dvh;border-radius:24px 24px 0 0}
-      .aura-conversation__flow{grid-template-columns:repeat(5,minmax(56px,1fr));overflow-x:auto;padding-inline:14px}
+      .aura-conversation__flow{display:none}
+      .aura-conversation__header{padding:14px 16px 10px}
+      .aura-conversation__header h2{font-size:clamp(1.25rem,7vw,1.65rem)}
+      .aura-conversation__context{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;overflow:visible;padding:8px 12px}
+      .aura-conversation__context .aura-conversation__fact{min-width:0;padding:7px 8px}
+      .aura-conversation__context .aura-conversation__fact span{font-size:8px;letter-spacing:.04em}
+      .aura-conversation__context .aura-conversation__fact strong{font-size:10px;line-height:1.25}
       .aura-conversation__tabs button{flex:1 1 0;min-width:0;min-height:52px;height:auto;padding:8px;white-space:normal;line-height:1.2}
     }
   `;

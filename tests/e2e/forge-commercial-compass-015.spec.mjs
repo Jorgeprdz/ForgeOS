@@ -184,6 +184,15 @@ test('CC-01 browser: Commercial Compass makes META -> GAP -> OPORTUNIDAD -> ACCI
   await mountHome(page, 'ready');
   const compass = page.locator('[data-commercial-compass-015]');
   await expect(compass).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Mi día' })).toBeVisible();
+  expect(await page.evaluate(() => {
+    const day = document.querySelector('[data-home-attention-contract]');
+    const progress = document.querySelector('[data-commercial-compass-015]');
+    return Boolean(day && progress && (day.compareDocumentPosition(progress) & Node.DOCUMENT_POSITION_FOLLOWING));
+  })).toBe(true);
+  const dayBox = await page.locator('[data-home-attention-contract]').boundingBox();
+  const compassBox = await compass.boundingBox();
+  expect(dayBox?.y ?? Infinity).toBeLessThan(compassBox?.y ?? -Infinity);
   await expect(compass).toContainText('1 · META');
   await expect(compass).toContainText('2 · GAP');
   await expect(compass).toContainText('3 · OPORTUNIDAD');
@@ -287,6 +296,7 @@ test('WA-01 browser: real bridge 015 adds all goals, humanizes the workspace and
   }
   await expect(layer).toContainText('¿Qué necesitas lograr con este mensaje?');
   await expect(layer).toContainText('Preparar mensaje');
+  await expect(layer.locator('[data-draft]')).toBeVisible();
   await expect(layer).toContainText('Aprobar este texto');
   await expect(layer).toContainText('Abrir WhatsApp');
   await expect(layer).toContainText('Ayuda con objeciones');
@@ -323,7 +333,17 @@ test('WA-015R browser: preapproval, exact approval, edit and objective changes a
   const open = layer.locator('[data-open-whatsapp]');
   await expect(layer.locator('[data-conversation-flow-015]')).toHaveCount(1);
   await expect(layer.locator('[data-message-adjustments-015]')).toHaveCount(1);
+  await expect(layer.locator('[data-draft]')).toBeVisible();
+  await expect(layer).toContainText('Prepara un borrador o escribe el mensaje. WhatsApp seguirá bloqueado hasta que apruebes el texto exacto.');
   await expect(open).toBeDisabled();
+  if (testInfo.project.name === 'mobile') {
+    await expect(layer.locator('[data-conversation-flow-015]')).toBeHidden();
+    const overflow = await layer.evaluate(node => [...node.querySelectorAll('*')].map(item => {
+      const rect = item.getBoundingClientRect();
+      return { tag: item.tagName, className: String(item.className || ''), left: rect.left, right: rect.right, scrollWidth: item.scrollWidth, clientWidth: item.clientWidth };
+    }).filter(item => item.right > innerWidth + 1 || item.left < -1 || item.scrollWidth > item.clientWidth + 1));
+    expect(overflow, JSON.stringify(overflow)).toEqual([]);
+  }
   await page.screenshot({ path: `artifacts/forge-whatsapp-preapproval-015r-${testInfo.project.name}.png` });
   await layer.locator('[data-generate-draft]').click();
   await layer.locator('[data-approve-draft]').click();
