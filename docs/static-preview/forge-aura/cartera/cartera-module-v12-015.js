@@ -17,25 +17,24 @@ function installStyles(doc) {
   const style = doc.createElement('style');
   style.id = STYLE_ID;
   style.textContent = `
-    .cartera-dialog-layer{padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
-    .cartera-dialog{display:grid!important;grid-template-rows:auto minmax(0,1fr) auto!important;max-height:min(94dvh,980px)!important;overflow:hidden!important}
-    .cartera-dialog>header{position:sticky;top:0;z-index:5;background:inherit}
-    .cartera-dialog__body{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:max(18px,env(safe-area-inset-bottom))}
-    .cartera-dialog>footer{position:sticky;bottom:0;z-index:5;background:inherit}
-    .cartera-semantic-decisions{min-width:0}
-    .cartera-semantic-confirm{position:sticky!important;bottom:0!important;z-index:6!important;background:color-mix(in srgb,#fff 94%,transparent);backdrop-filter:blur(10px);border-top:1px solid #e1e4ea;margin-inline:calc(-1 * clamp(12px,2vw,24px));padding:12px clamp(12px,2vw,24px) max(12px,env(safe-area-inset-bottom))!important;box-shadow:0 -10px 28px rgba(26,34,51,.08)}
-    .cartera-semantic-confirm .cartera-primary{min-height:48px;white-space:normal}
-    .cartera-semantic-coverages{max-width:100%;min-width:0}
-    .cartera-semantic-coverage{min-width:0;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(90px,.7fr))!important}
+    .cartera-dialog-layer{position:fixed!important;inset:0!important;z-index:10020!important;display:grid!important;place-items:center;overflow:hidden!important;box-sizing:border-box!important;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+    .cartera-dialog{display:grid!important;grid-template-rows:auto minmax(0,1fr) auto!important;width:min(1040px,100%)!important;max-width:100%!important;min-width:0!important;max-height:min(94dvh,980px)!important;overflow:hidden!important;box-sizing:border-box!important}
+    .cartera-dialog>header{position:sticky;top:0;z-index:5;background:inherit;min-width:0}
+    .cartera-dialog__body{min-height:0!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:max(18px,env(safe-area-inset-bottom))}
+    .cartera-dialog>footer{position:sticky;bottom:0;z-index:5;background:inherit;min-width:0}
+    .cartera-progress{min-width:0!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none;white-space:nowrap}
+    [data-semantic-review],[data-pdf-review],.cartera-semantic-section,.cartera-semantic-decisions,.cartera-semantic-coverages{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+    .cartera-semantic-confirm{position:sticky!important;bottom:0!important;z-index:6!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;background:color-mix(in srgb,#fff 94%,transparent);backdrop-filter:blur(10px);border-top:1px solid #e1e4ea;margin-inline:0!important;padding:12px clamp(12px,2vw,24px) max(12px,env(safe-area-inset-bottom))!important;box-shadow:0 -10px 28px rgba(26,34,51,.08)}
+    .cartera-semantic-confirm .cartera-primary{min-height:48px;max-width:100%;white-space:normal}
+    .cartera-semantic-coverage{min-width:0;max-width:100%;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(90px,.7fr))!important}
     .cartera-semantic-coverage>*{min-width:0;overflow-wrap:anywhere}
     [data-pdf-performance-015]{font-variant-numeric:tabular-nums}
     @media(max-width:760px){
-      .cartera-dialog-layer{padding:0;align-items:end}
-      .cartera-dialog{width:100%!important;max-width:none!important;max-height:96dvh!important;border-radius:24px 24px 0 0!important}
+      .cartera-dialog-layer{padding:0!important;place-items:end center!important}
+      .cartera-dialog{width:100%!important;max-width:100%!important;max-height:96dvh!important;border-radius:24px 24px 0 0!important}
       .cartera-dialog__body{padding-inline:14px!important}
       .cartera-semantic-coverage{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:8px!important}
-      .cartera-semantic-confirm{margin-inline:-14px!important;padding-inline:14px!important}
-      .cartera-progress{overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+      .cartera-semantic-confirm{margin-inline:0!important;padding-inline:14px!important}
     }
   `;
   doc.head.append(style);
