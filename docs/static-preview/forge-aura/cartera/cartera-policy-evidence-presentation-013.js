@@ -6,7 +6,7 @@ function makeSummary(doc, state, title, detail) {
   section.dataset.policyEvidenceTruthState = state;
   section.dataset.presentationContract = CONTRACT_ID;
   const heading = doc.createElement('h2');
-  heading.textContent = 'Qué está confirmado y qué viene del documento';
+  heading.textContent = 'Coberturas de esta póliza';
   const box = doc.createElement('div');
   box.className = state === 'DOCUMENT_EVIDENCE_ONLY' ? 'cartera-warning' : 'cartera-info';
   const strong = doc.createElement('strong');
@@ -16,6 +16,24 @@ function makeSummary(doc, state, title, detail) {
   box.append(strong, br, copy);
   section.append(heading, box);
   return section;
+}
+
+function coverageWord(count) {
+  return count === 1 ? 'cobertura' : 'coberturas';
+}
+
+function reconcileCanonicalSection(canonicalSection, canonicalCount, evidenceCount) {
+  const warning = canonicalSection.querySelector('.cartera-warning');
+  const action = canonicalSection.querySelector('[data-add-coverage]');
+  if (canonicalCount === 0 && evidenceCount > 0) {
+    if (warning) {
+      warning.textContent = `Encontramos ${evidenceCount} ${coverageWord(evidenceCount)} en el documento. Revísalas antes de confirmarlas.`;
+    }
+    if (action) {
+      action.textContent = 'Revisar coberturas';
+      action.dataset.policyEvidenceReviewAction = 'DOCUMENT_FOUND';
+    }
+  }
 }
 
 export function reconcilePolicyEvidencePresentation(root) {
@@ -29,28 +47,36 @@ export function reconcilePolicyEvidencePresentation(root) {
   const evidenceCount = evidenceSection.querySelectorAll('[data-evidence-coverages] .coverage-row').length;
   const existing = workspace.querySelector('[data-policy-evidence-truth-state]');
 
+  reconcileCanonicalSection(canonicalSection, canonicalCount, evidenceCount);
+
   let state;
   let title;
   let detail;
   if (canonicalCount > 0 && evidenceCount > 0) {
     state = 'CANONICAL_AND_DOCUMENT_EVIDENCE';
-    title = 'La póliza tiene coberturas confirmadas y también existe evidencia documental.';
-    detail = 'Las coberturas confirmadas son la referencia de Policy Truth. Las filas del documento explican de dónde vino parte de la evidencia, pero no crean ni reemplazan coberturas por sí solas.';
+    title = `Hay ${canonicalCount} ${coverageWord(canonicalCount)} confirmadas y ${evidenceCount} encontradas en el documento.`;
+    detail = 'Las confirmadas forman parte de la póliza. Las encontradas en el documento se muestran por separado para que puedas revisarlas sin confundirlas con información ya confirmada.';
   } else if (canonicalCount === 0 && evidenceCount > 0) {
     state = 'DOCUMENT_EVIDENCE_ONLY';
-    title = 'El documento sí contiene coberturas, pero todavía no hay detalle de coberturas confirmado en la póliza.';
-    detail = 'Puedes revisar la evidencia recuperada del PDF. Hasta que exista confirmación canónica, esas filas siguen siendo evidencia documental y no deben leerse como coberturas contratadas confirmadas.';
+    title = `Encontramos ${evidenceCount} ${coverageWord(evidenceCount)} en tu póliza.`;
+    detail = 'Revísalas para confirmar que estén correctas. Hasta entonces se muestran como información encontrada en el documento, no como coberturas confirmadas.';
   } else if (canonicalCount > 0) {
     state = 'CANONICAL_ONLY';
-    title = 'La póliza sí tiene detalle de coberturas confirmado.';
-    detail = 'No hay filas de cobertura recuperadas en la Evidence Version visible. La ausencia de esa evidencia en esta vista no invalida las coberturas canónicas.';
+    title = `Hay ${canonicalCount} ${coverageWord(canonicalCount)} confirmadas en la póliza.`;
+    detail = 'No encontramos filas adicionales de coberturas en el documento disponible para esta vista.';
   } else {
     state = 'NO_CONFIRMED_DETAIL_OR_DOCUMENT_ROWS';
-    title = 'No hay detalle de coberturas confirmado ni filas documentales recuperadas para esta vista.';
-    detail = 'Esto no significa que la póliza no tenga coberturas. Significa únicamente que Forge no tiene detalle suficiente para afirmarlas aquí.';
+    title = 'Todavía no tenemos detalle de coberturas para mostrar.';
+    detail = 'Esto no significa que la póliza no tenga coberturas. Revisa el documento para completar la información cuando esté disponible.';
   }
 
-  if (existing?.dataset.policyEvidenceTruthState === state) return existing;
+  if (existing?.dataset.policyEvidenceTruthState === state) {
+    const strong = existing.querySelector('strong');
+    const textNode = strong?.nextSibling?.nextSibling;
+    if (strong) strong.textContent = title;
+    if (textNode?.nodeType === 3) textNode.textContent = detail;
+    return existing;
+  }
   existing?.remove();
   const section = makeSummary(workspace.ownerDocument, state, title, detail);
   canonicalSection.before(section);
