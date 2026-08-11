@@ -64,13 +64,25 @@ test("Pages publishes the governed Cartera command validator", async () => {
   assert.match(publisher, /CARTERA_POLICY_ENTRY_VALIDATOR_PAGES_RUNTIME=READY/);
 });
 
-test("WhatsApp composer calls authenticated backend and remains human-controlled", async () => {
-  const source = await read("docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js");
-  assert.match(source, /whatsapp-draft/);
-  assert.match(source, /Authorization: `Bearer/);
-  assert.match(source, /Borrador editable/);
-  assert.match(source, /sent: false/);
-  assert.match(source, /También puedes escribirlo manualmente/);
+test("Legacy WhatsApp composer cannot bypass the governed Pipeline conversation authority", async () => {
+  const [legacy, pipeline, adapter] = await Promise.all([
+    read("docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js"),
+    read("docs/static-preview/forge-alive-material3/pipeline-module.js"),
+    read("docs/static-preview/forge-alive-material3/pipeline-productive-intelligence-adapter.js"),
+  ]);
+  assert.match(legacy, /retired:\s*true/);
+  assert.match(legacy, /installsClickInterceptor:\s*false/);
+  assert.match(legacy, /rawPipelineForwardedToProvider:\s*false/);
+  assert.match(legacy, /PRODUCTIVE_AUTHORITY = "MATERIAL3_PIPELINE_GOVERNED_NASH_WORKSPACE"/);
+  assert.doesNotMatch(legacy, /whatsapp-draft|FUNCTION_URL|fetch\s*\(|stopImmediatePropagation\s*\(/);
+  assert.match(pipeline, /openNashWorkspace/);
+  assert.match(pipeline, /ForgeDraftSafetyBoundaryNFAST06/);
+  assert.match(pipeline, /exactDraftHumanApprovalGate/);
+  assert.match(pipeline, /Continuar manualmente a WhatsApp/);
+  assert.match(adapter, /ForgePipelineNashDraftOrchestrator/);
+  assert.match(adapter, /conversationBriefProduced/);
+  assert.match(adapter, /humanApprovalRequired:\s*true/);
+  assert.match(adapter, /automaticSendPerformed:\s*false/);
 });
 
 test("Edge functions require authentication and keep secrets server-side", async () => {
@@ -86,8 +98,12 @@ test("Edge functions require authentication and keep secrets server-side", async
   assert.match(intake, /automaticPolicyCreation: false/);
 });
 
-test("canonical runtime mounts Pipeline repairs", async () => {
-  const source = await read("docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js");
+test("canonical runtime mounts Pipeline repairs while legacy composer remains compatibility-only", async () => {
+  const [source, legacy] = await Promise.all([
+    read("docs/static-preview/forge-alive-material3/pipeline-stage-filter-authority.js"),
+    read("docs/static-preview/forge-alive-material3/whatsapp-ai-composer.js"),
+  ]);
   assert.match(source, /pipeline-bulk-import-mount\.js/);
   assert.match(source, /whatsapp-ai-composer\.js/);
+  assert.match(legacy, /installsClickInterceptor:\s*false/);
 });
