@@ -62,6 +62,21 @@
     return { content, captureMethod };
   }
 
+  function assertWriteReceipt({ created, expected, prospectId, advisorId }) {
+    const valid = created?.id
+      && created.prospectId === prospectId
+      && created.advisorId === advisorId
+      && created.content === expected.content
+      && created.captureMethod === expected.captureMethod
+      && created.source === 'PIPELINE_CONTEXT';
+    if (valid) return created;
+    throw new ProspectJournalError(
+      'PROSPECT_JOURNAL_WRITE_RECEIPT_MISMATCH',
+      'La fuente no devolvió una confirmación válida de la nota escrita.',
+      { createdId: created?.id || null, prospectId: created?.prospectId || null },
+    );
+  }
+
   function assertConfirmedEntry({ created, confirmed, expected }) {
     const valid = created?.id
       && confirmed?.id === created.id
@@ -120,13 +135,28 @@
         .select('*')
         .single();
       if (error) mapError(error);
+
+      // The INSERT ... RETURNING response is the write receipt. Do not make a
+      // second read part of the write promise: a temporary read outage must not
+      // relabel a committed write as a failed write. Callers that need stronger
+      // read-after-write verification can use getEntry/listEntries separately.
       const created = rowToEntry(data);
-      const confirmed = await getEntry(created.id);
-      return assertConfirmedEntry({ created, confirmed, expected: normalized });
+      return assertWriteReceipt({
+        created,
+        expected: normalized,
+        prospectId,
+        advisorId: user.id,
+      });
     }
 
     return Object.freeze({ listEntries, getEntry, appendEntry });
   }
 
-  return Object.freeze({ create, validateEntry, assertConfirmedEntry, ProspectJournalError });
+  return Object.freeze({
+    create,
+    validateEntry,
+    assertWriteReceipt,
+    assertConfirmedEntry,
+    ProspectJournalError,
+  });
 });
