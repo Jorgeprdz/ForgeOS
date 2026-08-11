@@ -121,9 +121,11 @@ includes(files.pipeline, '<strong>Siguiente movimiento</strong>');
 includes(files.pipeline, 'Preparar mensaje');
 
 // Exact human approval remains owned by the existing workspace.
-includes(files.workspace, "draft.addEventListener('input'", 'Draft editing must have an explicit input handler');
-includes(files.workspace, 'approvedText = null', 'Editing or regenerating must invalidate approval state');
-includes(files.workspace, 'openWhatsapp.disabled = true', 'WhatsApp must be disabled before exact approval');
+includes(files.workspace, 'function invalidateApproval', 'Workspace must centralize approval invalidation');
+includes(files.workspace, 'state.approval = null', 'Editing or regenerating must clear exact approval');
+includes(files.workspace, 'openButton.disabled = true', 'Approval invalidation must disable WhatsApp');
+includes(files.workspace, "addEventListener('input'", 'Draft editing must have an explicit input handler');
+includes(files.workspace, "invalidateApproval(state, 'El texto cambió. Requiere una nueva aprobación exacta.')", 'Draft editing must invalidate exact approval');
 includes(files.workspace, 'windowRef.open', 'WhatsApp opening remains an explicit browser action');
 
 // PDF mobile reachability + wording + instrumentation.
@@ -150,7 +152,6 @@ const forbiddenVisiblePhrases = [
   'Generado por IA',
 ];
 for (const phrase of forbiddenVisiblePhrases) {
-  // Sanitizer regexes may contain the old phrase; quoted/template human copy may not.
   const quoted = new RegExp(`(['\"\x60])[^\\n]{0,180}${phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^\\n]{0,180}\\1`, 'i');
   ok(!quoted.test(files.home), `Home 015 visibly leaks banned phrase: ${phrase}`);
 }
