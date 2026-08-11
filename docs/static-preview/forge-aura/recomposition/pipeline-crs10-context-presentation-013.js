@@ -1,3 +1,10 @@
+import {
+  humanContextCopy,
+  humanEvidenceLabel,
+  humanStateLabel,
+  presentationDiagnostics,
+} from './human-context-presentation-013.js?v=forge-beta2-013-human-context';
+
 const DOMAIN_LABELS = Object.freeze({
   FUTURE_RADAR: 'Lo que viene',
   RELATIONSHIP_GROWTH: 'Cómo va la relación',
@@ -5,15 +12,6 @@ const DOMAIN_LABELS = Object.freeze({
   ECONOMIC_CONNECTION: 'Conexiones económicas',
   RELATIONSHIP_CAPITAL: 'Red y relación',
   PRODUCTIVITY_PROOF: 'Contexto de tu actividad',
-});
-
-const STATE_LABELS = Object.freeze({
-  CONFIRMED: 'Confirmado',
-  REVIEW_REQUIRED: 'Por revisar',
-  INFORMATION_REQUIRED: 'Falta información',
-  OBSERVED: 'Observado',
-  UNKNOWN: 'Aún no sabemos',
-  INSUFFICIENT_EVIDENCE: 'Evidencia insuficiente',
 });
 
 const esc = value => String(value ?? '')
@@ -39,15 +37,16 @@ export function hasUsableRelationshipContext(composition) {
 
 function itemHtml(domain, item) {
   const advisorScope = item.scope === 'ADVISOR';
+  const copy = humanContextCopy(item);
   return `
     <article class="aura-governed-projection" data-pipeline-crs10-item="${esc(item.reference)}" data-context-scope="${esc(item.scope || domain.scope || 'PERSON')}">
       <p class="aura-eyebrow">${esc(DOMAIN_LABELS[domain.id] || domain.label || 'Contexto')}</p>
       <h4>${esc(item.label || 'Información para revisar')}</h4>
       ${advisorScope ? '<p><strong>Contexto del asesor:</strong> esto habla de tu actividad y no se atribuye al prospecto.</p>' : ''}
-      ${item.summary ? `<p>${esc(item.summary)}</p>` : ''}
-      ${item.uncertainty ? `<p><strong>Lo que falta por confirmar:</strong> ${esc(item.uncertainty)}</p>` : ''}
-      ${item.smallestUsefulAction ? `<p><strong>Qué podrías revisar:</strong> ${esc(item.smallestUsefulAction)}. Tú decides si hacerlo.</p>` : ''}
-      <p><small>${esc(STATE_LABELS[item.state] || 'Contexto disponible')} · ${esc(item.evidenceCount || 0)} evidencia(s)</small></p>
+      ${copy.summary ? `<p>${esc(copy.summary)}</p>` : ''}
+      ${copy.uncertainty ? `<p><strong>Lo que falta por confirmar:</strong> ${esc(copy.uncertainty)}</p>` : ''}
+      ${copy.smallestUsefulAction ? `<p><strong>Qué podrías revisar:</strong> ${esc(copy.smallestUsefulAction)}. Tú decides si hacerlo.</p>` : ''}
+      <p><small>${esc(humanStateLabel(item.state, 'Contexto disponible'))} · ${esc(humanEvidenceLabel(item.evidenceCount))}</small></p>
       ${item.deepLink ? `<p><a href="${esc(item.deepLink)}" data-pipeline-crs10-deep-link>Abrir en Cartera</a></p>` : ''}
     </article>
   `;
@@ -97,4 +96,12 @@ export function relationshipContextHtml(composition) {
   `;
 }
 
-export { DOMAIN_LABELS, STATE_LABELS };
+export function pipelinePresentationDiagnostics() {
+  return Object.freeze({
+    presentation: presentationDiagnostics(),
+    relationshipPresentation: 'CRS10_PASSTHROUGH_ONLY',
+    createsRelationshipMeaning: false,
+  });
+}
+
+export { DOMAIN_LABELS };
