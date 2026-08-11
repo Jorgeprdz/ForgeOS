@@ -40,7 +40,7 @@ function installStyles(doc) {
   style.id = STYLE_ID;
   style.textContent = `
     .aura-conversation-layer{padding:clamp(12px,2.2vw,28px)}
-    .aura-conversation-layer .aura-conversation{width:min(1040px,calc(100vw - clamp(24px,4.4vw,56px)));max-width:1040px;max-height:min(92dvh,960px);grid-template-rows:auto auto auto minmax(0,1fr) auto}
+    .aura-conversation-layer .aura-conversation{width:min(1040px,calc(100vw - clamp(24px,4.4vw,56px)));max-width:1040px;max-height:min(92dvh,960px);grid-template-rows:auto auto auto auto minmax(0,1fr) auto}
     .aura-conversation-layer .aura-conversation__body{overflow-x:hidden;overflow-y:auto;min-height:0}
     .aura-conversation-layer .aura-conversation__body>*{min-width:0;max-width:100%}
     .aura-conversation__intent-fieldset{border:0;padding:0;margin:0;min-width:0}
@@ -65,6 +65,7 @@ function installStyles(doc) {
       .aura-conversation-layer{padding:0;place-items:end center}
       .aura-conversation-layer .aura-conversation{width:100%;max-width:none;max-height:94dvh;border-radius:24px 24px 0 0}
       .aura-conversation__flow{grid-template-columns:repeat(5,minmax(56px,1fr));overflow-x:auto;padding-inline:14px}
+      .aura-conversation__tabs button{flex:1 1 0;min-width:0;min-height:52px;height:auto;padding:8px;white-space:normal;line-height:1.2}
     }
   `;
   doc.head.append(style);
@@ -116,12 +117,14 @@ function ensureGoals(layer, adapter) {
 }
 
 function ensureFlow(layer) {
-  if (layer.querySelector('[data-conversation-flow-015]')) return;
+  const existing = [...layer.querySelectorAll('[data-conversation-flow-015]')];
+  existing.slice(1).forEach(node => node.remove());
+  if (existing[0]) return;
   const header = layer.querySelector('.aura-conversation__header');
   if (!header) return;
   const flow = layer.ownerDocument.createElement('ol');
   flow.className = 'aura-conversation__flow';
-  flow.dataset.conversationFlow015 = FLOW_ID;
+  flow.setAttribute('data-conversation-flow-015', FLOW_ID);
   flow.setAttribute('aria-label', 'Flujo para preparar el mensaje');
   for (const [step, label] of [
     ['context', 'Contexto Forge'],
@@ -139,16 +142,18 @@ function ensureFlow(layer) {
 }
 
 function ensureOptionalAdjustments(layer) {
-  let details = layer.querySelector('[data-message-adjustments-015]');
+  const existing = [...layer.querySelectorAll('[data-message-adjustments-015]')];
+  existing.slice(1).forEach(node => node.remove());
+  let details = existing[0] || null;
   if (!details) {
     details = layer.ownerDocument.createElement('details');
     details.className = 'aura-conversation__adjustments';
-    details.dataset.messageAdjustments015 = 'true';
+    details.setAttribute('data-message-adjustments-015', 'true');
     const summary = layer.ownerDocument.createElement('summary');
     summary.textContent = 'Ajustes opcionales';
     const body = layer.ownerDocument.createElement('div');
     body.className = 'aura-conversation__adjustments-body';
-    body.dataset.messageAdjustmentsBody015 = 'true';
+    body.setAttribute('data-message-adjustments-body-015', 'true');
     details.append(summary, body);
     const fieldset = layer.querySelector('.aura-conversation__intent-fieldset');
     fieldset?.insertAdjacentElement('afterend', details);
