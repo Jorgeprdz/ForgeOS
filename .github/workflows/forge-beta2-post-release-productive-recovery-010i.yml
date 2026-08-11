@@ -24,6 +24,7 @@ jobs:
           fetch-depth: 0
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - name: Enforce bounded 010I diff
+        if: github.event_name != 'pull_request' || github.head_ref == 'hotfix/forge-beta2-cartera-pipeline-productive-recovery-010i'
         shell: bash
         run: |
           set -euo pipefail
