@@ -200,7 +200,7 @@ export async function createPipelineAdapter(options = {}) {
 
       return freeze({
         ...prepared,
-        status: validation.decision === 'ALLOW_WHATSAPP' ? 'READY_FOR_HUMAN_REVIEW' : 'BLOCKED',
+        status: validation?.valid === false ? 'SAFETY_REVIEW_REQUIRED' : 'READY_FOR_HUMAN_REVIEW',
         candidate,
         validation,
         sourceMode: 'DETERMINISTIC_FALLBACK',

@@ -21,7 +21,10 @@ function installStyle() {
     [data-aura-governed-context-dialog="true"] .aura-governed-dialog{width:min(1080px,calc(100vw - clamp(24px,4.4vw,56px)));max-width:1080px;max-height:min(92dvh,960px);overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr)}
     [data-aura-governed-context-dialog="true"] .aura-dialog__body{min-width:0;max-width:100%;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding-inline:clamp(18px,2.4vw,32px)}
     [data-aura-governed-context-dialog="true"] .aura-dialog__body>*{min-width:0;max-width:100%}
-    [data-aura-governed-context-dialog="true"] .aura-technical-disclosure{display:none!important}
+    [data-aura-governed-context-dialog="true"] .aura-governed-primary-action{display:grid;gap:4px;margin:14px 0;padding:14px 16px;border-radius:16px;background:var(--aura-brand-soft);color:var(--aura-brand-hover)}
+    [data-aura-governed-context-dialog="true"] .aura-governed-primary-action span{font-size:.72rem;font-weight:850;letter-spacing:.08em}
+    [data-aura-governed-context-dialog="true"] .aura-governed-evidence>summary{min-height:44px;display:flex;align-items:center;color:var(--aura-brand-hover);font-weight:750;cursor:pointer}
+    [data-aura-governed-context-dialog="true"] .aura-governed-evidence .aura-technical-disclosure{margin-top:8px}
     @media(max-width:760px){
       [data-aura-governed-context-dialog="true"]{padding:0;place-items:end center}
       [data-aura-governed-context-dialog="true"] .aura-governed-dialog{width:100%;max-width:none;max-height:94dvh;border-radius:24px 24px 0 0}
@@ -95,7 +98,7 @@ function reconcileLayer(layer) {
     changed = true;
   }
 
-  layer.querySelectorAll('.aura-technical-disclosure,[data-pipeline-context-technical],[data-pipeline-projection-technical]').forEach(node => {
+  layer.querySelectorAll('[data-pipeline-context-technical]').forEach(node => {
     changed = hideTechnical(node) || changed;
   });
 

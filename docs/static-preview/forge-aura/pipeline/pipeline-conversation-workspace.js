@@ -168,16 +168,24 @@ export function createConversationWorkspaceController({
       const draft = state.layer.querySelector('[data-draft]');
       const block = state.layer.querySelector('[data-draft-block]');
       const source = state.layer.querySelector('[data-draft-source]');
+      const draftText = text(prepared?.candidate?.rawText || prepared?.candidate?.text);
       if (block) block.hidden = false;
-      if (draft) draft.value = text(prepared?.candidate?.rawText || prepared?.candidate?.text);
-      if (source) source.textContent = prepared.sourceMode === 'AI_RENDERED' ? 'Generado por IA' : 'Fallback seguro de Forge';
+      if (block) block.dataset.messageState = draftText
+        ? ['SAFETY_REVIEW_REQUIRED', 'BLOCKED'].includes(prepared.status) ? 'HUMAN_EDIT_REQUIRED' : 'MESSAGE_READY'
+        : 'CANNOT_GENERATE_RELIABLY';
+      if (draft) draft.value = draftText;
+      if (draft) draft.placeholder = draftText ? '' : 'Puedes escribir el mensaje manualmente.';
+      if (source) source.textContent = prepared.sourceMode === 'AI_RENDERED' ? 'Borrador preparado' : draftText ? 'Borrador de Forge' : 'No se pudo generar';
       const approve = state.layer.querySelector('[data-approve-draft]');
-      if (approve) approve.disabled = !draft?.value || prepared.status === 'BLOCKED';
+      if (approve) approve.disabled = !draftText;
+      if (approve) approve.textContent = ['SAFETY_REVIEW_REQUIRED', 'BLOCKED'].includes(prepared.status) ? 'Volver a validar' : 'Aprobar este texto';
       const combatNote = prepared.combatIncorporated ? ' La estrategia revisada de NASH Combat quedó incorporada al brief gobernado.' : '';
-      announce(state, prepared.status === 'BLOCKED'
-        ? 'La sugerencia no pasó el boundary de seguridad y no puede aprobarse.'
-        : `Sugerencia lista para revisión humana.${combatNote}`,
-      prepared.status === 'BLOCKED' ? 'error' : 'success');
+      announce(state, !draftText
+        ? text(prepared?.diagnostics?.userExplanation) || 'No se pudo preparar un mensaje utilizable. Completa la información o escribe el mensaje manualmente.'
+        : ['SAFETY_REVIEW_REQUIRED', 'BLOCKED'].includes(prepared.status)
+          ? 'Este borrador necesita cambios antes de aprobarse.'
+          : `Mensaje listo para aprobar.${combatNote}`,
+      !draftText ? 'error' : ['SAFETY_REVIEW_REQUIRED', 'BLOCKED'].includes(prepared.status) ? 'warning' : 'success');
     } catch (error) {
       state.prepared = null;
       const code = text(error?.code || error?.message || 'UNKNOWN');
@@ -285,7 +293,12 @@ export function createConversationWorkspaceController({
     state.layer.querySelector('[data-review-combat]').addEventListener('click', () => reviewCombat(state));
     state.layer.querySelector('[data-register-combat]').addEventListener('click', () => void registerCombat(state));
     state.layer.querySelector('[data-draft]').addEventListener('input', () => {
-      if (!state.prepared) return;
+      const value = text(state.layer.querySelector('[data-draft]')?.value);
+      if (!state.prepared && value) state.prepared = { candidate: { rawText: value, text: value, sendsMessage: false }, status: 'HUMAN_EDIT_REQUIRED', sourceMode: 'MANUAL' };
+      const approve = state.layer.querySelector('[data-approve-draft]');
+      if (approve) approve.disabled = !value;
+      const block = state.layer.querySelector('[data-draft-block]');
+      if (block) block.dataset.messageState = value ? 'HUMAN_EDIT_REQUIRED' : 'CANNOT_GENERATE_RELIABLY';
       invalidateApproval(state, 'El texto cambió. Requiere una nueva aprobación exacta.');
     });
     ['[data-message-goal]', '[data-message-style]', '[data-message-components]'].forEach(selector => {
@@ -340,7 +353,7 @@ export function createConversationWorkspaceController({
       <button class="aura-conversation-scrim" type="button" data-close-conversation aria-label="Cerrar preparación de mensaje"></button>
       <section class="aura-conversation" role="dialog" aria-modal="true" aria-labelledby="aura-conversation-title">
         <header class="aura-conversation__header">
-          <div><p>FORGE CONVERSATION WORKSPACE</p><h2 id="aura-conversation-title">Preparar mensaje</h2><small>${e(card.fullName || 'Prospecto')}</small></div>
+          <div><p>CONVERSACIÓN</p><h2 id="aura-conversation-title">Preparar mensaje para ${e(card.fullName || 'Prospecto')}</h2></div>
           <button class="aura-conversation__close" type="button" data-close-conversation aria-label="Cerrar">×</button>
         </header>
         <div class="aura-conversation__context" aria-label="Contexto gobernado del prospecto">
@@ -350,7 +363,7 @@ export function createConversationWorkspaceController({
         </div>
         <div class="aura-conversation__tabs" role="tablist" aria-label="Herramientas de conversación">
           <button type="button" role="tab" data-conversation-tab="message" aria-selected="true">Mensaje</button>
-          <button type="button" role="tab" data-conversation-tab="combat" aria-selected="false" tabindex="-1">NASH Combat</button>
+          <button type="button" role="tab" data-conversation-tab="combat" aria-selected="false" tabindex="-1">Ayuda con objeciones</button>
         </div>
         <div class="aura-conversation__body">
           <section class="aura-conversation__panel" data-conversation-panel="message" role="tabpanel">
@@ -360,11 +373,11 @@ export function createConversationWorkspaceController({
             </div>
             <label class="aura-conversation__components"><span data-message-components-label>Componentes adicionales (opcional)</span><textarea data-message-components rows="3" maxlength="900" placeholder="Ej. pedir comprobante de pago&#10;recordar fecha límite"></textarea></label>
             <div class="aura-conversation__action-row"><button class="aura-conversation__primary" type="button" data-generate-draft>Generar sugerencia</button></div>
-            <div class="aura-conversation__draft" data-draft-block hidden>
-              <div class="aura-conversation__draft-header"><strong>Sugerencia de Forge</strong><span class="aura-conversation__source" data-draft-source></span></div>
-              <label>Mensaje editable<textarea data-draft rows="6" aria-label="Borrador editable"></textarea></label>
+            <div class="aura-conversation__draft" data-draft-block data-message-state="CANNOT_GENERATE_RELIABLY">
+              <div class="aura-conversation__draft-header"><strong>Mensaje</strong><span class="aura-conversation__source" data-draft-source></span></div>
+              <label>Mensaje editable<textarea data-draft rows="6" aria-label="Borrador editable" placeholder="Prepara un borrador con Forge o escribe el mensaje manualmente."></textarea></label>
               <div class="aura-conversation__action-row"><button class="aura-conversation__secondary" type="button" data-approve-draft disabled>Revisar y aprobar texto exacto</button></div>
-              <p class="aura-conversation__notice" data-approval-state>Revisión y aprobación humana requeridas.</p>
+              <p class="aura-conversation__notice" data-approval-state>Prepara un borrador o escribe el mensaje. WhatsApp seguirá bloqueado hasta que apruebes el texto exacto.</p>
             </div>
           </section>
           <section class="aura-conversation__panel aura-combat" data-conversation-panel="combat" role="tabpanel" hidden>

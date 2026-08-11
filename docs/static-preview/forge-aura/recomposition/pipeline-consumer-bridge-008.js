@@ -64,15 +64,27 @@ function projectionsHtml(projections = [], { relationshipAvailable = false } = {
     `;
   }
 
-  return `<div class="aura-governed-projection-list">${projections.map(item => `
+  const primary = projections.find(item => item?.recommendedAction?.label) || projections[0];
+  return `<div class="aura-governed-projection-list">${[primary].map(item => `
     <article class="aura-governed-projection" data-decision-reference="${esc(item.decisionReference)}">
-      <p class="aura-eyebrow">${esc(item.domain || item.family || "CONTEXTO")}</p>
+      <p class="aura-eyebrow">QUÉ PASA</p>
       <h3>${esc(item.title || "Información para revisar")}</h3>
-      <p>${esc(item.whyNow || item.reason || "Forge no tiene una explicación adicional para esta señal.")}</p>
-      ${item.recommendedAction?.label ? `<p><strong>Posible siguiente paso:</strong> ${esc(item.recommendedAction.label)}. Tú decides si hacerlo.</p>` : ""}
-      ${projectionTechnicalHtml(item)}
+      ${item.recommendedAction?.label ? `<div class="aura-governed-primary-action"><span>QUÉ HACER AHORA</span><strong>${esc(item.recommendedAction.label)}</strong></div>` : ""}
+      <p><strong>Por qué:</strong> ${esc(item.whyNow || item.reason || "Forge todavía no puede confirmar el siguiente paso.")}</p>
+      <details class="aura-governed-evidence"><summary>¿Por qué Forge recomienda esto?</summary>${projectionTechnicalHtml(item)}</details>
     </article>
   `).join("")}</div>`;
+}
+
+function firstRelationshipAction(composition) {
+  const domains = Object.values(composition?.domains || {});
+  const item = domains.flatMap(domain => Array.isArray(domain?.items) ? domain.items : [])
+    .find(candidate => candidate?.smallestUsefulAction);
+  return item ? {
+    label: item.smallestUsefulAction,
+    reason: item.uncertainty || item.summary || 'Falta revisar información vinculada con esta persona.',
+    href: item.deepLink || '',
+  } : null;
 }
 
 export function createPipelineModule(options = {}) {
@@ -145,16 +157,19 @@ export function createPipelineModule(options = {}) {
         const relationshipComposition = context?.relationshipIntelligence || null;
         const relationshipAvailable = Boolean(relationshipComposition);
         const projectionAvailable = Array.isArray(context?.projections) && context.projections.length > 0;
+        const actionable = Boolean(context?.projections?.some(item => item?.recommendedAction?.label));
         const available = relationshipAvailable || projectionAvailable;
-        const actionable = projectionAvailable;
+        const relationshipAction = firstRelationshipAction(relationshipComposition);
         const decisionState = actionable ? 'CONTEXT_SUFFICIENT' : available ? 'CONTEXT_INCOMPLETE_BUT_ACTIONABLE' : 'CONTEXT_INSUFFICIENT';
         body.innerHTML = `
           <section class="aura-governed-context-summary" data-consumer-state="${esc(decisionState)}">
-            <h3>${actionable ? "Siguiente paso sugerido" : available ? "Falta completar una parte del contexto" : "No tengo suficiente información para recomendar el siguiente paso todavía."}</h3>
+            <h3>${actionable ? "Hay un siguiente paso respaldado por la información disponible" : available ? "Falta completar una parte del contexto" : "Todavía no puedo recomendar un siguiente paso."}</h3>
+            ${!actionable && relationshipAction
+              ? `<a class="aura-primary" href="${esc(relationshipAction.href || '#')}" data-pipeline-context-primary-action>${esc(relationshipAction.label)}</a>`
+              : !actionable ? '<button class="aura-primary" type="button" data-close-governed-context>Completar información</button>' : ''}
             <p>${actionable
-              ? "La recomendación se apoya en la información confirmada que aparece abajo."
-              : available ? "Revisa la información disponible y completa lo que falta antes de elegir una acción." : "Completa la información del prospecto para que Forge pueda ayudarte."}</p>
-            ${!actionable ? '<button class="aura-primary" type="button" data-close-governed-context>Completar información</button>' : ''}
+              ? "Revisa la acción principal y abre la evidencia sólo si la necesitas."
+              : available ? esc(relationshipAction?.reason || "Falta revisar información vinculada con esta persona.") : "Falta completar información del prospecto."}</p>
             ${technicalContextHtml(context)}
           </section>
           ${relationshipContextHtml(relationshipComposition)}
