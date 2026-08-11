@@ -72,7 +72,7 @@ test('RU04 source-owner: LINKED CRS03 personReference is the only identity passe
   assert.deepEqual(calls.decision[0].options.projections, []);
   assert.deepEqual(calls.relationship, [{ personReference: 'PERSON:013' }]);
   assert.equal(result.relationshipIntelligenceState, 'AVAILABLE');
-  assert.equal(result.relationshipIntelligence, composition());
+  assert.deepEqual(result.relationshipIntelligence, composition());
   assert.ok(result.degradedReasons.includes('NO_AUTHORIZED_PROJECTIONS'));
   assert.equal(result.boundaries.existingCarteraIntelligenceReused, true);
   assert.equal(result.boundaries.secondRelationshipEngine, false);
