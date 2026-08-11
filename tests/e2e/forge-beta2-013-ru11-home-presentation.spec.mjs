@@ -70,5 +70,9 @@ test('RU11 preserves uncertainty and does not turn presentation into an action o
   await details.locator('summary').first().click();
   await expect(details).toContainText('Lo que falta por confirmar: Falta confirmar si la fecha sigue vigente.');
   await expect(page.locator('.home-aura')).toHaveAttribute('data-human-presentation-contract', 'FORGE_HOME_HUMAN_INTERPRETATION_013');
-  await expect(page.locator('[data-home-technical-disclosure]')).not.toHaveAttribute('open', '');
+  const disclosures = page.locator('[data-home-technical-disclosure]');
+  await expect(disclosures).toHaveCount(2);
+  for (let index = 0; index < 2; index += 1) {
+    await expect(disclosures.nth(index)).not.toHaveAttribute('open', '');
+  }
 });
