@@ -4,6 +4,14 @@ function text(value) {
   return String(value ?? '').trim();
 }
 
+function setText(node, value) {
+  if (!node) return false;
+  const next = String(value ?? '');
+  if (node.textContent === next) return false;
+  node.textContent = next;
+  return true;
+}
+
 function installStyle() {
   if (document.getElementById(STYLE_ID)) return;
   const style = document.createElement('style');
@@ -24,62 +32,108 @@ function installStyle() {
 
 function collapseRepeatedSummary(layer) {
   const body = layer.querySelector('[data-governed-context-body]');
-  if (!body) return;
+  if (!body) return false;
   const relationship = body.querySelector('[data-pipeline-relationship-context="AVAILABLE"]');
   const projections = body.querySelector('.aura-governed-projection-list');
   const outer = body.querySelector('.aura-governed-context-summary[data-consumer-state]');
-  if (outer && (relationship || projections)) {
+  if (!outer || (!relationship && !projections)) return false;
+
+  let changed = false;
+  if (!outer.hidden) {
     outer.hidden = true;
-    outer.dataset.redundantSummary014 = 'true';
+    changed = true;
   }
+  if (outer.dataset.redundantSummary014 !== 'true') {
+    outer.dataset.redundantSummary014 = 'true';
+    changed = true;
+  }
+  return changed;
+}
+
+function hideTechnical(node) {
+  let changed = false;
+  if (!node.hidden) {
+    node.hidden = true;
+    changed = true;
+  }
+  if (node.dataset.internalOnly014 !== 'true') {
+    node.dataset.internalOnly014 = 'true';
+    changed = true;
+  }
+  return changed;
+}
+
+function humanizeLeaf(node) {
+  const current = text(node.textContent);
+  if (!current || node.children.length) return false;
+
+  let next = current;
+  next = next
+    .replace(/fuentes disponibles/gi, 'información disponible')
+    .replace(/fuentes de Cartera/gi, 'información de Cartera')
+    .replace(/fuente conectada/gi, 'información disponible')
+    .replace(/memoria relacional/gi, 'historial de seguimiento')
+    .replace(/brief relacional/gi, 'resumen de la relación');
+
+  if (/CommercialPerson|CRS-10|Relationship Intelligence|Consumer|Opportunity authority|source-owner/i.test(next)) {
+    next = 'Información vinculada con esta persona.';
+  }
+
+  if (/Forge no ejecutará ninguna acción por ti/i.test(next)) {
+    next = next.replace(/;?\s*Forge no ejecutará ninguna acción por ti\.?/i, '.');
+  }
+
+  return next !== current ? setText(node, next) : false;
 }
 
 function reconcileLayer(layer) {
-  if (!layer) return;
-  layer.dataset.realUserPresentation014 = 'true';
+  if (!layer) return false;
+  let changed = false;
+
+  if (layer.dataset.realUserPresentation014 !== 'true') {
+    layer.dataset.realUserPresentation014 = 'true';
+    changed = true;
+  }
 
   layer.querySelectorAll('.aura-technical-disclosure,[data-pipeline-context-technical],[data-pipeline-projection-technical]').forEach(node => {
-    node.hidden = true;
-    node.dataset.internalOnly014 = 'true';
+    changed = hideTechnical(node) || changed;
   });
 
-  const title = layer.querySelector('#aura-governed-context-title');
-  if (title) title.textContent = 'Información útil para decidir el siguiente paso';
+  changed = setText(
+    layer.querySelector('#aura-governed-context-title'),
+    'Información útil para decidir el siguiente paso',
+  ) || changed;
 
   layer.querySelectorAll('p,small,strong,h3,h4,dt,dd,li').forEach(node => {
-    const current = text(node.textContent);
-    if (!current || node.children.length) return;
-    if (/fuentes disponibles|fuentes de Cartera|fuente conectada/i.test(current)) {
-      node.textContent = current
-        .replace(/fuentes disponibles/gi, 'información disponible')
-        .replace(/fuentes de Cartera/gi, 'información de Cartera')
-        .replace(/fuente conectada/gi, 'información disponible');
-    }
-    if (/memoria relacional/i.test(text(node.textContent))) {
-      node.textContent = text(node.textContent).replace(/memoria relacional/gi, 'historial de seguimiento');
-    }
-    if (/brief relacional/i.test(text(node.textContent))) {
-      node.textContent = text(node.textContent).replace(/brief relacional/gi, 'resumen de la relación');
-    }
-    if (/CommercialPerson|CRS-10|Relationship Intelligence|Consumer|Opportunity authority|source-owner/i.test(text(node.textContent))) {
-      node.textContent = 'Información vinculada con esta persona.';
-    }
-    if (/Forge no ejecutará ninguna acción por ti/i.test(text(node.textContent))) {
-      node.textContent = text(node.textContent).replace(/;?\s*Forge no ejecutará ninguna acción por ti\.?/i, '.');
-    }
+    changed = humanizeLeaf(node) || changed;
   });
 
-  collapseRepeatedSummary(layer);
+  changed = collapseRepeatedSummary(layer) || changed;
+  return changed;
 }
 
 function reconcile() {
-  document.querySelectorAll('[data-aura-governed-context-dialog="true"]').forEach(reconcileLayer);
+  let changed = false;
+  document.querySelectorAll('[data-aura-governed-context-dialog="true"]').forEach(layer => {
+    changed = reconcileLayer(layer) || changed;
+  });
+  return changed;
 }
 
 installStyle();
 const Observer = globalThis.MutationObserver;
+let scheduled = false;
+function scheduleReconcile() {
+  if (scheduled) return;
+  scheduled = true;
+  queueMicrotask(() => {
+    scheduled = false;
+    reconcile();
+  });
+}
+
 if (Observer) {
-  const observer = new Observer(reconcile);
+  const observer = new Observer(scheduleReconcile);
   observer.observe(document.body, { childList: true, subtree: true, characterData: true });
 }
 reconcile();
