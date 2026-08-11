@@ -127,7 +127,7 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
     recognition = null;
     activeLayer?.remove();
     activeLayer = null;
-    delete documentRef.documentElement.dataset.auraJournalOpen;
+    delete documentRef.documentElement.dataset.auraJournalDialogOpen;
     if (restore) trigger?.focus?.({ preventScroll: true });
   }
 
@@ -164,7 +164,7 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
       </section>`;
     documentRef.body.append(layer);
     activeLayer = layer;
-    documentRef.documentElement.dataset.auraJournalOpen = 'true';
+    documentRef.documentElement.dataset.auraJournalDialogOpen = 'true';
     layer.querySelector('.aura-dialog')?.focus();
 
     const body = layer.querySelector('[data-aura-journal-body]');
