@@ -154,10 +154,15 @@ test('CC-11 browser: activity guidance consumes Advisor Forecast and degrades wi
   const guidance = page.locator('[data-commercial-activity-guidance-015]');
   await expect(guidance).toBeVisible();
   await expect(guidance).toHaveAttribute('data-activity-state', 'READY');
+  await expect(guidance).toContainText('Forge estimó mínimos sugeridos de actividad usando tu avance y el historial disponible.');
   await expect(guidance).toContainText('Contactos: 25');
   await expect(guidance).toContainText('Citas: 6');
   await expect(guidance).toContainText('Presentaciones: 3');
+  await expect(guidance).toContainText('Basado en tu avance e historial disponible.');
   await expect(guidance).toContainText('no crea tareas ni acciones automáticamente');
+  await expect(guidance).not.toContainText('ADVISOR_FORECAST_ACTIVITY_REQUIREMENT');
+  await expect(guidance).not.toContainText('Advisor Forecast');
+  await expect(guidance).not.toContainText('Fuente:');
 
   await page.evaluate(() => {
     window.ForgeAdvisorForecastRuntimeAcceptance = Object.freeze({ getReadModel: () => ({ activityRequirement: { status: 'INSUFFICIENT_DATA', recommendedActions: [] } }) });
@@ -176,9 +181,14 @@ test('CC-13 browser: Alfred answers commercial progress from Compass without ste
 
   await input.fill('¿Cómo voy?');
   await send.click();
+  await expect(response).toContainText('ALFRED · TU AVANCE');
   await expect(response).toContainText('Cómo vas este mes');
   await expect(response).toContainText('4 de 10 pólizas');
   await expect(response).toContainText('$42,000');
+  await expect(response).toContainText('Lectura basada en tus metas, pólizas confirmadas, ingreso disponible y escenario comercial.');
+  await expect(response).not.toContainText('COMMERCIAL COMPASS');
+  await expect(response).not.toContainText('Compensation Intelligence');
+  await expect(response).not.toContainText('Advisor Forecast');
 
   await input.fill('¿Qué me falta?');
   await send.click();
