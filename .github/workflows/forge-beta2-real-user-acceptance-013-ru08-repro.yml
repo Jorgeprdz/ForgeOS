@@ -5,7 +5,11 @@ on:
     branches:
       - fix/forge-beta2-real-user-acceptance-interpretation-recovery-013
     paths:
-      - 'docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.js'
+      - 'docs/static-preview/forge-aura/aura-auth-v4.js'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
+      - 'docs/static-preview/forge-aura/aura-router-v4.js'
+      - 'docs/static-preview/forge-aura/pipeline/**'
+      - 'docs/static-preview/forge-aura/recomposition/**'
       - 'tests/e2e/forge-beta2-013-ru08-reproduction.spec.mjs'
       - 'playwright.013.config.mjs'
       - '.github/workflows/forge-beta2-real-user-acceptance-013-ru08-repro.yml'
