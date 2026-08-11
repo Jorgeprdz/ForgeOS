@@ -283,8 +283,8 @@ export function renderAuraLogin({ root, auth, onAuthenticated } = {}) {
   form.addEventListener("submit", async event => {
     event.preventDefault();
     setError("");
-    setBusy("password");
     const data = new FormData(form);
+    setBusy("password");
     try {
       const snapshot = await auth.signInWithPassword({
         email: data.get("email"),
