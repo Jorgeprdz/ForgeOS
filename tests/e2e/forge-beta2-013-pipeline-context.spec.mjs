@@ -21,7 +21,61 @@ const record = Object.freeze({
   },
 });
 
-async function mount(page, { intelligence = false } = {}) {
+function relationshipComposition() {
+  return {
+    contractType: 'FORGE_EXISTING_RELATIONSHIP_INTELLIGENCE_COMPOSITION',
+    contractVersion: 'CRS-10-EXISTING-RELATIONSHIP-INTELLIGENCE-001',
+    personReference: 'PERSON:SYNTHETIC:013',
+    itemCount: 2,
+    reviewCount: 1,
+    domains: {
+      FUTURE_RADAR: {
+        id: 'FUTURE_RADAR',
+        label: 'Radar futuro',
+        authority: 'CARTERA050_FUTURE_RADAR_READ_MODEL',
+        scope: 'PERSON',
+        status: 'AVAILABLE',
+        items: [{
+          reference: 'FUTURE:013:1',
+          label: 'Cambio familiar por revisar',
+          summary: 'Existe un evento futuro registrado que puede cambiar el contexto de la conversación.',
+          state: 'REVIEW_REQUIRED',
+          scope: 'PERSON',
+          uncertainty: 'La fecha exacta todavía no está confirmada.',
+          smallestUsefulAction: 'Confirmar si el evento sigue vigente',
+          evidenceCount: 2,
+          deepLink: '?nav=person&person=PERSON%3ASYNTHETIC%3A013',
+        }],
+      },
+      PRODUCTIVITY_PROOF: {
+        id: 'PRODUCTIVITY_PROOF',
+        label: 'Evidencia de productividad',
+        authority: 'CARTERA100_PRODUCTIVITY_PROOF_READ_MODEL',
+        scope: 'ADVISOR',
+        status: 'AVAILABLE',
+        items: [{
+          reference: 'PRODUCTIVITY:013:1',
+          label: 'Actividad reciente del asesor',
+          summary: 'Existe actividad comercial reciente relacionada con este periodo.',
+          state: 'OBSERVED',
+          scope: 'ADVISOR',
+          uncertainty: null,
+          smallestUsefulAction: 'Revisar el detalle antes de usarlo como contexto',
+          evidenceCount: 1,
+          deepLink: '?nav=person&person=PERSON%3ASYNTHETIC%3A013',
+        }],
+      },
+    },
+    boundaries: {
+      existingCarteraIntelligenceReused: true,
+      secondScoreEngine: false,
+      automaticContact: false,
+      localMutationControls: false,
+    },
+  };
+}
+
+async function mount(page, { intelligence = 'none' } = {}) {
   await page.goto('/tests/e2e/fixtures/forge-beta2-013-intent/index.html');
   await page.evaluate(async ({ record, intelligence }) => {
     const { createPipelineModule } = await import(
@@ -31,7 +85,13 @@ async function mount(page, { intelligence = false } = {}) {
     root.innerHTML = '';
     let cards = [structuredClone(record)];
     const adapter = {
-      capabilities: { createProspect: true, importProspects: false },
+      capabilities: {
+        createProspect: true,
+        importProspects: false,
+        intelligenceAvailable: intelligence !== 'none',
+        relationshipIntelligenceAvailable: intelligence === 'relationship',
+        existingCarteraIntelligenceReused: intelligence === 'relationship',
+      },
       reload: async () => cards,
       getCards: () => cards,
       create: async () => null,
@@ -41,16 +101,46 @@ async function mount(page, { intelligence = false } = {}) {
       timeline: async () => [],
       whatsappUrl: () => null,
     };
-    if (intelligence) {
+    if (intelligence !== 'none') {
       adapter.intelligence = async prospectId => ({
         consumerId: 'FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A',
-        state: 'available',
-        identityState: 'CONFIRMED',
+        state: 'partial',
+        identityState: 'LINKED',
         personReference: 'PERSON:SYNTHETIC:013',
-        opportunityAuthorityState: 'AVAILABLE',
-        degradedReasons: [],
+        opportunityAuthorityState: 'NOT_PRODUCTIVE',
+        degradedReasons: intelligence === 'relationship'
+          ? ['OPPORTUNITY_AUTHORITY_NOT_PRODUCTIVE', 'NO_AUTHORIZED_PROJECTIONS']
+          : [],
         provenance: { sourceAuthorities: ['PIPELINE', 'RELATIONSHIP_INTELLIGENCE'] },
-        projections: [{
+        relationshipIntelligence: intelligence === 'relationship' ? {
+          contractType: 'FORGE_EXISTING_RELATIONSHIP_INTELLIGENCE_COMPOSITION',
+          contractVersion: 'CRS-10-EXISTING-RELATIONSHIP-INTELLIGENCE-001',
+          personReference: 'PERSON:SYNTHETIC:013',
+          itemCount: 2,
+          reviewCount: 1,
+          domains: {
+            FUTURE_RADAR: {
+              id: 'FUTURE_RADAR', scope: 'PERSON', status: 'AVAILABLE', items: [{
+                reference: 'FUTURE:013:1', label: 'Cambio familiar por revisar',
+                summary: 'Existe un evento futuro registrado que puede cambiar el contexto de la conversación.',
+                state: 'REVIEW_REQUIRED', scope: 'PERSON',
+                uncertainty: 'La fecha exacta todavía no está confirmada.',
+                smallestUsefulAction: 'Confirmar si el evento sigue vigente', evidenceCount: 2,
+                deepLink: '?nav=person&person=PERSON%3ASYNTHETIC%3A013',
+              }],
+            },
+            PRODUCTIVITY_PROOF: {
+              id: 'PRODUCTIVITY_PROOF', scope: 'ADVISOR', status: 'AVAILABLE', items: [{
+                reference: 'PRODUCTIVITY:013:1', label: 'Actividad reciente del asesor',
+                summary: 'Existe actividad comercial reciente relacionada con este periodo.',
+                state: 'OBSERVED', scope: 'ADVISOR', uncertainty: null,
+                smallestUsefulAction: 'Revisar el detalle antes de usarlo como contexto', evidenceCount: 1,
+                deepLink: '?nav=person&person=PERSON%3ASYNTHETIC%3A013',
+              }],
+            },
+          },
+        } : null,
+        projections: intelligence === 'projection' ? [{
           decisionReference: `DECISION:${prospectId}:013`,
           domain: 'RELACIÓN',
           title: 'Conviene revisar el contexto familiar',
@@ -59,7 +149,7 @@ async function mount(page, { intelligence = false } = {}) {
           humanDecisionRequired: true,
           provenance: { sourceAuthorities: ['RELATIONSHIP_INTELLIGENCE'] },
           recommendedAction: { label: 'Revisar la información antes de contactar' },
-        }],
+        }] : [],
       });
     }
     const module = createPipelineModule({
@@ -76,15 +166,15 @@ async function mount(page, { intelligence = false } = {}) {
 }
 
 test('RU07 Level 3: unavailable context presents a clear no-action state with no dead CTA', async ({ page }) => {
-  await mount(page, { intelligence: false });
+  await mount(page, { intelligence: 'none' });
   const recommendation = page.locator('[data-record-id="p-context-013"] .aura-recommendation');
   await expect(recommendation).toHaveAttribute('data-pipeline-context-actionable', 'false');
   await expect(recommendation).toContainText('No hay contexto adicional disponible');
   await expect(recommendation.locator('[data-pipeline-governed-context]')).toHaveCount(0);
 });
 
-test('RU07/RU06 Level 3: actionable context opens, explains itself, and hides mechanics by default', async ({ page }) => {
-  await mount(page, { intelligence: true });
+test('RU07/RU06 Level 3: actionable FCDP context opens, explains itself, and hides mechanics by default', async ({ page }) => {
+  await mount(page, { intelligence: 'projection' });
   const recommendation = page.locator('[data-record-id="p-context-013"] .aura-recommendation');
   await expect(recommendation).toHaveAttribute('data-pipeline-context-actionable', 'true');
   const button = recommendation.getByRole('button', { name: 'Ver contexto', exact: true });
@@ -108,4 +198,32 @@ test('RU07/RU06 Level 3: actionable context opens, explains itself, and hides me
   await expect(technical).toHaveAttribute('open', '');
   await expect(technical).toContainText('FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A');
   await expect(technical).toContainText('CommercialPerson');
+});
+
+test('RU04 Level 3: CRS10 context preserves meaning, uncertainty, evidence and human control without inventing FCDP', async ({ page }) => {
+  await mount(page, { intelligence: 'relationship' });
+  const recommendation = page.locator('[data-record-id="p-context-013"] .aura-recommendation');
+  await expect(recommendation).toHaveAttribute('data-pipeline-context-actionable', 'true');
+  await recommendation.getByRole('button', { name: 'Ver contexto', exact: true }).click();
+
+  const dialog = page.locator('[data-aura-governed-context-dialog]');
+  const relationship = dialog.locator('[data-pipeline-relationship-context="AVAILABLE"]');
+  await expect(relationship).toBeVisible();
+  await expect(relationship).toContainText('Lo que ya sabemos de la relación');
+  await expect(relationship).toContainText('Cambio familiar por revisar');
+  await expect(relationship).toContainText('La fecha exacta todavía no está confirmada.');
+  await expect(relationship).toContainText('Confirmar si el evento sigue vigente. Tú decides si hacerlo.');
+  await expect(relationship).toContainText('2 evidencia(s)');
+  await expect(relationship).toContainText('Contexto del asesor: esto habla de tu actividad y no se atribuye al prospecto.');
+  await expect(relationship.locator('[data-pipeline-crs10-deep-link]').first()).toHaveAttribute('href', /\?nav=person/);
+  await expect(dialog.locator('[data-aura-governed-projections="EMPTY"]')).toHaveCount(0);
+
+  const defaultText = await relationship.evaluate(node => node.innerText);
+  expect(defaultText).not.toMatch(/CRS-10|CARTERA050|CARTERA100|relationshipScore|priorityScore|NO_AUTHORIZED_PROJECTIONS/i);
+
+  const technical = relationship.locator('[data-pipeline-crs10-technical]');
+  await expect(technical).not.toHaveAttribute('open', '');
+  await technical.locator('summary').click();
+  await expect(technical).toContainText('CRS-10-EXISTING-RELATIONSHIP-INTELLIGENCE-001');
+  await expect(technical).toContainText('No crea score');
 });
