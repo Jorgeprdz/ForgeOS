@@ -1,9 +1,7 @@
-import { createPipelineDomainIntelligenceConsumer } from '../../../../advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js';
-import { createCrs10ExistingRelationshipIntelligenceService } from '../../../../advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js';
-
 const CONTRACT_ID = 'FORGE_PIPELINE_CRS10_PRESENTATION_CONTEXT_ADAPTER_013';
-const rootUrl = new URL('../../../../', import.meta.url);
-let convergenceAuthorityPromise;
+const sourceLayout = import.meta.url.includes('/docs/static-preview/');
+const rootUrl = new URL(sourceLayout ? '../../../../' : '../../../', import.meta.url);
+let authoritiesPromise;
 
 function freeze(value) {
   if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
@@ -13,12 +11,12 @@ function freeze(value) {
 }
 
 async function load(path) {
-  await import(`${new URL(path, rootUrl).href}?v=forge-beta2-013-crs10-context`);
+  return import(`${new URL(path, rootUrl).href}?v=forge-beta2-013-crs10-context`);
 }
 
-async function ensureConvergenceAuthority() {
-  if (convergenceAuthorityPromise) return convergenceAuthorityPromise;
-  convergenceAuthorityPromise = (async () => {
+async function ensureAuthorities() {
+  if (authoritiesPromise) return authoritiesPromise;
+  authoritiesPromise = (async () => {
     for (const path of [
       'advisor-os/sales-pipeline/productive-prospect-service.js',
       'platform/shared-commercial-model/crs-02-domain-link-envelope-contract.js',
@@ -27,26 +25,50 @@ async function ensureConvergenceAuthority() {
       'advisor-os/sales-pipeline/crs-03-pipeline-person-convergence-service.js',
     ]) await load(path);
 
-    const authority = globalThis.ForgeCrs03PipelinePersonConvergenceService;
-    if (!authority?.create) throw new Error('CRS03_PIPELINE_PERSON_CONVERGENCE_UNAVAILABLE');
-    return authority;
+    const [decisionModule, relationshipModule] = await Promise.all([
+      load('advisor-os/sales-pipeline/pipeline-domain-intelligence-consumer.js'),
+      load('advisor-os/person-workspace/crs-10-existing-relationship-intelligence-service.js'),
+    ]);
+    const convergence = globalThis.ForgeCrs03PipelinePersonConvergenceService;
+    if (!convergence?.create) throw new Error('CRS03_PIPELINE_PERSON_CONVERGENCE_UNAVAILABLE');
+    if (typeof decisionModule?.createPipelineDomainIntelligenceConsumer !== 'function') {
+      throw new Error('PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_UNAVAILABLE');
+    }
+    if (typeof relationshipModule?.createCrs10ExistingRelationshipIntelligenceService !== 'function') {
+      throw new Error('CRS10_RELATIONSHIP_INTELLIGENCE_SERVICE_UNAVAILABLE');
+    }
+    return freeze({
+      convergence,
+      decisionConsumerFactory: decisionModule.createPipelineDomainIntelligenceConsumer,
+      relationshipServiceFactory: relationshipModule.createCrs10ExistingRelationshipIntelligenceService,
+    });
   })().catch(error => {
-    convergenceAuthorityPromise = null;
+    authoritiesPromise = null;
     throw error;
   });
-  return convergenceAuthorityPromise;
+  return authoritiesPromise;
 }
 
 export async function createPipelineCrs10ContextAdapter({
   client,
   convergenceServiceModule = null,
-  decisionConsumerFactory = createPipelineDomainIntelligenceConsumer,
-  relationshipServiceFactory = createCrs10ExistingRelationshipIntelligenceService,
+  decisionConsumerFactory = null,
+  relationshipServiceFactory = null,
 } = {}) {
   if (!client) throw new Error('PRODUCTIVE_CLIENT_REQUIRED');
-  const convergence = convergenceServiceModule || await ensureConvergenceAuthority();
-  const decisionConsumer = decisionConsumerFactory({ client, convergenceServiceModule: convergence });
-  const relationshipService = relationshipServiceFactory({ client });
+
+  let convergence = convergenceServiceModule;
+  let decisionFactory = decisionConsumerFactory;
+  let relationshipFactory = relationshipServiceFactory;
+  if (!convergence || !decisionFactory || !relationshipFactory) {
+    const authorities = await ensureAuthorities();
+    convergence ||= authorities.convergence;
+    decisionFactory ||= authorities.decisionConsumerFactory;
+    relationshipFactory ||= authorities.relationshipServiceFactory;
+  }
+
+  const decisionConsumer = decisionFactory({ client, convergenceServiceModule: convergence });
+  const relationshipService = relationshipFactory({ client });
 
   async function intelligence(prospectReference, options = {}) {
     const base = await decisionConsumer.getProspectDecisionContext(prospectReference, {
@@ -96,6 +118,7 @@ export async function createPipelineCrs10ContextAdapter({
       contractId: CONTRACT_ID,
       decisionConsumer: 'FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A',
       relationshipAuthority: 'CRS-10-EXISTING-RELATIONSHIP-INTELLIGENCE-001',
+      pageSafeRootResolution: sourceLayout ? 'SOURCE_DOCS' : 'PUBLISHED_SITE',
       existingCarteraIntelligenceReused: true,
       createsTruth: false,
       createsScore: false,
