@@ -1,11 +1,11 @@
 import {
   createFesActivityReportSourceAdapter,
   FES_ACTIVITY_EVENT_AUTHORITY_SNAPSHOT_SCHEMA_VERSION,
-} from "../../../advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.mjs";
+} from "../../advisor-os/reporting/infrastructure/fes-activity-report-source-adapter.js";
 
 import {
   createActivityReportingRuntime,
-} from "../../../advisor-os/reporting/runtime/activity-reporting-runtime.mjs";
+} from "../../advisor-os/reporting/runtime/activity-reporting-runtime.js";
 
 export const PRODUCTIVE_ACTIVITY_REPORTING_BRIDGE_SCHEMA_VERSION =
   "productive-activity-reporting-bridge.v1";
