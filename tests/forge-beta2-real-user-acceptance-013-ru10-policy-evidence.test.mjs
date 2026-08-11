@@ -22,7 +22,7 @@ test('RU10 presentation distinguishes document-found coverage from confirmed pol
 test('RU10 presentation explains coexistence without saying document information is absent', () => {
   assert.match(owner, /CANONICAL_AND_DOCUMENT_EVIDENCE/);
   assert.match(owner, /Las confirmadas forman parte de la póliza/);
-  assert.match(owner, /información adicional encontrada en el documento/);
+  assert.match(owner, /Las encontradas en el documento se muestran por separado/);
   assert.match(owner, /NO_CONFIRMED_DETAIL_OR_DOCUMENT_ROWS/);
   assert.match(owner, /Esto no significa que la póliza no tenga coberturas/);
 });
