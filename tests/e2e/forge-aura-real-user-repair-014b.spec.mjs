@@ -74,15 +74,14 @@ async function mountGovernedConversation(page) {
 test('BUG07 browser: objective -> prepared draft -> human edit -> exact approval -> WhatsApp', async ({ page }) => {
   await mountGovernedConversation(page);
 
-  const goal = page.locator('[data-message-goal]');
-  await goal.selectOption('collection');
+  await page.getByRole('button', { name: 'Cobranza', exact: true }).click();
   await page.getByRole('button', { name: 'Generar sugerencia' }).click();
   await expect(page.locator('[data-draft]')).toHaveValue('Mensaje preparado para collection');
   await expect(page.locator('[data-open-whatsapp]')).toBeDisabled();
 
   await page.locator('[data-draft]').fill('Hola. Te escribo para revisar el seguimiento que acordemos juntos.');
   await expect(page.locator('[data-open-whatsapp]')).toBeDisabled();
-  await expect(page.locator('[data-approval-state]')).toContainText('requiere una nueva aprobación');
+  await expect(page.locator('[data-approval-state]')).toContainText('Requiere una nueva aprobación exacta.');
 
   await page.locator('[data-approve-draft]').click();
   await expect(page.locator('[data-open-whatsapp]')).toBeEnabled();
