@@ -96,7 +96,9 @@ jobs:
         run: node /tmp/build-canonical.cjs
 
       - name: Complete canonical Pages runtime closure
-        run: node scripts/prepare-forge-alive-pages-runtime-closure.mjs _site
+        run: |
+          node scripts/prepare-forge-alive-pages-runtime-closure.mjs _site
+          node scripts/prepare-segubeca-pages-runtime.mjs _site
 
       - name: Validate canonical-only artifact and static module graph
         env:

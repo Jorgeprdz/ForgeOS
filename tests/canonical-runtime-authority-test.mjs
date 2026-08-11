@@ -15,6 +15,7 @@ assert.match(pagesWorkflow, /const canonicalSource = 'docs\/static-preview\/forg
 assert.match(pagesWorkflow, /const canonicalTarget = path\.join\(siteDir, 'static-preview', 'forge-alive'\)/);
 assert.match(pagesWorkflow, /fs\.cpSync\(canonicalSource, canonicalTarget, \{ recursive: true \}\)/);
 assert.match(pagesWorkflow, /prepare-forge-alive-pages-runtime-closure\.mjs _site/);
+assert.match(pagesWorkflow, /prepare-segubeca-pages-runtime\.mjs _site/);
 assert.match(pagesWorkflow, /FORGE_SKIP_PAGES_RUNTIME_PREPARATION: 'true'/);
 assert.match(pagesWorkflow, /_site\/platform\/commands\/command-registry\.js/);
 assert.match(pagesWorkflow, /_site\/platform\/commands\/alfred-action-registry\.js/);

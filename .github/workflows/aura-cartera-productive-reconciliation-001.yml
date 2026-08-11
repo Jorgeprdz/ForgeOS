@@ -194,6 +194,7 @@ jobs:
           node scripts/build-advisor-presentation-pages-runtime.mjs
           node /tmp/build-canonical.cjs
           node scripts/prepare-forge-alive-pages-runtime-closure.mjs _site
+          node scripts/prepare-segubeca-pages-runtime.mjs _site
       - name: Validate canonical artifact and Aura import graph
         env:
           EXPECTED_DEMO_MODE: 'true'

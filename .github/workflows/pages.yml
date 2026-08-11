@@ -369,6 +369,7 @@ jobs:
           console.log('PAGES_FORGE_ALIVE_SHARED_RUNTIME_PRESERVED=PASS');
           EOF
           node scripts/prepare-forge-alive-pages-runtime-closure.mjs _site
+          node scripts/prepare-segubeca-pages-runtime.mjs _site
           du -sh _site
 
       - name: Validate canonical-only Pages artifact
