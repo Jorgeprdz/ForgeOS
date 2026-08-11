@@ -40,12 +40,16 @@ const publicExtensions = new Set([
   ".jpg",
   ".js",
   ".json",
+  ".mjs",
   ".map",
   ".png",
   ".svg",
   ".txt",
   ".webmanifest",
   ".webp",
+]);
+const generatedRuntimeFiles = Object.freeze([
+  "docs/static-preview/quote-runtime/gmm-quote-parser-authority.js",
 ]);
 
 const publicRootFiles = new Set([".nojekyll", "_redirects", "manifest.json"]);
@@ -97,6 +101,14 @@ for (const file of publicFiles) {
     ? file.slice("docs/".length)
     : file;
   const target = path.join(siteDir, publicPath);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(file, target);
+}
+for (const file of generatedRuntimeFiles) {
+  if (!fs.existsSync(file)) {
+    throw new Error(`Generated Pages runtime is missing: ${file}`);
+  }
+  const target = path.join(siteDir, file.slice("docs/".length));
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.copyFileSync(file, target);
 }
@@ -200,6 +212,7 @@ const required = [
   "static-preview/forge-alive/segubeca-progressive-layout.js",
   "static-preview/forge-alive/quote-runtime-printable-presence-guard-m05w002.js",
   "static-preview/quote-engine/nueva-cotizacion/index.html",
+  "static-preview/quote-runtime/gmm-quote-parser-authority.js",
   segubecaAuthorityAsset,
   "env.js",
   "build-info.json",
@@ -253,7 +266,7 @@ if (forbidden.length > 0) {
   throw new Error(`Private evidence published: ${forbidden.join(", ")}`);
 }
 
-console.log(`PAGES_PREVIEW_ARTIFACT=PASS files=${publicFiles.length + 2}`);
+console.log(`PAGES_PREVIEW_ARTIFACT=PASS files=${publicFiles.length + generatedRuntimeFiles.length + 2}`);
 console.log(`PAGES_PREVIEW_SEGUBECA_AUTHORITY=PASS path=${segubecaAuthorityAsset}`);
 console.log(`PAGES_PREVIEW_SEGUBECA_IMPORT=PASS import=${segubecaPublicAuthorityImport}`);
 console.log("PAGES_PREVIEW_SEGUBECA_PROGRESSIVE_LAYOUT=PASS");

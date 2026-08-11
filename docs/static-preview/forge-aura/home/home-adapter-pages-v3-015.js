@@ -2,6 +2,10 @@ import { createHomePagesAdapter as createPreviousAdapter } from './home-adapter-
 import { createIncomeAdapter } from '../income/income-adapter-pages-v1.js?v=forge-commercial-compass-015';
 import { projectIncomeReadModel } from '../income/income-core.js?v=forge-commercial-compass-015';
 import { createAdvisorMonthlyPolicyGoalRepository } from '../../forge-alive/home-authorities/repo/advisor-os/forge-alive/smart-widgets/advisor-monthly-policy-goal-repository.mjs';
+import { buildProductiveSmartWidgetStack } from '../../forge-alive/home-authorities/repo/advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs';
+import { projectProductiveSmartWidgetStack } from '../../forge-alive/home-authorities/repo/platform/attention/forge-home-attention-source-adapters.js';
+import { composeHomeAttention } from '../../forge-alive/home-authorities/repo/platform/attention/forge-home-attention-composition.js';
+import { normalizeRadarForOrchestrator } from './home-core.js';
 
 const TIME_ZONE = 'America/Mexico_City';
 const GOAL_REASON_PREFIX = 'HOME_MONTHLY_GOALS_V2:';
@@ -202,6 +206,56 @@ function productionSnapshot(facts, asOf) {
   });
 }
 
+async function reconcileProductiveAttention({ baseSnapshot, advisorId, goalSnapshot, policyFacts, policyFactsComplete, asOf, signal }) {
+  const radarReady = baseSnapshot?.radar?.state === 'READY' && baseSnapshot.radar.value;
+  const stack = await buildProductiveSmartWidgetStack({
+    now: new Date(asOf).toISOString(),
+    timeZone: baseSnapshot.timeZone || TIME_ZONE,
+    signal,
+    session: { status: 'AUTHENTICATED', advisorId },
+    sources: {
+      activity: {
+        sourceConnected: false,
+        sourceComplete: false,
+        blockedReason: 'MICK_ACTIVITY_SCORING_SNAPSHOT_NOT_CONNECTED_TO_AURA_HOME',
+      },
+      monthlyGoal: {
+        sourceConnected: true,
+        sourceComplete: policyFactsComplete === true,
+        goalSnapshot: goalSnapshot || null,
+        policyFacts: Array.isArray(policyFacts) ? policyFacts : [],
+        freshness: { asOf: new Date(asOf).toISOString(), definition: 'POLICY_SOLD_CONFIRMED' },
+      },
+      policyService: radarReady
+        ? {
+            sourceConnected: true,
+            sourceComplete: true,
+            radarSnapshot: normalizeRadarForOrchestrator(baseSnapshot.radar.value),
+            freshness: { asOf: new Date(asOf).toISOString(), authority: 'CARTERA_050_FUTURE_RADAR' },
+          }
+        : {
+            sourceConnected: true,
+            sourceComplete: false,
+            sourceUnavailable: true,
+            blockedReason: 'CARTERA_050_SOURCE_UNAVAILABLE',
+          },
+      opportunities: {
+        sourceConnected: false,
+        sourceComplete: false,
+        blockedReason: 'PIPELINE_BITACORA_SIGNAL_MAPPING_NOT_CONNECTED',
+      },
+    },
+  });
+  const projectionBundle = projectProductiveSmartWidgetStack({ advisorReference: advisorId, stack });
+  const attention = composeHomeAttention({
+    advisorReference: advisorId,
+    projectionBundle,
+    sourceState: stack.stackStatus,
+    asOf: new Date(asOf).toISOString(),
+  });
+  return freeze({ stack, attention });
+}
+
 function incomeSnapshot(projected) {
   const generated = projected?.generated || {};
   const pipeline = projected?.pipelineScenario || {};
@@ -287,7 +341,7 @@ export async function createHomePagesAdapter(options = {}) {
 
   async function readGoals(asOf, signal) {
     const goal = await goalRepository.readCurrent({ advisorId: user.id, yearMonth: monthKey(asOf), signal });
-    return normalizeGoals(goal);
+    return freeze({ snapshot: goal, goals: normalizeGoals(goal) });
   }
 
   async function saveCommercialGoals(input = {}) {
@@ -335,7 +389,7 @@ export async function createHomePagesAdapter(options = {}) {
           .catch(error => ({ ok: false, error })),
       ]);
 
-      const goals = goalResult.ok ? goalResult.value : normalizeGoals(null);
+      const goals = goalResult.ok ? goalResult.value.goals : normalizeGoals(null);
       sourceStates.goals = goalResult.ok ? goals.state : 'UNAVAILABLE';
       const production = policyResult.ok
         ? productionSnapshot(policyResult.value.policyFacts, asOf)
@@ -347,13 +401,27 @@ export async function createHomePagesAdapter(options = {}) {
       sourceStates.income = incomeResult.ok ? income.state : 'UNAVAILABLE';
 
       const commercialCompass = buildCompass({ goals, production, income, asOf, sourceStates });
+      const productiveAttention = await reconcileProductiveAttention({
+        baseSnapshot,
+        advisorId: user.id,
+        goalSnapshot: goalResult.ok ? goalResult.value.snapshot : null,
+        policyFacts: policyResult.ok ? policyResult.value.policyFacts : [],
+        policyFactsComplete: policyResult.ok && policyResult.value.sourceComplete,
+        asOf,
+        signal,
+      });
       globalThis[HANDOFF] = Object.freeze({
         phase: PHASE,
         snapshot: commercialCompass,
         saveGoals: saveCommercialGoals,
         sourceAuthorities: Object.freeze(['ADVISOR_MONTHLY_POLICY_GOAL', 'PRODUCTION_EVENTS', 'COMPENSATION_INTELLIGENCE']),
       });
-      return freeze({ ...baseSnapshot, commercialCompass });
+      return freeze({
+        ...baseSnapshot,
+        priority: freeze({ state: productiveAttention.stack.stackStatus, value: productiveAttention.stack, error: null }),
+        attention: freeze({ state: productiveAttention.attention.state, value: productiveAttention.attention, error: null }),
+        commercialCompass,
+      });
     },
     saveCommercialGoals,
     diagnostics() {
@@ -364,6 +432,9 @@ export async function createHomePagesAdapter(options = {}) {
         goalAuthority: 'ADVISOR_MONTHLY_POLICY_GOAL_APPEND_ONLY',
         productionAuthority: 'PRODUCTION_EVENTS:POLICY_SOLD_CONFIRMED',
         incomeAuthority: 'COMPENSATION_INTELLIGENCE',
+        productiveAttentionReconciled017a: true,
+        productiveAttentionRankingOwner: 'PRODUCTIVE_SMART_WIDGET_ORCHESTRATOR',
+        homeAttentionAuthority: 'FORGE_HOME_ATTENTION_ORCHESTRATION:FHAO-007-001',
         duplicateGoalAuthority: false,
         commissionCalculationInHome: false,
         homeDomainWrites: 0,

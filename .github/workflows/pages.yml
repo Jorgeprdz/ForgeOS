@@ -166,7 +166,7 @@ jobs:
             .split('\0')
             .filter(Boolean);
           const publicExtensions = new Set([
-            '.css', '.html', '.ico', '.jpeg', '.jpg', '.js', '.json',
+            '.css', '.html', '.ico', '.jpeg', '.jpg', '.js', '.json', '.mjs',
             '.map', '.png', '.svg', '.txt', '.webmanifest', '.webp',
           ]);
           const publicRootFiles = new Set([

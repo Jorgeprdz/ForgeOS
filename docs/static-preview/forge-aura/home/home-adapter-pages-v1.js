@@ -10,10 +10,10 @@ let authorityPromise = null;
 async function loadAuthorities() {
   if (authorityPromise) return authorityPromise;
   authorityPromise = Promise.all([
-    import("../../forge-alive-material3/home-authorities/repo/advisor-os/next-action/agenda-read-model.js"),
-    import("../../forge-alive-material3/home-authorities/repo/advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs"),
-    import("../../forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-source-adapters.js"),
-    import("../../forge-alive-material3/home-authorities/repo/platform/attention/forge-home-attention-composition.js"),
+    import("../../forge-alive/home-authorities/repo/advisor-os/next-action/agenda-read-model.js"),
+    import("../../forge-alive/home-authorities/repo/advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs"),
+    import("../../forge-alive/home-authorities/repo/platform/attention/forge-home-attention-source-adapters.js"),
+    import("../../forge-alive/home-authorities/repo/platform/attention/forge-home-attention-composition.js"),
   ]).then(([agenda, widgets, attentionSource, attention]) => Object.freeze({
     buildAgendaReadModel: agenda.buildAgendaReadModel,
     buildProductiveSmartWidgetStack: widgets.buildProductiveSmartWidgetStack,

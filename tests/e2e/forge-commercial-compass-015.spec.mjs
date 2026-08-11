@@ -180,9 +180,18 @@ async function mountRealWorkspace(page) {
   await page.waitForFunction(() => [...document.styleSheets].some(sheet => String(sheet.href || '').includes('pipeline-conversation-workspace.css')));
 }
 
+async function openCommercialCompass(page) {
+  const compass = page.locator('[data-commercial-compass-015]');
+  if (await compass.evaluate(node => node instanceof HTMLDetailsElement && !node.open)) {
+    await compass.getByText('Progreso y metas', { exact: true }).click();
+  }
+  await expect(compass).toHaveAttribute('open', '');
+  return compass;
+}
+
 test('CC-01 browser: Commercial Compass makes META -> GAP -> OPORTUNIDAD -> ACCION legible', async ({ page }, testInfo) => {
   await mountHome(page, 'ready');
-  const compass = page.locator('[data-commercial-compass-015]');
+  const compass = await openCommercialCompass(page);
   await expect(compass).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Mi día' })).toBeVisible();
   expect(await page.evaluate(() => {
@@ -210,6 +219,7 @@ test('CC-01 browser: Commercial Compass makes META -> GAP -> OPORTUNIDAD -> ACCI
 
 test('CC-02 browser: first-use goals flow is short, optional and annual policies are editable', async ({ page }) => {
   await mountHome(page, 'missing');
+  await openCommercialCompass(page);
   await expect(page.getByText('Para poder decirte cómo vas, primero necesito saber qué quieres lograr.')).toBeVisible();
   await page.getByRole('button', { name: 'Definir mis metas' }).click();
   await expect(page.getByText('1 de 4 · Ingreso del mes')).toBeVisible();
@@ -227,6 +237,7 @@ test('CC-02 browser: first-use goals flow is short, optional and annual policies
   await page.getByRole('button', { name: 'Guardar metas' }).click();
   const compass = page.locator('[data-commercial-compass-015]');
   await expect(compass).toHaveAttribute('data-compass-state', 'READY');
+  await openCommercialCompass(page);
   await expect(compass).toContainText('$100,000 · 10 pólizas');
   await page.getByRole('button', { name: 'Año', exact: true }).click();
   await expect(compass).toContainText('$1,200,000 · 100 pólizas');
@@ -235,6 +246,7 @@ test('CC-02 browser: first-use goals flow is short, optional and annual policies
 test('CC-11 browser: activity guidance consumes Advisor Forecast and degrades without historical evidence', async ({ page }) => {
   await mountHome(page, 'ready');
   await mountConsumer(page, 'ready');
+  await openCommercialCompass(page);
   const guidance = page.locator('[data-commercial-activity-guidance-015]');
   await expect(guidance).toBeVisible();
   await expect(guidance).toHaveAttribute('data-activity-state', 'READY');

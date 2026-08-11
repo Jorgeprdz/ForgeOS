@@ -62,6 +62,10 @@ const ALFRED_PUBLIC_ROOT = "static-preview/forge-alive";
 const ALFRED_RUNTIME_FILE = "alfred-command-runtime.js";
 const ALFRED_STYLE_FILE = "alfred-command-runtime.css";
 const ALFRED_PUBLIC_RUNTIME = `${ALFRED_PUBLIC_ROOT}/${ALFRED_RUNTIME_FILE}`;
+const AURA_ALFRED_CONSUMERS = Object.freeze([
+  "static-preview/forge-aura/app-v4.js",
+  "static-preview/forge-aura/app-v4-r1.js",
+]);
 
 const QUOTE_PRINTABLE_PROXY_REWRITES = Object.freeze([
   Object.freeze({
@@ -261,6 +265,33 @@ async function rewriteAlfredCommandRuntime(siteDir) {
   });
 }
 
+async function rewriteAuraAlfredConsumers(siteDir) {
+  const rewritten = [];
+  for (const relativePath of AURA_ALFRED_CONSUMERS) {
+    const target = join(siteDir, relativePath);
+    let source;
+    try {
+      source = await readFile(target, "utf8");
+    } catch (error) {
+      if (error?.code === "ENOENT") continue;
+      throw error;
+    }
+    const output = source.replaceAll(
+      "../forge-alive-material3/alfred-command-runtime",
+      "../forge-alive/alfred-command-runtime",
+    );
+    if (output === source) {
+      throw new Error(`FORGE_ALIVE_PAGES_AURA_ALFRED_CONSUMER_REWRITE_MISSING=${relativePath}`);
+    }
+    if (output.includes("../forge-alive-material3/alfred-command-runtime")) {
+      throw new Error(`FORGE_ALIVE_PAGES_AURA_ALFRED_SOURCE_NAMESPACE_LEAK=${relativePath}`);
+    }
+    await writeFile(target, output);
+    rewritten.push(relativePath);
+  }
+  return Object.freeze(rewritten);
+}
+
 async function publishCanonicalQpdAssets(siteDir) {
   const sourceRoot = join(root, QPD_SOURCE_ROOT);
   const publicRoot = join(siteDir, QPD_PUBLIC_ROOT);
@@ -297,6 +328,7 @@ export async function prepareForgeAlivePagesRuntimeClosure({
   ]);
   const rewrittenProxies = await rewriteQuotePrintableProxies(resolvedSiteDir);
   const alfredRewrite = await rewriteAlfredCommandRuntime(resolvedSiteDir);
+  const auraAlfredConsumers = await rewriteAuraAlfredConsumers(resolvedSiteDir);
 
   const requiredPublishedFiles = [
     "advisor-os/sales-pipeline/productive-prospect-service.js",
@@ -343,6 +375,7 @@ export async function prepareForgeAlivePagesRuntimeClosure({
     qpdAssets,
     rewrittenProxies,
     alfredRewrite,
+    auraAlfredConsumers,
     requiredPublishedFiles,
   });
   await writeFile(
@@ -354,6 +387,7 @@ export async function prepareForgeAlivePagesRuntimeClosure({
   console.log(`FORGE_ALIVE_PAGES_QPD_ASSETS=${qpdAssets.length}`);
   console.log(`FORGE_ALIVE_PAGES_PROXY_REWRITES=${rewrittenProxies.length}`);
   console.log("FORGE_ALIVE_PAGES_ALFRED_COMMAND_OS_REWRITE=PASS");
+  console.log(`FORGE_ALIVE_PAGES_AURA_ALFRED_CONSUMERS=${auraAlfredConsumers.length}`);
   return manifest;
 }
 
