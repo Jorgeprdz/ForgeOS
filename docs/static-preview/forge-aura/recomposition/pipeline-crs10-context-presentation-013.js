@@ -1,6 +1,5 @@
 import {
   humanContextCopy,
-  humanEvidenceLabel,
   humanStateLabel,
   presentationDiagnostics,
 } from './human-context-presentation-013.js?v=forge-beta2-013-human-context';
@@ -42,11 +41,11 @@ function itemHtml(domain, item) {
     <article class="aura-governed-projection" data-pipeline-crs10-item="${esc(item.reference)}" data-context-scope="${esc(item.scope || domain.scope || 'PERSON')}">
       <p class="aura-eyebrow">${esc(DOMAIN_LABELS[domain.id] || domain.label || 'Contexto')}</p>
       <h4>${esc(item.label || 'Información para revisar')}</h4>
-      ${advisorScope ? '<p><strong>Contexto del asesor:</strong> esto habla de tu actividad y no se atribuye al prospecto.</p>' : ''}
+      ${advisorScope ? '<p><strong>Sobre tu actividad:</strong> esta información corresponde a tu seguimiento y no se atribuye al prospecto.</p>' : ''}
       ${copy.summary ? `<p>${esc(copy.summary)}</p>` : ''}
-      ${copy.uncertainty ? `<p><strong>Lo que falta por confirmar:</strong> ${esc(copy.uncertainty)}</p>` : ''}
-      ${copy.smallestUsefulAction ? `<p><strong>Qué podrías revisar:</strong> ${esc(copy.smallestUsefulAction)}. Tú decides si hacerlo.</p>` : ''}
-      <p><small>${esc(humanStateLabel(item.state, 'Contexto disponible'))} · ${esc(humanEvidenceLabel(item.evidenceCount))}</small></p>
+      ${copy.uncertainty ? `<p><strong>Falta revisar:</strong> ${esc(copy.uncertainty)}</p>` : ''}
+      ${copy.smallestUsefulAction ? `<p><strong>Puedes revisar:</strong> ${esc(copy.smallestUsefulAction)}</p>` : ''}
+      <p><small>${esc(humanStateLabel(item.state, 'Información disponible'))}</small></p>
       ${item.deepLink ? `<p><a href="${esc(item.deepLink)}" data-pipeline-crs10-deep-link>Abrir en Cartera</a></p>` : ''}
     </article>
   `;
@@ -54,7 +53,7 @@ function itemHtml(domain, item) {
 
 function technicalHtml(composition) {
   return `
-    <details class="aura-technical-disclosure" data-pipeline-crs10-technical>
+    <details class="aura-technical-disclosure" data-pipeline-crs10-technical hidden>
       <summary>Información técnica de la relación</summary>
       <dl class="aura-detail">
         <div><dt>Contrato</dt><dd>${esc(composition?.contractVersion || 'CRS-10-EXISTING-RELATIONSHIP-INTELLIGENCE-001')}</dd></div>
@@ -75,23 +74,21 @@ export function relationshipContextHtml(composition) {
   if (!pairs.length) {
     return `
       <section class="aura-inline-empty" data-pipeline-relationship-context="EMPTY">
-        <h3>La relación está vinculada, pero no hay señales adicionales</h3>
-        <p>Forge revisó las fuentes disponibles de Cartera y no encontró información relacional útil para mostrar aquí. No va a completar el espacio con inferencias.</p>
-        ${degraded.length ? `<p><small>${esc(degraded.length)} fuente(s) no estuvieron disponibles por completo.</small></p>` : ''}
-        ${technicalHtml(composition)}
+        <h3>No hay información adicional para esta relación</h3>
+        <p>Con la información disponible, Forge no tiene más contexto útil para mostrar aquí. Los datos que falten se mantienen como pendientes de revisión.</p>
+        ${degraded.length ? '<p><small>Parte de la información no está disponible en este momento.</small></p>' : ''}
       </section>
     `;
   }
 
   return `
     <section class="aura-governed-context-summary" data-pipeline-relationship-context="AVAILABLE">
-      <h3>Lo que ya sabemos de la relación</h3>
-      <p>Estas señales vienen de información existente en Cartera. Te ayudan a entender el contexto antes de actuar, pero no deciden por ti.</p>
+      <h3>Seguimiento con esta persona</h3>
+      <p>Esto resume información que ya está vinculada con la persona para ayudarte a revisar el siguiente paso.</p>
       <div class="aura-governed-projection-list">
         ${pairs.map(({ domain, item }) => itemHtml(domain, item)).join('')}
       </div>
-      ${degraded.length ? `<p><small>${esc(degraded.length)} fuente(s) tienen información incompleta o no disponible.</small></p>` : ''}
-      ${technicalHtml(composition)}
+      ${degraded.length ? '<p><small>Parte de la información no está disponible en este momento.</small></p>' : ''}
     </section>
   `;
 }
@@ -101,7 +98,8 @@ export function pipelinePresentationDiagnostics() {
     presentation: presentationDiagnostics(),
     relationshipPresentation: 'CRS10_PASSTHROUGH_ONLY',
     createsRelationshipMeaning: false,
+    technicalDisclosureRendered: false,
   });
 }
 
-export { DOMAIN_LABELS };
+export { DOMAIN_LABELS, technicalHtml };
