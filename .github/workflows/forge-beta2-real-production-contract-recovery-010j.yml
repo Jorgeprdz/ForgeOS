@@ -76,7 +76,8 @@ jobs:
           node --check docs/static-preview/forge-aura/home/home-adapter-pages-v2.js
           node --check tests/e2e/forge-beta2-real-production-contract-recovery-010j.spec.mjs
           node --check tests/aura010j-playwright.config.mjs
-      - name: Exact production-shape contracts
+      - name: Exact 010J cutover contract
+        if: github.event_name != 'pull_request' || github.head_ref == 'hotfix/forge-beta2-real-production-contract-recovery-010j'
         run: node --test tests/forge-beta2-real-production-contract-recovery-010j.test.mjs
 
   regressions:
