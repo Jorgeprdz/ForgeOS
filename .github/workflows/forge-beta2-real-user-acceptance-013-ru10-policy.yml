@@ -1,0 +1,70 @@
+name: Forge Beta2 Real User Acceptance 013 RU10 Policy Presentation
+
+on:
+  push:
+    branches:
+      - fix/forge-beta2-real-user-acceptance-interpretation-recovery-013
+    paths:
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v10-013.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v7.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module.js'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'tests/forge-beta2-real-user-acceptance-013-ru10-policy-evidence.test.mjs'
+      - 'tests/e2e/fixtures/forge-beta2-013-ru10-policy-evidence/index.html'
+      - 'tests/e2e/forge-beta2-013-ru10-policy-evidence.spec.mjs'
+      - 'playwright.013-ru10.config.mjs'
+      - '.github/workflows/forge-beta2-real-user-acceptance-013-ru10-policy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-beta2-013-ru10-policy
+  cancel-in-progress: true
+
+jobs:
+  ru10-policy-presentation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Syntax gates
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v10-013.js
+          node --check tests/forge-beta2-real-user-acceptance-013-ru10-policy-evidence.test.mjs
+          node --check tests/e2e/forge-beta2-013-ru10-policy-evidence.spec.mjs
+
+      - name: RU10 source-owner and boundary contract
+        run: node --test tests/forge-beta2-real-user-acceptance-013-ru10-policy-evidence.test.mjs
+
+      - name: Inherited semantic truth-boundary regression
+        run: node --test tests/cartera-pdf-semantic-completion-014.test.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: RU10 browser acceptance
+        run: npx playwright test tests/e2e/forge-beta2-013-ru10-policy-evidence.spec.mjs --config=playwright.013-ru10.config.mjs
+
+      - name: Constitutional markers
+        run: |
+          echo 'RU10_POLICY_TRUTH_PRESERVED=YES'
+          echo 'RU10_DOCUMENT_EVIDENCE_PRESERVED=YES'
+          echo 'RU10_SINGLE_PRESENTATION_STATE=PASS'
+          echo 'RU10_DOCUMENT_EVIDENCE_PROMOTED_TO_TRUTH=NO'
+          echo 'RU10_POLICY_MUTATION=NO'
+          echo 'RU10_SECOND_POLICY_ENGINE=NO'
