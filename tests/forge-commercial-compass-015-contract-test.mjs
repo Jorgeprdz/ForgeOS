@@ -51,6 +51,7 @@ includes(files.home, 'Meta del mes');
 includes(files.home, 'Todavía no hay suficiente historial confirmado para mostrar el ingreso anual.');
 includes(files.home, 'newMutationObservers: 0', 'Home 015 must not add a MutationObserver');
 excludes(files.home, 'new MutationObserver', 'Home 015 must use direct/bounded rendering, not a new observer');
+excludes(files.home, 'new Observer(', 'Home 015 must not instantiate an Observer alias');
 
 // Goal authority must be reused, append-only and advisor scoped.
 includes(files.homeAdapter, 'createAdvisorMonthlyPolicyGoalRepository');
@@ -94,7 +95,8 @@ includes(files.incomeCore, 'pipelineScenario', 'Income owner must keep Pipeline 
 includes(files.incomeCore, 'combinedScenario', 'Income owner must own combined scenario projection');
 
 // WA must be bounded and expose all required human goals without observer loops.
-excludes(files.pipeline, 'MutationObserver', 'Phase 015 Pipeline bridge must have zero MutationObserver usage');
+excludes(files.pipeline, 'new MutationObserver', 'Phase 015 Pipeline bridge must not instantiate MutationObserver');
+excludes(files.pipeline, 'new Observer(', 'Phase 015 Pipeline bridge must not instantiate an Observer alias');
 includes(files.pipeline, 'bodyMutationObserver: false');
 includes(files.pipeline, 'conversationMutationObserver: false');
 includes(files.pipeline, 'boundedReconciliation: true');
@@ -125,7 +127,8 @@ includes(files.workspace, 'openWhatsapp.disabled = true', 'WhatsApp must be disa
 includes(files.workspace, 'windowRef.open', 'WhatsApp opening remains an explicit browser action');
 
 // PDF mobile reachability + wording + instrumentation.
-excludes(files.cartera, 'MutationObserver', 'Cartera 015 wrapper must not add a new observer');
+excludes(files.cartera, 'new MutationObserver', 'Cartera 015 wrapper must not instantiate MutationObserver');
+excludes(files.cartera, 'new Observer(', 'Cartera 015 wrapper must not instantiate an Observer alias');
 includes(files.cartera, 'min-height:0!important');
 includes(files.cartera, 'overflow-y:auto!important');
 includes(files.cartera, 'position:sticky!important;bottom:0!important');
