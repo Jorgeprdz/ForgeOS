@@ -30,9 +30,9 @@ test("Aura base boot lazy-loads every productive route, including governed Phase
 
   assert.match(app, /import\("\.\/home\/home-module-008\.js\?v=forge-global-aura-recomposition-008"\)/);
   assert.match(app, /import\("\.\/recomposition\/pipeline-consumer-bridge-008\.js\?v=forge-global-aura-recomposition-008"\)/);
-  assert.match(homeBridge, /from "\.\/home-module\.js"/);
-  assert.match(pipelineBridge, /from "\.\.\/pipeline\/pipeline-module\.js"/);
-  assert.match(pipelineBridge, /from "\.\.\/pipeline\/pipeline-adapter\.js"/);
+  assert.match(homeBridge, /from ["']\.\/home-module\.js["']/);
+  assert.match(pipelineBridge, /from ["']\.\.\/pipeline\/pipeline-module\.js["']/);
+  assert.match(pipelineBridge, /from ["']\.\.\/pipeline\/pipeline-adapter\.js["']/);
 
   assert.match(app, /import\("\.\/activity\/activity-module\.js\?v=activity-reports-ux-001-corrected"\)/);
   assert.match(app, /import\("\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012"\)/);
