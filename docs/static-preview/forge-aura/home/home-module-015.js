@@ -405,6 +405,7 @@ export function createHomeModule(options = {}) {
   const events = new AbortController();
   const timers = new Set();
   let mode = 'monthly';
+  let compassOpen = false;
   let destroyed = false;
 
   function insertionPoint() {
@@ -420,6 +421,9 @@ export function createHomeModule(options = {}) {
       ? missingGoalsHtml()
       : readyCompassHtml(snapshot, mode);
     const node = createNode(doc, html);
+    if ((compassOpen || existing?.open) && node instanceof HTMLDetailsElement) {
+      node.open = true;
+    }
     if (existing) existing.replaceWith(node);
     else {
       const point = insertionPoint();
@@ -450,6 +454,13 @@ export function createHomeModule(options = {}) {
   }
 
   root.addEventListener('click', event => {
+    const summary = event.target?.closest?.('summary');
+    if (summary?.closest?.(`[${COMPASS_ATTR}]`)) {
+      event.preventDefault();
+      compassOpen = !summary.closest(`[${COMPASS_ATTR}]`).open;
+      renderCompass('disclosure-toggle');
+      return;
+    }
     const goals = event.target?.closest?.('[data-commercial-goals-open]');
     if (goals) {
       event.preventDefault();
