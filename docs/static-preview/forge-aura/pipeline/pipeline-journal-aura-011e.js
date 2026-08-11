@@ -142,7 +142,8 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
       button.type = 'button';
       button.className = 'aura-journal-action';
       button.dataset.auraJournalOpen = id;
-      button.textContent = 'Bitácora';
+      button.textContent = '▤';
+      button.title = 'Bitácora';
       button.setAttribute('aria-label', `Abrir Bitácora de ${text(record.querySelector('h3, [data-label="Prospecto"] strong')?.textContent) || 'prospecto'}`);
       actions.append(button);
     });
@@ -175,17 +176,19 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
         loadInitialContext(client, prospectId),
       ]);
       if (activeLayer !== layer) return;
-      if (!entriesResult.ok) throw entriesResult.error;
-
-      const entries = entriesResult.value || [];
-      const timeline = timelineResult.ok ? (timelineResult.value || []) : [];
+      const entries = entriesResult.ok ? (entriesResult.value || []) : [];
+      let currentEntries = entries;
+      let currentTimeline = timelineResult.ok ? (timelineResult.value || []) : [];
+      const timeline = currentTimeline;
       const record = trigger.closest('[data-record-id]');
       const displayName = initial.fullName || text(record?.querySelector('h3, [data-label="Prospecto"] strong')?.textContent) || 'prospecto';
       const SpeechRecognition = globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition;
+      const journalWarning = entriesResult.ok ? '' : '<p class="aura-journal-warning" data-aura-journal-read-warning>No pudimos consultar el historial de Bitácora. Puedes escribir y guardar una nota; el fallo de lectura no bloquea la captura. <button type="button" data-aura-journal-history-retry>Reintentar historial</button></p>';
       const timelineWarning = timelineResult.ok ? '' : '<p class="aura-journal-warning">El Timeline no respondió. Puedes consultar y capturar notas; Forge no lo sustituirá por datos locales.</p>';
       body.setAttribute('aria-busy', 'false');
       body.innerHTML = `
         <section class="aura-journal-context"><h3>Contexto inicial</h3><p>${escapeHtml(initial.initialContext || 'Sin contexto inicial registrado.')}</p></section>
+        ${journalWarning}
         ${timelineWarning}
         <form data-aura-journal-form>
           <label><span>Nueva nota</span><textarea name="content" maxlength="4000" required placeholder="Qué ocurrió, qué preocupa al prospecto y cuál es el siguiente paso."></textarea></label>
@@ -205,6 +208,29 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
       const status = form.querySelector('[data-aura-journal-status]');
       const errorNode = form.querySelector('[data-aura-journal-error]');
       let captureMethod = 'text';
+
+      body.querySelector('[data-aura-journal-history-retry]')?.addEventListener('click', async event => {
+        const button = event.currentTarget;
+        button.disabled = true;
+        try {
+          const [entriesRetry, timelineRetry] = await Promise.all([
+            authorities.journal.listEntries(prospectId).then(value => ({ ok: true, value })).catch(error => ({ ok: false, error })),
+            authorities.timeline.listProspectTimeline(prospectId).then(value => ({ ok: true, value })).catch(error => ({ ok: false, error })),
+          ]);
+          if (!entriesRetry.ok) {
+            status.textContent = 'El historial sigue sin responder. Tu formulario y cualquier texto escrito permanecen disponibles.';
+            return;
+          }
+          currentEntries = entriesRetry.value || [];
+          if (timelineRetry.ok) currentTimeline = timelineRetry.value || [];
+          body.querySelector('[data-aura-journal-history]').innerHTML = historyHtml(mergeHistory(currentEntries, currentTimeline));
+          body.querySelector('[data-aura-journal-read-warning]')?.remove();
+          status.textContent = 'Historial actualizado.';
+          documentRef.documentElement.dataset.auraJournalState = timelineRetry.ok ? 'READY' : 'READY_TIMELINE_DEGRADED';
+        } finally {
+          if (button.isConnected) button.disabled = false;
+        }
+      });
 
       body.querySelector('[data-aura-journal-dictate]')?.addEventListener('click', event => {
         if (!SpeechRecognition) return;
@@ -246,12 +272,10 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
             authorities.timeline.listProspectTimeline(prospectId).then(value => ({ ok: true, value })).catch(error => ({ ok: false, error })),
           ]);
 
-          if (!nextEntriesResult.ok) {
-            throw Object.assign(new Error('PROSPECT_JOURNAL_REFRESH_FAILED'), { code: 'PROSPECT_JOURNAL_REFRESH_FAILED' });
-          }
-
-          const nextEntries = nextEntriesResult.value || [];
-          const nextTimeline = nextTimelineResult.ok ? (nextTimelineResult.value || []) : [];
+          const nextEntries = nextEntriesResult.ok ? (nextEntriesResult.value || []) : [...currentEntries, entry];
+          const nextTimeline = nextTimelineResult.ok ? (nextTimelineResult.value || []) : currentTimeline;
+          currentEntries = nextEntries;
+          currentTimeline = nextTimeline;
           if (nextTimelineResult.ok) {
             const linked = nextTimeline.some(item => item.eventType === 'CONVERSATION_RECORDED' && item.sourceRecordReference === `JOURNAL:${entry.id}`);
             if (!linked) throw Object.assign(new Error('PROSPECT_JOURNAL_TIMELINE_LINK_MISSING'), { code: 'PROSPECT_JOURNAL_TIMELINE_LINK_MISSING' });
@@ -260,7 +284,10 @@ export function installPipelineJournalAura({ documentRef = document, getClient }
           body.querySelector('[data-aura-journal-history]').innerHTML = historyHtml(mergeHistory(nextEntries, nextTimeline));
           textarea.value = '';
           captureMethod = 'text';
-          if (nextTimelineResult.ok) {
+          if (!nextEntriesResult.ok) {
+            status.textContent = 'Nota guardada. No pudimos refrescar el historial; la captura confirmada no se convierte en un fallo de escritura.';
+            documentRef.documentElement.dataset.auraJournalState = 'WRITE_CONFIRMED_READ_DEGRADED';
+          } else if (nextTimelineResult.ok) {
             status.textContent = 'Nota guardada · Timeline confirmado.';
             documentRef.documentElement.dataset.auraJournalState = 'WRITE_CONFIRMED';
             globalThis.dispatchEvent(new CustomEvent('forge:aura-journal-confirmed', { detail: { prospectId, journalEntryId: entry.id, timelineLinked: true } }));

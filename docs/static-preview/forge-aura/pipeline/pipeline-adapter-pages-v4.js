@@ -1,12 +1,16 @@
 import { createPipelineAdapter as createPreviousAdapter } from './pipeline-adapter-pages-v3.js?v=forge-aura-conversation-workspace-011a';
 
-const rootUrl = new URL('../../../../', import.meta.url);
+const sourceLayout = import.meta.url.includes('/docs/static-preview/');
+const rootUrl = new URL(sourceLayout ? '../../../../' : '../../../', import.meta.url);
 let conversationAuthoritiesPromise;
 
 const GOAL_LABELS = Object.freeze({
   first_contact: 'Primer contacto',
   follow_up: 'Seguimiento',
   reactivation: 'Retomar conversación',
+  collection: 'Cobranza',
+  application_signature: 'Firma de solicitud',
+  custom: 'Otro / Personalizado',
   appointment_confirmation: 'Confirmar cita',
   reschedule: 'Reprogramar',
   after_call: 'Después de llamada',
@@ -233,6 +237,7 @@ export async function createPipelineAdapter({ client } = {}) {
     const style = text(options.style || 'professional');
     const variation = Number(options.variation) || 0;
     const combat = options.combat?.reviewed === true ? options.combat : null;
+    const advisorComponents = Array.isArray(options.advisorComponents) ? options.advisorComponents : [];
 
     const invokeFunction = (name, requestOptions) => client.functions?.invoke
       ? client.functions.invoke(name, requestOptions)
@@ -250,6 +255,7 @@ export async function createPipelineAdapter({ client } = {}) {
         variation,
         providerId,
         approvedDisplayName: true,
+        advisorComponents,
       });
       conversationBrief = result.conversationBrief || null;
       providerEnvelope = result.providerEnvelope || null;
@@ -264,6 +270,7 @@ export async function createPipelineAdapter({ client } = {}) {
         variation,
         providerId: 'deterministic',
         approvedDisplayName: true,
+        advisorComponents,
       });
       if (base.conversationBrief?.status === 'SUCCESS') {
         conversationBrief = await buildObjectionAwareBrief(base.conversationBrief, combat);

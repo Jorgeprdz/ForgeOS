@@ -49,6 +49,24 @@ const GOAL_CONFIG = Object.freeze({
     successCondition: "The prospect can freely choose whether to reconnect.",
     allowedCtaType: "OPTIONAL_RECONNECT",
   }),
+  collection: Object.freeze({
+    strategyCategory: "FOLLOW_UP",
+    statement: "Prepare a respectful collection follow-up using only governed payment facts; do not assert nonpayment, debt, lapse or cancellation without governed evidence.",
+    successCondition: "The prospect can review the information or provide evidence without pressure.",
+    allowedCtaType: "OPTIONAL_NEXT_STEP",
+  }),
+  application_signature: Object.freeze({
+    strategyCategory: "FOLLOW_UP",
+    statement: "Follow up on an advisor-declared application-signature step without claiming that a signature is pending unless governed context supports it.",
+    successCondition: "The prospect can review the next step and freely choose how to continue.",
+    allowedCtaType: "OPTIONAL_NEXT_STEP",
+  }),
+  custom: Object.freeze({
+    strategyCategory: "INFORMATION_RESPONSE",
+    statement: "Prepare a message around the advisor-declared objective while treating that objective as an instruction, not as verified prospect, product, payment or policy truth.",
+    successCondition: "The prospect receives a clear, non-pressuring message grounded only in allowed claims.",
+    allowedCtaType: "OPTIONAL_REPLY",
+  }),
   appointment_confirmation: Object.freeze({
     strategyCategory: "APPOINTMENT_CONFIRMATION",
     statement: "Confirm a governed appointment reference without inventing details.",
@@ -103,6 +121,13 @@ function unique(values) {
       .flatMap(item => asArray(item))
       .filter(item => item !== undefined && item !== null && item !== ""),
   )];
+}
+
+function normalizeAdvisorComponents(values) {
+  return unique(asArray(values).map(value => String(value ?? "").trim()))
+    .filter(Boolean)
+    .map(value => value.slice(0, 240))
+    .slice(0, 6);
 }
 
 function nowIso(now) {
@@ -332,6 +357,7 @@ function createPipelineNashDraftOrchestrator({
     locale = DEFAULT_LOCALE,
     approvedDisplayName = false,
     governedReferences = [],
+    advisorComponents = [],
     requestId = null,
     correlationId = null,
   } = {}) {
@@ -341,6 +367,7 @@ function createPipelineNashDraftOrchestrator({
       .toLowerCase();
     const goalConfig = GOAL_CONFIG[goal];
     const toneStyle = STYLE_CONFIG[style] || STYLE_CONFIG.professional;
+    const declaredComponents = normalizeAdvisorComponents(advisorComponents);
 
     if (!pipelineRecord || typeof pipelineRecord !== "object" || Array.isArray(pipelineRecord)) {
       const providerEnvelope = errorEnvelope(
@@ -477,7 +504,12 @@ function createPipelineNashDraftOrchestrator({
           "Do not imply consent, commitment or urgency.",
         ],
         urgencyClassification: "NORMAL",
-        sequencingGuidance: "Use the objective, then an optional non-pressuring next step.",
+        sequencingGuidance: [
+          "Use the objective, then an optional non-pressuring next step.",
+          ...declaredComponents.map(component =>
+            `Advisor-declared message component (instruction only; not source truth): ${component}`
+          ),
+        ].join(" "),
       },
       requestMetadata: {
         briefId: safeOpaque(

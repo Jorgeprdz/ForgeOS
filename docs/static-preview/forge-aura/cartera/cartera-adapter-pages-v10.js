@@ -146,15 +146,14 @@ async function loadPersonPoliciesByCanonicalParticipantId(client, personReferenc
     'CARTERA_POLICY_READ_FAILED',
   );
 
-  const linked = [];
   const personId = String(personResult.data.id);
-  for (const policy of policies) {
+  const linked = await Promise.all(policies.map(async policy => {
     const roleResult = await client.rpc(GENERAL_ROLE_RPC, { p_policy_reference: policy.policy_reference });
     if (roleResult?.error) throw fail('CARTERA_POLICY_ROLE_READ_FAILED', roleResult.error);
     const roles = Array.isArray(roleResult?.data) ? roleResult.data : roleResult?.data?.items || [];
-    if (roles.some(role => String(role?.participant_person_id || '') === personId)) linked.push(policy);
-  }
-  return linked;
+    return roles.some(role => String(role?.participant_person_id || '') === personId) ? policy : null;
+  }));
+  return linked.filter(Boolean);
 }
 
 async function loadPipelinePeople(client, baseDirectory) {
