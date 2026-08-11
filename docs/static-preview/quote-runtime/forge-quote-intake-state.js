@@ -99,30 +99,38 @@
   }
 
   function openExistingReview014(packet) {
-    if (!packet || packet === lastReviewPacket014 || popupOpen014()) return false;
+    if (!packet) return false;
+    if (popupOpen014()) {
+      lastReviewPacket014 = packet;
+      return true;
+    }
+    if (packet === lastReviewPacket014) return false;
+
     const runtime = globalThis.ForgeNuevaCotizacionAcceptedQuoteRuntime;
     const bridge = globalThis.ForgeAcceptedQuoteBridge;
     const reviewButton = runtime?.submit;
     const calculationState = bridge?.getCurrentQuotePreviewCalculationState?.();
     if (!reviewButton || calculationState?.candidateReady !== true) return false;
 
-    lastReviewPacket014 = packet;
     const calculationPending = calculationState.state === "CALCULATING_PREVIEW";
     reviewButton.disabled = false;
     reviewButton.setAttribute("aria-disabled", "false");
     reviewButton.click();
+
+    const opened = popupOpen014();
+    if (!opened) return false;
+
+    status.textContent = "Datos encontrados. Revisa la información antes de confirmarla.";
+    status.setAttribute("data-forge-state", "pending-review");
+    setState(STATES.READY, { message: status.textContent });
 
     if (calculationPending) {
       reviewButton.disabled = true;
       reviewButton.setAttribute("aria-disabled", "true");
     }
 
-    if (popupOpen014()) {
-      status.textContent = "Datos encontrados. Revisa la información antes de confirmarla.";
-      status.setAttribute("data-forge-state", "pending-review");
-      setState(STATES.READY, { message: status.textContent });
-    }
-    return popupOpen014();
+    lastReviewPacket014 = packet;
+    return true;
   }
 
   function scheduleHumanReview014(event) {
@@ -177,6 +185,7 @@
     repair014: Object.freeze({
       packetEvent: PACKET_EVENT_014,
       opensReviewBeforeCalculationCompletes: true,
+      retriesUntilExistingBridgeCanOpen: true,
       usesExistingAcceptanceBridge: true,
       createsQuoteAuthority: false,
       calculatesQuote: false,
