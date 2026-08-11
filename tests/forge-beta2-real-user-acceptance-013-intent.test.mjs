@@ -24,21 +24,28 @@ function pipelineRecord() {
   };
 }
 
+function sourceOwnerFor(fieldId) {
+  if (fieldId === 'appointment.verified_reference') return 'APPOINTMENT_AUTHORITY';
+  if (fieldId === 'interaction.verified_reference') return 'PIPELINE';
+  throw new Error(`FORGE_013_UNEXPECTED_GOVERNED_FIELD:${fieldId}`);
+}
+
 function governedReference(fieldId) {
+  const sourceOwner = sourceOwnerFor(fieldId);
   return {
     fieldId,
     value: `FORGE_013:${fieldId}`,
-    sourceOwner: 'PIPELINE',
-    sourceRecordReference: 'forge-013-intent-prospect',
+    sourceOwner,
+    sourceRecordReference: `FORGE_013:${fieldId}`,
     evidence: {
       evidenceId: `FORGE_013:EVIDENCE:${fieldId}`,
-      sourceOwner: 'PIPELINE',
-      sourceRecordReference: 'forge-013-intent-prospect',
+      sourceOwner,
+      sourceRecordReference: `FORGE_013:${fieldId}`,
       observedAt: NOW,
     },
     verificationStatus: 'VERIFIED',
     freshness: { status: 'CURRENT', observedAt: NOW },
-    sensitivityClassification: 'DECLARED_BUSINESS_CONTEXT',
+    sensitivityClassification: 'AUTHORITY_REFERENCE',
   };
 }
 
