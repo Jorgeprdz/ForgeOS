@@ -22,6 +22,14 @@ function coverageWord(count) {
   return count === 1 ? 'cobertura' : 'coberturas';
 }
 
+function confirmedWord(count) {
+  return count === 1 ? 'confirmada' : 'confirmadas';
+}
+
+function foundWord(count) {
+  return count === 1 ? 'encontrada' : 'encontradas';
+}
+
 function reconcileCanonicalSection(canonicalSection, canonicalCount, evidenceCount) {
   const warning = canonicalSection.querySelector('.cartera-warning');
   const action = canonicalSection.querySelector('[data-add-coverage]');
@@ -54,7 +62,7 @@ export function reconcilePolicyEvidencePresentation(root) {
   let detail;
   if (canonicalCount > 0 && evidenceCount > 0) {
     state = 'CANONICAL_AND_DOCUMENT_EVIDENCE';
-    title = `Hay ${canonicalCount} ${coverageWord(canonicalCount)} confirmadas y ${evidenceCount} encontradas en el documento.`;
+    title = `Hay ${canonicalCount} ${coverageWord(canonicalCount)} ${confirmedWord(canonicalCount)} y ${evidenceCount} ${foundWord(evidenceCount)} en el documento.`;
     detail = 'Las confirmadas forman parte de la póliza. Las encontradas en el documento se muestran por separado para que puedas revisarlas sin confundirlas con información ya confirmada.';
   } else if (canonicalCount === 0 && evidenceCount > 0) {
     state = 'DOCUMENT_EVIDENCE_ONLY';
@@ -62,7 +70,7 @@ export function reconcilePolicyEvidencePresentation(root) {
     detail = 'Revísalas para confirmar que estén correctas. Hasta entonces se muestran como información encontrada en el documento, no como coberturas confirmadas.';
   } else if (canonicalCount > 0) {
     state = 'CANONICAL_ONLY';
-    title = `Hay ${canonicalCount} ${coverageWord(canonicalCount)} confirmadas en la póliza.`;
+    title = `Hay ${canonicalCount} ${coverageWord(canonicalCount)} ${confirmedWord(canonicalCount)} en la póliza.`;
     detail = 'No encontramos filas adicionales de coberturas en el documento disponible para esta vista.';
   } else {
     state = 'NO_CONFIRMED_DETAIL_OR_DOCUMENT_ROWS';
