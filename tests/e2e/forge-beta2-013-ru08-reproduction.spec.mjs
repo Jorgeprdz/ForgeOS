@@ -187,7 +187,7 @@ test('RU08 productive browser path writes, reads, reopens and survives reload', 
   expect(rows.data[0].advisor_id).toBe(userA.id);
   journalId = rows.data[0].id;
 
-  await page.getByRole('button', { name: 'Cerrar' }).click();
+  await page.getByRole('button', { name: 'Cerrar', exact: true }).click();
   await expect(page.locator('[data-aura-journal-form]')).toHaveCount(0);
   await openJournal(page);
   await expect(page.locator('[data-aura-journal-history]')).toContainText(NOTE);
