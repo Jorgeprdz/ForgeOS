@@ -95,6 +95,9 @@ jobs:
       - name: Build canonical-only artifact
         run: node /tmp/build-canonical.cjs
 
+      - name: Complete canonical Pages runtime closure
+        run: node scripts/prepare-forge-alive-pages-runtime-closure.mjs _site
+
       - name: Validate canonical-only artifact and static module graph
         env:
           EXPECTED_DEMO_MODE: 'true'
