@@ -8,6 +8,8 @@ const RUN_SCOPE = process.env.GITHUB_RUN_ID || `local-${process.pid}`;
 const DISPLAY_NAME = `FORGE 013 RU08 ${RUN_SCOPE}`;
 const CONTEXT = `[NON_PERSONAL_SYNTHETIC_ACCEPTANCE_DATA][013][RU08][RUN:${RUN_SCOPE}]`;
 const NOTE = `Nota sintética RU08 ${RUN_SCOPE}: escritura, lectura y persistencia.`;
+const DEGRADED_NOTE = `Nota sintética RU08 ${RUN_SCOPE}: lectura degradada con escritura productiva.`;
+const FAILED_WRITE_DRAFT = `Borrador sintético RU08 ${RUN_SCOPE}: debe sobrevivir fallo de escritura.`;
 
 for (const name of [
   'SUPABASE_URL',
@@ -88,37 +90,7 @@ async function archiveFixture() {
   expect(archived.error, 'RU08_FIXTURE_ARCHIVE').toBeNull();
 }
 
-async function installAuthIsolationShim(page) {
-  // Phase 013 does not authorize an Auth rewrite. Current Aura disables the
-  // login inputs before constructing FormData, which strips email/password.
-  // This test-only shim makes FormData observe the already-entered controls so
-  // RU08 can be reached without changing productive Auth runtime.
-  await page.addInitScript(() => {
-    const NativeFormData = window.FormData;
-    window.FormData = new Proxy(NativeFormData, {
-      construct(Target, args, NewTarget) {
-        const form = args[0];
-        const toggled = [];
-        if (form instanceof HTMLFormElement) {
-          for (const element of form.elements) {
-            if (element?.name && element.disabled) {
-              element.disabled = false;
-              toggled.push(element);
-            }
-          }
-        }
-        try {
-          return Reflect.construct(Target, args, NewTarget);
-        } finally {
-          toggled.forEach(element => { element.disabled = true; });
-        }
-      },
-    });
-  });
-}
-
 async function loginAura(page) {
-  await installAuthIsolationShim(page);
   await page.goto('/docs/static-preview/forge-aura/index.html?route=pipeline');
   await expect(page.locator('[data-aura-login-form]')).toBeVisible();
   await page.locator('input[name="email"]').fill(EMAIL_A);
@@ -136,6 +108,42 @@ async function openJournal(page) {
   await expect(button).toBeVisible();
   await button.click();
   await expect(page.locator('[data-aura-journal-form]')).toBeVisible();
+}
+
+async function journalRowsByContent(content) {
+  return clientA
+    .from('prospect_journal_entries')
+    .select('id,prospect_id,advisor_id,content')
+    .eq('prospect_id', prospectId)
+    .eq('content', content);
+}
+
+async function failBrowserJournalReads(page) {
+  await page.route('**/rest/v1/prospect_journal_entries**', async route => {
+    if (route.request().method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'FORGE_013_SIMULATED_READ_FAILURE', message: 'synthetic read failure' }),
+    });
+  });
+}
+
+async function failBrowserJournalWrites(page) {
+  await page.route('**/rest/v1/prospect_journal_entries**', async route => {
+    if (route.request().method() !== 'POST') {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'FORGE_013_SIMULATED_WRITE_FAILURE', message: 'synthetic write failure' }),
+    });
+  });
 }
 
 test.beforeAll(async () => {
@@ -177,11 +185,7 @@ test('RU08 productive browser path writes, reads, reopens and survives reload', 
   await expect(page.locator('[data-aura-journal-status]')).toContainText(/Nota guardada/);
   await expect(page.locator('[data-aura-journal-history]')).toContainText(NOTE);
 
-  const rows = await clientA
-    .from('prospect_journal_entries')
-    .select('id,prospect_id,advisor_id,content')
-    .eq('prospect_id', prospectId)
-    .eq('content', NOTE);
+  const rows = await journalRowsByContent(NOTE);
   expect(rows.error, 'RU08_READ_AFTER_WRITE').toBeNull();
   expect(rows.data).toHaveLength(1);
   expect(rows.data[0].advisor_id).toBe(userA.id);
@@ -206,6 +210,46 @@ test('RU08 productive browser path writes, reads, reopens and survives reload', 
   expect(timeline.data).toHaveLength(1);
 
   expect(pageErrors, `RU08_PAGE_ERRORS:${pageErrors.join('\n')}`).toEqual([]);
+});
+
+test('RU08 journal read failure does not destroy productive write path', async ({ page }) => {
+  await failBrowserJournalReads(page);
+  await loginAura(page);
+  await openJournal(page);
+
+  await expect(page.locator('[data-aura-journal-read-warning]')).toBeVisible();
+  const textarea = page.locator('[data-aura-journal-form] textarea[name="content"]');
+  await expect(textarea).toBeEditable();
+  await textarea.pressSequentially(DEGRADED_NOTE, { delay: 3 });
+  await expect(textarea).toHaveValue(DEGRADED_NOTE);
+
+  await page.getByRole('button', { name: 'Guardar nota' }).click();
+  await expect(page.locator('[data-aura-journal-error]')).toBeHidden();
+  await expect(page.locator('[data-aura-journal-status]')).toContainText(/Nota guardada/);
+  await expect(page.locator('[data-aura-journal-history]')).toContainText(DEGRADED_NOTE);
+
+  const rows = await journalRowsByContent(DEGRADED_NOTE);
+  expect(rows.error, 'RU08_DEGRADED_WRITE_READBACK').toBeNull();
+  expect(rows.data).toHaveLength(1);
+  expect(rows.data[0].advisor_id).toBe(userA.id);
+});
+
+test('RU08 write failure preserves the typed draft and does not fake persistence', async ({ page }) => {
+  await failBrowserJournalWrites(page);
+  await loginAura(page);
+  await openJournal(page);
+
+  const textarea = page.locator('[data-aura-journal-form] textarea[name="content"]');
+  await textarea.pressSequentially(FAILED_WRITE_DRAFT, { delay: 3 });
+  await expect(textarea).toHaveValue(FAILED_WRITE_DRAFT);
+
+  await page.getByRole('button', { name: 'Guardar nota' }).click();
+  await expect(page.locator('[data-aura-journal-error]')).toBeVisible();
+  await expect(textarea).toHaveValue(FAILED_WRITE_DRAFT);
+
+  const rows = await journalRowsByContent(FAILED_WRITE_DRAFT);
+  expect(rows.error, 'RU08_FAILED_WRITE_BACKEND_CHECK').toBeNull();
+  expect(rows.data).toHaveLength(0);
 });
 
 test('RU08 owner isolation denies B read and write', async () => {
