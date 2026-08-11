@@ -5,12 +5,15 @@ on:
     branches:
       - fix/forge-beta2-real-user-acceptance-interpretation-recovery-013
     paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/app-v4-r1.js'
       - 'docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace-013.js'
       - 'docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v6-013.js'
-      - 'docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-013.js'
+      - 'docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-011b.js'
       - 'nash/pipeline-nash-draft-orchestrator.js'
       - 'nash/conversation-brief/nash-deterministic-conversation-brief-boundary-contract.js'
       - 'nash/draft-intake/nfast06-deterministic-draft-renderer.js'
+      - 'tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs'
       - 'tests/forge-beta2-real-user-acceptance-013-intent.test.mjs'
       - 'tests/e2e/forge-beta2-013-intent-workspace.spec.mjs'
       - 'playwright.013-intent.config.mjs'
@@ -47,8 +50,13 @@ jobs:
         run: |
           node --check docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace-013.js
           node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v6-013.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-011b.js
+          node --check tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs
           node --check tests/forge-beta2-real-user-acceptance-013-intent.test.mjs
           node --check tests/e2e/forge-beta2-013-intent-workspace.spec.mjs
+
+      - name: Productive import graph gate
+        run: node --test tests/forge-beta2-real-user-acceptance-013-import-graph.test.mjs
 
       - name: RU01-RU02 NASH source-owner contract
         run: node --test tests/forge-beta2-real-user-acceptance-013-intent.test.mjs
@@ -61,6 +69,7 @@ jobs:
 
       - name: Constitutional markers
         run: |
+          echo 'PRODUCTIVE_IMPORT_GRAPH_013=PASS'
           echo 'ONE_CLICK_SELECTION_TESTED=YES'
           echo 'SELECTED_INTENT_NASH_CONSUMPTION_TESTED=YES'
           echo 'HUMAN_APPROVAL_REQUIRED=YES'
