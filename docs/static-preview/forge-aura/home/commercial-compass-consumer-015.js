@@ -261,6 +261,7 @@ function schedule(reason = 'runtime') {
   }
 }
 
+window.addEventListener('forge:commercial-compass-rendered', () => schedule('compass-rendered'));
 window.addEventListener('forge:advisor-forecast-read-model-ready', () => schedule('forecast-ready'));
 window.addEventListener('pageshow', () => schedule('pageshow'));
 window.addEventListener('popstate', () => schedule('popstate'));
