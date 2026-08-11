@@ -124,7 +124,7 @@ function renderActivityGuidance() {
   if (!section) {
     section = document.createElement('section');
     section.className = 'commercial-compass-015__activity';
-    section.dataset.commercialActivityGuidance015 = 'true';
+    section.setAttribute('data-commercial-activity-guidance-015', 'true');
     const actions = compass.querySelector('.commercial-compass-015__actions');
     if (actions) actions.before(section);
     else compass.append(section);
