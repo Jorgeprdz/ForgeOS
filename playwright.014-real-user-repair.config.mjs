@@ -5,7 +5,7 @@ const baseURL = process.env.FORGE_E2E_BASE_URL || `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: './tests/e2e',
-  testMatch: /forge-aura-real-user-repair-014\.spec\.mjs/,
+  testMatch: /forge-aura-real-user-repair-014b?\.spec\.mjs/,
   fullyParallel: false,
   forbidOnly: true,
   retries: 0,
