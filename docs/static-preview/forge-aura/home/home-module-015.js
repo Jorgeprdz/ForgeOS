@@ -56,44 +56,44 @@ function installStyles(doc) {
   const style = doc.createElement('style');
   style.id = STYLE_ID;
   style.textContent = `
-    .commercial-compass-015{display:grid;gap:16px;margin:0 0 22px;padding:clamp(16px,2.3vw,26px);border:1px solid #e2e5ec;border-radius:24px;background:#fff;box-shadow:0 12px 36px rgba(28,36,54,.07)}
+    .commercial-compass-015{display:grid;gap:16px;margin:22px 0 0;padding:clamp(16px,2.3vw,26px);border:1px solid var(--aura-border);border-radius:var(--aura-radius-lg);background:var(--aura-surface);box-shadow:var(--aura-shadow-sm)}
     .commercial-compass-015 *{box-sizing:border-box}
     .commercial-compass-015__head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
-    .commercial-compass-015__eyebrow{margin:0 0 5px;font-size:.76rem;font-weight:850;letter-spacing:.08em;color:#667085}
-    .commercial-compass-015 h2{margin:0;font-size:clamp(1.3rem,3vw,2rem);line-height:1.08;color:#182033}
-    .commercial-compass-015__intro{margin:7px 0 0;color:#596176;max-width:64ch}
-    .commercial-compass-015__tabs{display:flex;gap:6px;padding:4px;border-radius:14px;background:#f3f5f8}
-    .commercial-compass-015__tabs button{min-height:38px;border:0;border-radius:10px;padding:7px 14px;background:transparent;color:#4b5568;font:inherit;font-weight:750;cursor:pointer}
-    .commercial-compass-015__tabs button[aria-pressed="true"]{background:#fff;color:#182033;box-shadow:0 1px 5px rgba(20,28,45,.1)}
+    .commercial-compass-015__eyebrow{margin:0 0 5px;font-size:.76rem;font-weight:850;letter-spacing:.08em;color:var(--aura-text-muted)}
+    .commercial-compass-015 h2{margin:0;font-size:clamp(1.3rem,3vw,2rem);line-height:1.08;color:var(--aura-text)}
+    .commercial-compass-015__intro{margin:7px 0 0;color:var(--aura-text-muted);max-width:64ch}
+    .commercial-compass-015__tabs{display:flex;gap:6px;padding:4px;border-radius:14px;background:var(--aura-surface-subtle)}
+    .commercial-compass-015__tabs button{min-height:38px;border:0;border-radius:10px;padding:7px 14px;background:transparent;color:var(--aura-text-muted);font:inherit;font-weight:750;cursor:pointer}
+    .commercial-compass-015__tabs button[aria-pressed="true"]{background:var(--aura-surface);color:var(--aura-brand-hover);box-shadow:var(--aura-shadow-sm)}
     .commercial-compass-015__sequence{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-    .commercial-compass-015__step{display:grid;gap:7px;min-width:0;padding:14px;border:1px solid #e5e7ed;border-radius:18px;background:#fbfcfe}
-    .commercial-compass-015__step small{font-size:.73rem;font-weight:850;letter-spacing:.06em;color:#72798a}
-    .commercial-compass-015__step strong{font-size:1.05rem;color:#1d2638;overflow-wrap:anywhere}
-    .commercial-compass-015__step p{margin:0;color:#60697a;font-size:.88rem;line-height:1.4}
+    .commercial-compass-015__step{display:grid;gap:7px;min-width:0;padding:14px;border:1px solid var(--aura-border);border-radius:18px;background:var(--aura-surface-subtle)}
+    .commercial-compass-015__step small{font-size:.73rem;font-weight:850;letter-spacing:.06em;color:var(--aura-text-muted)}
+    .commercial-compass-015__step strong{font-size:1.05rem;color:var(--aura-text);overflow-wrap:anywhere}
+    .commercial-compass-015__step p{margin:0;color:var(--aura-text-muted);font-size:.88rem;line-height:1.4}
     .commercial-compass-015__metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .commercial-compass-015__metric{padding:16px;border-radius:18px;background:#f7f8fb;min-width:0}
+    .commercial-compass-015__metric{padding:16px;border-radius:18px;background:var(--aura-surface-subtle);min-width:0}
     .commercial-compass-015__metric header{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
     .commercial-compass-015__metric header strong{font-size:.95rem}
-    .commercial-compass-015__metric header span{font-size:.8rem;font-weight:800;padding:4px 8px;border-radius:999px;background:#eef1f5}
-    .commercial-compass-015__metric header span[data-tone="ahead"],.commercial-compass-015__metric header span[data-tone="track"]{background:#edf7ef}
-    .commercial-compass-015__metric header span[data-tone="behind"]{background:#fff2e8}
+    .commercial-compass-015__metric header span{font-size:.8rem;font-weight:800;padding:4px 8px;border-radius:999px;background:var(--aura-info-soft);color:var(--aura-info)}
+    .commercial-compass-015__metric header span[data-tone="ahead"],.commercial-compass-015__metric header span[data-tone="track"]{background:var(--aura-success-soft);color:var(--aura-success)}
+    .commercial-compass-015__metric header span[data-tone="behind"]{background:var(--aura-warning-soft);color:var(--aura-warning)}
     .commercial-compass-015__numbers{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
     .commercial-compass-015__numbers b{font-size:clamp(1.3rem,4vw,2.15rem);line-height:1}
-    .commercial-compass-015__numbers span{color:#697386}
-    .commercial-compass-015__bar{height:8px;border-radius:999px;background:#e6e9ef;overflow:hidden;margin-top:12px}
+    .commercial-compass-015__numbers span{color:var(--aura-text-muted)}
+    .commercial-compass-015__bar{height:8px;border-radius:999px;background:var(--aura-border);overflow:hidden;margin-top:12px}
     .commercial-compass-015__bar i{display:block;height:100%;max-width:100%;border-radius:inherit;background:currentColor}
-    .commercial-compass-015__opportunity{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:14px;border:1px solid #e1e4ea;border-radius:18px}
+    .commercial-compass-015__opportunity{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:14px;border:1px solid var(--aura-border);border-radius:18px}
     .commercial-compass-015__opportunity article{min-width:0;padding:8px}
-    .commercial-compass-015__opportunity small{display:block;color:#687084;margin-bottom:4px}
+    .commercial-compass-015__opportunity small{display:block;color:var(--aura-text-muted);margin-bottom:4px}
     .commercial-compass-015__opportunity strong{font-size:1.12rem;overflow-wrap:anywhere}
-    .commercial-compass-015__scenario{margin:0;color:#687084;font-size:.83rem}
+    .commercial-compass-015__scenario{margin:0;color:var(--aura-text-muted);font-size:.83rem}
     .commercial-compass-015__actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
     .commercial-compass-015__primary,.commercial-compass-015__secondary{min-height:44px;border-radius:13px;padding:10px 15px;font:inherit;font-weight:800;cursor:pointer}
-    .commercial-compass-015__primary{border:0;background:#20283b;color:#fff}
-    .commercial-compass-015__secondary{border:1px solid #d8dce5;background:#fff;color:#30394d}
+    .commercial-compass-015__primary{border:0;background:var(--aura-brand);color:var(--aura-surface)}
+    .commercial-compass-015__secondary{border:1px solid var(--aura-border);background:var(--aura-surface);color:var(--aura-text)}
     .commercial-compass-015__empty{display:grid;gap:12px;padding:8px 0 2px}
-    .commercial-compass-015__empty p{margin:0;color:#596176;max-width:62ch}
-    .commercial-compass-015__partial{padding:10px 12px;border-radius:12px;background:#fff8e8;color:#68521d;font-size:.88rem}
+    .commercial-compass-015__empty p{margin:0;color:var(--aura-text-muted);max-width:62ch}
+    .commercial-compass-015__partial{padding:10px 12px;border-radius:12px;background:var(--aura-warning-soft);color:var(--aura-warning);font-size:.88rem}
     .commercial-goal-layer-015{position:fixed;inset:0;z-index:10030;display:grid;place-items:center;padding:16px;background:rgba(20,27,42,.42)}
     .commercial-goal-layer-015__scrim{position:absolute;inset:0;border:0;background:transparent}
     .commercial-goal-dialog-015{position:relative;z-index:1;display:grid;grid-template-rows:auto minmax(0,1fr) auto;width:min(560px,100%);max-height:min(90dvh,760px);overflow:hidden;border-radius:24px;background:#fff;box-shadow:0 28px 70px rgba(16,24,40,.24)}
@@ -416,7 +416,7 @@ export function createHomeModule(options = {}) {
     if (existing) existing.replaceWith(node);
     else {
       const point = insertionPoint();
-      if (point) point.insertAdjacentElement('beforebegin', node);
+      if (point) point.insertAdjacentElement('afterend', node);
       else root.prepend(node);
     }
     root.dataset.commercialCompass015 = PHASE;
