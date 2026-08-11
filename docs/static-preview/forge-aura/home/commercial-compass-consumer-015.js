@@ -85,7 +85,7 @@ function activityGuidance(snapshot) {
   if (requirement?.status === 'READY' && Array.isArray(requirement.recommendedActions) && requirement.recommendedActions.length) {
     return Object.freeze({
       state: 'READY',
-      message: 'Advisor Forecast convirtió la brecha residual en mínimos sugeridos usando tasas respaldadas por evidencia.',
+      message: 'Forge estimó mínimos sugeridos de actividad usando tu avance y el historial disponible.',
       actions: Object.freeze(requirement.recommendedActions.map(action => Object.freeze({
         actionType: action.actionType,
         requiredCount: finite(action.requiredCount),
@@ -134,7 +134,7 @@ function renderActivityGuidance() {
   const chips = guidance.actions.length
     ? `<ul class="commercial-compass-015__activity-list">${guidance.actions.map(action => `<li>${actionLabel(action.actionType)}: ${count(action.requiredCount)}</li>`).join('')}</ul>`
     : '';
-  section.innerHTML = `<header><div><p class="commercial-compass-015__eyebrow">ACTIVIDAD</p><h3>¿Qué necesito hacer?</h3></div></header><p>${guidance.message}</p>${chips}<small>Fuente: ${guidance.authority}. Sugerencia de planeación; no crea tareas ni acciones automáticamente.</small>`;
+  section.innerHTML = `<header><div><p class="commercial-compass-015__eyebrow">ACTIVIDAD</p><h3>¿Qué necesito hacer?</h3></div></header><p>${guidance.message}</p>${chips}<small>Basado en tu avance e historial disponible. Es una sugerencia de planeación; no crea tareas ni acciones automáticamente.</small>`;
   return true;
 }
 
@@ -206,7 +206,7 @@ function renderAlfredAnswer(payload) {
   response.replaceChildren();
   const meta = document.createElement('p');
   meta.className = 'alfred-command-response__meta';
-  meta.textContent = 'ALFRED · COMMERCIAL COMPASS';
+  meta.textContent = 'ALFRED · TU AVANCE';
   const title = document.createElement('h3');
   title.className = 'alfred-command-response__title';
   title.textContent = payload.title;
@@ -215,7 +215,7 @@ function renderAlfredAnswer(payload) {
   answer.textContent = payload.answer;
   const boundary = document.createElement('p');
   boundary.className = 'alfred-command-response__boundary';
-  boundary.textContent = 'Lectura desde metas, producción confirmada, Compensation Intelligence y Advisor Forecast. Sin escritura ni ejecución automática.';
+  boundary.textContent = 'Lectura basada en tus metas, pólizas confirmadas, ingreso disponible y escenario comercial. No guarda cambios ni ejecuta acciones automáticamente.';
   response.append(meta, title, answer, boundary);
   document.documentElement.dataset.alfredExecutionPath = 'COMMERCIAL_COMPASS_015_READ_ONLY';
   sheet.dataset.alfredExecutionPath = 'COMMERCIAL_COMPASS_015_READ_ONLY';
