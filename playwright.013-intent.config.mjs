@@ -5,7 +5,7 @@ const baseURL = process.env.FORGE_E2E_BASE_URL || `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: './tests/e2e',
-  testMatch: /forge-beta2-013-(intent-workspace|pipeline-context)\.spec\.mjs/,
+  testMatch: /forge-beta2-013-(intent-workspace|pipeline-context|remaining)\.spec\.mjs/,
   fullyParallel: false,
   forbidOnly: true,
   retries: 0,
