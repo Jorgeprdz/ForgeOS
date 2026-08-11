@@ -44,7 +44,7 @@ test('BUG04 confirmed and document-found coverages coexist without contradiction
   await mount(page, { canonical: 1, evidence: 2 });
   const summary = page.locator('[data-policy-evidence-truth-state="CANONICAL_AND_DOCUMENT_EVIDENCE"]');
   await expect(summary).toBeVisible();
-  await expect(summary).toContainText('Hay 1 cobertura confirmadas y 2 encontradas en el documento');
+  await expect(summary).toContainText('Hay 1 cobertura confirmada y 2 encontradas en el documento');
   await expect(summary).toContainText('Las confirmadas forman parte de la póliza');
   await expect(summary).toContainText('sin confundirlas con información ya confirmada');
   const visibleText = await summary.innerText();
