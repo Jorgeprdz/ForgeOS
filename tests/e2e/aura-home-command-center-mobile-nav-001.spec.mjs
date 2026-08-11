@@ -19,7 +19,7 @@ async function mountProductHome(page) {
   await page.evaluate(async () => {
     const [{ createAuraShell }, { createHomeModule }] = await Promise.all([
       import("/docs/static-preview/forge-aura/aura-shell.js"),
-      import("/docs/static-preview/forge-aura/home/home-module.js"),
+      import("/docs/static-preview/forge-aura/home/home-module-015.js"),
     ]);
     const user = Object.freeze({
       id: "advisor-test-001",
@@ -118,11 +118,16 @@ for (const size of sizes) {
     await mountProductHome(page);
     await expect(page.getByRole("heading", { name: "Mi día", exact: true })).toBeVisible();
     await expect(page.getByText("ALFRED", { exact: true }).first()).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Ahora / Hoy" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Requiere atención" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Cómo vas hoy" })).toBeVisible();
-    await expect(page.getByText("Tu ritmo todavía no tiene una métrica verificable", { exact: true })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Patrón contextual" })).toBeVisible();
+    await expect(page.locator(".home-alfred-card")).toHaveCount(1);
+    expect(await page.locator(".home-supporting-item").count()).toBeLessThanOrEqual(2);
+    expect(await page.locator(".home-alfred-card, .home-supporting-item").count()).toBeLessThanOrEqual(3);
+    await expect(page.getByText("Profundiza sólo cuando lo necesites:", { exact: true })).toBeVisible();
+    await expect(page.locator("details[data-commercial-compass-015]")).toBeVisible();
+    await expect(page.locator("details[data-commercial-compass-015]")).not.toHaveAttribute("open", "");
+    await expect(page.getByRole("heading", { name: "Ahora / Hoy" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Requiere atención" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Cómo vas hoy" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Patrón contextual" })).toHaveCount(0);
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(1);
@@ -135,8 +140,9 @@ for (const size of sizes) {
       expect(Math.round(box.x)).toBe(12);
       expect(Math.round(size.width - box.x - box.width)).toBe(12);
       await expect(page.locator("[data-aura-alfred-command-pill]")).toBeVisible();
-      const lastSection = page.locator(".home-truth-note");
+      const lastSection = page.locator("details[data-commercial-compass-015]");
       await lastSection.scrollIntoViewIfNeeded();
+      await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
       const lastBox = await lastSection.boundingBox();
       const navBox = await nav.boundingBox();
       expect(lastBox.y + lastBox.height).toBeLessThan(navBox.y);

@@ -188,6 +188,37 @@ function renderBriefing(snapshot) {
   </article>`;
 }
 
+function renderSupportingAttention(snapshot) {
+  const items = Array.isArray(snapshot.attention?.value?.items)
+    ? snapshot.attention.value.items.slice(1, 3)
+    : [];
+  if (!items.length) return "";
+  return `<section class="home-supporting" aria-labelledby="home-supporting-title">
+    <div class="home-supporting-heading"><p class="home-mini-label">TAMBIÉN VALE LA PENA REVISAR</p><h2 id="home-supporting-title">Dos cosas más</h2></div>
+    <div class="home-supporting-list">${items.map(attention => {
+      const action = attention.recommendedHumanAction;
+      const route = routeForAttention(snapshot, attention);
+      return `<article class="home-supporting-item" data-decision-reference="${esc(attention.decisionReference)}" data-state="${esc(attention.state)}">
+        <div><h3>${esc(attention.title)}</h3><p>${esc(attention.whyNow || attention.reason)}</p></div>
+        <div class="home-supporting-actions">
+          ${action ? `<button type="button" class="home-link-button" data-home-route="${esc(route)}">${esc(action.label)}</button>` : ""}
+          <details><summary>Ver por qué</summary><p>${esc(attention.reason)}</p>${attention.limitations?.length ? `<p><b>Qué falta confirmar:</b> ${esc(attention.limitations.join(" · "))}</p>` : ""}</details>
+        </div>
+      </article>`;
+    }).join("")}</div>
+  </section>`;
+}
+
+function renderDetailNavigation() {
+  return `<nav class="home-detail-navigation" aria-label="Explorar detalle comercial">
+    <span>Profundiza sólo cuando lo necesites:</span>
+    <button type="button" class="home-link-button" data-home-route="pipeline">Pipeline</button>
+    <button type="button" class="home-link-button" data-home-route="actividad">Actividad</button>
+    <button type="button" class="home-link-button" data-home-route="cartera">Cartera</button>
+    <button type="button" class="home-link-button" data-home-route="comisiones">Ingresos</button>
+  </nav>`;
+}
+
 function attentionSummary(snapshot) {
   const orchestration = snapshot.attention?.value;
   const state = snapshot.attention?.state || "UNKNOWN";
@@ -213,28 +244,8 @@ function renderReady(root, snapshot, user, timeZone, now) {
     </header>
 
     ${renderBriefing(snapshot)}
-
-    <section class="home-section" aria-labelledby="home-agenda-title">
-      <div class="home-section-heading"><div><p class="home-mini-label">OPERACIÓN</p><h2 id="home-agenda-title">Ahora / Hoy</h2></div><button type="button" class="home-link-button" data-home-route="pipeline">Ver Pipeline</button></div>
-      ${renderAgenda(snapshot, timeZone)}
-    </section>
-
-    <section class="home-section" aria-labelledby="home-cartera-title">
-      <div class="home-section-heading"><div><p class="home-mini-label">CARTERA</p><h2 id="home-cartera-title">Requiere atención</h2></div><button type="button" class="home-link-button" data-home-route="cartera">Abrir Cartera</button></div>
-      ${renderCartera(snapshot)}
-    </section>
-
-    <section class="home-section home-section--compact" aria-labelledby="home-rhythm-title">
-      <div class="home-section-heading"><div><p class="home-mini-label">TU RITMO</p><h2 id="home-rhythm-title">Cómo vas hoy</h2></div></div>
-      ${renderRhythm(snapshot)}
-    </section>
-
-    <section class="home-section home-section--compact" aria-labelledby="home-mick-title">
-      <div class="home-section-heading"><div><p class="home-mini-label">MICK OBSERVÓ</p><h2 id="home-mick-title">Patrón contextual</h2></div></div>
-      ${renderMick(snapshot)}
-    </section>
-
-    <p class="home-truth-note">Inicio transporta Decision Projection → Attention. No crea tareas, no converge identidades, no confirma pagos, no recalcula métricas y no ejecuta acciones sensibles sin tu revisión.</p>
+    ${renderSupportingAttention(snapshot)}
+    ${renderDetailNavigation()}
   </section>`;
 }
 

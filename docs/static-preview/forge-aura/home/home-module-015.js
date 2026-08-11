@@ -56,7 +56,10 @@ function installStyles(doc) {
   const style = doc.createElement('style');
   style.id = STYLE_ID;
   style.textContent = `
-    .commercial-compass-015{display:grid;gap:16px;margin:22px 0 0;padding:clamp(16px,2.3vw,26px);border:1px solid var(--aura-border);border-radius:var(--aura-radius-lg);background:var(--aura-surface);box-shadow:var(--aura-shadow-sm)}
+    .commercial-compass-015{margin:22px 0 0;border:1px solid var(--aura-border);border-radius:var(--aura-radius-lg);background:var(--aura-surface)}
+    .commercial-compass-015>summary{display:flex;align-items:center;min-height:52px;padding:10px clamp(16px,2.3vw,26px);color:var(--aura-brand-hover);font-weight:800;cursor:pointer}
+    .commercial-compass-015>summary::marker{color:var(--aura-brand)}
+    .commercial-compass-015__detail{display:grid;gap:16px;padding:0 clamp(16px,2.3vw,26px) clamp(16px,2.3vw,26px)}
     .commercial-compass-015 *{box-sizing:border-box}
     .commercial-compass-015__head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
     .commercial-compass-015__eyebrow{margin:0 0 5px;font-size:.76rem;font-weight:850;letter-spacing:.08em;color:var(--aura-text-muted)}
@@ -150,14 +153,16 @@ function incomeMetricHtml({ title, progress, rhythm }) {
 }
 
 function missingGoalsHtml() {
-  return `<section class="commercial-compass-015" ${COMPASS_ATTR} data-compass-state="missing">
+  return `<details class="commercial-compass-015" ${COMPASS_ATTR} data-compass-state="missing">
+    <summary>Progreso y metas</summary>
+    <div class="commercial-compass-015__detail">
     <div class="commercial-compass-015__empty">
       <p class="commercial-compass-015__eyebrow">TU NORTE COMERCIAL</p>
       <h2>Primero, dime a dónde quieres llegar.</h2>
       <p>Para poder decirte cómo vas, primero necesito saber qué quieres lograr.</p>
       <div><button type="button" class="commercial-compass-015__primary" data-commercial-goals-open>Definir mis metas</button></div>
-    </div>
-  </section>`;
+    </div></div>
+  </details>`;
 }
 
 function sequenceHtml(snapshot, mode) {
@@ -209,7 +214,9 @@ function readyCompassHtml(snapshot, mode = 'monthly') {
       </div>
       <p class="commercial-compass-015__scenario">Escenario, no ingreso confirmado. Pipeline se mantiene separado del ingreso estimado actual.</p>`;
 
-  return `<section class="commercial-compass-015" ${COMPASS_ATTR} data-compass-state="${escapeHtml(snapshot.goalState || 'ready')}" data-compass-mode="${annual ? 'annual' : 'monthly'}">
+  return `<details class="commercial-compass-015" ${COMPASS_ATTR} data-compass-state="${escapeHtml(snapshot.goalState || 'ready')}" data-compass-mode="${annual ? 'annual' : 'monthly'}">
+    <summary>Progreso y metas</summary>
+    <div class="commercial-compass-015__detail">
     <div class="commercial-compass-015__head">
       <div><p class="commercial-compass-015__eyebrow">TU NORTE COMERCIAL</p><h2>¿Cómo vas contra lo que quieres lograr?</h2><p class="commercial-compass-015__intro">Meta, brecha, oportunidad y siguiente acción en una sola lectura.</p></div>
       <div class="commercial-compass-015__tabs" role="group" aria-label="Periodo del avance"><button type="button" data-compass-mode="monthly" aria-pressed="${String(!annual)}">Mes</button><button type="button" data-compass-mode="annual" aria-pressed="${String(annual)}">Año</button></div>
@@ -226,8 +233,8 @@ function readyCompassHtml(snapshot, mode = 'monthly') {
     <div class="commercial-compass-015__actions">
       <button type="button" class="commercial-compass-015__secondary" data-commercial-goals-open>Editar metas</button>
       <button type="button" class="commercial-compass-015__primary" data-compass-action data-nav="${escapeHtml(snapshot.action?.nav || '')}">${escapeHtml(snapshot.action?.label || 'Revisar mi avance')}</button>
-    </div>
-  </section>`;
+    </div></div>
+  </details>`;
 }
 
 function currentHandoff() {
