@@ -4,10 +4,14 @@ import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
 
 const root = document.querySelector("[data-aura-app]");
 const auth = createAuraAuth();
+const ROUTE_FACTORY_SETTLE_MS = 12000;
+const ROUTE_MOUNT_SETTLE_MS = 18000;
+const ROUTE_CLEANUP_SETTLE_MS = 2500;
 let shell = null;
 let router = null;
 let activeModule = null;
 let activeRoute = null;
+let activeRouteHost = null;
 let activeAdvisorId = null;
 let bootRevision = 0;
 let alfredRuntime = null;
@@ -24,25 +28,82 @@ function ensureStylesheet(href, key = "module") {
   link.dataset.auraModuleStyleKey = key;
   document.head.append(link);
 }
+
+function ensureRouteHostStyles() {
+  if (document.querySelector('style[data-aura-route-host-style="013"]')) return;
+  const style = document.createElement("style");
+  style.dataset.auraRouteHostStyle = "013";
+  style.textContent = ".aura-route-host-013{display:contents}";
+  document.head.append(style);
+}
+
 function renderBoot(message) {
   root.setAttribute("aria-busy", "true");
   root.innerHTML = `<section class="aura-login" data-aura-auth-state="AUTH_LOADING"><div class="aura-loading"><div aria-hidden="true"></div><h1>${message}</h1><p>Forge verifica tu acceso seguro.</p></div></section>`;
 }
-async function destroyActiveModule() {
+
+function settleWithin(operation, timeoutMs, code) {
+  let timer = null;
+  const work = Promise.resolve().then(operation);
+  const timeout = new Promise((_, reject) => {
+    timer = globalThis.setTimeout(() => {
+      reject(Object.assign(new Error(code), { code }));
+    }, timeoutMs);
+  });
+  return Promise.race([work, timeout]).finally(() => {
+    if (timer !== null) globalThis.clearTimeout(timer);
+  });
+}
+
+async function disposeModule(current, reason = "ROUTE_CHANGE") {
+  if (!current) return;
+  for (const method of ["unmount", "scrub", "destroy"]) {
+    if (typeof current?.[method] !== "function") continue;
+    try {
+      await settleWithin(
+        () => current[method](),
+        ROUTE_CLEANUP_SETTLE_MS,
+        `AURA_ROUTE_${method.toUpperCase()}_TIMEOUT`,
+      );
+    } catch (error) {
+      console.warn("AURA_ROUTE_CLEANUP_SETTLED", {
+        reason,
+        method,
+        code: String(error?.code || error?.message || "CLEANUP_FAILED"),
+      });
+    }
+  }
+}
+
+function retireActiveModule() {
   const current = activeModule;
+  const host = activeRouteHost;
   activeModule = null;
   activeRoute = null;
-  if (!current) return;
-  await current.unmount?.();
-  await current.scrub?.();
-  await current.destroy?.();
+  activeRouteHost = null;
+  host?.remove?.();
+  return current;
 }
+
+function disposeDetached(current, reason) {
+  if (!current) return;
+  void disposeModule(current, reason).catch(error => {
+    console.warn("AURA_ROUTE_CLEANUP_FAILED", String(error?.code || error?.message || "CLEANUP_FAILED"));
+  });
+}
+
+async function destroyActiveModule() {
+  const current = retireActiveModule();
+  await disposeModule(current, "SCRUB");
+}
+
 async function destroyAlfredRuntime() {
   const current = alfredRuntime;
   alfredRuntime = null;
   alfredRuntimePromise = null;
   current?.destroy?.();
 }
+
 async function scrub({ destroyShell = false, clearAdvisor = false } = {}) {
   bootRevision += 1;
   await destroyActiveModule();
@@ -55,6 +116,7 @@ async function scrub({ destroyShell = false, clearAdvisor = false } = {}) {
   }
   document.querySelectorAll('input[type="password"]').forEach(input => { input.value = ""; });
 }
+
 function showLogin(message = "") {
   void scrub({ destroyShell: true, clearAdvisor: true }).then(() => {
     renderAuraLogin({ root, auth, onAuthenticated: () => router.restoreAfterAuth() });
@@ -64,6 +126,7 @@ function showLogin(message = "") {
     }
   });
 }
+
 async function ensureAlfredRuntime(currentShell) {
   if (alfredRuntime) return alfredRuntime;
   if (alfredRuntimePromise) return alfredRuntimePromise;
@@ -83,12 +146,13 @@ async function ensureAlfredRuntime(currentShell) {
     })
     .catch(error => {
       alfredRuntimePromise = null;
-      currentShell.setAlfredAvailability(false, "Alfred Command OS no pudo cargarse; el resto de Forge sigue disponible.");
+      currentShell.setAlfredAvailability(false, "Alfred no pudo cargarse; el resto de Forge sigue disponible.");
       console.error("AURA_ALFRED_COMMAND_OS_LOAD_FAILED", error);
       return null;
     });
   return alfredRuntimePromise;
 }
+
 function wireQuotesEntry(currentShell) {
   const link = root.querySelector('[data-aura-productive-link="cotizaciones"]');
   if (!link || link.dataset.auraQuotesNativeBound === "true") return;
@@ -102,6 +166,7 @@ function wireQuotesEntry(currentShell) {
     router.navigate("cotizaciones");
   });
 }
+
 function ensureShell(snapshot) {
   if (!shell) {
     shell = createAuraShell({
@@ -113,6 +178,7 @@ function ensureShell(snapshot) {
         finally { router.navigate("login", { replace: true }); showLogin(); }
       },
     });
+    ensureRouteHostStyles();
     ensureStylesheet("./aura-recomposition-008.css?v=forge-global-aura-recomposition-008", "aura-recomposition-008");
     wireQuotesEntry(shell);
   }
@@ -121,6 +187,7 @@ function ensureShell(snapshot) {
   void ensureAlfredRuntime(shell);
   return shell;
 }
+
 async function loadRouteFactory(route) {
   if (route === "inicio") {
     const module = await import("./home/home-module-008.js?v=forge-global-aura-recomposition-008");
@@ -145,30 +212,34 @@ async function loadRouteFactory(route) {
   const module = await import("./recomposition/pipeline-consumer-bridge-008.js?v=forge-global-aura-recomposition-008");
   return module.createPipelineModule;
 }
-async function createRouteModule(route, currentShell, client, snapshot) {
+
+async function createRouteModule(route, currentShell, routeRoot, client, snapshot) {
   const factory = await loadRouteFactory(route);
   if (typeof factory !== "function") throw Object.assign(new Error("AURA_ROUTE_FACTORY_INVALID"), { route });
   if (route === "inicio") return factory({
-    root: currentShell.main,
+    root: routeRoot,
     client,
     user: snapshot.user,
     globalState: currentShell.setGlobalState,
     onNavigate: (target, context = null) => router.navigate(target, { context }),
   });
-  if (route === "actividad") return factory({ root: currentShell.main, client, user: snapshot.user, globalState: currentShell.setGlobalState });
-  if (route === "cartera") return factory({ root: currentShell.main, client, globalState: currentShell.setGlobalState });
-  if (route === "comisiones") return factory({ root: currentShell.main, client, user: snapshot.user, globalState: currentShell.setGlobalState });
-  if (route === "cotizaciones") return factory({ root: currentShell.main, client, globalState: currentShell.setGlobalState });
-  return factory({ root: currentShell.main, client, globalState: currentShell.setGlobalState });
+  if (route === "actividad") return factory({ root: routeRoot, client, user: snapshot.user, globalState: currentShell.setGlobalState });
+  if (route === "cartera") return factory({ root: routeRoot, client, globalState: currentShell.setGlobalState });
+  if (route === "comisiones") return factory({ root: routeRoot, client, user: snapshot.user, globalState: currentShell.setGlobalState });
+  if (route === "cotizaciones") return factory({ root: routeRoot, client, globalState: currentShell.setGlobalState });
+  return factory({ root: routeRoot, client, globalState: currentShell.setGlobalState });
 }
+
 function renderRouteLoadFailure(currentShell, route) {
   const labels = { inicio: "Inicio", actividad: "Actividad", cartera: "Cartera", comisiones: "Ingresos", cotizaciones: "Cotizaciones", pipeline: "Pipeline" };
   const label = labels[route] || "este módulo";
   root.setAttribute("aria-busy", "false");
-  currentShell.main.innerHTML = `<section class="aura-login" data-aura-route-state="LOAD_ERROR"><div class="aura-loading"><h1>No pudimos cargar ${label}</h1><p>El resto de Forge sigue protegido. Recarga para obtener el runtime más reciente.</p><button type="button" data-aura-route-retry>Reintentar</button></div></section>`;
+  currentShell.main.dataset.auraRouteState = "LOAD_ERROR";
+  currentShell.main.innerHTML = `<section class="aura-login" data-aura-route-state="LOAD_ERROR"><div class="aura-loading"><h1>No pudimos cargar ${label}</h1><p>Puedes reintentar sin salir de Forge.</p><button type="button" data-aura-route-retry>Reintentar</button></div></section>`;
   currentShell.main.querySelector("[data-aura-route-retry]")?.addEventListener("click", () => router.navigate(route, { replace: true }));
   currentShell.setGlobalState(`No pudimos cargar ${label}.`, "error");
 }
+
 function renderRouteContext(shellRoot, main, route, context = {}) {
   shellRoot?.querySelector("[data-aura-route-context]")?.remove();
   if (!shellRoot || !main || !context || !Object.keys(context).length) return;
@@ -184,11 +255,11 @@ function renderRouteContext(shellRoot, main, route, context = {}) {
   eyebrow.className = "aura-route-context__eyebrow";
   eyebrow.textContent = "CONTINUIDAD DE DECISIÓN";
   const title = document.createElement("strong");
-  title.textContent = "Llegaste desde una señal gobernada";
+  title.textContent = "Llegaste desde una señal de Forge";
   const detail = document.createElement("span");
   const source = context.contract || context.source || "Origen conservado";
   const reference = context.decisionReference || context.sourceReference || "sin referencia adicional";
-  detail.textContent = `${source} · ${reference}. Este módulo conserva el origen; no recalcula ni sustituye a la autoridad fuente.`;
+  detail.textContent = `${source} · ${reference}. Forge conserva el origen de esta señal y no reemplaza la información que la produjo.`;
   copy.append(eyebrow, title, detail);
 
   const close = document.createElement("button");
@@ -203,49 +274,94 @@ function renderRouteContext(shellRoot, main, route, context = {}) {
   section.append(copy, close);
   main.before(section);
 }
+
+function createRouteHost(currentShell, route, revision) {
+  const host = document.createElement("div");
+  host.className = "aura-route-host-013";
+  host.dataset.auraRouteHost = route;
+  host.dataset.auraRouteRevision = String(revision);
+  currentShell.main.replaceChildren(host);
+  return host;
+}
+
 async function mountRoute(route, snapshot) {
   const revision = ++bootRevision;
   if (activeRoute === route && activeModule && activeAdvisorId === snapshot.user?.id) {
     renderRouteContext(shell?.root, shell?.main, route, router?.context?.());
     return;
   }
-  await destroyActiveModule();
+
+  const previous = retireActiveModule();
+  disposeDetached(previous, "ROUTE_CHANGE");
+
   const currentShell = ensureShell(snapshot);
   currentShell.setActiveRoute(route);
-  currentShell.main.replaceChildren();
-  const client = await auth.getClient();
-  if (route === "pipeline") ensureStylesheet("./pipeline/pipeline.css?v=aura-pipeline-ux-reconciliation-001", "pipeline");
-  if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
-  if (route === "cartera") {
-    ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
-    ensureStylesheet("./cartera/cartera-semantic-012.css?v=cartera-pdf-semantic-reconciliation-012", "cartera-semantic-012");
-  }
-  if (route === "comisiones") ensureStylesheet("./income/income.css?v=income-aura-ux-reconciliation-001", "comisiones");
-  if (route === "cotizaciones") ensureStylesheet("./quotes/quotes.css?v=aura-quotes-product-intelligence-001", "cotizaciones");
-  if (revision !== bootRevision) return;
+  currentShell.main.dataset.auraRouteState = "LOADING";
+  currentShell.main.dataset.auraRouteRevision = String(revision);
+  root.setAttribute("aria-busy", "true");
+  const routeHost = createRouteHost(currentShell, route, revision);
+
+  let candidate = null;
   try {
-    activeModule = await createRouteModule(route, currentShell, client, snapshot);
-    if (revision !== bootRevision) { await activeModule?.destroy?.(); activeModule = null; return; }
+    const client = await auth.getClient();
+    if (route === "pipeline") ensureStylesheet("./pipeline/pipeline.css?v=aura-pipeline-ux-reconciliation-001", "pipeline");
+    if (route === "actividad") ensureStylesheet("./activity/activity.css?v=activity-reports-ux-001-corrected", "actividad");
+    if (route === "cartera") {
+      ensureStylesheet("./cartera/cartera.css?v=aura-cartera-pdf-auth-002", "cartera");
+      ensureStylesheet("./cartera/cartera-semantic-012.css?v=cartera-pdf-semantic-reconciliation-012", "cartera-semantic-012");
+    }
+    if (route === "comisiones") ensureStylesheet("./income/income.css?v=income-aura-ux-reconciliation-001", "comisiones");
+    if (route === "cotizaciones") ensureStylesheet("./quotes/quotes.css?v=aura-quotes-product-intelligence-001", "cotizaciones");
+    if (revision !== bootRevision) { routeHost.remove(); return; }
+
+    candidate = await settleWithin(
+      () => createRouteModule(route, currentShell, routeHost, client, snapshot),
+      ROUTE_FACTORY_SETTLE_MS,
+      "AURA_ROUTE_FACTORY_TIMEOUT",
+    );
+    if (revision !== bootRevision) {
+      routeHost.remove();
+      disposeDetached(candidate, "STALE_FACTORY");
+      return;
+    }
+
+    await settleWithin(
+      () => candidate.mount(),
+      ROUTE_MOUNT_SETTLE_MS,
+      "AURA_ROUTE_MOUNT_TIMEOUT",
+    );
+    if (revision !== bootRevision) {
+      routeHost.remove();
+      disposeDetached(candidate, "STALE_MOUNT");
+      return;
+    }
+
+    activeModule = candidate;
     activeRoute = route;
-    await activeModule.mount();
-    if (revision !== bootRevision) { await destroyActiveModule(); return; }
+    activeRouteHost = routeHost;
+    currentShell.main.dataset.auraRouteState = "READY";
     renderRouteContext(currentShell.root, currentShell.main, route, router.context());
     root.setAttribute("aria-busy", "false");
     currentShell.main.focus({ preventScroll: true });
   } catch (error) {
+    routeHost.remove();
+    disposeDetached(candidate, "FAILED_MOUNT");
+    if (revision !== bootRevision) return;
     activeModule = null;
     activeRoute = null;
-    if (revision !== bootRevision) return;
+    activeRouteHost = null;
     renderRouteLoadFailure(currentShell, route);
-    console.error("AURA_ROUTE_LOAD_FAILED", { route, error });
+    console.error("AURA_ROUTE_LOAD_FAILED", { route, code: String(error?.code || error?.message || "ROUTE_LOAD_FAILED") });
   }
 }
+
 async function renderRoute(route) {
   const snapshot = auth.snapshot();
   if (!snapshot.user?.id) { showLogin(); return; }
   if (route === "login") { router.restoreAfterAuth(); return; }
   await mountRoute(route, snapshot);
 }
+
 async function handleAdvisorSwitch(snapshot) {
   const nextAdvisorId = snapshot.user?.id || null;
   if (!nextAdvisorId || !activeAdvisorId || nextAdvisorId === activeAdvisorId) return;
@@ -256,6 +372,7 @@ async function handleAdvisorSwitch(snapshot) {
   globalThis.dispatchEvent(new CustomEvent("aura:advisor-switch-scrub", { detail: { previousAdvisorId, nextAdvisorId, route } }));
   if (auth.snapshot().user?.id === nextAdvisorId) router.navigate(route, { replace: true });
 }
+
 async function boot() {
   renderBoot("Recuperando tu sesión");
   router = createAuraRouter({ onChange: route => void renderRoute(route) });
