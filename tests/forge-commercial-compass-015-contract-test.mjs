@@ -112,6 +112,16 @@ excludes(files.consumer, '.from(', 'Consumer must not read domain tables directl
 excludes(files.consumer, '.rpc(', 'Consumer must not call domain RPCs directly');
 excludes(files.consumer, 'functions.invoke', 'Commercial answers must not depend on a generative provider');
 
+// Human Language gate for the new Forecast/Alfred consumer: technical authorities stay diagnostics-only.
+includes(files.consumer, 'Forge estimó mínimos sugeridos de actividad usando tu avance y el historial disponible.');
+includes(files.consumer, 'Basado en tu avance e historial disponible. Es una sugerencia de planeación; no crea tareas ni acciones automáticamente.');
+includes(files.consumer, "meta.textContent = 'ALFRED · TU AVANCE';");
+includes(files.consumer, 'Lectura basada en tus metas, pólizas confirmadas, ingreso disponible y escenario comercial. No guarda cambios ni ejecuta acciones automáticamente.');
+excludes(files.consumer, 'Fuente: ${guidance.authority}', 'Internal authority ids must not be rendered to the advisor');
+excludes(files.consumer, 'Advisor Forecast convirtió la brecha residual', 'Internal subsystem names must not appear in visible guidance');
+excludes(files.consumer, 'Lectura desde metas, producción confirmada, Compensation Intelligence y Advisor Forecast.', 'Internal subsystem names must not appear in Alfred visible copy');
+excludes(files.consumer, "meta.textContent = 'ALFRED · COMMERCIAL COMPASS';", 'Internal phase naming must not be exposed in Alfred visible copy');
+
 // WA must be bounded and expose all required human goals without observer loops.
 excludes(files.pipeline, 'new MutationObserver', 'Phase 015 Pipeline bridge must not instantiate MutationObserver');
 excludes(files.pipeline, 'new Observer(', 'Phase 015 Pipeline bridge must not instantiate an Observer alias');
