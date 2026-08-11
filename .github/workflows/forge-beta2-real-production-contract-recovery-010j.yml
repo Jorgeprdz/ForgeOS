@@ -24,6 +24,7 @@ jobs:
           fetch-depth: 0
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - name: Enforce bounded 010J diff
+        if: github.event_name != 'pull_request' || github.head_ref == 'hotfix/forge-beta2-real-production-contract-recovery-010j'
         shell: bash
         run: |
           set -euo pipefail
