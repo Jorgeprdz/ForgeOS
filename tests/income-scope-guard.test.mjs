@@ -104,6 +104,22 @@ const phase008CompatibilityAllowed = [
   /^tests\/income-scope-guard\.test\.mjs$/,
 ];
 
+const phase015CompatibilityAllowed = [
+  ...sharedAuraRuntime,
+  ...auraBootCompatibilityAllowed,
+  /^docs\/static-preview\/forge-aura\/home\/(?:home-module-015|home-adapter-pages-v3-015|commercial-compass-consumer-015)\.js$/,
+  /^docs\/static-preview\/forge-aura\/cartera\/cartera-module-v12-015\.js$/,
+  /^docs\/static-preview\/forge-aura\/recomposition\/pipeline-consumer-bridge-015\.js$/,
+  /^\.github\/workflows\/forge-commercial-compass-015\.yml$/,
+  /^playwright\.015-commercial-compass\.config\.mjs$/,
+  /^tests\/forge-commercial-compass-015-contract-test\.mjs$/,
+  /^tests\/forge-pages-cartera-cache-versioning-post-013\.test\.mjs$/,
+  /^tests\/income-scope-guard\.test\.mjs$/,
+  /^tests\/cartera-(?:020c-durable-attach-015|pdf-ingress-legacy-refresh)\.test\.mjs$/,
+  /^tests\/e2e\/forge-commercial-compass-015\.spec\.mjs$/,
+  /^tests\/e2e\/fixtures\/forge-commercial-compass-015\//,
+];
+
 const forbidden = [
   /^compensation\/advisor\/engine\//,
   /^compensation\/advisor-development\/.*engine/,
@@ -145,6 +161,12 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
   );
   assert.deepEqual(forbiddenHits, [], `Forbidden mutation detected: ${forbiddenHits.join(", ")}`);
 
+  const phase015Mutation = changed.some(file =>
+    /^\.github\/workflows\/forge-commercial-compass-015\.yml$/.test(file)
+      || /^docs\/static-preview\/forge-aura\/home\/(?:home-module-015|home-adapter-pages-v3-015|commercial-compass-consumer-015)\.js$/.test(file)
+      || /^docs\/static-preview\/forge-aura\/cartera\/cartera-module-v12-015\.js$/.test(file)
+      || /^tests\/forge-commercial-compass-015-contract-test\.mjs$/.test(file),
+  );
   const phase008Mutation = changed.some(file =>
     /^\.github\/workflows\/forge-global-aura-recomposition-008\.yml$/.test(file)
       || /^docs\/static-preview\/forge-aura\/recomposition\//.test(file)
@@ -162,24 +184,28 @@ test("FORGE_AURA_INCOME_UX_RECONCILIATION_001 preserves strict scope while allow
       || /^docs\/architecture\/source-truth\/FORGE_AURA_HOME_COMMAND_CENTER_AND_MOBILE_NAV_RECONCILIATION_REPORT_001\.md$/.test(file),
   );
 
-  const activeAllowlist = phase008Mutation
-    ? phase008CompatibilityAllowed
-    : incomeProductMutation
-      ? incomeAllowed
-      : quotePhaseMutation
-        ? quotesCompatibilityAllowed
-        : homePhaseMutation
-          ? homeCompatibilityAllowed
-          : carteraCompatibilityAllowed;
-  const scopeName = phase008Mutation
-    ? "PHASE008_GLOBAL_AURA_COMPATIBILITY_SCOPE_VIOLATION"
-    : incomeProductMutation
-      ? "OUT_OF_SCOPE_VIOLATION"
-      : quotePhaseMutation
-        ? "QUOTES_COMPATIBILITY_SCOPE_VIOLATION"
-        : homePhaseMutation
-          ? "HOME_COMPATIBILITY_SCOPE_VIOLATION"
-          : "CARTERA_COMPATIBILITY_SCOPE_VIOLATION";
+  const activeAllowlist = phase015Mutation
+    ? phase015CompatibilityAllowed
+    : phase008Mutation
+      ? phase008CompatibilityAllowed
+      : incomeProductMutation
+        ? incomeAllowed
+        : quotePhaseMutation
+          ? quotesCompatibilityAllowed
+          : homePhaseMutation
+            ? homeCompatibilityAllowed
+            : carteraCompatibilityAllowed;
+  const scopeName = phase015Mutation
+    ? "PHASE015_COMMERCIAL_COMPASS_COMPATIBILITY_SCOPE_VIOLATION"
+    : phase008Mutation
+      ? "PHASE008_GLOBAL_AURA_COMPATIBILITY_SCOPE_VIOLATION"
+      : incomeProductMutation
+        ? "OUT_OF_SCOPE_VIOLATION"
+        : quotePhaseMutation
+          ? "QUOTES_COMPATIBILITY_SCOPE_VIOLATION"
+          : homePhaseMutation
+            ? "HOME_COMPATIBILITY_SCOPE_VIOLATION"
+            : "CARTERA_COMPATIBILITY_SCOPE_VIOLATION";
   const outOfScope = changed.filter(file => !matchesAny(file, activeAllowlist));
   assert.deepEqual(outOfScope, [], `${scopeName}: ${outOfScope.join(", ")}`);
 });

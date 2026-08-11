@@ -246,9 +246,9 @@ test('SECURITY/RLS gate: new presentation wrappers do not add database or servic
   ]) forbiddenWriteCheck(source, label);
 });
 
-test('AURA entrypoint routes only consumers/presentation wrappers; productive adapters remain existing owners', () => {
-  assert.match(auraIndex, /cartera-module-v11-014\.js/);
-  assert.match(auraIndex, /pipeline-consumer-bridge-014\.js/);
+test('AURA entrypoint accepts governed 015 successors while preserving 014 owner chains', () => {
+  assert.match(auraIndex, /cartera-module-v12-015\.js\?v=forge-commercial-compass-015/);
+  assert.match(auraIndex, /pipeline-consumer-bridge-015\.js\?v=forge-commercial-compass-015/);
   assert.match(auraIndex, /income-module-014\.js/);
   assert.match(cartera014, /cartera-module-v10-013\.js/);
   assert.match(pipeline014, /pipeline-consumer-bridge-011b\.js/);

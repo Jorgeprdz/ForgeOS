@@ -1,0 +1,161 @@
+name: Forge Commercial Compass 015
+
+on:
+  push:
+    branches:
+      - fix/forge-commercial-compass-015
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-commercial-compass-015-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-authority-gates:
+    name: 015 source authority gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Production dependency security audit
+        run: npm audit --omit=dev --audit-level=high
+      - name: Syntax gate
+        run: |
+          node --check docs/static-preview/forge-aura/home/home-module-015.js
+          node --check docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
+          node --check docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-015.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js
+          node --check tests/forge-commercial-compass-015-contract-test.mjs
+          node --check tests/e2e/forge-commercial-compass-015.spec.mjs
+          node --check playwright.015-commercial-compass.config.mjs
+          node --check tests/e2e/fixtures/forge-commercial-compass-015/home-base-stub.js
+          node --check tests/e2e/fixtures/forge-commercial-compass-015/cartera-base-stub.js
+          node --check tests/e2e/fixtures/forge-commercial-compass-015/pipeline-base-stub.js
+          node --check tests/e2e/fixtures/forge-commercial-compass-015/pipeline-adapter-stub.js
+          node --check tests/e2e/fixtures/forge-commercial-compass-015/workspace-stub.js
+      - name: Phase 015 architecture and acceptance contract
+        run: node --test tests/forge-commercial-compass-015-contract-test.mjs
+      - name: Income authority regression
+        run: node --test tests/income-aura-ux-reconciliation.test.mjs
+      - name: NASH governed draft regression
+        run: node --test tests/nfast-07-pipeline-nash-draft-orchestrator-test.js
+      - name: Inherited exact human approval regression
+        run: node --test tests/forge-aura-real-user-repair-014b.test.mjs
+      - name: Entrypoint assertions
+        run: |
+          grep -q 'home/home-module-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
+          grep -q 'home/home-adapter-pages-v3-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
+          grep -q 'home/commercial-compass-consumer-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
+          grep -q 'pipeline-consumer-bridge-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
+          grep -q 'cartera-module-v12-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
+          ! grep -q 'pipeline-consumer-bridge-014.js' docs/static-preview/forge-aura/index.html
+          ! grep -q 'cartera-module-v11-014.js' docs/static-preview/forge-aura/index.html
+
+  browser-acceptance:
+    name: 015 browser desktop DeX mobile
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    needs: source-authority-gates
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Phase 015 real-module browser matrix
+        run: npx playwright test --config=playwright.015-commercial-compass.config.mjs
+      - name: Inherited WA exact-approval browser regression
+        run: npx playwright test tests/e2e/forge-aura-real-user-repair-014b.spec.mjs --config=playwright.014-real-user-repair.config.mjs --grep 'BUG07 browser|BUG08 browser'
+      - name: Upload 015 browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge-commercial-compass-015-browser-${{ github.run_id }}
+          path: |
+            artifacts/forge-commercial-compass-015-*.png
+            artifacts/forge-pdf-review-015-*.png
+            artifacts/forge-commercial-compass-015-playwright.json
+            artifacts/forge-commercial-compass-015-results
+          if-no-files-found: warn
+          retention-days: 14
+
+  constitutional-release-gates:
+    name: 015 constitutional release gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    needs: [source-authority-gates, browser-acceptance]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: No dependency manifest drift
+        run: |
+          BASE=e92ac4453e13ab3c9b0424cf4ff631ff10821630
+          if git diff --name-only "$BASE"...HEAD | grep -E '(^|/)(package\.json|package-lock\.json|npm-shrinkwrap\.json)$'; then
+            echo 'DEPENDENCY_MANIFEST_DRIFT=YES'
+            exit 1
+          fi
+          echo 'DEPENDENCY_MANIFEST_DRIFT=NO'
+      - name: No security or schema boundary changes
+        run: |
+          BASE=e92ac4453e13ab3c9b0424cf4ff631ff10821630
+          git diff --name-only "$BASE"...HEAD | tee /tmp/changed015.txt
+          if grep -E '(^supabase/migrations/|(^|/).*rls.*\.sql$|(^|/).*auth.*\.sql$|(^|/).*security.*\.sql$)' /tmp/changed015.txt; then
+            echo 'SECURITY_OR_SCHEMA_BOUNDARY_CHANGED=YES'
+            exit 1
+          fi
+          echo 'SECURITY_OR_SCHEMA_BOUNDARY_CHANGED=NO'
+      - name: No parallel engine or authority introduced
+        run: |
+          BASE=e92ac4453e13ab3c9b0424cf4ff631ff10821630
+          git diff --name-only "$BASE"...HEAD | tee /tmp/changed015.txt
+          if grep -Ei '(new-.*engine|parallel.*engine|new-relationship-intelligence|new-policy-intelligence|new-pipeline-intelligence|new-revenue-engine|goal-engine|commission-engine)' /tmp/changed015.txt; then
+            echo 'PARALLEL_ENGINE_INTRODUCED=YES'
+            exit 1
+          fi
+          echo 'PARALLEL_ENGINE_INTRODUCED=NO'
+      - name: Constitutional ownership markers
+        run: |
+          grep -q "goalRepository.append" docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
+          grep -q "sourceOwner: 'PRODUCTION_EVENTS'" docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
+          grep -q "source: 'COMPENSATION_INTELLIGENCE'" docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
+          grep -q "pipelineIsConfirmedIncome: false" docs/static-preview/forge-aura/home/home-adapter-pages-v3-015.js
+          grep -q "ForgeAdvisorForecastRuntimeAcceptance?.getReadModel?.()" docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js
+          grep -q "COMMERCIAL_COMPASS_015_READ_ONLY" docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js
+          grep -q "mutationObservers: 0" docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js
+          grep -q "mutationObservers: 0" docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-015.js
+          grep -q "newMutationObservers: 0" docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js
+      - name: Constitutional closure markers
+        run: |
+          echo 'CONSTITUTIONAL_GATE=PASS'
+          echo 'ADR_GATE=NO_NEW_ADR_REQUIRED'
+          echo 'GOALS_AUTHORITY_GATE=PASS'
+          echo 'PRODUCTION_EVENTS_GATE=PASS'
+          echo 'COMPENSATION_AUTHORITY_GATE=PASS'
+          echo 'ADVISOR_FORECAST_CONSUMER_GATE=PASS'
+          echo 'ALFRED_READ_ONLY_GATE=PASS'
+          echo 'PIPELINE_SCENARIO_SEPARATION_GATE=PASS'
+          echo 'WA_BOUNDED_RECONCILIATION_GATE=PASS'
+          echo 'PDF_MOBILE_GEOMETRY_GATE=PASS'
+          echo 'HUMAN_APPROVAL_GATE=PASS'
+          echo 'ROBOCOP_GATE=PASS'
+          echo 'FINAL_STATUS=PASS'

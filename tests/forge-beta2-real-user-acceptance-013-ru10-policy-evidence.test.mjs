@@ -10,6 +10,10 @@ const wrapper = fs.readFileSync(
   'docs/static-preview/forge-aura/cartera/cartera-module-v10-013.js',
   'utf8',
 );
+const successor = fs.readFileSync(
+  'docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js',
+  'utf8',
+);
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 
 test('RU10 presentation distinguishes document-found coverage from confirmed policy coverage', () => {
@@ -27,7 +31,7 @@ test('RU10 presentation explains coexistence without saying document information
   assert.match(owner, /Esto no significa que la póliza no tenga coberturas/);
 });
 
-test('RU10 remains presentation-only and Aura mounts the 014 wrapper over the existing owner', () => {
+test('RU10 remains presentation-only and Aura mounts the governed 015 successor over the existing owner chain', () => {
   for (const forbidden of [
     '.insert(', '.update(', '.delete(', '.rpc(', 'service_role',
     'create table', 'create or replace function', 'premium_amount =',
@@ -40,8 +44,9 @@ test('RU10 remains presentation-only and Aura mounts the 014 wrapper over the ex
   assert.match(owner, /persists:\s*false/);
   assert.match(wrapper, /cartera-policy-evidence-presentation-013\.js/);
   assert.match(wrapper, /reconcilePolicyEvidencePresentation\(root\)/);
+  assert.match(successor, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
   assert.match(
     index,
-    /"\.\/cartera\/cartera-module\.js\?v=aura-cartera-pdf-auth-002"\s*:\s*"\.\/cartera\/cartera-module-v11-014\.js\?v=forge-aura-real-user-repair-014"/,
+    /"\.\/cartera\/cartera-module\.js\?v=aura-cartera-pdf-auth-002"\s*:\s*"\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/,
   );
 });

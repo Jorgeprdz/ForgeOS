@@ -1,0 +1,2 @@
+const cards=[{id:'p015',fullName:'Ana Prospecto',status:'contacted',stageLabel:'Contactado',latestActivity:{label:'Llamada registrada'},nextCommitment:null}];
+export async function createPipelineAdapter(){return Object.freeze({getCards:()=>cards,messageOptions:()=>({goals:{first_contact:'Primer contacto',follow_up:'Seguimiento',reactivation:'Retomar conversación',collection:'Cobranza',application_signature:'Firma de solicitud',custom:'Otro / Personalizado'},styles:{professional:'Profesional'}})});}

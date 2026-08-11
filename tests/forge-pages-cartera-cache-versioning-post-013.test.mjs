@@ -10,12 +10,17 @@ const auraIndex = await readFile(
   new URL("../docs/static-preview/forge-aura/index.html", import.meta.url),
   "utf8",
 );
+const module015 = await readFile(
+  new URL("../docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js", import.meta.url),
+  "utf8",
+);
 
 test("Pages cache versioner follows the current Aura Cartera import-map authority", () => {
   assert.match(
     auraIndex,
-    /"\.\/cartera\/cartera-module\.js\?v=[^"]+"\s*:\s*"\.\/cartera\/cartera-module-v10-013\.js\?v=[^"]+"/,
+    /"\.\/cartera\/cartera-module\.js\?v=[^"]+"\s*:\s*"\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/,
   );
+  assert.match(module015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
   assert.match(script, /auraCarteraMappingPattern/);
   assert.match(script, /auraCarteraEntrypoint/);
   assert.doesNotMatch(script, /auraCarteraPattern = \/\\\.\\\/cartera\\\/cartera-module-v9/);

@@ -160,7 +160,7 @@ test('011A NASH Combat stays inside workspace, excludes legacy final response, a
     };
   });
   expect(registration.appends.length,`COMBAT_REGISTRATION_DIAGNOSTIC=${JSON.stringify(registration)}`).toBe(1);
-  await expect(workspace.getByText(/Se registró únicamente la clasificación revisada/i)).toBeVisible();
+  await expect(workspace.getByText(/Se guardó la clasificación revisada en el historial del prospecto/i)).toBeVisible();
   const append=registration.appends.at(-1);
   expect(append.p_event_type).toBe('OBJECTION_RECORDED');
   expect(append.p_payload.objectionCode).toBeTruthy();
