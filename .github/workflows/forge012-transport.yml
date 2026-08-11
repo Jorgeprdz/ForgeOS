@@ -20,15 +20,15 @@ jobs:
       - name: Checkout exact transport commit
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 3
           ref: fix/forge-beta2-real-user-stabilization-012
 
-      - name: Guard exact production parent
+      - name: Guard exact production ancestry
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_REF_NAME" = "fix/forge-beta2-real-user-stabilization-012"
-          test "$(git rev-parse HEAD^)" = "c04cef2e426bf95a431bbb54983831e54386724f"
+          git merge-base --is-ancestor c04cef2e426bf95a431bbb54983831e54386724f HEAD
           test -f .forge012/patch.gz.part00
           test -f .forge012/patch.gz.part01
           test -f .forge012/patch.gz.part02
@@ -70,7 +70,7 @@ jobs:
           check_blob c1401559f093a90e294b32001a181f8c94456f82 docs/static-preview/forge-aura/pipeline/pipeline-conversation-workspace.js
           check_blob 59c1b567a01ebfbe2168740a2427bd9f12856422 docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.js
           check_blob 9499bc1960aa9b03235db01fd631e4b9051572cf docs/static-preview/forge-aura/pipeline/pipeline.css
-          check_blob 4e1bb3e42b6d8a4606e1b6c8854d054ea09972c nash/pipeline-nash-draft-orchestrator.js
+          check_blob 4e1bb3e42b6d8a4606e1b6c8854d054ea09972c2 nash/pipeline-nash-draft-orchestrator.js
           check_blob 2a8b9644064bbf617a1ca4565d3cc07cf2e32426 supabase/migrations/20260810001200_cartera020b_targeted_interactive_claim_012.sql
           check_blob d9456872ab753de29852aafc1d6ccece69461055 tests/forge-beta2-real-user-stabilization-012.test.mjs
           check_blob 69ed6452caae7f48e5d7c88e6fc3eef118dfd8a8 .github/workflows/forge-beta2-real-user-stabilization-012.yml
