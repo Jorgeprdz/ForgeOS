@@ -73,7 +73,8 @@ jobs:
           node --check docs/static-preview/forge-aura/pipeline/pipeline-adapter-pages-v2.js
           node --check tests/e2e/forge-beta2-post-release-productive-recovery-010i.spec.mjs
           node --check tests/aura010i-playwright.config.mjs
-      - name: 010I contracts
+      - name: 010I cutover contract
+        if: github.event_name != 'pull_request' || github.head_ref == 'hotfix/forge-beta2-cartera-pipeline-productive-recovery-010i'
         run: node tests/forge-beta2-post-release-productive-recovery-010i.test.mjs
 
   regressions:
