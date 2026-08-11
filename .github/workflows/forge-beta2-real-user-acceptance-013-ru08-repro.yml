@@ -5,6 +5,7 @@ on:
     branches:
       - fix/forge-beta2-real-user-acceptance-interpretation-recovery-013
     paths:
+      - 'docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.js'
       - 'tests/e2e/forge-beta2-013-ru08-reproduction.spec.mjs'
       - 'playwright.013.config.mjs'
       - '.github/workflows/forge-beta2-real-user-acceptance-013-ru08-repro.yml'
