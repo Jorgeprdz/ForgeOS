@@ -10,6 +10,8 @@ on:
       - 'docs/static-preview/forge-aura/aura-router-v4.js'
       - 'docs/static-preview/forge-aura/pipeline/**'
       - 'docs/static-preview/forge-aura/recomposition/**'
+      - 'advisor-os/sales-pipeline/prospect-journal/prospect-journal-service.js'
+      - 'tests/prospect-journal-service-contract-test.mjs'
       - 'tests/e2e/forge-beta2-013-ru08-reproduction.spec.mjs'
       - 'playwright.013.config.mjs'
       - '.github/workflows/forge-beta2-real-user-acceptance-013-ru08-repro.yml'
@@ -46,6 +48,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Journal source-owner contract
+        run: node --test tests/prospect-journal-service-contract-test.mjs
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
