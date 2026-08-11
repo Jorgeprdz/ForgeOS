@@ -1,6 +1,5 @@
-{"timestamp":"2026-07-31T17:28:33.498Z","name":"predeployment_inventory","status":"PASS","rpcState":"PRESENT","activeProspectAvailable":true}
-{"timestamp":"2026-07-31T17:28:34.336Z","name":"migration_applied","status":"PASS","migration":"20260731000200"}
-{"timestamp":"2026-07-31T17:28:35.550Z","name":"timeline_digest_repair_applied","status":"PASS","migration":"20260731000300"}
-{"timestamp":"2026-07-31T17:28:36.171Z","name":"postdeployment_security_inventory","status":"PASS","checks":["rpc_exists","security_definer","authenticated_execute","anon_denied","checks_auth_uid","checks_owner","excludes_archived","capture_has_pgcrypto_search_path","append_has_pgcrypto_search_path"]}
-{"timestamp":"2026-07-31T17:28:38.543Z","name":"authenticated_rollback_acceptance","status":"PASS","mutationPersisted":false,"originalStatusPreserved":true,"timelineEventObservedInsideTransaction":true,"timelineRollbackPreserved":true}
-{"timestamp":"2026-07-31T17:28:41.912Z","name":"migration_history","status":"PASS","migrations":["20260731000200","20260731000300"]}
+{"timestamp":"2026-08-11T05:39:15.391Z","name":"predeployment_inventory","status":"PASS","rpcState":"PRESENT","activeProspectAvailable":true}
+{"timestamp":"2026-08-11T05:39:15.797Z","name":"migration_applied","status":"PASS","migration":"20260731000200"}
+{"timestamp":"2026-08-11T05:39:16.021Z","name":"timeline_digest_repair_applied","status":"PASS","migration":"20260731000300"}
+{"timestamp":"2026-08-11T05:39:16.197Z","name":"postdeployment_security_inventory","status":"PASS","checks":["rpc_exists","security_definer","authenticated_execute","anon_denied","checks_auth_uid","checks_owner","excludes_archived","capture_has_pgcrypto_search_path","append_has_pgcrypto_search_path"]}
+{"timestamp":"2026-08-11T05:39:16.619Z","name":"database_query","status":"FAIL","httpStatus":400,"detail":"Failed to run sql query: ERROR:  42501: FORGE_DEMO_ACCOUNT_READ_ONLY\nCONTEXT:  PL/pgSQL function forge_demo_read_only_guard() line 15 at RAISE\nSQL statement \"update public.prospects\n  set\n    status = p_status,\n    updated_by = actor_id\n  where id = p_prospect_id\n    and advisor_id = actor_id\n    and archived_at is null\n  returning *\"\nPL/pgSQL function [REDACTED](uuid,text) line 27 at SQL statement\nPL/pgSQL function inline_code_block line 7 at assignment\n"}
