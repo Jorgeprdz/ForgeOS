@@ -99,6 +99,17 @@ export function createConversationWorkspaceController({
     if (openButton) openButton.disabled = true;
     const approvalLabel = state.layer.querySelector('[data-approval-state]');
     if (approvalLabel) approvalLabel.textContent = message || 'Revisión y aprobación humana requeridas.';
+    if (message) announce(state, message, 'warning');
+  }
+
+  function approvalFingerprint(state, draft = text(state.layer.querySelector('[data-draft]')?.value)) {
+    return JSON.stringify({
+      prospectId: text(state.card?.id),
+      goal: text(state.layer.querySelector('[data-message-goal]')?.value),
+      style: text(state.layer.querySelector('[data-message-style]')?.value),
+      components: advisorComponents(state.layer.querySelector('[data-message-components]')?.value),
+      draft,
+    });
   }
 
   function clearDraftForCombat(state) {
@@ -188,7 +199,7 @@ export function createConversationWorkspaceController({
     button.disabled = true;
     try {
       const approval = await state.adapter.approveExactDraft(state.card, state.prepared, value);
-      state.approval = approval.approved ? approval : null;
+      state.approval = approval.approved ? { ...approval, exactFingerprint: approvalFingerprint(state, value) } : null;
       const openButton = state.layer.querySelector('[data-open-whatsapp]');
       openButton.disabled = !approval.approved;
       const label = state.layer.querySelector('[data-approval-state]');
@@ -255,7 +266,11 @@ export function createConversationWorkspaceController({
   }
 
   function openWhatsapp(state) {
-    if (!state.approval?.approved || !state.approval.whatsappUrl) return;
+    if (!state.approval?.approved || !state.approval.whatsappUrl
+      || state.approval.exactFingerprint !== approvalFingerprint(state)) {
+      invalidateApproval(state, 'El texto o su objetivo cambió. Requiere una nueva aprobación exacta.');
+      return;
+    }
     windowRef.open(state.approval.whatsappUrl, '_blank', 'noopener,noreferrer');
     announce(state, 'WhatsApp se abrió manualmente con el texto exacto aprobado. Forge no marcó el mensaje como enviado.', 'info');
   }
@@ -272,6 +287,20 @@ export function createConversationWorkspaceController({
     state.layer.querySelector('[data-draft]').addEventListener('input', () => {
       if (!state.prepared) return;
       invalidateApproval(state, 'El texto cambió. Requiere una nueva aprobación exacta.');
+    });
+    ['[data-message-goal]', '[data-message-style]', '[data-message-components]'].forEach(selector => {
+      state.layer.querySelector(selector)?.addEventListener('input', () => {
+        state.prepared = null;
+        const approve = state.layer.querySelector('[data-approve-draft]');
+        if (approve) approve.disabled = true;
+        invalidateApproval(state, 'El objetivo o los ajustes cambiaron. Prepara y aprueba un nuevo texto.');
+      });
+      state.layer.querySelector(selector)?.addEventListener('change', () => {
+        state.prepared = null;
+        const approve = state.layer.querySelector('[data-approve-draft]');
+        if (approve) approve.disabled = true;
+        invalidateApproval(state, 'El objetivo o los ajustes cambiaron. Prepara y aprueba un nuevo texto.');
+      });
     });
 
     state.keyHandler = event => {

@@ -13,6 +13,46 @@ function phoneAvailable(prospect = {}) {
   return Boolean(String(prospect.phone_normalized || prospect.whatsapp_normalized || '').trim());
 }
 
+function repositoryRootUrl() {
+  return new URL(import.meta.url.includes('/docs/static-preview/') ? '../../../../' : '../../../', import.meta.url);
+}
+
+async function readPipelineRelationshipContext(client, linkedProspects) {
+  if (!linkedProspects.length) return freeze({ state: 'EMPTY', commitments: [], notes: [], history: [] });
+  const rootUrl = repositoryRootUrl();
+  try {
+    if (!globalThis.ForgeProspectJournalServiceP7) {
+      await import(`${new URL('advisor-os/sales-pipeline/prospect-journal/prospect-journal-service.js', rootUrl).href}?v=forge-commercial-compass-015r`);
+    }
+    if (!globalThis.ForgeProspectTimelineServiceNFAST08) {
+      await import(`${new URL('advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-contract.js', rootUrl).href}?v=forge-commercial-compass-015r`);
+      await import(`${new URL('advisor-os/sales-pipeline/prospect-timeline/prospect-timeline-service.js', rootUrl).href}?v=forge-commercial-compass-015r`);
+    }
+    const journal = globalThis.ForgeProspectJournalServiceP7.create(client);
+    const timeline = globalThis.ForgeProspectTimelineServiceNFAST08.create(client);
+    const results = await Promise.all(linkedProspects.map(async prospect => {
+      const [notes, events] = await Promise.all([
+        journal.listEntries(prospect.prospectReference).catch(() => []),
+        timeline.listProspectTimeline(prospect.prospectReference).catch(() => []),
+      ]);
+      return { prospect, notes, events };
+    }));
+    const notes = results.flatMap(result => result.notes.map(note => freeze({
+      kind: 'Nota de seguimiento', summary: note.content, occurredAt: note.createdAt,
+      sourceAuthority: 'PIPELINE_JOURNAL', prospectReference: result.prospect.prospectReference,
+    })));
+    const history = results.flatMap(result => result.events.map(event => freeze({
+      kind: event.eventType || 'Actividad comercial', summary: event.payload?.outcome || event.payload?.decisionCode || 'Actividad registrada',
+      occurredAt: event.occurredAt || event.recordedAt, sourceAuthority: event.eventSource || 'PIPELINE_TIMELINE',
+      prospectReference: result.prospect.prospectReference,
+    })));
+    const commitments = history.filter(item => /APPOINTMENT|FOLLOW_UP|COMMITMENT/i.test(item.kind));
+    return freeze({ state: notes.length || history.length ? 'AVAILABLE' : 'EMPTY', commitments, notes, history });
+  } catch {
+    return freeze({ state: 'UNAVAILABLE', commitments: [], notes: [], history: [] });
+  }
+}
+
 async function readConfirmedPipelineLinks(client) {
   const linkResult = await client.from('commercial_source_identity_links')
     .select('person_id,source_record_reference,prospect_id,match_status,effective_to')
@@ -121,9 +161,11 @@ export async function createCarteraAdapter({ client, windowRef = window } = {}) 
         readConfirmedPipelineLinks(client),
       ]);
       const linkedProspects = links.get(String(reference || '')) || [];
+      const pipelineContext = await readPipelineRelationshipContext(client, linkedProspects);
       return freeze({
         ...workspace,
         linkedProspects,
+        pipelineContext,
         identityContinuity: linkedProspects.length
           ? 'PIPELINE_LINK_CONFIRMED'
           : 'NO_CONFIRMED_PIPELINE_LINK',

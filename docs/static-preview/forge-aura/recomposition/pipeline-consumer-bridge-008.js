@@ -146,19 +146,23 @@ export function createPipelineModule(options = {}) {
         const relationshipAvailable = Boolean(relationshipComposition);
         const projectionAvailable = Array.isArray(context?.projections) && context.projections.length > 0;
         const available = relationshipAvailable || projectionAvailable;
+        const actionable = projectionAvailable;
+        const decisionState = actionable ? 'CONTEXT_SUFFICIENT' : available ? 'CONTEXT_INCOMPLETE_BUT_ACTIONABLE' : 'CONTEXT_INSUFFICIENT';
         body.innerHTML = `
-          <section class="aura-governed-context-summary" data-consumer-state="${esc(context?.state || "unavailable")}">
-            <h3>${available ? "Forge encontró contexto adicional" : "Forge no encontró contexto adicional disponible"}</h3>
-            <p>${available
-              ? "Esta información complementa el registro del prospecto. Revísala antes de decidir qué hacer; Forge no ejecutará ninguna acción por ti."
-              : "Puedes seguir trabajando con los datos del prospecto. Forge no va a inventar una recomendación para llenar lo que falta."}</p>
+          <section class="aura-governed-context-summary" data-consumer-state="${esc(decisionState)}">
+            <h3>${actionable ? "Siguiente paso sugerido" : available ? "Falta completar una parte del contexto" : "No tengo suficiente información para recomendar el siguiente paso todavía."}</h3>
+            <p>${actionable
+              ? "La recomendación se apoya en la información confirmada que aparece abajo."
+              : available ? "Revisa la información disponible y completa lo que falta antes de elegir una acción." : "Completa la información del prospecto para que Forge pueda ayudarte."}</p>
+            ${!actionable ? '<button class="aura-primary" type="button" data-close-governed-context>Completar información</button>' : ''}
             ${technicalContextHtml(context)}
           </section>
           ${relationshipContextHtml(relationshipComposition)}
-          ${projectionsHtml(context?.projections, {
+          ${available ? projectionsHtml(context?.projections, {
             relationshipAvailable: hasUsableRelationshipContext(relationshipComposition),
-          })}
+          }) : ''}
         `;
+        body.querySelectorAll('[data-close-governed-context]').forEach(node => node.addEventListener('click', close));
       })
       .catch(error => {
         if (activeDialog !== currentDialog) return;

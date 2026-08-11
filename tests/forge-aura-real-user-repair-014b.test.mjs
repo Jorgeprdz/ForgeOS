@@ -76,7 +76,8 @@ test('BUG07 complete human workflow preserves draft editing exact approval and m
   assert.match(workspaceBase, /data-draft/);
   assert.match(workspaceBase, /invalidateApproval\(state, 'El texto cambió/);
   assert.match(workspaceBase, /state\.adapter\.approveExactDraft/);
-  assert.match(workspaceBase, /if \(!state\.approval\?\.approved \|\| !state\.approval\.whatsappUrl\) return/);
+  assert.match(workspaceBase, /!state\.approval\?\.approved \|\| !state\.approval\.whatsappUrl/);
+  assert.match(workspaceBase, /exactFingerprint !== approvalFingerprint\(state\)/);
   assert.match(workspaceBase, /windowRef\.open\(state\.approval\.whatsappUrl/);
   assert.match(workspaceBase, /Forge no marcó el mensaje como enviado/);
   for (const label of ['Primer contacto', 'Seguimiento', 'Retomar conversación', 'Cobranza', 'Firma de solicitud', 'Confirmar cita', 'Reprogramar', 'Después de llamada', 'Otro / Personalizado']) {

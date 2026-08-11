@@ -8,10 +8,10 @@ async function fixture(page) {
 test('RU10 browser: one human state reconciles canonical coverages and document evidence', async ({ page }) => {
   const root = await fixture(page);
   const cases = [
-    ['DOCUMENT_EVIDENCE_ONLY', false, true, 'todavía no hay detalle de coberturas confirmado'],
-    ['CANONICAL_AND_DOCUMENT_EVIDENCE', true, true, 'coberturas confirmadas y también existe evidencia documental'],
-    ['CANONICAL_ONLY', true, false, 'sí tiene detalle de coberturas confirmado'],
-    ['NO_CONFIRMED_DETAIL_OR_DOCUMENT_ROWS', false, false, 'no hay detalle de coberturas confirmado ni filas documentales recuperadas'],
+    ['DOCUMENT_EVIDENCE_ONLY', false, true, 'Encontramos 1 cobertura en tu póliza'],
+    ['CANONICAL_AND_DOCUMENT_EVIDENCE', true, true, 'Hay 1 cobertura confirmada y 1 encontrada en el documento'],
+    ['CANONICAL_ONLY', true, false, 'Hay 1 cobertura confirmada en la póliza'],
+    ['NO_CONFIRMED_DETAIL_OR_DOCUMENT_ROWS', false, false, 'Todavía no tenemos detalle de coberturas para mostrar'],
   ];
   for (const [state, canonical, evidence, copy] of cases) {
     await page.evaluate(async ({ canonical, evidence }) => {
@@ -50,11 +50,10 @@ test('RU11 browser: Home primary UI removes engine jargon while technical proven
   await expect(root.locator('.home-alfred-card h2')).toContainText('No hay algo adicional');
   await expect(root.locator('.home-truth-note')).not.toContainText('Decision Projection');
   await expect(root.locator('.home-cartera-copy > details > summary')).toHaveText('Por qué conviene revisarlo');
-  const technical = root.locator('[data-home-technical-disclosure]').first();
+  const technical = root.locator('.home-cartera-copy [data-home-technical-disclosure]');
   await expect(technical).not.toHaveAttribute('open', '');
   const visible = await root.evaluate(node => node.innerText);
   expect(visible).not.toMatch(/Decision Projection|FHAO-007-001|señal gobernada|FUTURE_RADAR/);
-  await technical.locator('summary').click();
   await expect(technical).toContainText('FUTURE_RADAR');
 });
 
@@ -70,7 +69,7 @@ test('RU12 browser: shared presentation contract only translates supplied contex
     };
   });
   expect(result.state).toBe('Por revisar');
-  expect(result.evidence).toBe('2 evidencias');
+  expect(result.evidence).toBe('2 datos disponibles para revisar');
   expect(result.copy).toEqual({ summary: 'Dato existente', uncertainty: 'Falta fecha', smallestUsefulAction: 'Revisar documento' });
   expect(result.diagnostics.callsNash).toBe(false);
   expect(result.diagnostics.createsTruth).toBe(false);
