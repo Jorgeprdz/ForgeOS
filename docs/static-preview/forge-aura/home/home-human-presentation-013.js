@@ -133,6 +133,7 @@ function humanizeStateBlocks(root) {
     if (!detail) continue;
     let next = text(detail.textContent);
     next = next
+      .replace(/Forge no mostrará cero pendientes mientras la proyección canónica no responda\./i, 'La agenda no respondió. Forge no mostrará tus pendientes como cero mientras falte esa información.')
       .replace(/La Agenda canónica confirmó ausencia de compromisos en estas dos categorías\./i, 'No hay compromisos vencidos ni para hoy en la información disponible.')
       .replace(/Future Radar confirmó que no hay elementos de atención en la respuesta actual\./i, 'No hay elementos adicionales que requieran revisión en el horizonte disponible.')
       .replace(/Inicio no recalculará puntos, metas ni ingresos fuera de sus owners productivos\./i, 'Forge no recalculará puntos, metas ni ingresos fuera de sus fuentes correspondientes.');
