@@ -6,6 +6,7 @@ const read = path => fs.readFileSync(new URL(`../${path}`, import.meta.url), 'ut
 const journal = read('docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.js');
 const journalCss = read('docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.css');
 const cartera = read('docs/static-preview/forge-aura/cartera/cartera-module-v9.js');
+const cartera015 = read('docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js');
 const carteraCss = read('docs/static-preview/forge-aura/cartera/cartera-live-acceptance-011e.css');
 const loop = read('docs/static-preview/forge-aura/commercial-loop-011c.js');
 const index = read('docs/static-preview/forge-aura/index.html');
@@ -30,7 +31,7 @@ assert.match(journal, /documentRef\.documentElement\.dataset\.auraJournalState =
 assert.match(journal, /data-aura-journal-retry>Reintentar<\/button>/);
 assert.match(journal, /data-aura-journal-close>Cerrar<\/button>/);
 assert.match(journal, /activeLayer\?\.remove\(\)/);
-assert.match(journal, /delete documentRef\.documentElement\.dataset\.auraJournalOpen/);
+assert.match(journal, /delete documentRef\.documentElement\.dataset\.auraJournalDialogOpen/);
 assert.match(journal, /if \(event\.key !== 'Escape' \|\| !activeLayer\) return;/);
 assert.match(journal, /close\(\);/);
 
@@ -62,7 +63,8 @@ assert.ok(
 assert.match(loop, /pipeline-journal-aura-011e\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
 assert.match(index, /pipeline-journal-aura-011e\.css/);
 assert.match(index, /cartera-live-acceptance-011e\.css/);
-assert.match(index, /cartera-module-v9\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
+assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/);
+assert.match(cartera015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
 assert.match(index, /commercial-loop-011c\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
 
 console.log('AURA_LIVE_ACCEPTANCE_011E=PASS');
