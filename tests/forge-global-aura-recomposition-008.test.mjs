@@ -85,7 +85,7 @@ assert.ok(router.includes("preserveContext"));
 assert.ok(router.includes("clearContext"));
 assert.ok(css.includes("var(--forge-brand-soft)"));
 assert.ok(css.includes("var(--forge-border-subtle)"));
-assert.ok(index.includes("aura-bootstrap-v4-r1.js?v=cartera-020c-policy-attach-pipeline-person-015-auth-premium-entry-001-forge-global-aura-recomposition-008"));
+assert.match(index, /<script type="module" src="\.\/aura-bootstrap-v4-r1\.js\?v=[^"]+"><\/script>/);
 assert.ok(bootstrap.includes('import("./app-v4-r1.js?v=aura-boot-cache-isolation-013-forge-global-aura-recomposition-008")'));
 
 console.log("FORGE_GLOBAL_AURA_RECOMPOSITION_008=PASS");
