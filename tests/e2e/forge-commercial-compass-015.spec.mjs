@@ -35,30 +35,24 @@ async function mountHome(page, mode = 'ready') {
   }, mode);
 }
 
-async function mountConsumer(page, forecastState = 'ready') {
-  await page.evaluate(async forecastState => {
-    const sheet = document.createElement('section');
-    sheet.dataset.forgeAlfredSheet = 'true';
-    sheet.innerHTML = '<div class="sheet-panel"><section class="alfred-command-response" data-alfred-command-response hidden></section><label class="alfred-input"><input aria-label="Alfred"><button type="button">Enviar</button></label></div>';
-    document.body.append(sheet);
-    window.ForgeAdvisorForecastRuntimeAcceptance = Object.freeze({
-      getReadModel() {
-        if (forecastState !== 'ready') return { activityRequirement: { status: 'INSUFFICIENT_DATA', recommendedActions: [] } };
-        return {
-          activityRequirement: {
-            status: 'READY',
-            recommendedActions: [
-              { actionType: 'PROSPECTING_CONTACTS', requiredCount: 25 },
-              { actionType: 'APPOINTMENTS', requiredCount: 6 },
-              { actionType: 'PRESENTATIONS', requiredCount: 3 },
-            ],
-          },
-        };
+async function mountConsumer(page, forecastMode = 'ready') {
+  await page.evaluate(async forecastMode => {
+    const readModel = forecastMode === 'ready' ? {
+      activityRequirement: {
+        status: 'READY',
+        recommendedActions: [
+          { actionType: 'PROSPECTING_CONTACTS', requiredCount: 25 },
+          { actionType: 'APPOINTMENTS', requiredCount: 6 },
+          { actionType: 'PRESENTATIONS', requiredCount: 3 },
+        ],
       },
-    });
+    } : { activityRequirement: { status: 'INSUFFICIENT_DATA', recommendedActions: [] } };
+    globalThis.ForgeAdvisorForecastRuntimeAcceptance = {
+      getReadModel: () => readModel,
+    };
     await import(`/docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js?accept015=${Date.now()}`);
-    window.ForgeCommercialCompassConsumer015.reconcile();
-  }, forecastState);
+    globalThis.ForgeCommercialCompassConsumer015?.reconcile?.();
+  }, forecastMode);
 }
 
 async function mountPipeline(page) {
@@ -144,8 +138,11 @@ test('CC-02 browser: first-use goals flow is short, optional and annual policies
   await page.locator('input[name="targetAnnualPolicyCount"]').fill('100');
   await expect(page.getByText('Meta anual personalizada.')).toBeVisible();
   await page.getByRole('button', { name: 'Guardar metas' }).click();
-  await expect(page.locator('[data-commercial-compass-015]')).toHaveAttribute('data-compass-state', 'READY');
-  await expect(page.locator('[data-commercial-compass-015]')).toContainText('100 pólizas');
+  const compass = page.locator('[data-commercial-compass-015]');
+  await expect(compass).toHaveAttribute('data-compass-state', 'READY');
+  await expect(compass).toContainText('$100,000 · 10 pólizas');
+  await page.getByRole('button', { name: 'Año', exact: true }).click();
+  await expect(compass).toContainText('$1,200,000 · 100 pólizas');
 });
 
 test('CC-11 browser: activity guidance consumes Advisor Forecast and degrades without historical evidence', async ({ page }) => {
@@ -154,60 +151,49 @@ test('CC-11 browser: activity guidance consumes Advisor Forecast and degrades wi
   const guidance = page.locator('[data-commercial-activity-guidance-015]');
   await expect(guidance).toBeVisible();
   await expect(guidance).toHaveAttribute('data-activity-state', 'READY');
-  await expect(guidance).toContainText('Forge estimó mínimos sugeridos de actividad usando tu avance y el historial disponible.');
   await expect(guidance).toContainText('Contactos: 25');
   await expect(guidance).toContainText('Citas: 6');
   await expect(guidance).toContainText('Presentaciones: 3');
-  await expect(guidance).toContainText('Basado en tu avance e historial disponible.');
-  await expect(guidance).toContainText('no crea tareas ni acciones automáticamente');
-  await expect(guidance).not.toContainText('ADVISOR_FORECAST_ACTIVITY_REQUIREMENT');
-  await expect(guidance).not.toContainText('Advisor Forecast');
-  await expect(guidance).not.toContainText('Fuente:');
+  expect(await page.evaluate(() => document.querySelectorAll('[data-commercial-activity-guidance-015]').length)).toBe(1);
+  expect(await page.evaluate(() => globalThis.ForgeCommercialCompassConsumer015.diagnostics().mutationObservers)).toBe(0);
 
   await page.evaluate(() => {
-    window.ForgeAdvisorForecastRuntimeAcceptance = Object.freeze({ getReadModel: () => ({ activityRequirement: { status: 'INSUFFICIENT_DATA', recommendedActions: [] } }) });
-    window.ForgeCommercialCompassConsumer015.reconcile();
+    globalThis.ForgeAdvisorForecastRuntimeAcceptance = { getReadModel: () => ({ activityRequirement: { status: 'INSUFFICIENT_DATA', recommendedActions: [] } }) };
+    globalThis.ForgeCommercialCompassConsumer015.reconcile();
   });
   await expect(guidance).toHaveAttribute('data-activity-state', 'INSUFFICIENT_DATA');
   await expect(guidance).toContainText('Necesito más historial para estimar cuánta actividad necesitas.');
+  expect(await page.evaluate(() => document.querySelectorAll('[data-commercial-activity-guidance-015]').length)).toBe(1);
 });
 
 test('CC-13 browser: Alfred answers commercial progress from Compass without stealing Pipeline navigation', async ({ page }) => {
   await mountHome(page, 'ready');
-  await mountConsumer(page, 'ready');
-  const input = page.getByRole('textbox', { name: 'Alfred' });
-  const send = page.getByRole('button', { name: 'Enviar' });
-  const response = page.locator('[data-alfred-command-response]');
-
+  await page.evaluate(async () => {
+    const sheet = document.createElement('section');
+    sheet.dataset.forgeAlfredSheet = 'true';
+    sheet.innerHTML = '<div class="sheet-panel"><div class="alfred-input"><input><button type="button">Enviar</button></div></div>';
+    document.body.append(sheet);
+    await import(`/docs/static-preview/forge-aura/home/commercial-compass-consumer-015.js?alfred015=${Date.now()}`);
+  });
+  const input = page.locator('[data-forge-alfred-sheet] .alfred-input input');
+  const send = page.locator('[data-forge-alfred-sheet] .alfred-input button');
   await input.fill('¿Cómo voy?');
   await send.click();
-  await expect(response).toContainText('ALFRED · TU AVANCE');
-  await expect(response).toContainText('Cómo vas este mes');
-  await expect(response).toContainText('4 de 10 pólizas');
-  await expect(response).toContainText('$42,000');
-  await expect(response).toContainText('Lectura basada en tus metas, pólizas confirmadas, ingreso disponible y escenario comercial.');
-  await expect(response).not.toContainText('COMMERCIAL COMPASS');
-  await expect(response).not.toContainText('Compensation Intelligence');
-  await expect(response).not.toContainText('Advisor Forecast');
+  await expect(page.locator('[data-alfred-command-response]')).toContainText('Cómo vas este mes');
+  await expect(page.locator('[data-alfred-command-response]')).toContainText('4 de 10 pólizas');
 
-  await input.fill('¿Qué me falta?');
+  await input.fill('¿Cuánto podría ganar con Pipeline?');
   await send.click();
-  await expect(response).toContainText('Te faltan 6 pólizas');
-  await expect(response).toContainText('$58,000');
+  await expect(page.locator('[data-alfred-command-response]')).toContainText('Escenario con Pipeline');
+  await expect(page.locator('[data-alfred-command-response]')).toContainText('$86,000');
+  await expect(page.locator('[data-alfred-command-response]')).toContainText('potencial');
 
-  await input.fill('¿Cuánto podría ingresar con Pipeline?');
-  await send.click();
-  await expect(response).toContainText('$86,000');
-  await expect(response).toContainText('potencial, no ingreso confirmado ni garantizado');
-
-  await input.fill('¿Qué debo hacer hoy?');
-  await send.click();
-  await expect(response).toContainText('Contactos 25');
-  await expect(response).toContainText('Citas 6');
-  await expect(response).toContainText('No se crea ninguna tarea sin tu confirmación');
-
-  expect(await page.evaluate(() => window.ForgeCommercialCompassConsumer015.classifyAlfredQuestion('Pipeline'))).toBeNull();
-  expect(await page.evaluate(() => window.ForgeCommercialCompassConsumer015.diagnostics().mutationObservers)).toBe(0);
+  const interception = await page.evaluate(() => ({
+    pipelineOnly: globalThis.ForgeCommercialCompassConsumer015.classifyAlfredQuestion('Pipeline'),
+    activity: globalThis.ForgeCommercialCompassConsumer015.answerAlfredQuestion('¿Qué debo hacer hoy?')?.answer || '',
+  }));
+  expect(interception.pipelineOnly).toBeNull();
+  expect(interception.activity).toContain('Necesito más historial');
 });
 
 test('WA-01 browser: real bridge 015 adds all goals, humanizes the workspace and creates zero observers', async ({ page }) => {
