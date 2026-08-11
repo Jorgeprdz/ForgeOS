@@ -41,7 +41,6 @@ let clientB;
 let userA;
 let userB;
 let prospectId;
-let journalId;
 
 async function authenticate(client, email, password, key) {
   const { data, error } = await client.auth.signInWithPassword({ email, password });
@@ -110,6 +109,13 @@ async function openJournal(page) {
   await expect(button).toBeVisible();
   await button.click();
   await expect(page.locator('[data-aura-journal-form]')).toBeVisible();
+}
+
+async function closeJournal(page) {
+  const dialog = page.locator('.aura-journal-dialog');
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole('button', { name: 'Cerrar', exact: true }).click();
+  await expect(page.locator('[data-aura-journal-form]')).toHaveCount(0);
 }
 
 async function journalRowsByContent(content) {
@@ -190,11 +196,9 @@ test('RU08 productive browser path writes, reads, reopens and survives reload', 
   const rows = await journalRowsByContent(NOTE);
   expect(rows.error, 'RU08_READ_AFTER_WRITE').toBeNull();
   expect(rows.data).toHaveLength(1);
-  journalId = rows.data[0].id;
   expect(rows.data[0].advisor_id).toBe(userA.id);
 
-  await page.getByRole('button', { name: 'Cerrar bitácora' }).click();
-  await expect(page.locator('[data-aura-journal-form]')).toHaveCount(0);
+  await closeJournal(page);
   await openJournal(page);
   await expect(page.locator('[data-aura-journal-history]')).toContainText(NOTE);
 
@@ -238,11 +242,15 @@ test('RU08 write failure preserves the typed draft and does not fake persistence
 });
 
 test('RU08 owner isolation denies B read and write', async () => {
-  expect(journalId, 'RU08_JOURNAL_ID').toBeTruthy();
+  const ownedRows = await journalRowsByContent(NOTE);
+  expect(ownedRows.error, 'RU08_OWNER_ROW_LOOKUP').toBeNull();
+  expect(ownedRows.data).toHaveLength(1);
+  const ownedJournalId = ownedRows.data[0].id;
+
   const foreignRead = await clientB
     .from('prospect_journal_entries')
     .select('id')
-    .eq('id', journalId);
+    .eq('id', ownedJournalId);
   expect(foreignRead.error, 'RU08_B_READ_ERROR').toBeNull();
   expect(foreignRead.data).toHaveLength(0);
 
