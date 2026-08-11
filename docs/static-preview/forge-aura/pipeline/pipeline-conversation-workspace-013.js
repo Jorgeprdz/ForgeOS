@@ -34,10 +34,24 @@ function clearStaleDraft(layer) {
   if (approvalState) approvalState.textContent = 'El objetivo cambió. Genera una nueva sugerencia antes de aprobar.';
 }
 
-function upgradeGoalSelector(layer) {
+function ensureRegisteredGoals(select, adapter) {
+  const registry = adapter?.messageOptions?.()?.goals || {};
+  const present = new Set([...select.options].map(option => option.value));
+  for (const [value, label] of Object.entries(registry)) {
+    if (!value || present.has(value)) continue;
+    const option = select.ownerDocument.createElement('option');
+    option.value = value;
+    option.textContent = text(label) || value;
+    select.append(option);
+    present.add(value);
+  }
+}
+
+function upgradeGoalSelector(layer, adapter) {
   const select = layer.querySelector('select[data-message-goal]');
   if (!select || select.dataset.intent013Upgraded === 'true') return;
   select.dataset.intent013Upgraded = 'true';
+  ensureRegisteredGoals(select, adapter);
 
   const label = select.closest('label');
   if (!label) return;
@@ -51,6 +65,7 @@ function upgradeGoalSelector(layer) {
   options.setAttribute('role', 'group');
   options.setAttribute('aria-label', 'Tipo de mensaje');
 
+  layer.dataset.selectedMessageIntent = select.value;
   [...select.options].forEach(option => {
     const button = doc.createElement('button');
     button.type = 'button';
@@ -61,8 +76,8 @@ function upgradeGoalSelector(layer) {
     button.addEventListener('click', () => {
       const generate = layer.querySelector('[data-generate-draft]');
       if (generate?.disabled) return;
-      if (select.value === option.value) return;
       select.value = option.value;
+      layer.dataset.selectedMessageIntent = option.value;
       select.dispatchEvent(new Event('change', { bubbles: true }));
       options.querySelectorAll('[data-message-goal-option]').forEach(peer => {
         peer.setAttribute('aria-pressed', String(peer === button));
@@ -103,7 +118,7 @@ export function createConversationWorkspaceController(options = {}) {
       if (!layer) return;
       installStyle(doc);
       humanizeStaticSurface(layer);
-      upgradeGoalSelector(layer);
+      upgradeGoalSelector(layer, args?.adapter);
     },
   });
 }
