@@ -12,8 +12,9 @@ on:
       - 'docs/static-preview/forge-aura/recomposition/**'
       - 'docs/static-preview/forge-aura/pipeline/**'
       - 'docs/static-preview/forge-aura/cartera/**'
+      - 'docs/static-preview/forge-aura/activity/**'
       - 'docs/static-preview/forge-alive/safe-xlsx-decoder.js'
-      - 'docs/static-preview/forge-alive-material3/safe-xlsx-decoder.js'
+      - 'docs/static-preview/forge-alive-material3/**'
       - 'scripts/prepare-aura-home-pages-authorities.mjs'
       - 'tests/forge-beta2-real-user-acceptance-013-route-lifecycle.test.mjs'
       - 'tests/e2e/forge-beta2-013-route-lifecycle.spec.mjs'
@@ -60,13 +61,19 @@ jobs:
           node --check tests/forge-beta2-real-user-acceptance-013-route-lifecycle.test.mjs
           node --test tests/forge-beta2-real-user-acceptance-013-route-lifecycle.test.mjs
 
-      - name: Prepare Home authority closure required by productive Aura
+      - name: Prepare productive Pages runtime namespace
         run: |
           set -euo pipefail
           node scripts/prepare-aura-home-pages-authorities.mjs
           test -f docs/static-preview/forge-alive-material3/home-authorities/repo/advisor-os/next-action/agenda-read-model.js
+          rm -rf docs/static-preview/forge-alive
+          cp -a docs/static-preview/forge-alive-material3 docs/static-preview/forge-alive
           test -f docs/static-preview/forge-alive/home-authorities/repo/advisor-os/next-action/agenda-read-model.js
+          test -f docs/static-preview/forge-alive/activity-manual-entry.js
+          test -f docs/static-preview/forge-alive/activity-reports-productivity-runtime.js
+          test -f docs/static-preview/forge-alive/alfred-command-runtime.js
           echo 'HOME_AUTHORITY_CLOSURE_PREPARATION=PASS'
+          echo 'PAGES_RUNTIME_NAMESPACE_MIRROR=PASS'
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -160,6 +167,7 @@ jobs:
         if: success()
         run: |
           echo 'HOME_AUTHORITY_CLOSURE_PREPARATION=PASS'
+          echo 'PAGES_RUNTIME_NAMESPACE_MIRROR=PASS'
           echo 'ROUTER_RELOAD_USED=NO'
           echo 'FIFTY_TRANSITIONS_TESTED=YES'
           echo 'BACK_FORWARD_TESTED=YES'
