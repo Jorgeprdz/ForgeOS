@@ -29,8 +29,9 @@ const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4-r1.js', 'utf8
 test('RU12 shared contract is presentation-only and preserves unknowns without creating authority', () => {
   assert.equal(humanStateLabel('CONFIRMED'), 'Confirmado');
   assert.equal(humanStateLabel('UNKNOWN'), 'Aún no sabemos');
+  assert.equal(humanStateLabel('INSUFFICIENT_EVIDENCE'), 'Falta información suficiente');
   assert.equal(humanConfidenceLabel('HIGH'), 'Alta');
-  assert.equal(humanEvidenceLabel(2), '2 evidencias');
+  assert.equal(humanEvidenceLabel(2), '2 datos disponibles para revisar');
   assert.deepEqual(presentationDiagnostics(), {
     contractId: 'FORGE_HUMAN_CONTEXT_PRESENTATION_013',
     role: 'PRESENTATION_ONLY',
@@ -62,7 +63,7 @@ test('RU12 is actually reused by Home and Pipeline instead of introducing parall
   assert.match(app, /\.\/home\/home-module-008\.js/);
 });
 
-test('RU11 Home presentation removes architecture vocabulary from primary copy while retaining technical disclosure', () => {
+test('RU11 Home presentation removes architecture vocabulary from primary copy while retaining internal traceability', () => {
   assert.match(homePresentation, /La agenda no respondió\. Forge no mostrará tus pendientes como cero mientras falte esa información\./);
   assert.match(homePresentation, /No hay asuntos adicionales que requieran tu revisión con la información disponible\./);
   assert.match(homePresentation, /Por qué conviene revisarlo/);

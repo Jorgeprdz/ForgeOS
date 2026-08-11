@@ -7,6 +7,7 @@
     ERROR: "ERROR",
     READY: "READY",
   });
+  const PACKET_EVENT_014 = "forge:accepted-quote-packet-ready";
 
   const root = document.querySelector(
     '[data-forge-module="dedicated-new-quote-static-route"]',
@@ -27,6 +28,7 @@
 
   const initialResultsMarkup = results.innerHTML;
   let currentState = null;
+  let lastReviewPacket014 = null;
 
   function restoreInitialResults() {
     results.innerHTML = initialResultsMarkup;
@@ -88,7 +90,55 @@
 
   function reset() {
     input.value = "";
+    lastReviewPacket014 = null;
     setState(STATES.EMPTY, { resetResults: true });
+  }
+
+  function popupOpen014() {
+    return Boolean(document.querySelector('[data-quote-preview-confirmation-popup="true"]'));
+  }
+
+  function openExistingReview014(packet) {
+    if (!packet) return false;
+    if (popupOpen014()) {
+      lastReviewPacket014 = packet;
+      return true;
+    }
+    if (packet === lastReviewPacket014) return false;
+
+    const runtime = globalThis.ForgeNuevaCotizacionAcceptedQuoteRuntime;
+    const bridge = globalThis.ForgeAcceptedQuoteBridge;
+    const reviewButton = runtime?.submit;
+    const calculationState = bridge?.getCurrentQuotePreviewCalculationState?.();
+    if (!reviewButton || calculationState?.candidateReady !== true) return false;
+
+    const calculationPending = calculationState.state === "CALCULATING_PREVIEW";
+    reviewButton.disabled = false;
+    reviewButton.setAttribute("aria-disabled", "false");
+    reviewButton.click();
+
+    const opened = popupOpen014();
+    if (!opened) return false;
+
+    status.textContent = "Datos encontrados. Revisa la información antes de confirmarla.";
+    status.setAttribute("data-forge-state", "pending-review");
+    setState(STATES.READY, { message: status.textContent });
+
+    if (calculationPending) {
+      reviewButton.disabled = true;
+      reviewButton.setAttribute("aria-disabled", "true");
+    }
+
+    lastReviewPacket014 = packet;
+    return true;
+  }
+
+  function scheduleHumanReview014(event) {
+    const packet = event?.detail?.packet || null;
+    globalThis.setTimeout(() => {
+      if (openExistingReview014(packet)) return;
+      globalThis.setTimeout(() => openExistingReview014(packet), 50);
+    }, 0);
   }
 
   document.addEventListener("change", (event) => {
@@ -98,6 +148,7 @@
       setState(STATES.EMPTY, { resetResults: true });
       return;
     }
+    lastReviewPacket014 = null;
     setState(STATES.LOADING, { resetResults: true });
   }, true);
 
@@ -124,7 +175,24 @@
     attributeFilter: ["data-tone"],
   });
 
-  const api = Object.freeze({ STATES, getState: () => currentState, setState, reset });
+  globalThis.addEventListener(PACKET_EVENT_014, scheduleHumanReview014);
+
+  const api = Object.freeze({
+    STATES,
+    getState: () => currentState,
+    setState,
+    reset,
+    repair014: Object.freeze({
+      packetEvent: PACKET_EVENT_014,
+      opensReviewBeforeCalculationCompletes: true,
+      retriesUntilExistingBridgeCanOpen: true,
+      usesExistingAcceptanceBridge: true,
+      createsQuoteAuthority: false,
+      calculatesQuote: false,
+      confirmsAutomatically: false,
+      persistsAutomatically: false,
+    }),
+  });
   globalThis.ForgeQuoteIntakeState = api;
   setState(STATES.EMPTY);
 })();

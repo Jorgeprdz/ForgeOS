@@ -1,0 +1,155 @@
+name: Forge Aura Real User Repair 014
+
+on:
+  push:
+    branches:
+      - fix/forge-aura-real-user-repair-014
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forge-aura-real-user-repair-014-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-authority-gates:
+    name: 014 source authority gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production dependency security audit
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Syntax gate
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v11-014.js
+          node --check docs/static-preview/forge-aura/income/income-module-014.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-consumer-bridge-014.js
+          node --check docs/static-preview/forge-aura/recomposition/governed-context-presentation-014.js
+          node --check docs/static-preview/forge-aura/recomposition/human-language-gate-014.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-policy-evidence-presentation-013.js
+          node --check docs/static-preview/forge-aura/recomposition/human-context-presentation-013.js
+          node --check docs/static-preview/forge-aura/recomposition/pipeline-crs10-context-presentation-013.js
+          node --check docs/static-preview/quote-runtime/forge-quote-intake-state.js
+          node --check tests/forge-aura-real-user-repair-014.test.mjs
+          node --check tests/e2e/forge-aura-real-user-repair-014.spec.mjs
+
+      - name: 014 root cause and authority matrix
+        run: node --test tests/forge-aura-real-user-repair-014.test.mjs
+
+      - name: Inherited policy evidence contract
+        run: node --test tests/forge-beta2-real-user-acceptance-013-ru10-policy-evidence.test.mjs
+
+      - name: Inherited human presentation contract
+        run: node --test tests/forge-beta2-real-user-acceptance-013-ru11-ru12-presentation.test.mjs
+
+      - name: Quote lifecycle and human-confirmation authority
+        run: |
+          node --test --test-name-pattern='BUG01|AI AUTHORITY|LAW ZERO' tests/forge-aura-real-user-repair-014.test.mjs
+          grep -q 'acceptedQuoteReviewSnapshotBoundary.setSnapshot' docs/static-preview/quote-runtime/forge-accepted-quote-bridge.js
+          grep -q 'opensReviewBeforeCalculationCompletes: true' docs/static-preview/quote-runtime/forge-quote-intake-state.js
+          grep -q 'confirmsAutomatically: false' docs/static-preview/quote-runtime/forge-quote-intake-state.js
+          grep -q 'persistsAutomatically: false' docs/static-preview/quote-runtime/forge-quote-intake-state.js
+
+      - name: Governance evidence exists
+        run: |
+          test -f docs/evidence/FORGE_AURA_REAL_USER_REPAIR_014_GOVERNANCE_GATE.md
+          grep -q 'ADR_STATUS_ASSUMED_FROM_FILENAME=NO' docs/evidence/FORGE_AURA_REAL_USER_REPAIR_014_GOVERNANCE_GATE.md
+          grep -q 'NEW_ADR_CREATED=0' docs/evidence/FORGE_AURA_REAL_USER_REPAIR_014_GOVERNANCE_GATE.md
+          grep -q 'No new Relationship Intelligence' docs/evidence/FORGE_AURA_REAL_USER_REPAIR_014_GOVERNANCE_GATE.md
+
+  browser-acceptance:
+    name: 014 browser acceptance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    needs: source-authority-gates
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: 014 desktop DeX mobile matrix
+        run: npx playwright test --config=playwright.014-real-user-repair.config.mjs
+
+      - name: Coverage browser regression
+        run: npx playwright test tests/e2e/forge-beta2-013-ru10-policy-evidence.spec.mjs --config=playwright.013-ru10.config.mjs
+
+      - name: Relationship and context browser regression
+        run: npx playwright test tests/e2e/forge-beta2-013-pipeline-context.spec.mjs --config=playwright.013-intent.config.mjs
+
+  constitutional-release-gates:
+    name: 014 constitutional release gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    needs: [source-authority-gates, browser-acceptance]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: No security boundary files changed from base
+        run: |
+          BASE=a8bdd20988c8463e80e09d154546045d05840c7b
+          git diff --name-only "$BASE"...HEAD > /tmp/changed.txt
+          if grep -E '(^|/)(supabase/config\.toml|.*rls.*\.sql|.*auth.*\.sql|.*csp.*|.*security.*\.sql)$' /tmp/changed.txt; then
+            echo 'SECURITY_BOUNDARY_FILE_CHANGED=YES'
+            exit 1
+          fi
+          echo 'SECURITY_BOUNDARY_FILE_CHANGED=NO'
+
+      - name: No dependency manifest drift
+        run: |
+          BASE=a8bdd20988c8463e80e09d154546045d05840c7b
+          if git diff --name-only "$BASE"...HEAD | grep -E '(^|/)(package\.json|package-lock\.json|npm-shrinkwrap\.json)$'; then
+            echo 'DEPENDENCY_MANIFEST_DRIFT=YES'
+            exit 1
+          fi
+          echo 'DEPENDENCY_MANIFEST_DRIFT=NO'
+
+      - name: No parallel engine introduced
+        run: |
+          BASE=a8bdd20988c8463e80e09d154546045d05840c7b
+          git diff --name-only "$BASE"...HEAD | tee /tmp/changed.txt
+          if grep -E '(new-relationship-intelligence|new-policy-intelligence|new-pipeline-intelligence|new-revenue-engine|parallel.*engine)' /tmp/changed.txt; then
+            exit 1
+          fi
+          echo 'PARALLEL_ENGINE_INTRODUCED=NO'
+
+      - name: Constitutional markers
+        run: |
+          echo 'CONSTITUTIONAL_GATE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'ADR_GATE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'LAW_ZERO_GATE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'AI_AUTHORITY_GATE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'RLS_GATE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'SECURITY_GATE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'BROWSER_ACCEPTANCE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'HUMAN_LANGUAGE_GATE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'RELATIONSHIP_CONVERGENCE_GATE=READY_FOR_FINAL_TRIPLE_CHECK'
+          echo 'ROBOCOP_GATE=READY_FOR_FINAL_TRIPLE_CHECK'

@@ -11,7 +11,7 @@ const STATE_LABELS = Object.freeze({
   REVIEW_REQUIRED: 'Por revisar',
   CONFIRMATION_REQUIRED: 'Necesita confirmación',
   INFORMATION_REQUIRED: 'Falta información',
-  INSUFFICIENT_EVIDENCE: 'Evidencia insuficiente',
+  INSUFFICIENT_EVIDENCE: 'Falta información suficiente',
   PARTIAL: 'Información parcial',
   DEGRADED: 'Información parcial',
   UNAVAILABLE: 'No disponible',
@@ -44,8 +44,8 @@ export function humanConfidenceLabel(value) {
 
 export function humanEvidenceLabel(count) {
   const number = Number(count);
-  if (!Number.isFinite(number) || number < 0) return 'Evidencia no cuantificada';
-  return `${number} ${number === 1 ? 'evidencia' : 'evidencias'}`;
+  if (!Number.isFinite(number) || number < 0) return 'Información disponible para revisar';
+  return `${number} ${number === 1 ? 'dato disponible' : 'datos disponibles'} para revisar`;
 }
 
 export function humanContextCopy({
