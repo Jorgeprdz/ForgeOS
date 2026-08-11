@@ -30,13 +30,17 @@ function excludes(source, value, message = `expected source to exclude ${value}`
   assertions += 1;
   assert.ok(!source.includes(value), message);
 }
+function matches(source, value, message = `expected source to match ${value}`) {
+  assertions += 1;
+  assert.match(source, value, message);
+}
 
 // Production entrypoint must resolve all 015 boundaries.
 includes(files.index, './home/home-module-015.js?v=forge-commercial-compass-015', 'Home 015 must be the productive route');
 includes(files.index, './home/home-adapter-pages-v3-015.js?v=forge-commercial-compass-015', 'Home adapter 015 must be productive');
 includes(files.index, './home/commercial-compass-consumer-015.js?v=forge-commercial-compass-015', 'Forecast/Alfred consumer 015 must be productive');
 includes(files.index, './recomposition/pipeline-consumer-bridge-015.js?v=forge-commercial-compass-015', 'Pipeline 015 must be productive');
-includes(files.index, './cartera/cartera-module-v12-015.js?v=forge-commercial-compass-015', 'Cartera 015 must be productive');
+matches(files.index, /\.\/cartera\/cartera-module-v12-015\.js\?v=[^"\s]+/, 'Cartera 015 must be productive regardless of its governed cache key');
 excludes(files.index, 'pipeline-consumer-bridge-014.js', 'Pipeline 014 observer bridge must not remain in productive import map');
 excludes(files.index, 'cartera-module-v11-014.js', 'Cartera 014 characterData observer wrapper must not remain in productive import map');
 

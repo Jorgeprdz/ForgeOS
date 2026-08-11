@@ -5,6 +5,7 @@ const root = process.cwd();
 const ENTRYPOINTS = Object.freeze([
   "advisor-os/next-action/agenda-read-model.js",
   "advisor-os/forge-alive/smart-widgets/productive-smart-widget-orchestrator.mjs",
+  "advisor-os/forge-alive/smart-widgets/advisor-monthly-policy-goal-repository.mjs",
   "platform/attention/forge-home-attention-source-adapters.js",
   "platform/attention/forge-home-attention-composition.js",
 ]);

@@ -11,12 +11,12 @@ const entry = await readFile(
 );
 
 assert.doesNotMatch(entry, /prepare-forge-canonical-runtime\.mjs/);
-assert.match(pagesWorkflow, /cleanForgeAliveSource/);
-assert.match(pagesWorkflow, /forge-alive-material3/);
-assert.match(pagesWorkflow, /canonicalForgeAliveTarget/);
-assert.match(pagesWorkflow, /pipeline-bulk-import-mount\.js/);
-assert.match(pagesWorkflow, /cartera-document-intake\.js/);
-assert.match(pagesWorkflow, /whatsapp-ai-composer\.js/);
+assert.match(pagesWorkflow, /const canonicalSource = 'docs\/static-preview\/forge-alive-material3'/);
+assert.match(pagesWorkflow, /const canonicalTarget = path\.join\(siteDir, 'static-preview', 'forge-alive'\)/);
+assert.match(pagesWorkflow, /fs\.cpSync\(canonicalSource, canonicalTarget, \{ recursive: true \}\)/);
+assert.match(pagesWorkflow, /prepare-forge-alive-pages-runtime-closure\.mjs _site/);
+assert.match(pagesWorkflow, /_site\/platform\/commands\/command-registry\.js/);
+assert.match(pagesWorkflow, /_site\/platform\/commands\/alfred-action-registry\.js/);
 assert.doesNotMatch(pagesWorkflow, /prepare-productive-canonical-pages\.mjs/);
 
 console.log("CANONICAL_RUNTIME_AUTHORITY_TEST=PASS");

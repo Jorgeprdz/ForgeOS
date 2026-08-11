@@ -368,6 +368,7 @@ jobs:
           console.log('PAGES_AURA_CANONICAL_BOUNDARY=PASS');
           console.log('PAGES_FORGE_ALIVE_SHARED_RUNTIME_PRESERVED=PASS');
           EOF
+          node scripts/prepare-forge-alive-pages-runtime-closure.mjs _site
           du -sh _site
 
       - name: Validate canonical-only Pages artifact
@@ -413,6 +414,8 @@ jobs:
             path.join(canonical, 'app.css'),
             path.join(canonical, 'app.js'),
             path.join(canonical, 'quotes-module.js'),
+            '_site/platform/commands/command-registry.js',
+            '_site/platform/commands/alfred-action-registry.js',
             quoteEngine,
             '_site/static-preview/quote-engine/forge-sales-presentation-entrypoint-r16j0.js',
             '_site/static-preview/quote-runtime/forge-quote-preview-bundle.js',

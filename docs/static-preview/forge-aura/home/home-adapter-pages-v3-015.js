@@ -1,7 +1,7 @@
 import { createHomePagesAdapter as createPreviousAdapter } from './home-adapter-pages-v2.js?v=forge-commercial-compass-015-base';
 import { createIncomeAdapter } from '../income/income-adapter-pages-v1.js?v=forge-commercial-compass-015';
 import { projectIncomeReadModel } from '../income/income-core.js?v=forge-commercial-compass-015';
-import { createAdvisorMonthlyPolicyGoalRepository } from '../../../../advisor-os/forge-alive/smart-widgets/advisor-monthly-policy-goal-repository.mjs';
+import { createAdvisorMonthlyPolicyGoalRepository } from '../../forge-alive/home-authorities/repo/advisor-os/forge-alive/smart-widgets/advisor-monthly-policy-goal-repository.mjs';
 
 const TIME_ZONE = 'America/Mexico_City';
 const GOAL_REASON_PREFIX = 'HOME_MONTHLY_GOALS_V2:';
