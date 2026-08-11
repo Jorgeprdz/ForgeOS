@@ -35,6 +35,20 @@ function blockedValidation(safety) {
   });
 }
 
+function intentConsumption(prepared, selectedIntent) {
+  // The previous adapter passes this exact goal to NFAST-07. A successful
+  // Conversation Brief proves NASH consumed the selected governed objective;
+  // a failed brief must not pretend that it did.
+  return prepared?.conversationBriefProduced === true ? selectedIntent : null;
+}
+
+function truthfulFallbackExplanation(prepared, selectedIntent) {
+  if (prepared?.conversationBriefProduced === true) {
+    return `Forge conservó el objetivo “${selectedIntent}”, pero no obtuvo una redacción segura y no existe un fallback determinístico autorizado para sustituirla. Reintenta la sugerencia; Forge no cambiará el objetivo por otro.`;
+  }
+  return `Forge conservó el objetivo “${selectedIntent}”, pero el contexto verificado no alcanzó para construir una sugerencia segura. Revisa la información disponible antes de continuar.`;
+}
+
 export async function createPipelineAdapter(options = {}) {
   const adapter = await createPreviousAdapter(options);
 
@@ -43,13 +57,38 @@ export async function createPipelineAdapter(options = {}) {
     async prepareMessage(card, request = {}) {
       const selectedIntent = text(request.goal || 'first_contact');
       const prepared = await adapter.prepareMessage(card, request);
+      const intentConsumedByNash = intentConsumption(prepared, selectedIntent);
+
+      if (intentConsumedByNash && intentConsumedByNash !== selectedIntent) {
+        return freeze({
+          ...prepared,
+          status: 'BLOCKED',
+          candidate: null,
+          sourceMode: 'INTENT_MISMATCH_BLOCKED',
+          selectedIntent,
+          intentConsumedByNash,
+          humanApprovalRequired: true,
+          approved: false,
+          sent: false,
+          diagnostics: {
+            ...(prepared?.diagnostics || {}),
+            selectedIntent,
+            intentConsumedByNash,
+            fallbackReason: 'SELECTED_INTENT_NASH_CONSUMPTION_MISMATCH',
+            userExplanation: 'Forge detuvo la sugerencia porque el objetivo seleccionado no coincide con el objetivo consumido por NASH.',
+          },
+        });
+      }
+
       if (prepared?.sourceMode !== 'DETERMINISTIC_FALLBACK') {
         return freeze({
           ...prepared,
           selectedIntent,
+          intentConsumedByNash,
           diagnostics: {
             ...(prepared?.diagnostics || {}),
             selectedIntent,
+            intentConsumedByNash,
             intentFallbackApplied: false,
           },
         });
@@ -64,13 +103,16 @@ export async function createPipelineAdapter(options = {}) {
           candidate: null,
           sourceMode: 'NO_SAFE_FALLBACK',
           selectedIntent,
+          intentConsumedByNash,
           humanApprovalRequired: true,
           approved: false,
           sent: false,
           diagnostics: {
             ...(prepared?.diagnostics || {}),
             selectedIntent,
+            intentConsumedByNash,
             fallbackReason: 'DRAFT_FALLBACK_AUTHORITY_UNAVAILABLE',
+            userExplanation: truthfulFallbackExplanation(prepared, selectedIntent),
           },
         });
       }
@@ -84,13 +126,16 @@ export async function createPipelineAdapter(options = {}) {
           validation: blockedValidation(safety),
           sourceMode: 'NO_SAFE_FALLBACK',
           selectedIntent,
+          intentConsumedByNash,
           humanApprovalRequired: true,
           approved: false,
           sent: false,
           diagnostics: {
             ...(prepared?.diagnostics || {}),
             selectedIntent,
+            intentConsumedByNash,
             fallbackReason: 'NO_INTENT_SAFE_DETERMINISTIC_FALLBACK',
+            userExplanation: truthfulFallbackExplanation(prepared, selectedIntent),
           },
         });
       }
@@ -115,12 +160,14 @@ export async function createPipelineAdapter(options = {}) {
         validation,
         sourceMode: 'DETERMINISTIC_FALLBACK',
         selectedIntent,
+        intentConsumedByNash,
         humanApprovalRequired: true,
         approved: false,
         sent: false,
         diagnostics: {
           ...(prepared?.diagnostics || {}),
           selectedIntent,
+          intentConsumedByNash,
           fallbackIntent: selectedIntent,
           intentFallbackApplied: true,
         },
