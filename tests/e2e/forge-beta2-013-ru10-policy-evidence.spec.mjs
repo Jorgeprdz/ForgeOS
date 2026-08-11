@@ -21,10 +21,10 @@ async function mount(page, { canonical = 0, evidence = 0 } = {}) {
             : ''}
         </section>
       </div>`;
-    const { reconcilePolicyWorkspace } = await import(
-      `/docs/static-preview/forge-aura/cartera/cartera-module-v10-013.js?acceptance=${Date.now()}`
+    const { reconcilePolicyEvidencePresentation } = await import(
+      `/docs/static-preview/forge-aura/cartera/cartera-policy-evidence-presentation-013.js?acceptance=${Date.now()}`
     );
-    reconcilePolicyWorkspace(root);
+    reconcilePolicyEvidencePresentation(root);
   }, { canonical, evidence });
 }
 
