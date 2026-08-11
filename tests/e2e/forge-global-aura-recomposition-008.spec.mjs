@@ -94,26 +94,29 @@ async function mount(page) {
   }, record);
 }
 
-test("Pipeline 008 demotes local NBA and exposes governed context", async ({ page }) => {
+test("Pipeline 008 demotes local NBA and exposes advisor-facing governed context", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await mount(page);
 
-  await expect(page.getByText("CONTEXTO OPERATIVO", { exact: true })).toBeVisible();
+  await expect(page.getByText("Contexto para decidir", { exact: true })).toBeVisible();
   await expect(page.getByText("Siguiente mejor acción", { exact: true })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Ver contexto gobernado" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Ver contexto", exact: true })).toBeVisible();
 
   await expect(page.locator('[data-filter="sort"]')).toHaveValue("next_commitment");
-  await expect(page.getByRole("option", { name: "Orden local heredado (no autoridad)" })).toHaveCount(1);
+  await expect(page.getByRole("option", { name: "Orden anterior", exact: true })).toHaveCount(1);
 
-  await page.getByRole("button", { name: "Ver contexto gobernado" }).click();
+  await page.getByRole("button", { name: "Ver contexto", exact: true }).click();
   const dialog = page.locator("[data-aura-governed-context-dialog]");
   await expect(dialog).toBeVisible();
-  await expect(dialog).toContainText("FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A");
-  await expect(dialog).toContainText("UNRESOLVED");
-  await expect(dialog).toContainText("NOT_PRODUCTIVE");
-  await expect(dialog).toContainText("NO_AUTHORIZED_PROJECTIONS");
-  await expect(dialog).toContainText("Prospect ≠ CommercialPerson");
-  await expect(dialog).toContainText("Sin proyecciones autorizadas");
+  await expect(dialog.getByRole("heading", { name: "Lo que Forge puede explicar de este prospecto" })).toBeVisible();
+  await expect(dialog).toContainText("Forge no encontró contexto adicional disponible");
+  await expect(dialog).toContainText("Sin información adicional para decidir");
+  await expect(dialog).toContainText("Forge no va a inventar una recomendación");
+
+  await expect(dialog.getByText("FORGE_PIPELINE_DOMAIN_INTELLIGENCE_CONSUMER_005A", { exact: true })).not.toBeVisible();
+  await expect(dialog.getByText("UNRESOLVED", { exact: true })).not.toBeVisible();
+  await expect(dialog.getByText("NO_AUTHORIZED_PROJECTIONS", { exact: true })).not.toBeVisible();
+  await expect(dialog.getByText("Prospect ≠ CommercialPerson", { exact: false })).not.toBeVisible();
 
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
@@ -123,7 +126,7 @@ test("Pipeline 008 remains usable on mobile without horizontal overflow", async 
   await page.setViewportSize({ width: 390, height: 844 });
   await mount(page);
 
-  await expect(page.getByRole("button", { name: "Ver contexto gobernado" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Ver contexto", exact: true })).toBeVisible();
   const overflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
