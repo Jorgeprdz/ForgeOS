@@ -67,7 +67,7 @@ test('011A exact approval is the only path that exposes manual WhatsApp navigati
 test('011A Conversation Workspace reserves a dedicated tab row above the scroll body',()=>{
   assert.match(workspaceCss,/grid-template-rows:auto auto auto minmax\(0,1fr\) auto/);
   assert.match(workspaceCss,/\.aura-conversation__tabs\{[^}]*position:relative;z-index:2/s);
-  assert.match(workspaceCss,/\.aura-conversation__body\{[^}]*position:relative;z-index:1;min-height:0;overflow:auto/s);
+  assert.match(workspaceCss,/\.aura-conversation__body\{[^}]*position:relative;z-index:1;min-height:0;overflow-y:auto;overflow-x:hidden/s);
 });
 
 test('011A objection Timeline persistence stores classification only after human review',()=>{
