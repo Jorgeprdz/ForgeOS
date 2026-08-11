@@ -7,6 +7,7 @@ if (!process.env.FORGE_ACCEPTANCE_A_PASSWORD) throw new Error('FORGE_ACCEPTANCE_
 
 async function login(page) {
   await page.addInitScript(() => {
+    if (globalThis.top !== globalThis) return;
     const count = Number(sessionStorage.getItem('forge013DocumentLoads') || '0') + 1;
     sessionStorage.setItem('forge013DocumentLoads', String(count));
   });
