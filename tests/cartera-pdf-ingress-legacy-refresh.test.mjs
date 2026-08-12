@@ -9,6 +9,7 @@ const adapterV11 = read('docs/static-preview/forge-aura/cartera/cartera-adapter-
 const adapterV12 = read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v12.js');
 const adapterV13 = read('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js');
 const module = read('docs/static-preview/forge-aura/cartera/cartera-module-v5.js');
+const module017e = read('docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js');
 const module015 = read('docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js');
 const migration = read('supabase/migrations/20260809000100_cartera020b_semantic_refresh_rpc.sql');
 const index = read('docs/static-preview/forge-aura/index.html');
@@ -70,9 +71,11 @@ test('drag and drop is normalized into the exact hidden input change pipeline', 
   assert.match(module, /stopImmediatePropagation/);
 });
 
-test('canonical Aura import graph preserves governed ingress while 015 presentation still reaches v10 durable confirmation', () => {
+test('canonical Aura import graph preserves governed ingress through additive 017E mount while 015 presentation still reaches v10 durable confirmation', () => {
   assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
-  assert.match(index, /"\.\/cartera\/cartera-module\.js\?v=aura-cartera-pdf-auth-002": "\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/);
+  assert.match(index, /"\.\/cartera\/cartera-module\.js\?v=aura-cartera-pdf-auth-002": "\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/);
+  assert.match(module017e, /cartera-module-v12-015\.js\?v=forge-commercial-pilot-evidence-017e-base/);
+  assert.match(module017e, /createAuraCarteraFutureRadar017e/);
   assert.match(module015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
   assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
   assert.match(adapterV13, /cartera-adapter-pages-v12\.js\?v=forge-aura-conversation-cartera-011a/);
