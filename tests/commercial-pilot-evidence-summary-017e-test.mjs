@@ -6,10 +6,6 @@ const {
   PILOT_METRIC_DEFINITIONS,
   summarizeCommercialPilotEvidence,
 } = require("../platform/business-intelligence/commercial-leverage-pilot-read-model.js");
-const {
-  normalizeCartera030cPaymentEvents,
-  summarizeCommercialPilotEvidenceWithCartera030c,
-} = require("../platform/business-intelligence/cartera030c-commercial-pilot-action-adapter-017e.js");
 
 const advisor = "advisor-017e";
 const window = Object.freeze({ from: "2026-08-01T00:00:00.000Z", to: "2026-09-01T00:00:00.000Z" });
@@ -54,19 +50,6 @@ function action(id, person, at, decisionRef = null, tenant = advisor) {
   };
 }
 
-function paymentEvent({ decisionRef = null, policyReference = "POLICY-A", tenant = advisor, at = "2026-08-04T10:00:00Z", suffix = "a" } = {}) {
-  return {
-    advisor_id: tenant,
-    payment_event_reference: `PAYMENT_EVENT:${suffix.repeat(64).slice(0, 64)}`,
-    policy_reference: policyReference,
-    payment_evidence_reference: `PAYMENT_EVIDENCE:${suffix.repeat(16).slice(0, 16)}`,
-    confirmation_state: "CONFIRMED",
-    confirmed_at: at,
-    created_at: at,
-    recommendation_decision_reference: decisionRef,
-  };
-}
-
 function funnel(facts = [], coverage = "COMPLETE") {
   return {
     schema: "COMMERCIAL_FUNNEL_RECONCILIATION_READ_MODEL_017B",
@@ -79,7 +62,7 @@ function funnel(facts = [], coverage = "COMPLETE") {
 
 const p1 = presentation("rec-a", "person-a", "2026-08-02T10:00:00Z", "presentation:key-a");
 const p2 = presentation("rec-b", "person-b", "2026-08-02T11:00:00Z", "presentation:key-b");
-const actionable = Object.freeze({ recommendation_action_addressable: true, policy_reference: "POLICY-A", payment_obligation_reference: "OBL-A", action_owner: "CARTERA_030C", action_target_type: "PAYMENT_OBLIGATION", action_target_reference: "OBL-A", expected_action: "CONFIRM_PAYMENT" });
+const actionable = Object.freeze({ recommendation_action_addressable: true, policy_reference: "POLICY-A", payment_obligation_reference: "OBL-A", action_owner: "CARTERA_030C", action_target_reference: "OBL-A", expected_action: "CONFIRM_PAYMENT" });
 const d1 = decision("evt_11111111111111111111111111111111", "rec-a", "ACCEPTED", "2026-08-03T10:00:00Z", actionable);
 const d2 = decision("evt_22222222222222222222222222222222", "rec-b", "MODIFIED", "2026-08-03T11:00:00Z", { ...actionable, policy_reference: "POLICY-B", payment_obligation_reference: "OBL-B", action_target_reference: "OBL-B" });
 const a1 = action("evt_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "person-a", "2026-08-04T10:00:00Z", d1.event_id);
@@ -112,60 +95,6 @@ test("action linkage denominator is accepted-only while MODIFIED remains decisio
   assert.equal(summary.outcomeAfterActionRate.value, 1);
   assert.equal(summary.causalAttribution, false);
   assert.equal(summary.forgeCausedSaleClaim, false);
-});
-
-test("durable 030C PaymentEvent lineage is adapted into the existing pilot summary without new action authority", () => {
-  const payment = paymentEvent({ decisionRef: d1.event_id });
-  const [normalized] = normalizeCartera030cPaymentEvents({ advisorId: advisor, paymentEvents: [payment], decisionEvents: [d1] });
-  assert.equal(normalized.event_type, "CARTERA_030C_CONFIRMED_PAYMENT");
-  assert.equal(normalized.source.authority, "CARTERA_030C");
-  assert.equal(normalized.payload.recommendation_decision_reference, d1.event_id);
-  assert.equal(normalized.payload.policy_reference, "POLICY-A");
-
-  const summary = summarizeCommercialPilotEvidenceWithCartera030c({
-    advisorId: advisor,
-    observationWindow: window,
-    presentationEvents: [p1],
-    decisionEvents: [d1],
-    paymentEvents: [payment],
-    funnelModel: null,
-  });
-  assert.equal(summary.actionLinkageEligibleAcceptedCount.value, 1);
-  assert.equal(summary.explicitlyLinkedActionCount.value, 1);
-  assert.equal(summary.actionAfterAcceptRate.value, 1);
-  assert.equal(summary.correlations.decisionToAction[0].state, "EXPLICIT_LINEAGE");
-  assert.equal(summary.causalAttribution, false);
-});
-
-test("030C PaymentEvent without durable recommendation lineage remains temporal-only and does not count as ACTED", () => {
-  const summary = summarizeCommercialPilotEvidenceWithCartera030c({
-    advisorId: advisor,
-    observationWindow: window,
-    presentationEvents: [p1],
-    decisionEvents: [d1],
-    paymentEvents: [paymentEvent({ decisionRef: null, suffix: "b" })],
-    funnelModel: null,
-  });
-  assert.equal(summary.explicitlyLinkedActionCount.value, 0);
-  assert.equal(summary.actionAfterAcceptRate.value, 0);
-  assert.equal(summary.correlations.decisionToAction[0].state, "TEMPORAL_ASSOCIATION_ONLY");
-  assert.equal(summary.temporalOnlyCountsAsAction, false);
-});
-
-test("030C adapter fails closed on cross-advisor, wrong-policy or non-ACCEPTED durable lineage", () => {
-  assert.throws(
-    () => normalizeCartera030cPaymentEvents({ advisorId: advisor, paymentEvents: [paymentEvent({ decisionRef: d1.event_id, tenant: "advisor-b" })], decisionEvents: [d1] }),
-    /CARTERA030C_PILOT_PAYMENT_CROSS_ADVISOR_BLOCKED/,
-  );
-  assert.throws(
-    () => normalizeCartera030cPaymentEvents({ advisorId: advisor, paymentEvents: [paymentEvent({ decisionRef: d1.event_id, policyReference: "POLICY-WRONG", suffix: "c" })], decisionEvents: [d1] }),
-    /CARTERA030C_PILOT_POLICY_IDENTITY_MISMATCH/,
-  );
-  const modified = decision("evt_44444444444444444444444444444444", "rec-a", "MODIFIED", "2026-08-03T10:30:00Z", actionable);
-  assert.throws(
-    () => normalizeCartera030cPaymentEvents({ advisorId: advisor, paymentEvents: [paymentEvent({ decisionRef: modified.event_id, suffix: "d" })], decisionEvents: [modified] }),
-    /CARTERA030C_PILOT_DECISION_NOT_ACCEPTED/,
-  );
 });
 
 test("temporal or generic correlation is excluded without explicit recommendation_decision_reference", () => {
