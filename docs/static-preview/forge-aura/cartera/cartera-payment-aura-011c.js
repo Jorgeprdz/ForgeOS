@@ -128,14 +128,31 @@ export function createAuraCarteraPaymentConsumer({ client } = {}) {
     if (result?.error) throw Object.assign(new Error('CARTERA030C_RECONCILIATION_FAILED'), { code: result.error.code || 'CARTERA030C_RECONCILIATION_FAILED', cause: result.error });
     if (!result?.data || typeof result.data !== 'object') throw Object.assign(new Error('CARTERA030C_RECONCILIATION_RESPONSE_INVALID'), { code: 'CARTERA030C_RECONCILIATION_RESPONSE_INVALID' });
 
+    const serverPaymentEventReadAfterWriteVerified = Boolean(
+      result.data.paymentEventReadAfterWriteVerified === true
+      && text(result.data.paymentEventReference)
+      && text(result.data.policyReference) === policyReference
+      && text(result.data.paymentEvidenceReference) === paymentEvidenceReference
+      && !Number.isNaN(Date.parse(result.data.paymentEventConfirmedAt))
+    );
+    if (!serverPaymentEventReadAfterWriteVerified) {
+      throw Object.assign(new Error('CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_FAILED'), { code: 'CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_FAILED' });
+    }
+
     const calendar = await loadCalendar(policyReference);
     const confirmedObligation = calendar.items.find(item => item.obligationReference === (result.data.obligationReference || obligationReference));
     const complete = result.data.reconciliationState === 'COMPLETE';
-    const readAfterWriteVerified = complete
+    const calendarReadAfterWriteVerified = complete
       ? Boolean(confirmedObligation && ['CONFIRMED', 'PARTIAL'].includes(String(confirmedObligation.ledgerStatus || confirmedObligation.status).toUpperCase()))
       : true;
+    const readAfterWriteVerified = serverPaymentEventReadAfterWriteVerified && calendarReadAfterWriteVerified;
     if (!readAfterWriteVerified) throw Object.assign(new Error('CARTERA030C_READ_AFTER_WRITE_FAILED'), { code: 'CARTERA030C_READ_AFTER_WRITE_FAILED' });
-    const lineageReadAfterWriteVerified = !lineage || result.data.recommendationDecisionReference === lineage.decisionEventId;
+    const lineageReadAfterWriteVerified = serverPaymentEventReadAfterWriteVerified
+      && (!lineage || (
+        result.data.recommendationLineageState === 'EXPLICIT_LINEAGE'
+        && result.data.recommendationDecisionReference === lineage.decisionEventId
+        && result.data.recommendationActionTargetReference === obligationReference
+      ));
     if (lineage) {
       if (lineageReadAfterWriteVerified) consumeRecommendationDecisionLineage({ advisorId: user.id, decisionEventId: lineage.decisionEventId });
       else clearRecommendationDecisionLineage(user.id);
@@ -144,6 +161,7 @@ export function createAuraCarteraPaymentConsumer({ client } = {}) {
     return Object.freeze({
       response: Object.freeze({ ...result.data }),
       calendar,
+      paymentEventReadAfterWriteVerified: serverPaymentEventReadAfterWriteVerified,
       readAfterWriteVerified,
       lineageReadAfterWriteVerified,
       requestedRecommendationDecisionReference: lineage?.decisionEventId || null,
@@ -280,8 +298,11 @@ export function installCarteraPaymentAura({ documentRef = document, getClient } 
             policyReference,
             obligationReference: response.obligationReference || data.get('obligationReference'),
             paymentEventReference: response.paymentEventReference || null,
+            paymentEventConfirmedAt: response.paymentEventConfirmedAt || null,
+            paymentEventReadAfterWriteVerified: result.paymentEventReadAfterWriteVerified,
             recommendationDecisionReference: response.recommendationDecisionReference || null,
             recommendationLineageState: response.recommendationLineageState || null,
+            recommendationActionTargetReference: response.recommendationActionTargetReference || null,
             lineageReadAfterWriteVerified: result.lineageReadAfterWriteVerified,
             reconciliationState: response.reconciliationState,
             readAfterWriteVerified: result.readAfterWriteVerified,
