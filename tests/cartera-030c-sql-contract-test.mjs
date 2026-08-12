@@ -60,6 +60,23 @@ test('017E-R4 keeps the same 030C RPC signature and validates explicit ACCEPTED 
     assert.match(sql, /recommendation_lineage_state := 'EXPLICIT_LINEAGE'/i);
 });
 
+test('017E-R4 performs a real PaymentEvent read-after-write and verifies payment fields plus optional lineage', async () => {
+    const sql = await readFile(r4Path, 'utf8');
+    assert.match(sql, /select e\.\* into persisted_event\s+from public\.cartera030c_confirmed_payment_events e\s+where e\.id = event_id_value\s+and e\.advisor_id = advisor/is);
+    for (const field of [
+        'payment_event_reference', 'policy_reference', 'payment_evidence_reference', 'payment_amount',
+        'currency', 'payment_date', 'period_covered_start', 'period_covered_end', 'payment_source',
+        'evidence_references', 'confirmation_state', 'event_digest', 'recommendation_decision_reference',
+    ]) {
+        assert.match(sql, new RegExp(`persisted_event\\.${field}`, 'i'), field);
+    }
+    assert.match(sql, /CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_FAILED/i);
+    assert.match(sql, /CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_MISMATCH/i);
+    assert.match(sql, /'paymentEventReadAfterWriteVerified', true/i);
+    assert.match(sql, /'paymentEventConfirmedAt', persisted_event\.confirmed_at/i);
+    assert.match(sql, /'recommendationDecisionReference', persisted_event\.recommendation_decision_reference/i);
+});
+
 test('017E-R4 recommendation lineage never becomes payment evidence or PaymentEvent identity', async () => {
     const sql = await readFile(r4Path, 'utf8');
     const eventIdentity = sql.match(/event_identity := jsonb_build_object\(([\s\S]*?)\);\s*event_digest_value/i)?.[1] || '';
