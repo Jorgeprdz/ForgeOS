@@ -1,0 +1,81 @@
+ADR-027 — Durable Recommendation to Human Decision Evidence Boundary
+
+Status: ACCEPTED FOR PHASE_017C_COMMERCIAL_LEVERAGE_EVIDENCE_LOOP_AND_PILOT_READINESS
+Program: FORGE_COMMERCIAL_LEVERAGE
+Phase: PHASE_017C_COMMERCIAL_LEVERAGE_EVIDENCE_LOOP_AND_PILOT_READINESS
+Base main: 4d5963a1fbf4f3c54022dc7c64855df028719121
+Branch: fix/forge-commercial-leverage-pilot-readiness-017c
+
+Context
+
+ADR-012 and Phase 017B established a read-only Business Planning boundary that can consume governed Goal, production, activity and Pipeline evidence, express a gap without inventing a constraint, and pass evidence-backed action candidates to the existing NBA / Reason Why authority. Phase 017B could not durably observe the advisor's explicit decision about a recommendation. The existing SALES_NBA_ADVISOR_RESPONSE concept had unit coverage but no productive persistence consumer.
+
+Article 0 requires recommendations to remain advisory. A decision to accept, modify, defer or dismiss is a valid human judgment. It is not proof of execution and it must not become a compliance score, punishment mechanism or causal claim.
+
+Decision 1 — Recommendation ownership remains upstream.
+
+Business Planning, NBA / Reason Why, Forecast or another governed recommendation authority continues to own the recommendation. FES does not generate, rank, modify or validate recommendations.
+
+Decision 2 — FES owns durable explicit human-decision evidence.
+
+FES is the canonical durable owner of the fact that an advisor explicitly responded to a recommendation. SALES_NBA_ADVISOR_RESPONSE is productionized instead of creating a second equivalent event. The event subject is RECOMMENDATION and the payload preserves the recommendation reference, source authority, domain, version when available, normalized human decision and compatible commercial identity references when available.
+
+Decision 3 — Human decision vocabulary is bounded.
+
+The canonical decisions are ACCEPTED, MODIFIED, DISMISSED and DEFERRED. Existing UI responses REJECTED and SNOOZED map explicitly to DISMISSED and DEFERRED. EXECUTED is not a human-decision state because acceptance and execution are different facts. NOT_RELEVANT maps to DISMISSED only when it is an explicit advisor response. Original response vocabulary remains preserved as evidence metadata in the canonical payload.
+
+Decision 4 — Action and outcome owners remain unchanged.
+
+Commercial actions remain owned by FES commercial activity, Pipeline, appointments, follow-ups, CRS, Application and Policy authorities as applicable. Outcomes remain owned by their canonical domains, including CRS-06, CRS-07 and POLICY_SOLD_CONFIRMED. An ACCEPTED decision creates no activity, funnel movement or outcome.
+
+Decision 5 — Linkage is explicit, not temporal-only.
+
+Recommendation-to-decision linkage requires recommendation identity, advisor identity, source authority and explicit lineage. Decision-to-action reconciliation requires a governed explicit reference to the decision or recommendation plus compatible advisor, commercial identity and chronology. Matching only a person and nearby timestamp is insufficient.
+
+Decision 6 — Evidence is append-only and idempotent.
+
+The FES canonical event identity and ledger digest provide retry idempotency. A later correction is a new canonical event with correction_of and an explicit correction reason. Historical decisions are not updated or deleted silently. The latest effective interpretation is derived read-only from the correction chain.
+
+Decision 7 — Advisor isolation is mandatory.
+
+The event tenant, advisor actor and recommendation advisor must be compatible. FES RLS remains tenant-scoped through auth.uid(). Cross-advisor responses are rejected before append and by the durable boundary.
+
+Decision 8 — Human Authority remains final.
+
+Every decision is valid. Dismissal and deferral create no penalty. Modification does not authorize execution. No decision triggers customer contact, Pipeline movement, task creation, calendar creation or any external effect.
+
+Decision 9 — No causal interpretation.
+
+Later actions, funnel movements and outcomes may be described as explicitly linked or observed after a decision when the evidence supports that statement. Forge may not state that a recommendation caused an action, sale, policy or uplift.
+
+Decision 10 — Minimal persistence extension only.
+
+FES-02 remains the only ledger. The existing canonical JSON, idempotency, evidence-reference, correction and RLS semantics are reused. The SQL subject allowlist is extended additively with RECOMMENDATION because representing the recommendation as ACTIVITY would conflate decision evidence with commercial-action truth. No new table, RPC, policy, store or dependency is created.
+
+Consequences
+
+Positive:
+- Forge can durably observe an explicit advisor decision without moving recommendation ownership;
+- retries do not duplicate evidence and corrections remain auditable;
+- accepted remains distinct from acted;
+- read-only 017C reconciliation can measure cohorts without temporal-only certainty or causal claims;
+- no new administrative form or tracking burden is introduced.
+
+Tradeoffs and limitations:
+- recommendations without an explicit human response remain unobserved;
+- actions without governed explicit lineage cannot be claimed as executions of a recommendation;
+- historical recommendation decisions are not backfilled or inferred;
+- the boundary enables pilot observation but does not prove Forge caused commercial uplift.
+
+Acceptance
+
+Phase 017C may close this boundary only when tests prove recommendation identity, advisor isolation, retry idempotency, append-only correction, ACCEPTED != acted, valid dismissal/deferral, chronology, explicit-link requirements and non-causal output. Schema, migration and RLS tests must prove that only the additive RECOMMENDATION subject extension occurred and existing tenant isolation remains unchanged.
+
+Final boundary
+
+RECOMMENDATION
+!= HUMAN DECISION EVIDENCE
+!= COMMERCIAL ACTION
+!= FUNNEL MOVEMENT
+!= COMMERCIAL OUTCOME
+!= CAUSATION

@@ -10,6 +10,7 @@ import {
   selectCarteraAttention,
 } from "./home-core.js";
 import { createHomePagesAdapter } from "./home-adapter-pages-v1.js";
+import { createAuraDecisionControl } from "./home-decision-control-017c.js?v=forge-commercial-leverage-017c";
 
 const STATE = Symbol.for("forge.aura.home.module.001");
 const ALLOWED_ROUTES = new Set(["inicio", "pipeline", "actividad", "cartera", "comisiones"]);
@@ -149,7 +150,22 @@ function confidenceLabel(attention) {
   return attention?.confidence?.value || "No informada";
 }
 
-function renderBriefing(snapshot) {
+function decisionControls(attention, decisionEvent = null) {
+  if (!attention?.humanDecisionRequired || !attention?.decisionReference) return "";
+  const current = decisionEvent?.payload?.decision || null;
+  return `<div class="home-decision-control" data-home-decision-control data-current-decision="${esc(current || "NONE")}" aria-label="Tu decisión sobre esta recomendación">
+    <span>${current ? `Decisión guardada: ${esc({ ACCEPTED: "Aceptada", MODIFIED: "Modificada", DEFERRED: "Pospuesta", DISMISSED: "Descartada" }[current] || current)}` : "Tú decides qué hacer con esta recomendación"}</span>
+    <div role="group" aria-label="Responder a la recomendación">
+      <button type="button" data-home-decision="ACCEPT" aria-pressed="${String(current === "ACCEPTED")}">Aceptar</button>
+      <button type="button" data-home-decision="MODIFY" aria-pressed="${String(current === "MODIFIED")}">Modificar</button>
+      <button type="button" data-home-decision="DEFER" aria-pressed="${String(current === "DEFERRED")}">Posponer</button>
+      <button type="button" data-home-decision="DISMISS" aria-pressed="${String(current === "DISMISSED")}">Descartar</button>
+    </div>
+    <small data-home-decision-status aria-live="polite"></small>
+  </div>`;
+}
+
+function renderBriefing(snapshot, decisions = new Map()) {
   const orchestration = snapshot.attention?.value || null;
   const attention = orchestration?.items?.[0] || null;
   if (!attention) {
@@ -184,11 +200,12 @@ function renderBriefing(snapshot) {
           ${attention.asOf ? `<p><b>As of:</b> ${esc(attention.asOf)}</p>` : ""}
         </details>
       </div>
+      ${decisionControls(attention, decisions.get(attention.decisionReference))}
     </div>
   </article>`;
 }
 
-function renderSupportingAttention(snapshot) {
+function renderSupportingAttention(snapshot, decisions = new Map()) {
   const items = Array.isArray(snapshot.attention?.value?.items)
     ? snapshot.attention.value.items.slice(1, 3)
     : [];
@@ -204,6 +221,7 @@ function renderSupportingAttention(snapshot) {
           ${action ? `<button type="button" class="home-link-button" data-home-route="${esc(route)}">${esc(action.label)}</button>` : ""}
           <details><summary>Ver por qué</summary><p>${esc(attention.reason)}</p>${attention.limitations?.length ? `<p><b>Qué falta confirmar:</b> ${esc(attention.limitations.join(" · "))}</p>` : ""}</details>
         </div>
+        ${decisionControls(attention, decisions.get(attention.decisionReference))}
       </article>`;
     }).join("")}</div>
   </section>`;
@@ -230,7 +248,7 @@ function attentionSummary(snapshot) {
   return `${count} ${count === 1 ? "señal gobernada requiere" : "señales gobernadas requieren"} tu revisión.`;
 }
 
-function renderReady(root, snapshot, user, timeZone, now) {
+function renderReady(root, snapshot, user, timeZone, now, decisions = new Map()) {
   const state = snapshot.attention?.state || "UNKNOWN";
   root.innerHTML = `<section class="home-aura" data-home-state="${esc(state)}" data-home-timezone="${esc(timeZone)}" data-home-attention-contract="FHAO-007-001">
     <header class="home-header">
@@ -243,13 +261,13 @@ function renderReady(root, snapshot, user, timeZone, now) {
       <button type="button" class="home-refresh" data-home-refresh aria-label="Actualizar Mi Día">Actualizar</button>
     </header>
 
-    ${renderBriefing(snapshot)}
-    ${renderSupportingAttention(snapshot)}
+    ${renderBriefing(snapshot, decisions)}
+    ${renderSupportingAttention(snapshot, decisions)}
     ${renderDetailNavigation()}
   </section>`;
 }
 
-export function createHomeModule({ root, client, user, globalState, onNavigate } = {}) {
+export function createHomeModule({ root, client, user, globalState, onNavigate, homeAdapterFactory = createHomePagesAdapter } = {}) {
   if (!root) throw new Error("AURA_HOME_ROOT_REQUIRED");
   if (!client) throw new Error("AURA_HOME_CLIENT_REQUIRED");
   if (root[STATE]) return root[STATE];
@@ -261,6 +279,8 @@ export function createHomeModule({ root, client, user, globalState, onNavigate }
   let controller = null;
   let timeZone = resolveBrowserTimeZone();
   let lastSnapshot = null;
+  const decisionControl = createAuraDecisionControl({ client, user, globalState });
+  let decisions = new Map();
   const events = new AbortController();
 
   function navigate(route) {
@@ -285,7 +305,7 @@ export function createHomeModule({ root, client, user, globalState, onNavigate }
   }
 
   async function ensureAdapter() {
-    if (!adapter) adapter = await createHomePagesAdapter({ client, user });
+    if (!adapter) adapter = await homeAdapterFactory({ client, user });
     return adapter;
   }
 
@@ -307,7 +327,14 @@ export function createHomeModule({ root, client, user, globalState, onNavigate }
       });
       if (!mounted || selected !== revision || currentController.signal.aborted) return;
       lastSnapshot = snapshot;
-      renderReady(root, snapshot, user, timeZone, now);
+      try {
+        decisions = await decisionControl.read();
+      } catch (error) {
+        decisions = new Map();
+        globalState?.("Las recomendaciones están disponibles, pero no pudimos consultar tus decisiones guardadas.", "error");
+      }
+      if (!mounted || selected !== revision || currentController.signal.aborted) return;
+      renderReady(root, snapshot, user, timeZone, now, decisions);
       root.setAttribute("aria-busy", "false");
       globalState?.(reason === "timezone-change" ? `Mi Día actualizado para ${timeZone}.` : "");
     } catch (error) {
@@ -335,6 +362,21 @@ export function createHomeModule({ root, client, user, globalState, onNavigate }
         return;
       }
       if (event.target.closest("[data-home-refresh]")) void refresh("manual-refresh");
+      const decisionButton = event.target.closest("[data-home-decision]");
+      if (decisionButton) {
+        const card = decisionButton.closest("[data-decision-reference]");
+        const item = lastSnapshot?.attention?.value?.items?.find(candidate => candidate.decisionReference === card?.dataset.decisionReference);
+        const status = decisionButton.closest("[data-home-decision-control]")?.querySelector("[data-home-decision-status]");
+        if (!item) { if (status) status.textContent = "No pudimos identificar esta recomendación."; return; }
+        decisionButton.closest("[data-home-decision-control]")?.querySelectorAll("button").forEach(button => { button.disabled = true; });
+        if (status) status.textContent = "Guardando tu decisión…";
+        void decisionControl.decide(item, decisionButton.dataset.homeDecision).then(() => refresh("decision-write")).catch(error => {
+          decisionButton.closest("[data-home-decision-control]")?.querySelectorAll("button").forEach(button => { button.disabled = false; });
+          if (status) status.textContent = "No pudimos guardar tu decisión. Inténtalo nuevamente.";
+          globalState?.("No pudimos guardar tu decisión.", "error");
+          console.warn("AURA_DECISION_WRITE_FAILED", error?.code || error?.message);
+        });
+      }
     }, { signal: events.signal });
     globalThis.addEventListener("pageshow", () => reconcileTimeZone("pageshow"), { signal: events.signal });
     document.addEventListener("visibilitychange", () => {
@@ -373,6 +415,7 @@ export function createHomeModule({ root, client, user, globalState, onNavigate }
       controller?.abort();
       events.abort();
       adapter?.destroy?.();
+      void decisionControl.close();
       adapter = null;
       lastSnapshot = null;
       delete root[STATE];

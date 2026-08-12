@@ -49,6 +49,13 @@ export const ROOT_RUNTIME_ENTRYPOINTS = Object.freeze([
   "platform/commands/entity-provider-adapter.js",
   "platform/commands/alfred-action-registry.js",
   "platform/commands/alfred-review-action-packet-browser.js",
+  "platform/event-evidence/canonical-activity-event-contract.js",
+  "platform/event-evidence/activity-ledger-contract.js",
+  "platform/event-evidence/activity-ledger-local-store.js",
+  "platform/event-evidence/activity-ledger-sync-service.js",
+  "platform/event-evidence/activity-ledger-supabase-gateway.js",
+  "platform/event-evidence/activity-ledger-browser-runtime.js",
+  "platform/event-evidence/sales-nba-advisor-response-evidence.js",
 ]);
 
 const QPD_CANONICAL_ASSETS = Object.freeze([
@@ -341,6 +348,7 @@ export async function prepareForgeAlivePagesRuntimeClosure({
     "advisor-os/quotes/printable/quote-printable-read-model-m05e005.js",
     "platform/event-evidence/quote-lifecycle-supabase-service.js",
     "platform/event-evidence/prospect-quote-detail-projection.js",
+    "platform/event-evidence/sales-nba-advisor-response-evidence.js",
     "platform/shared-commercial-model/crs-09-person-workspace-contract.js",
     "advisor-os/person-workspace/crs-09-person-workspace-service.js",
     "platform/shared-commercial-model/crs-10-relationship-intelligence-contract.js",

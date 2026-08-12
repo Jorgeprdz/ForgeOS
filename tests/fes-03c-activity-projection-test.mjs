@@ -88,9 +88,11 @@ test("FES 03C locks versions and display ordering", () => {
   assert.deepEqual(ORDERING, { display: "occurred_at:DESC", canonical_reference: "canonical_position:ASC" });
 });
 
-test("FES 03C presents every canonical event type", () => {
-  assert.deepEqual(Object.keys(EVENT_PRESENTATION).sort(), [...EVENT_TYPES].sort());
-  EVENT_TYPES.forEach(type => assert.ok(EVENT_PRESENTATION[type].title));
+test("FES 03C presents only its governed Activity timeline event types", () => {
+  const presented = Object.keys(EVENT_PRESENTATION);
+  assert.ok(presented.every(type => EVENT_TYPES.includes(type)));
+  presented.forEach(type => assert.ok(EVENT_PRESENTATION[type].title));
+  assert.equal(EVENT_PRESENTATION.SALES_NBA_ADVISOR_RESPONSE, undefined);
 });
 
 test("FES 03C creates one item per timeline entry", () => {
