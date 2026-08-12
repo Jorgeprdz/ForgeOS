@@ -14,7 +14,7 @@ function decisionReference(item) {
 function lineageFor(item, decision, advisorId) {
   const ref = decisionReference(item);
   if (!ref || !decision || decision.tenant_id !== advisorId) return null;
-  if (!['ACCEPTED', 'MODIFIED'].includes(decision.payload?.decision)) return null;
+  if (!["ACCEPTED", "MODIFIED"].includes(decision.payload?.decision)) return null;
   if (decision.payload?.recommendation_reference !== ref) return null;
   if (Number.isNaN(Date.parse(decision.occurred_at))) return null;
   return Object.freeze({
@@ -133,14 +133,13 @@ export function createHomeModule(options = {}) {
     async scrub(reason = "session-scrub") {
       observer.disconnect();
       root.removeEventListener("click", captureRecommendationNavigation, true);
-      clearRecommendationDecisionLineage(user.id);
       return base.scrub?.(reason);
     },
     async destroy() {
       observer.disconnect();
       root.removeEventListener("click", captureRecommendationNavigation, true);
       void presentationControl.close();
-      void decisionReader.close();
+      void decisionReader.close?.();
       return base.destroy?.();
     },
     diagnostics() {
