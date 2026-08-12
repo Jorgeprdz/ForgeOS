@@ -424,16 +424,25 @@ test("017E-R4 applies and enforces recommendation lineage on real ephemeral Post
     ]);
 
     let ready = false;
-    for (let attempt = 0; attempt < 60; attempt += 1) {
+    let consecutiveReadyChecks = 0;
+    for (let attempt = 0; attempt < 120; attempt += 1) {
       try {
-        docker(["exec", container, "pg_isready", "-U", "postgres", "-d", database]);
-        ready = true;
-        break;
+        docker([
+          "exec", container,
+          "psql", "-U", "postgres", "-d", database,
+          "-v", "ON_ERROR_STOP=1", "-qAt", "-c", "select 1",
+        ]);
+        consecutiveReadyChecks += 1;
+        if (consecutiveReadyChecks >= 8) {
+          ready = true;
+          break;
+        }
       } catch {
-        sleep(500);
+        consecutiveReadyChecks = 0;
       }
+      sleep(500);
     }
-    assert.equal(ready, true, "ephemeral PostgreSQL did not become ready");
+    assert.equal(ready, true, "ephemeral PostgreSQL did not reach stable final readiness");
 
     psql(setupSql);
     psql(readFileSync(migrationPath, "utf8"));
