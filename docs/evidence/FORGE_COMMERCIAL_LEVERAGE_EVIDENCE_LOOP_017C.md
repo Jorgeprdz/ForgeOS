@@ -1,6 +1,6 @@
 # Forge Commercial Leverage Evidence Loop 017C
 
-Status: PRE-MERGE EVIDENCE
+Status: GOVERNED PRODUCTION CLOSURE EVIDENCE
 
 ## Authority boundary
 
@@ -42,8 +42,30 @@ Status: PRE-MERGE EVIDENCE
 - 10% versus 30% conversion yields +20 percentage points and +200% relative uplift.
 - These are observed, period-specific, non-causal measurements.
 
-## Release hold
+## Production database acceptance
 
-The production database must apply migration `20260811000100_fes_sales_nba_advisor_response_subject_017c.sql` before Pages exposes the control. The repository currently has no generic governed migration deployment workflow for this migration. The existing `deploy-supabase.yml` deploys Edge Functions only. Pages deployment must not proceed before the migration is applied and remotely verified.
+- Project: `rmlxigxysujsuwzgoimv`.
+- Migration: `20260811000100_fes_sales_nba_advisor_response_subject_017c.sql`.
+- Governed Supabase CLI execution: PASS before this closure run.
+- Migration ledger verification: `MIGRATION_LEDGER=PASS`.
+- PostgreSQL constraint verification: PASS.
+- `activity_event_ledger_subject_type_ck` accepts `PROSPECT`, `APPOINTMENT`, `ACTIVITY`, `DUE_ACTION`, and `RECOMMENDATION`.
+- This closure run did not execute or reapply any database migration.
+- No credential, access token, password, connection string, or session URL is recorded here.
 
-Therefore this evidence package does not claim deployed production PASS yet.
+## CI classification at head `aba6adce58740c3c38f47b5c53d79d56e3affad7`
+
+- Applicable 017C, FES, Home, Pages, browser, responsive, regression and Robocop checks: PASS.
+- CRS-09 `contract-service-route`: `NON_APPLICABLE_SCOPE_GUARD`; it rejects every path outside its dedicated CRS-09/10 allowlist. Its responsive job passed.
+- CRS-10 `contract-service-workspace`: `NON_APPLICABLE_SCOPE_GUARD`; it rejects every path outside its dedicated CRS-10 allowlist. Its responsive job passed.
+- Phase 015 `constitutional release gates`: `NON_APPLICABLE_SCOPE_GUARD`; it rejects any migration, while 017C carries the explicit exception for exactly this existing-check allowlist extension.
+- Forge UI Visual Diagnostic `capture`: `INHERITED_BASELINE_FAILURE`. Exact base `4d5963a1fbf4f3c54022dc7c64855df028719121` failed the same global diagnostic. The base had 390 failed assertions and this head has 201; every failed assertion at this head was already failed at the base (`headNotInBase=0`). No diagnostic, Nash, Cotizaciones, WhatsApp, Google Auth, manager NBA, Material3, package, or lockfile source was changed by 017C.
+
+## Pre-merge verdict
+
+- Constitutional gate: PASS.
+- Robocop gate: PASS.
+- Database gate: PASS.
+- Recommendation, decision, action, and outcome authorities remain separate.
+- Commercial promise readiness: `PILOT_READY`.
+- Ready to merge: TRUE, subject to the documentation-only closure commit retaining the same applicable CI result.
