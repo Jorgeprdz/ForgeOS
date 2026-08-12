@@ -211,15 +211,15 @@ const mockSupabaseSdk = `
     return chain;
   }
 
-  const client = Object.freeze({
-    auth: Object.freeze({
+  const client = {
+    auth: {
       onAuthStateChange() {
         return { data: { subscription: { unsubscribe() {} } } };
       },
       async getSession() { return { data: { session }, error: null }; },
       async getUser() { return { data: { user }, error: null }; },
       async signOut() { return { error: null }; },
-    }),
+    },
     from() { return query(); },
     rpc(name) {
       if (name === 'forge_cartera050_list_future_radar') {
@@ -244,12 +244,12 @@ const mockSupabaseSdk = `
       }
       return query();
     },
-    functions: Object.freeze({
+    functions: {
       async invoke() { return { data: [], error: null }; },
-    }),
-  });
+    },
+  };
 
-  window.supabase = Object.freeze({ createClient: () => client });
+  window.supabase = { createClient: () => client };
 })();
 `;
 
