@@ -227,6 +227,51 @@ function renderSupportingAttention(snapshot, decisions = new Map()) {
   </section>`;
 }
 
+function operatingSection({ id, eyebrow, title, body, state = "READY", compact = false }) {
+  return `<section class="home-section${compact ? " home-section--compact" : ""}" data-home-operating-section="${esc(id)}" data-state="${esc(state)}" aria-labelledby="home-${esc(id)}-title">
+    <div class="home-section-heading"><div><p class="home-mini-label">${esc(eyebrow)}</p><h2 id="home-${esc(id)}-title">${esc(title)}</h2></div></div>
+    ${body}
+  </section>`;
+}
+
+function renderOperatingDashboard(snapshot, timeZone) {
+  const rhythm = rhythmFromStack(snapshot.priority?.value);
+  const mick = mickHonestState(snapshot.mick?.value);
+  return `<section class="home-operating-dashboard" aria-label="Tu operación de hoy">
+    <div class="home-operating-grid">
+      ${operatingSection({
+        id: "agenda",
+        eyebrow: "HOY",
+        title: "Compromisos que requieren atención",
+        body: renderAgenda(snapshot, timeZone),
+        state: snapshot.agenda?.state || "UNKNOWN",
+      })}
+      ${operatingSection({
+        id: "rhythm",
+        eyebrow: "RITMO Y METAS",
+        title: "Cómo vas",
+        body: renderRhythm(snapshot),
+        state: rhythm.state,
+      })}
+      ${operatingSection({
+        id: "cartera",
+        eyebrow: "CARTERA EN RADAR",
+        title: "Lo que se puede escapar",
+        body: renderCartera(snapshot),
+        state: snapshot.radar?.state || "UNKNOWN",
+      })}
+      ${operatingSection({
+        id: "mick",
+        eyebrow: "OBSERVACIÓN PRODUCTIVA",
+        title: "Una lectura de tu ritmo",
+        body: renderMick(snapshot),
+        state: mick.state,
+        compact: true,
+      })}
+    </div>
+  </section>`;
+}
+
 function renderDetailNavigation() {
   return `<nav class="home-detail-navigation" aria-label="Explorar detalle comercial">
     <span>Profundiza sólo cuando lo necesites:</span>
@@ -262,6 +307,7 @@ function renderReady(root, snapshot, user, timeZone, now, decisions = new Map())
     </header>
 
     ${renderBriefing(snapshot, decisions)}
+    ${renderOperatingDashboard(snapshot, timeZone)}
     ${renderSupportingAttention(snapshot, decisions)}
     ${renderDetailNavigation()}
   </section>`;

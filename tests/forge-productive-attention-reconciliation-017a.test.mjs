@@ -79,18 +79,19 @@ test("017A many governed signals retain one primary, at most two supporting, evi
   assert.equal(attention.boundaries.automaticCommercialAction, false);
 });
 
-test("017A presentation renders attention units, keeps detail available and collapses Compass", async () => {
+test("017A attention remains bounded while 017D restores governed operating detail", async () => {
   const home = await readFile(new URL("../docs/static-preview/forge-aura/home/home-module.js", import.meta.url), "utf8");
   const compass = await readFile(new URL("../docs/static-preview/forge-aura/home/home-module-015.js", import.meta.url), "utf8");
   const ready = home.slice(home.indexOf("function renderReady"), home.indexOf("function renderError"));
   assert.match(ready, /renderBriefing\(snapshot, decisions\)/);
   assert.match(ready, /renderSupportingAttention\(snapshot, decisions\)/);
   assert.match(ready, /renderDetailNavigation\(\)/);
-  assert.doesNotMatch(ready, /renderAgenda\(/);
-  assert.doesNotMatch(ready, /renderCartera\(/);
-  assert.doesNotMatch(ready, /renderRhythm\(/);
-  assert.doesNotMatch(ready, /renderMick\(/);
+  assert.match(ready, /renderOperatingDashboard\(snapshot, timeZone\)/);
   assert.match(home, /snapshot\.attention\.value\.items\.slice\(1, 3\)/);
+  assert.match(home, /body: renderAgenda\(snapshot, timeZone\)/);
+  assert.match(home, /body: renderCartera\(snapshot\)/);
+  assert.match(home, /body: renderRhythm\(snapshot\)/);
+  assert.match(home, /body: renderMick\(snapshot\)/);
   assert.match(home, /Ver por qué/);
   assert.match(compass, /<details class="commercial-compass-015"/);
   assert.match(compass, /<summary>Progreso y metas<\/summary>/);

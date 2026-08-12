@@ -6,6 +6,7 @@ const sizes = [
   { name: "mobile-430x932", width: 430, height: 932 },
   { name: "tablet-834x1194", width: 834, height: 1194 },
   { name: "desktop-1440x900", width: 1440, height: 900 },
+  { name: "dex-1600x900", width: 1600, height: 900 },
 ];
 
 async function mountProductHome(page) {
@@ -112,6 +113,44 @@ async function mountProductHome(page) {
   await expect(page.locator('[data-home-state="READY"]')).toBeVisible();
 }
 
+async function mountOwnerReadyHome(page) {
+  await page.goto("/tests/e2e/fixtures/fes03-preflight/index.html");
+  await page.setContent(`<!doctype html><html lang="es-MX"><head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <link rel="stylesheet" href="/docs/static-preview/forge-aura/aura-tokens.css">
+  </head><body><main id="home"></main></body></html>`);
+  await page.evaluate(async () => {
+    const { createHomeModule } = await import("/docs/static-preview/forge-aura/home/home-module.js");
+    const user = { id: "advisor-ready-017d", email: "ready@example.test", user_metadata: { given_name: "Jorge" } };
+    const activity = {
+      widgetId: "activity-ready-017d", widgetFamily: "ACTIVITY_PROGRESS_WIDGET", state: "READY",
+      title: "Actividad de hoy", subtitle: "Ritmo observado por Actividad", primaryMetric: { display: "18 / 20" },
+    };
+    const goal = {
+      widgetId: "goal-ready-017d", widgetFamily: "MONTHLY_POLICY_GOAL_WIDGET", state: "PARTIAL",
+      title: "Pólizas confirmadas del mes", subtitle: "Meta mensual vigente", primaryMetric: { display: "4 / 10" },
+    };
+    const snapshot = {
+      advisorId: user.id, generatedAt: new Date().toISOString(), timeZone: "America/Mexico_City",
+      agenda: { state: "READY", value: { sections: [
+        { id: "OVERDUE", count: 1, items: [{ personDisplayName: "Mariana Torres", nextActionType: "Seguimiento", nextActionAt: "2026-08-10T16:00:00.000Z" }] },
+        { id: "TODAY", count: 1, items: [{ personDisplayName: "Carlos Vega", nextActionType: "Presentación", nextActionAt: "2026-08-11T19:00:00.000Z" }] },
+      ] } },
+      radar: { state: "READY", value: { focusItems: [] } },
+      priority: { state: "READY", value: { inventory: [activity, goal], visible: [activity, goal], primary: activity } },
+      mick: { state: "BLOCKED_BY_MISSING_EVIDENCE", value: null },
+      attention: { state: "EMPTY", value: { state: "EMPTY", contractVersion: "FHAO-007-001", items: [] } },
+    };
+    const client = {
+      auth: { getUser: async () => ({ data: { user }, error: null }) },
+      rpc: async () => ({ data: { changes: [], cursor: "0", has_more: false }, error: null }),
+    };
+    const home = createHomeModule({ root: document.querySelector("#home"), client, user, homeAdapterFactory: async () => ({ load: async () => snapshot, scrub() {}, destroy() {} }) });
+    await home.mount();
+  });
+  await expect(page.locator('[data-home-state="EMPTY"]')).toBeVisible();
+}
+
 for (const size of sizes) {
   test(`${size.name} renders command center without overlap`, async ({ page }) => {
     await page.setViewportSize({ width: size.width, height: size.height });
@@ -122,12 +161,18 @@ for (const size of sizes) {
     expect(await page.locator(".home-supporting-item").count()).toBeLessThanOrEqual(2);
     expect(await page.locator(".home-alfred-card, .home-supporting-item").count()).toBeLessThanOrEqual(3);
     await expect(page.getByText("Profundiza sólo cuando lo necesites:", { exact: true })).toBeVisible();
+    await expect(page.locator('[data-home-operating-section="agenda"]')).toBeVisible();
+    await expect(page.locator('[data-home-operating-section="rhythm"]')).toBeVisible();
+    await expect(page.locator('[data-home-operating-section="cartera"]')).toBeVisible();
+    await expect(page.locator('[data-home-operating-section="mick"]')).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Compromisos que requieren atención" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Cómo vas" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Lo que se puede escapar" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Una lectura de tu ritmo" })).toBeVisible();
     await expect(page.locator("details[data-commercial-compass-015]")).toBeVisible();
     await expect(page.locator("details[data-commercial-compass-015]")).not.toHaveAttribute("open", "");
-    await expect(page.getByRole("heading", { name: "Ahora / Hoy" })).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Requiere atención" })).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Cómo vas hoy" })).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Patrón contextual" })).toHaveCount(0);
+    await expect(page.getByText("Sin señales de Cartera en el horizonte", { exact: true })).toHaveCount(0);
+    await expect(page.getByText("Mick todavía no tiene evidencia disponible en Inicio para mostrar un patrón confiable.", { exact: true })).toBeVisible();
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(1);
@@ -195,4 +240,17 @@ test("200 percent zoom, reduced motion and keyboard focus remain usable", async 
   expect(focused).not.toBe("BODY");
   const reduced = await page.evaluate(() => getComputedStyle(document.querySelector(".aura-mobile-nav")).transitionDuration);
   expect(Number.parseFloat(reduced)).toBeLessThanOrEqual(0.001);
+});
+
+test("owner-backed Agenda and Rhythm READY states render without Home recalculation", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await mountOwnerReadyHome(page);
+  await expect(page.getByText("Seguimiento · Mariana Torres", { exact: true })).toBeVisible();
+  await expect(page.getByText("Presentación · Carlos Vega", { exact: true })).toBeVisible();
+  await expect(page.getByText("18 / 20", { exact: true })).toBeVisible();
+  await expect(page.getByText("4 / 10", { exact: true })).toBeVisible();
+  await expect(page.getByText("Sin señales de Cartera en el horizonte", { exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  await mkdir("artifacts/aura-home-acceptance", { recursive: true });
+  await page.screenshot({ path: "artifacts/aura-home-acceptance/owner-ready-1440x900.png", fullPage: true });
 });
