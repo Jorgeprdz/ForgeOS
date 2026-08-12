@@ -5,6 +5,15 @@
 .home-header h1 { margin:calc(var(--forge-space-unit)*1) 0 0; font-size:clamp(32px,5vw,46px); line-height:1.04; letter-spacing:-.035em; }
 .home-date { margin-top:calc(var(--forge-space-unit)*2); color:var(--forge-text-secondary); font-size:14px; }
 .home-attention-summary { margin-top:calc(var(--forge-space-unit)*2); color:var(--forge-text-primary); font-size:15px; font-weight:650; }
+.home-decision-control{display:grid;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--aura-border)}
+.home-decision-control>span{font-size:.82rem;font-weight:750;color:var(--aura-text-muted)}
+.home-decision-control>div{display:flex;flex-wrap:wrap;gap:6px}
+.home-decision-control button{min-height:36px;padding:6px 10px;border:1px solid var(--aura-border);border-radius:10px;background:var(--aura-surface);color:var(--aura-text);font:inherit;font-size:.82rem;font-weight:750;cursor:pointer}
+.home-decision-control button[aria-pressed="true"]{border-color:var(--aura-brand);background:var(--aura-info-soft);color:var(--aura-brand-hover)}
+.home-decision-control button:focus-visible{outline:3px solid var(--aura-focus);outline-offset:2px}
+.home-decision-control button:disabled{opacity:.55;cursor:wait}
+.home-decision-control small{min-height:1em;color:var(--aura-text-muted)}
+@media(max-width:480px){.home-decision-control>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.home-decision-control button{width:100%}}
 .home-refresh,.home-link-button,.home-retry { min-width:var(--aura-control); min-height:var(--aura-control); border:1px solid var(--forge-border-default); border-radius:var(--forge-radius-input); background:var(--forge-surface); color:var(--forge-text-primary); padding:0 calc(var(--forge-space-unit)*4); cursor:pointer; font-weight:700; }
 .home-refresh:hover,.home-link-button:hover,.home-retry:hover { border-color:var(--forge-border-focus); color:var(--forge-brand-hover); }
 .home-mini-label { margin:0; color:var(--forge-brand); font-size:12px; line-height:1.2; font-weight:850; letter-spacing:.09em; }

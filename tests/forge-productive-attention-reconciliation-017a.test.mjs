@@ -83,8 +83,8 @@ test("017A presentation renders attention units, keeps detail available and coll
   const home = await readFile(new URL("../docs/static-preview/forge-aura/home/home-module.js", import.meta.url), "utf8");
   const compass = await readFile(new URL("../docs/static-preview/forge-aura/home/home-module-015.js", import.meta.url), "utf8");
   const ready = home.slice(home.indexOf("function renderReady"), home.indexOf("function renderError"));
-  assert.match(ready, /renderBriefing\(snapshot\)/);
-  assert.match(ready, /renderSupportingAttention\(snapshot\)/);
+  assert.match(ready, /renderBriefing\(snapshot, decisions\)/);
+  assert.match(ready, /renderSupportingAttention\(snapshot, decisions\)/);
   assert.match(ready, /renderDetailNavigation\(\)/);
   assert.doesNotMatch(ready, /renderAgenda\(/);
   assert.doesNotMatch(ready, /renderCartera\(/);

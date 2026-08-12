@@ -221,6 +221,18 @@ function fixtureFor(eventType, index) {
         capture_mode: "TEXT",
       },
     },
+    REFERRAL_RECEIVED: {
+      subject: { type: "ACTIVITY", id: "activity-referral-001" },
+      payload: { activity_reference: "activity-referral-001", referral_reference: "referral-001", prospect_reference: "prospect-001" },
+    },
+    CALL_COMPLETED: {
+      subject: { type: "ACTIVITY", id: "activity-call-001" },
+      payload: { activity_reference: "activity-call-001", contact_reference: "contact-001", prospect_reference: "prospect-001" },
+    },
+    ADVISOR_REFERRAL_RECEIVED: {
+      subject: { type: "ACTIVITY", id: "activity-advisor-referral-001" },
+      payload: { activity_reference: "activity-advisor-referral-001", referred_advisor_reference: "advisor-002" },
+    },
     DUE_ACTION_CREATED: {
       subject: { type: "DUE_ACTION", id: "due-action-001" },
       source: {
@@ -258,6 +270,14 @@ function fixtureFor(eventType, index) {
         due_action_reference: "due-action-001",
         completed_at: "2026-07-30T16:15:00.000Z",
       },
+    },
+    SALES_NBA_ADVISOR_RESPONSE: {
+      actor: { type: "ADVISOR", id: "tenant-advisor-001" },
+      subject: { type: "RECOMMENDATION", id: "NBA_fixture-001" },
+      source: { type: "ADVISOR_CONFIRMED", reference: "decision-fixture-001", channel: "FORGE_UI" },
+      evidence_strength: "HUMAN_CONFIRMED",
+      confirmation_state: "CONFIRMED",
+      payload: { recommendation_reference: "NBA_fixture-001", recommendation_source: "NBA_REASON_WHY", recommendation_domain: "ADVISOR_OS_SALES", advisor_reference: "tenant-advisor-001", decision: "ACCEPTED", original_response: "ACCEPTED" },
     },
   };
 
@@ -299,8 +319,8 @@ test("manual Activity preserves structured context without executing its next ac
   assert.equal(event.safety_flags.cross_tenant_data, false);
 });
 
-test("FES 01 exposes the thirteen first-vertical event types", () => {
-  assert.equal(EVENT_TYPES.length, 13);
+test("FES 01 exposes every governed event type including advisor response evidence", () => {
+  assert.equal(EVENT_TYPES.length, 17);
   assert.deepEqual(EVENT_TYPES, [
     "PROSPECT_PROFILE_CREATED",
     "PROSPECT_CREATED",
@@ -312,9 +332,13 @@ test("FES 01 exposes the thirteen first-vertical event types", () => {
     "APPOINTMENT_RESCHEDULED",
     "APPOINTMENT_NO_SHOW",
     "ACTIVITY_CONTEXT_ADDED",
+    "REFERRAL_RECEIVED",
+    "CALL_COMPLETED",
+    "ADVISOR_REFERRAL_RECEIVED",
     "DUE_ACTION_CREATED",
     "DUE_ACTION_RESCHEDULED",
     "DUE_ACTION_COMPLETED",
+    "SALES_NBA_ADVISOR_RESPONSE",
   ]);
 });
 
