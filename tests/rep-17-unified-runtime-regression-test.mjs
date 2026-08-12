@@ -1,3 +1,6 @@
+import "./recommendation-presentation-evidence-017e-test.mjs";
+import "./recommendation-decision-action-lineage-017e-test.mjs";
+import "./commercial-pilot-evidence-summary-017e-test.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
