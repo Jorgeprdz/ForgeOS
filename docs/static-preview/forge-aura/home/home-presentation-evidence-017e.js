@@ -29,7 +29,7 @@ function recommendation(item, advisorId) {
     advisorId,
     domain: item.sourceDomain,
     sourceAuthority: item.sourceAuthority,
-    recommendationVersion: item.provenance?.decisionProjectionContract || "FCDP-004-001",
+    recommendationVersion: item.recommendationVersion || item.provenance?.recommendationVersion || null,
     subjectType: item.subject?.type || "ADVISOR",
     subjectId: item.subject?.reference || advisorId,
   });
