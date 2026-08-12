@@ -1,15 +1,10 @@
 import { copyFile, mkdir } from "node:fs/promises";
 
-const directRuntimeCopies = Object.freeze([
-  ["../platform/navigation-runtime.js", "../docs/platform/navigation-runtime.js"],
-  ["../platform/portfolio-intelligence/cartera-050d-future-radar-view.js", "../docs/platform/portfolio-intelligence/cartera-050d-future-radar-view.js"],
-  ["../platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js", "../docs/platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js"],
-]);
-
-await mkdir(new URL("../docs/platform/portfolio-intelligence/", import.meta.url), { recursive: true });
-for (const [source, target] of directRuntimeCopies) {
-  await copyFile(new URL(source, import.meta.url), new URL(target, import.meta.url));
-}
+await mkdir(new URL("../docs/platform/", import.meta.url), { recursive: true });
+await copyFile(
+  new URL("../platform/navigation-runtime.js", import.meta.url),
+  new URL("../docs/platform/navigation-runtime.js", import.meta.url),
+);
 
 await import("./prepare-material3-auth-entry.mjs");
 await import("./prepare-material3-runtime-fail-closed.mjs");

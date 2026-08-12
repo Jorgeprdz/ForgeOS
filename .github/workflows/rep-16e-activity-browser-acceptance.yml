@@ -6,25 +6,43 @@ on:
       - 'integration/reporting-source-truth-reconciliation'
     paths:
       - 'advisor-os/reporting/**'
+      - 'advisor-os/cartera/cartera-050d-future-radar-enhancement.js'
       - 'platform/event-evidence/**'
+      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
+      - 'platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js'
       - 'docs/static-preview/forge-alive-material3/index.html'
       - 'docs/static-preview/forge-alive-material3/app.js'
       - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
       - 'docs/static-preview/forge-alive-material3/activity-*'
       - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
+      - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
+      - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
       - 'tests/e2e/rep-16e-activity-browser.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs'
       - 'playwright.rep16e.config.mjs'
       - '.github/workflows/rep-16e-activity-browser-acceptance.yml'
   pull_request:
     paths:
       - 'advisor-os/reporting/**'
+      - 'advisor-os/cartera/cartera-050d-future-radar-enhancement.js'
       - 'platform/event-evidence/**'
+      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
+      - 'platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js'
       - 'docs/static-preview/forge-alive-material3/index.html'
       - 'docs/static-preview/forge-alive-material3/app.js'
       - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
       - 'docs/static-preview/forge-alive-material3/activity-*'
       - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
+      - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
+      - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
       - 'tests/e2e/rep-16e-activity-browser.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs'
       - 'playwright.rep16e.config.mjs'
       - '.github/workflows/rep-16e-activity-browser-acceptance.yml'
   workflow_dispatch:
@@ -38,6 +56,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact tested HEAD
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          echo "REP16E_EXACT_HEAD=$ACTUAL_SHA"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -46,8 +73,52 @@ jobs:
         run: npm ci
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
-      - name: Run REP-16E browser acceptance
-        run: npx playwright test --config=playwright.rep16e.config.mjs
+      - name: Run REP-16E-R2 primary gates
+        run: |
+          npx playwright test --config=playwright.rep16e.config.mjs \
+            tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs \
+            tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs
+          cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-primary-results.json
+      - name: Run REP-16E activity regression
+        run: |
+          npx playwright test --config=playwright.rep16e.config.mjs \
+            tests/e2e/rep-16e-activity-browser.spec.mjs
+      - name: Triple-check REP-16E-R2 closure
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          git diff --exit-code
+          node - <<'EOF'
+          const fs = require('fs');
+          const evidence = JSON.parse(fs.readFileSync(
+            'artifacts/rep16e-r2-pages-site/rep16e-r2-pages-evidence.json',
+            'utf8',
+          ));
+          if (evidence.status !== 'PASS') throw new Error('REP16E_R2_PAGES_STATUS_NOT_PASS');
+          if (evidence.head !== process.env.EXPECTED_SHA) throw new Error('REP16E_R2_HEAD_MISMATCH');
+          for (const required of [
+            'static-preview/forge-alive/alfred-command-runtime.js',
+            'platform/portfolio-intelligence/cartera-050d-future-radar-view.js',
+            'platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js',
+          ]) {
+            if (!evidence.requiredPublished.includes(required)) {
+              throw new Error(`REP16E_R2_REQUIRED_PUBLISHED_MISSING=${required}`);
+            }
+          }
+          const selector = fs.readFileSync('playwright.rep16e.config.mjs', 'utf8');
+          if (selector.includes('forge-commercial-pilot-017e-runtime-mount')) {
+            throw new Error('REP16E_R2_BROKEN_CHILD_STILL_SELECTED');
+          }
+          for (const child of [
+            'forge-commercial-pilot-017e-authenticated',
+            'forge-commercial-pilot-017e-r2',
+            'rep-16e-activity-browser',
+          ]) {
+            if (!selector.includes(child)) throw new Error(`REP16E_R2_CHILD_MISSING=${child}`);
+          }
+          console.log(`REP16E_R2_TRIPLE_CHECK=PASS head=${evidence.head}`);
+          EOF
       - name: Upload browser evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,6 +127,8 @@ jobs:
           path: |
             artifacts/rep16e-playwright-report
             artifacts/rep16e-playwright-results.json
+            artifacts/rep16e-r2-primary-results.json
             artifacts/rep16e-playwright-test-results
+            artifacts/rep16e-r2-pages-site/rep16e-r2-pages-evidence.json
           if-no-files-found: warn
           retention-days: 14
