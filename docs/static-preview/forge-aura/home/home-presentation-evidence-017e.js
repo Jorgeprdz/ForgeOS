@@ -58,22 +58,66 @@ export function createAuraPresentationEvidenceControl({
     return runtime;
   }
 
+  async function existingPresentation(identity) {
+    const entries = await (await ensureRuntime()).listEntries();
+    return entries
+      .map(entry => entry.canonical_event)
+      .find(event => event?.event_type === "RECOMMENDATION_PRESENTED" && event.idempotency_key === identity) || null;
+  }
+
+  function replay(event) {
+    return Object.freeze({
+      event,
+      result: Object.freeze({ status: "IDEMPOTENT_REPLAY" }),
+      recommendationPresented: true,
+      recommendationViewed: false,
+      activityExecuted: false,
+      outcomeCreated: false,
+    });
+  }
+
   async function present(item, { presentationSurface = "AURA_HOME", presentedAt = null } = {}) {
     const ref = decisionReference(item);
     if (!ref) throw new Error("AURA_PRESENTATION_IDENTITY_INCOMPLETE");
     if (inFlight.has(ref)) return inFlight.get(ref);
     const operation = (async () => {
       const api = await authorityLoader();
+      const recommendationInput = recommendation(item, user.id);
+      const identity = api.evidence.presentationIdentity({
+        advisorId: recommendationInput.advisorId,
+        recommendationId: recommendationInput.recommendationId,
+        recommendationVersion: recommendationInput.recommendationVersion,
+      });
+
+      const local = await existingPresentation(identity);
+      if (local) return replay(local);
+
+      try {
+        await (await ensureRuntime()).syncOnce();
+      } catch (error) {
+        const unavailable = new Error("AURA_PRESENTATION_CANONICAL_STATE_UNAVAILABLE");
+        unavailable.code = "AURA_PRESENTATION_CANONICAL_STATE_UNAVAILABLE";
+        unavailable.cause = error;
+        throw unavailable;
+      }
+
+      const synced = await existingPresentation(identity);
+      if (synced) return replay(synced);
+
       const when = presentedAt || clock();
       const result = await api.evidence.persistRecommendationPresentation({
         runtime: await ensureRuntime(),
-        recommendation: recommendation(item, user.id),
+        recommendation: recommendationInput,
         presentedAt: when,
         recordedAt: when,
         presentationSurface,
       });
-      await (await ensureRuntime()).syncOnce();
-      return result;
+      try {
+        await (await ensureRuntime()).syncOnce();
+        return result;
+      } catch (error) {
+        return Object.freeze({ ...result, syncState: "PENDING", syncErrorCode: error?.code || error?.message || "FES_SYNC_FAILED" });
+      }
     })().finally(() => inFlight.delete(ref));
     inFlight.set(ref, operation);
     return operation;
