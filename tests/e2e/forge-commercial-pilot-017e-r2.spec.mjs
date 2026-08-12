@@ -86,10 +86,6 @@ function buildRelevantCanonicalSite(worktree, targetSite) {
   );
   fs.cpSync(canonicalSource, canonicalTarget, { recursive: true });
 
-  copyFileExact(
-    path.join(worktree, 'env.js'),
-    path.join(targetSite, 'env.js'),
-  );
 }
 
 function prepareCanonicalPagesEvidence() {
