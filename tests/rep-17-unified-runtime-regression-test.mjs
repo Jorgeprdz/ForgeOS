@@ -1,3 +1,12 @@
+import "./recommendation-presentation-evidence-017e-test.mjs";
+import "./recommendation-decision-action-lineage-017e-test.mjs";
+import "./commercial-pilot-evidence-summary-017e-test.mjs";
+import "./cartera-030c-recommendation-lineage-017e-test.mjs";
+import "./cartera-030c-postgres-lineage-017e-test.mjs";
+import "./recommendation-human-decision-evidence-017c-test.mjs";
+import "./activity-foundational-fes-taxonomy-test.mjs";
+import "./activity-manual-countable-capture.test.mjs";
+import "./activity-fes-01-2-reporting-compatibility.test.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";

@@ -2,6 +2,7 @@ import { SupabaseRuntime } from '../../supabase-runtime.js';
 import { PAYMENT_EVIDENCE_STATES } from '../../policy-operations/evidence/payment-evidence-packet.js';
 
 const REFERENCE_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,239}$/;
+const DECISION_REFERENCE_PATTERN = /^evt_[a-f0-9]{32}$/;
 const IDEMPOTENCY_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,159}$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const SOURCES = new Set([
@@ -83,6 +84,12 @@ function normalizeCommand(input = {}) {
             'CARTERA030C_EVIDENCE_REFERENCE_INVALID'
         ))
         : [];
+    const recommendationDecisionReference = input.recommendationDecisionReference == null || input.recommendationDecisionReference === ''
+        ? null
+        : requiredReference(input.recommendationDecisionReference, 'CARTERA030C_RECOMMENDATION_DECISION_REFERENCE_INVALID', DECISION_REFERENCE_PATTERN);
+    const paymentObligationReference = recommendationDecisionReference
+        ? requiredReference(input.paymentObligationReference, 'CARTERA030C_PAYMENT_OBLIGATION_REFERENCE_REQUIRED')
+        : null;
 
     return Object.freeze({
         policyReference: requiredReference(input.policyReference, 'CARTERA030C_POLICY_REFERENCE_INVALID'),
@@ -103,6 +110,7 @@ function normalizeCommand(input = {}) {
             'CARTERA030C_IDEMPOTENCY_KEY_INVALID',
             IDEMPOTENCY_PATTERN
         ),
+        ...(recommendationDecisionReference ? { recommendationDecisionReference, paymentObligationReference } : {}),
     });
 }
 

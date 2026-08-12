@@ -21,6 +21,21 @@ const RESPONSE_TO_DECISION = Object.freeze({
 function fail(code) { const error = new TypeError(code); error.code = code; throw error; }
 function token(value, code) { const result = String(value || "").trim(); if (!result || result.length > 240) fail(code); return result; }
 
+function cartera030cLineageMetadata(recommendation) {
+  if (recommendation?.actionAddressable !== true || recommendation?.actionOwner !== "CARTERA_030C") return Object.freeze({});
+  return Object.freeze({
+    policy_reference: token(recommendation.policyReference, "RECOMMENDATION_POLICY_REFERENCE_REQUIRED"),
+    signal_reference: token(recommendation.signalReference, "RECOMMENDATION_SIGNAL_REFERENCE_REQUIRED"),
+    payment_obligation_reference: token(recommendation.paymentObligationReference, "RECOMMENDATION_PAYMENT_OBLIGATION_REFERENCE_REQUIRED"),
+    recommendation_action_addressable: true,
+    action_owner: "CARTERA_030C",
+    action_target_type: token(recommendation.actionTargetType, "RECOMMENDATION_ACTION_TARGET_TYPE_REQUIRED"),
+    action_target_reference: token(recommendation.actionTargetReference, "RECOMMENDATION_ACTION_TARGET_REFERENCE_REQUIRED"),
+    expected_action: token(recommendation.expectedAction, "RECOMMENDATION_EXPECTED_ACTION_REQUIRED"),
+    smallest_useful_action: token(recommendation.smallestUsefulAction, "RECOMMENDATION_SMALLEST_USEFUL_ACTION_REQUIRED"),
+  });
+}
+
 function createAdvisorDecisionEvidence({ recommendation, response, decisionReference, recordedAt, correctionOf = null, correctionReasonCode = null } = {}) {
   if (!recommendation || recommendation.recommendationAvailable === false) fail("RECOMMENDATION_REQUIRED");
   const recommendationId = token(recommendation.recommendationId, "RECOMMENDATION_ID_REQUIRED");
@@ -42,6 +57,7 @@ function createAdvisorDecisionEvidence({ recommendation, response, decisionRefer
     prospect_reference: recommendation.subjectType === "PROSPECT" ? recommendation.subjectId : null,
     opportunity_reference: recommendation.opportunityId || null,
     deferred_until: response.deferredUntil || null,
+    ...cartera030cLineageMetadata(recommendation),
   };
   const input = {
     event_type: "SALES_NBA_ADVISOR_RESPONSE", tenant_id: advisorId,

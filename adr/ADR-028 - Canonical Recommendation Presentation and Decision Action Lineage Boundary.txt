@@ -1,0 +1,190 @@
+ADR-028 — Canonical Recommendation Presentation and Decision Action Lineage Boundary
+
+Status: ACCEPTED FOR PHASE_017E_COMMERCIAL_PILOT_EVIDENCE_ACTIVATION
+Program: FORGE_COMMERCIAL_LEVERAGE
+Phase: PHASE_017E_COMMERCIAL_PILOT_EVIDENCE_ACTIVATION / 017E-R1 + 017E-R4 AMENDMENT
+Base main: db5b63298c0ed9303b22fb47cce0d59a9f8c9062
+Branch: feature/forge-commercial-pilot-evidence-017e
+
+Context
+
+ADR-027 established the durable recommendation → explicit human decision boundary and locked ACCEPTED != ACTED, explicit lineage, advisor isolation, append-only evidence and non-causal interpretation. Phase 017E correctly stopped because two observability primitives were still missing: there was no canonical durable fact that a governed recommendation was presented in an authenticated productive UI, and existing productive action writers did not retain an optional explicit reference to the human-decision event that preceded a real action.
+
+This ADR ratifies exactly those two evidence semantics. It creates no new recommendation, action, outcome, identity, commercial metric or source-of-truth authority.
+
+Decision 1 — FES remains the only durable event-evidence ledger.
+
+RECOMMENDATION_PRESENTED is added to the existing canonical FES event taxonomy. No second analytics or impression ledger is created. FES records only the observation that an already-governed recommendation was successfully delivered into an authenticated advisor's active productive UI in an interactable state.
+
+Decision 2 — PRESENTED is narrowly defined.
+
+PRESENTED != GENERATED.
+PRESENTED != EVALUATED.
+PRESENTED != VIEWED.
+PRESENTED != READ.
+PRESENTED != ACCEPTED.
+
+RECOMMENDATION_PRESENTED means the governed recommendation reached the authenticated advisor's active productive UI after successful composition/render completion so that the advisor could interact with it. It does not claim visual attention or cognition.
+
+Decision 3 — Presentation evidence is SYSTEM_OBSERVED and non-blocking.
+
+The event source is SYSTEM_OBSERVED. The recommendation remains owned by its existing originating authority. A presentation-evidence write or sync failure must not hide, mutate or invalidate the recommendation and must not fabricate a successful durable presentation. The UI may remain usable while evidence truth remains unavailable until the existing FES runtime can persist/sync it.
+
+Decision 4 — Presentation identity is distinct recommendation identity, not impression count.
+
+Canonical presentation idempotency is scoped to:
+
+advisor identity
++ recommendation_reference
++ recommendation_version
+
+for the same governed recommendation version.
+
+A refresh, remount, pageshow or return to the module does not create a second canonical presentation item. A materially new recommendation version is eligible for a new presentation item. If no authoritative recommendation version exists, the canonical stable decision/recommendation reference is the version identity and the event must not invent a synthetic revision merely from a render timestamp.
+
+Decision 5 — Presentation event preserves existing authoritative identity.
+
+The canonical envelope/payload preserves, where already available from the governed recommendation projection:
+- advisor identity;
+- recommendation reference;
+- recommendation version;
+- source authority;
+- source domain;
+- recommendation subject type/reference;
+- presented_at;
+- presentation_surface.
+
+Fields already owned by the FES envelope are not duplicated unnecessarily. Missing optional recommendation metadata remains null/unknown; it is not inferred from display text.
+
+Decision 6 — Real action authority remains unchanged.
+
+ADR-027 Decision 4 remains controlling. Navigation, opening a module, accepting a recommendation or clicking an action CTA is not an action event. Only the existing productive action authority may establish ACTED by writing its existing canonical action evidence.
+
+Decision 7 — Existing action evidence may retain optional explicit human-decision lineage.
+
+An existing action event may carry an optional `recommendation_decision_reference` containing the canonical `SALES_NBA_ADVISOR_RESPONSE.event_id` that legitimately preceded that real action. The field is lineage metadata only. It does not change event type, action ownership, action semantics, funnel movement or outcome truth.
+
+No new action event type, action ledger or action owner is created.
+
+Decision 8 — Lineage transport may be ephemeral; productive truth is not.
+
+The Home recommendation/action path may carry bounded ephemeral context between productive UI surfaces. Ephemeral navigation state is not evidence and is not business authority. The lineage becomes productive evidence only when the existing action writer validates compatibility and persists the reference on the real action event.
+
+Local storage is not authorized as a commercial source of truth.
+
+Decision 9 — Eligibility and compatibility are strict. [R4 supersedes the R1 eligibility sentence below.]
+
+R1 originally allowed automatic lineage for explicit ACCEPTED or MODIFIED decisions. 017E-R4 proved that MODIFY does not preserve final action or final target and therefore narrows action-lineage eligibility to ACCEPTED only. MODIFIED remains valid durable human-decision evidence but its action execution lineage is UNRESOLVED until a future ratified contract preserves the final modified action and target. DEFERRED and DISMISSED are also not action-lineage eligible.
+
+Before retaining lineage, the action boundary must establish:
+- decision advisor == action advisor;
+- decision timestamp <= action timestamp;
+- decision recommendation identity matches the transported governed recommendation identity;
+- recommendation subject/action subject compatibility is explicit;
+- commercial identity compatibility exists where required by the action owner;
+- the recommendation is explicitly action-addressable;
+- the action owner and exact target are compatible with the recommendation decision metadata.
+
+Cross-advisor, name-only, guessed-person, wrong-subject, wrong-target or temporal-only matching is forbidden. If compatibility cannot be established, the real action may still be written by its existing owner but without recommendation lineage. Recommendation-lineage state is UNRESOLVED/TEMPORAL_ASSOCIATION_ONLY as applicable; payment truth does not depend on recommendation state.
+
+Decision 10 — Outcome ownership and causality remain unchanged.
+
+017E does not copy recommendation lineage directly into outcomes unless an existing outcome authority already owns such metadata. Existing action→outcome reconciliation remains authoritative.
+
+Allowed observation chain:
+RECOMMENDATION
+→ PRESENTED
+→ HUMAN DECISION
+→ EXPLICITLY LINKED REAL ACTION
+→ EXISTING OUTCOME RELATIONSHIP
+
+This chain supports `observed after`, `explicitly linked`, `subsequent action`, `subsequent outcome`, `associated with`, same-advisor comparison and pilot evidence language only.
+
+It does not authorize causal attribution.
+
+Decision 11 — R1 database stop and R4 minimum persistence authorization.
+
+R1 correctly authorized no database migration and required STOP if productive action storage proved insufficient. R2/R3 subsequently proved that CARTERA 030C is the legitimate existing action owner for the selected `UNCONFIRMED_PAYMENT_EVIDENCE` pilot and that `cartera030c_confirmed_payment_events` has no semantically valid durable field for an explicit prior recommendation-decision reference. `payment_evidence_reference`, `evidence_references`, Compensation `decisionId` and Compensation `correlationId` are not semantically equivalent and must not be reused.
+
+017E-R4 therefore authorizes exactly one minimal persistence delta on the existing CARTERA 030C PaymentEvent owner:
+
+`recommendation_decision_reference text null`
+
+The value is an optional canonical semantic reference to an existing `SALES_NBA_ADVISOR_RESPONSE.event_id`. It is validated by the existing action command against FES and the exact advisor/policy/payment-obligation/action context. It is not a database foreign key, payment evidence, payment truth, outcome truth, action authority, recommendation authority or causal attribution.
+
+The R4 migration may alter only the existing PaymentEvent storage contract and the existing 030C RPC body needed to validate, persist and return this optional metadata. No new table, ledger, action owner, recommendation owner, RLS rule, auth rule, dependency, lockfile or workflow is authorized. Historical rows remain valid with NULL; no backfill or retrospective update is authorized.
+
+Decision 12 — Pilot denominators use canonical presentations and accepted-only action eligibility.
+
+`RECOMMENDATIONS_PRESENTED` counts distinct eligible canonical RECOMMENDATION_PRESENTED evidence items, not render calls, page loads, projection evaluations or recorded decisions.
+
+Decision metrics continue to preserve ACCEPTED, MODIFIED, DEFERRED and DISMISSED. The action-linkage denominator is narrower and includes only action-addressable ACCEPTED decisions with valid identity in the eligible observation window. MODIFIED is reported separately and is not part of `ACTION_LINKAGE_ELIGIBLE_ACCEPTED_COUNT` or `ACTION_AFTER_ACCEPT_RATE`.
+
+Decision-derived rates must distinguish zero, unknown, unavailable and insufficient sample. TEMPORAL_ASSOCIATION_ONLY does not count as explicit recommendation execution.
+
+Decision 13 — Selected R4 Cartera pilot boundary.
+
+The initial actionable pilot family is `UNCONFIRMED_PAYMENT_EVIDENCE`, owned by `PAYMENT_OBLIGATION`, with canonical subject `POLICY`, exact action target `PAYMENT_OBLIGATION`, and smallest useful action "Revisar la evidencia y confirmar o rechazar el pago." The individual Cartera item is action-addressable only when the exact policy and obligation references are present. The Home item "Pólizas que requieren atención" remains aggregate, advisor-level and not action-addressable; it may navigate to Cartera but may not manufacture individual lineage or presentation evidence for contained signals.
+
+Decision 14 — Payment evidence and recommendation lineage are separate.
+
+`payment_evidence_reference` and `evidence_references` remain exclusively payment/payment-obligation evidence. `recommendation_decision_reference` answers only which canonical prior human recommendation decision, if any, is explicitly associated with the real action. A PaymentEvent without recommendation lineage remains fully valid. A recommendation accepted without a later successful 030C write remains NOT ACTED.
+
+Consequences
+
+Positive:
+- Forge can truthfully establish a recommendation presentation denominator without claiming a view;
+- refreshes do not inflate the pilot denominator;
+- a real existing action can retain explicit decision lineage without changing action ownership;
+- ACCEPTED remains distinct from ACTED;
+- MODIFIED remains decision evidence without false execution attribution;
+- payment evidence remains semantically clean;
+- commercial pilot measurement can exclude temporal guessing;
+- no parallel authority or ledger is introduced.
+
+Tradeoffs and limitations:
+- a presentation write failure means presentation evidence is unavailable even if the recommendation remained visible;
+- pre-017E historical presentations are not inferred or backfilled;
+- historical PaymentEvents are not retroactively linked;
+- actions without validated explicit lineage remain unresolved/temporal-only for the governed pilot;
+- MODIFIED/DEFERRED/DISMISSED decisions do not qualify later actions as recommendation execution;
+- explicit lineage and subsequent outcomes still do not prove causation.
+
+Acceptance
+
+Phase 017E may close this boundary only when tests prove:
+- evaluated-but-not-presented does not emit RECOMMENDATION_PRESENTED;
+- authenticated successful presentation emits one idempotent canonical item per advisor/recommendation/version;
+- refresh/remount does not inflate presentation count;
+- a new governed recommendation version may produce a new presentation item;
+- advisor isolation and failure-honest presentation semantics;
+- ACCEPT/MODIFY/DEFER/DISMISS non-regression;
+- ACCEPTED != ACTED;
+- navigation alone creates no action;
+- Home aggregate is not action-addressable;
+- the selected individual Cartera recommendation carries exact policy/obligation identity;
+- a real existing 030C action can persist valid explicit ACCEPTED decision lineage;
+- MODIFIED/DEFERRED/DISMISSED lineage is absent/unresolved;
+- invalid/cross-advisor/wrong-policy/wrong-obligation/action-before-decision/temporal-only cases are not counted as explicit lineage;
+- payment evidence remains unchanged and no recommendation id appears inside payment evidence arrays;
+- existing outcome authorities remain unchanged;
+- pilot metrics use canonical presentation denominators, accepted-only action linkage denominators and non-causal language;
+- the only database change is the ratified optional 030C lineage storage; no auth, RLS, dependency, lockfile or workflow change occurs.
+
+Final boundary
+
+PRESENTED
+!= VIEWED
+!= HUMAN DECISION
+!= COMMERCIAL ACTION
+!= COMMERCIAL OUTCOME
+!= CAUSATION
+
+PAYMENT_EVIDENCE
+!= RECOMMENDATION_LINEAGE
+
+ACCEPTED
+!= ACTED
+
+MODIFIED
+!= ACTION_LINEAGE_ELIGIBLE

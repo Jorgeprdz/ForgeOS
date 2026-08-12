@@ -51,10 +51,34 @@ function filterItems(radar, horizon) {
     return (radar.items || []).filter(item => item.horizon === horizon).slice(0, 12);
 }
 
-function itemCard(item) {
+function decisionControls(item, { actionableSignalReference = null, decisionState = null, presentationState = null, operationState = null } = {}) {
+    if (!actionableSignalReference || item.signalReference !== actionableSignalReference) return '';
+    const busy = operationState === 'SAVING';
+    const status = decisionState
+        ? `Decisión guardada: ${decisionState}`
+        : presentationState === 'UNAVAILABLE'
+            ? 'Recomendación visible; evidencia de presentación pendiente.'
+            : 'Decide qué hacer. Aceptar todavía no registra el pago.';
+    const continueButton = decisionState === 'ACCEPTED' && item.policyReference
+        ? `<button type="button" class="glass-button" data-open-policy="${escapeHTML(item.policyReference)}" style="min-height:38px;font-weight:900;">Continuar a la póliza</button>`
+        : '';
+    return `
+        <div data-radar-actionable-recommendation="017e" style="display:grid;gap:8px;border-top:1px solid var(--outline-variant,rgba(255,255,255,.12));padding-top:10px;">
+            <div style="font-size:10px;color:var(--text-secondary);">${escapeHTML(status)}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                <button type="button" class="glass-button" data-radar-decision="ACCEPT" data-radar-signal="${escapeHTML(item.signalReference)}" ${busy ? 'disabled' : ''}>Aceptar</button>
+                <button type="button" class="glass-button" data-radar-decision="MODIFY" data-radar-signal="${escapeHTML(item.signalReference)}" ${busy ? 'disabled' : ''}>Modificar</button>
+                <button type="button" class="glass-button" data-radar-decision="DEFER" data-radar-signal="${escapeHTML(item.signalReference)}" ${busy ? 'disabled' : ''}>Posponer</button>
+                <button type="button" class="glass-button" data-radar-decision="DISMISS" data-radar-signal="${escapeHTML(item.signalReference)}" ${busy ? 'disabled' : ''}>Descartar</button>
+                ${continueButton}
+            </div>
+        </div>`;
+}
+
+function itemCard(item, decisionState) {
     const person = item.personDisplayName || item.personReference || 'Relación no identificada';
     return `
-        <article class="glass-widget" style="padding:14px;display:grid;gap:9px;">
+        <article class="glass-widget" data-radar-signal-reference="${escapeHTML(item.signalReference)}" style="padding:14px;display:grid;gap:9px;">
             <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
                 <div style="min-width:0;">
                     <div style="font-size:10px;color:var(--text-secondary);font-weight:800;text-transform:uppercase;">
@@ -83,6 +107,7 @@ function itemCard(item) {
             <div style="font-size:10px;color:var(--text-secondary);overflow-wrap:anywhere;">
                 Fuente: ${escapeHTML(item.sourceAuthority)} · ${escapeHTML(item.sourceRecordReference)}
             </div>
+            ${decisionControls(item, decisionState)}
         </article>
     `;
 }
@@ -92,6 +117,10 @@ export function renderCartera050FutureRadar({
     radar = null,
     horizon = 'ALL',
     errorCode = null,
+    actionableSignalReference = null,
+    decisionState = null,
+    presentationState = null,
+    operationState = null,
 } = {}) {
     if (status === 'LOADING') {
         return `
@@ -132,6 +161,7 @@ export function renderCartera050FutureRadar({
         >${escapeHTML(label)} · ${escapeHTML(count)}</button>
     `).join('');
 
+    const actionState = { actionableSignalReference, decisionState, presentationState, operationState };
     return `
         <section class="glass-widget" style="padding:18px;margin-bottom:18px;" aria-labelledby="cartera-radar-title">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
@@ -157,7 +187,7 @@ export function renderCartera050FutureRadar({
             </div>
 
             <div style="margin-top:14px;display:grid;gap:10px;">
-                ${items.length ? items.map(itemCard).join('') : `
+                ${items.length ? items.map(item => itemCard(item, actionState)).join('') : `
                     <div class="glass-widget" style="padding:14px;color:var(--text-secondary);font-size:12px;">
                         No hay señales visibles en este horizonte.
                     </div>

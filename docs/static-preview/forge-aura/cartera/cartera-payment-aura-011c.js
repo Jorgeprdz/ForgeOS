@@ -1,3 +1,9 @@
+import {
+  recommendationDecisionLineageFor,
+  consumeRecommendationDecisionLineage,
+  clearRecommendationDecisionLineage,
+} from '../recommendation-lineage-session-017e.js?v=forge-commercial-pilot-evidence-017e-r4';
+
 const INSTALL_KEY = Symbol.for('forge.aura.cartera.payment.011c');
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const SOURCES = new Set(['policy_receipt', 'payment_proof', 'bank_proof', 'carrier_statement', 'manual_capture', 'integration']);
@@ -45,6 +51,15 @@ function money(value, currency = 'MXN') {
   }
 }
 
+function compatibleLineage(userId, policyReference, obligationReference) {
+  const lineage = recommendationDecisionLineageFor(userId);
+  if (!lineage) return null;
+  if (lineage.decision !== 'ACCEPTED') return null;
+  if (lineage.subjectType !== 'POLICY' || lineage.subjectReference !== policyReference) return null;
+  if (lineage.actionOwner !== 'CARTERA_030C' || lineage.actionTarget !== obligationReference) return null;
+  return lineage;
+}
+
 export function createAuraCarteraPaymentConsumer({ client } = {}) {
   if (!client?.auth?.getUser || !client?.rpc) throw new Error('AURA_CARTERA_PAYMENT_CLIENT_REQUIRED');
 
@@ -70,7 +85,7 @@ export function createAuraCarteraPaymentConsumer({ client } = {}) {
   }
 
   async function confirmPayment(input = {}) {
-    await authenticatedUser();
+    const user = await authenticatedUser();
     const policyReference = text(input.policyReference);
     const paymentEvidenceReference = text(input.paymentEvidenceReference);
     const paymentAmount = Number(input.paymentAmount);
@@ -85,6 +100,7 @@ export function createAuraCarteraPaymentConsumer({ client } = {}) {
     if (!SOURCES.has(paymentSource)) throw Object.assign(new Error('CARTERA030C_PAYMENT_SOURCE_INVALID'), { code: 'CARTERA030C_PAYMENT_SOURCE_INVALID' });
     if (input.humanConfirmation !== true) throw Object.assign(new Error('CARTERA030C_HUMAN_CONFIRMATION_REQUIRED'), { code: 'CARTERA030C_HUMAN_CONFIRMATION_REQUIRED' });
 
+    const lineage = compatibleLineage(user.id, policyReference, obligationReference);
     const command = Object.freeze({
       policyReference,
       paymentEvidenceReference,
@@ -97,6 +113,10 @@ export function createAuraCarteraPaymentConsumer({ client } = {}) {
       evidenceReferences: Object.freeze([paymentEvidenceReference, `OBLIGATION:${obligationReference}`]),
       confirmationState: 'CONFIRMED',
       idempotencyKey: text(input.idempotencyKey) || `AURA011C:${obligationReference}:${paymentEvidenceReference}`,
+      ...(lineage ? {
+        recommendationDecisionReference: lineage.decisionEventId,
+        paymentObligationReference: obligationReference,
+      } : {}),
     });
     const payloadDigest = await sha256(command);
     const result = await client.rpc('forge_cartera030c_record_and_reconcile_confirmed_payment', {
@@ -108,18 +128,43 @@ export function createAuraCarteraPaymentConsumer({ client } = {}) {
     if (result?.error) throw Object.assign(new Error('CARTERA030C_RECONCILIATION_FAILED'), { code: result.error.code || 'CARTERA030C_RECONCILIATION_FAILED', cause: result.error });
     if (!result?.data || typeof result.data !== 'object') throw Object.assign(new Error('CARTERA030C_RECONCILIATION_RESPONSE_INVALID'), { code: 'CARTERA030C_RECONCILIATION_RESPONSE_INVALID' });
 
+    const serverPaymentEventReadAfterWriteVerified = Boolean(
+      result.data.paymentEventReadAfterWriteVerified === true
+      && text(result.data.paymentEventReference)
+      && text(result.data.policyReference) === policyReference
+      && text(result.data.paymentEvidenceReference) === paymentEvidenceReference
+      && !Number.isNaN(Date.parse(result.data.paymentEventConfirmedAt))
+    );
+    if (!serverPaymentEventReadAfterWriteVerified) {
+      throw Object.assign(new Error('CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_FAILED'), { code: 'CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_FAILED' });
+    }
+
     const calendar = await loadCalendar(policyReference);
     const confirmedObligation = calendar.items.find(item => item.obligationReference === (result.data.obligationReference || obligationReference));
     const complete = result.data.reconciliationState === 'COMPLETE';
-    const readAfterWriteVerified = complete
+    const calendarReadAfterWriteVerified = complete
       ? Boolean(confirmedObligation && ['CONFIRMED', 'PARTIAL'].includes(String(confirmedObligation.ledgerStatus || confirmedObligation.status).toUpperCase()))
       : true;
+    const readAfterWriteVerified = serverPaymentEventReadAfterWriteVerified && calendarReadAfterWriteVerified;
     if (!readAfterWriteVerified) throw Object.assign(new Error('CARTERA030C_READ_AFTER_WRITE_FAILED'), { code: 'CARTERA030C_READ_AFTER_WRITE_FAILED' });
+    const lineageReadAfterWriteVerified = serverPaymentEventReadAfterWriteVerified
+      && (!lineage || (
+        result.data.recommendationLineageState === 'EXPLICIT_LINEAGE'
+        && result.data.recommendationDecisionReference === lineage.decisionEventId
+        && result.data.recommendationActionTargetReference === obligationReference
+      ));
+    if (lineage) {
+      if (lineageReadAfterWriteVerified) consumeRecommendationDecisionLineage({ advisorId: user.id, decisionEventId: lineage.decisionEventId });
+      else clearRecommendationDecisionLineage(user.id);
+    }
 
     return Object.freeze({
       response: Object.freeze({ ...result.data }),
       calendar,
+      paymentEventReadAfterWriteVerified: serverPaymentEventReadAfterWriteVerified,
       readAfterWriteVerified,
+      lineageReadAfterWriteVerified,
+      requestedRecommendationDecisionReference: lineage?.decisionEventId || null,
       compensationHandoffState: 'NOT_CONNECTED_TO_PRODUCTIVE_SERVER_AUTHORITY',
     });
   }
@@ -253,6 +298,12 @@ export function installCarteraPaymentAura({ documentRef = document, getClient } 
             policyReference,
             obligationReference: response.obligationReference || data.get('obligationReference'),
             paymentEventReference: response.paymentEventReference || null,
+            paymentEventConfirmedAt: response.paymentEventConfirmedAt || null,
+            paymentEventReadAfterWriteVerified: result.paymentEventReadAfterWriteVerified,
+            recommendationDecisionReference: response.recommendationDecisionReference || null,
+            recommendationLineageState: response.recommendationLineageState || null,
+            recommendationActionTargetReference: response.recommendationActionTargetReference || null,
+            lineageReadAfterWriteVerified: result.lineageReadAfterWriteVerified,
             reconciliationState: response.reconciliationState,
             readAfterWriteVerified: result.readAfterWriteVerified,
             compensationHandoffState: result.compensationHandoffState,

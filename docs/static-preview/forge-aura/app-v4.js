@@ -1,12 +1,13 @@
 import { createAuraRouter } from "./aura-router-v4.js";
 import { createAuraShell } from "./aura-shell.js";
 import { createAuraAuth, renderAuraLogin } from "./aura-auth-v4.js";
-import { createHomeModule } from "./home/home-module.js?v=aura-home-command-center-001";
+import { createHomeModule } from "./home/home-module-017e.js?v=forge-commercial-pilot-evidence-017e";
 import { createPipelineModule } from "./pipeline/pipeline-module-v2.js?v=forge-aura-conversation-workspace-011a";
 import { createActivityModule } from "./activity/activity-module.js?v=activity-reports-ux-001-corrected";
 import { createCarteraModule } from "./cartera/cartera-module-v8.js?v=forge-aura-conversation-cartera-011a";
 import { createIncomeModule } from "./income/income-module.js?v=income-aura-ux-reconciliation-001";
 import { createQuotesModule } from "./quotes/quotes-module.js?v=aura-quotes-product-intelligence-001";
+import { clearRecommendationDecisionLineage } from "./recommendation-lineage-session-017e.js?v=forge-commercial-pilot-evidence-017e";
 
 const root = document.querySelector("[data-aura-app]");
 const auth = createAuraAuth();
@@ -52,7 +53,10 @@ async function destroyAlfredRuntime() {
 async function scrub({ destroyShell = false, clearAdvisor = false } = {}) {
   bootRevision += 1;
   await destroyActiveModule();
-  if (clearAdvisor) activeAdvisorId = null;
+  if (clearAdvisor) {
+    clearRecommendationDecisionLineage();
+    activeAdvisorId = null;
+  }
   if (destroyShell) {
     await destroyAlfredRuntime();
     shell?.destroy?.();
@@ -183,6 +187,7 @@ async function boot() {
   router = createAuraRouter({ onChange: route => void renderRoute(route) });
   auth.subscribe(snapshot => {
     if (snapshot.event === "SIGNED_OUT") {
+      clearRecommendationDecisionLineage();
       activeAdvisorId = null;
       alfredRuntime?.resetForSessionBoundary?.("anonymous");
       router.navigate("login", { replace: true });
