@@ -196,8 +196,8 @@ for (const size of sizes) {
       await expect(page.locator(".aura-shell__bar")).toBeVisible();
     }
 
-    await mkdir("artifacts/aura-home-017d", { recursive: true });
-    await page.screenshot({ path: `artifacts/aura-home-017d/${size.name}.png`, fullPage: true });
+    await mkdir("artifacts/aura-home-acceptance", { recursive: true });
+    await page.screenshot({ path: `artifacts/aura-home-acceptance/${size.name}.png`, fullPage: true });
   });
 }
 
@@ -251,6 +251,6 @@ test("owner-backed Agenda and Rhythm READY states render without Home recalculat
   await expect(page.getByText("4 / 10", { exact: true })).toBeVisible();
   await expect(page.getByText("Sin señales de Cartera en el horizonte", { exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
-  await mkdir("artifacts/aura-home-017d", { recursive: true });
-  await page.screenshot({ path: "artifacts/aura-home-017d/owner-ready-1440x900.png", fullPage: true });
+  await mkdir("artifacts/aura-home-acceptance", { recursive: true });
+  await page.screenshot({ path: "artifacts/aura-home-acceptance/owner-ready-1440x900.png", fullPage: true });
 });
