@@ -28,6 +28,13 @@ const base = (eventType, payload, overrides = {}) => ({
 
 assert.equal(fes.CONTRACT_VERSION, "FES-01.2");
 for (const type of ["REFERRAL_RECEIVED", "CALL_COMPLETED", "ADVISOR_REFERRAL_RECEIVED"]) assert.ok(fes.EVENT_TYPES.includes(type));
+assert.ok(fes.EVENT_TYPES.includes("SALES_NBA_ADVISOR_RESPONSE"));
+const advisorResponse = fes.createCanonicalActivityEvent(base("SALES_NBA_ADVISOR_RESPONSE", {
+  recommendation_reference: "recommendation-1", recommendation_source: "NBA_REASON_WHY", recommendation_domain: "COMMERCIAL",
+  advisor_reference: "advisor-1", decision: "ACCEPTED", original_response: "ACCEPTED", recommendation_version: "NBA-009",
+  commercial_person_reference: null, prospect_reference: null, opportunity_reference: null, deferred_until: null,
+}, { subject: { type: "RECOMMENDATION", id: "recommendation-1" }, idempotency_key: "advisor-response-1" }));
+assert.equal(advisorResponse.subject.type, "RECOMMENDATION");
 assert.equal(fes.EVENT_TYPES.includes("POLICY_PAID_CONFIRMED"), false);
 assert.equal(fes.EVENT_TYPES.includes("APPLICATION_SUBMITTED"), false);
 assert.equal(fes.ACTIVITY_FACT_DEFINITIONS.POLICY_PAID.fesOfficialTruth, false);

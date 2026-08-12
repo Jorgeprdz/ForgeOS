@@ -38,8 +38,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          APPROVED_CONTRACT=dc031b1dbe8c1da1a1de72733b01d88a173f1a1b
-          APPROVED_TEST=540809b002e072e9d774a1576923d342915910de
+          APPROVED_CONTRACT=76cc630eb30475908c5f2c00b017e5cece58ff89
+          APPROVED_TEST=a108a3bc8b8fa54cb8f4a599a22fe09fc811f270
           test "$(git hash-object platform/event-evidence/canonical-activity-event-contract.js)" = "$APPROVED_CONTRACT"
           test "$(git hash-object tests/activity-foundational-fes-taxonomy-test.mjs)" = "$APPROVED_TEST"
       - name: FES taxonomy contract test
