@@ -54,6 +54,7 @@ declare
   policy_row record;
   prior_receipt record;
   existing_event record;
+  persisted_event record;
   event_identity jsonb;
   event_reference_value text;
   event_digest_value text;
@@ -134,7 +135,38 @@ begin
 
   if found then
     if prior_receipt.command_digest = command_digest then
-      return prior_receipt.response_envelope;
+      select e.* into persisted_event
+      from public.cartera030c_confirmed_payment_events e
+      where e.advisor_id = advisor
+        and e.payment_event_reference = prior_receipt.response_envelope ->> 'paymentEventReference'
+      limit 1;
+      if not found then
+        raise exception 'CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_FAILED';
+      end if;
+      if persisted_event.policy_reference <> policy_reference_value
+        or persisted_event.payment_evidence_reference <> evidence_reference_value
+        or persisted_event.payment_amount <> payment_amount_value
+        or persisted_event.currency is distinct from currency_value
+        or persisted_event.payment_date <> payment_date_value
+        or persisted_event.period_covered_start is distinct from period_start_value
+        or persisted_event.period_covered_end is distinct from period_end_value
+        or persisted_event.payment_source <> payment_source_value
+        or persisted_event.evidence_references <> evidence_references_value
+        or persisted_event.confirmation_state <> 'CONFIRMED' then
+        raise exception 'CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_MISMATCH';
+      end if;
+      return prior_receipt.response_envelope || jsonb_build_object(
+        'policyReference', persisted_event.policy_reference,
+        'paymentEventReference', persisted_event.payment_event_reference,
+        'paymentEvidenceReference', persisted_event.payment_evidence_reference,
+        'paymentEventConfirmedAt', persisted_event.confirmed_at,
+        'recommendationDecisionReference', persisted_event.recommendation_decision_reference,
+        'recommendationLineageState', case
+          when persisted_event.recommendation_decision_reference is null then coalesce(prior_receipt.response_envelope ->> 'recommendationLineageState', 'UNLINKED')
+          else 'EXPLICIT_LINEAGE'
+        end,
+        'paymentEventReadAfterWriteVerified', true
+      );
     end if;
     conflict_reference_value := 'PAYMENT_EVENT_CONFLICT:' || public.forge_cartera030b_digest(jsonb_build_object(
       'advisorId', advisor::text,
@@ -282,7 +314,11 @@ begin
       return jsonb_build_object(
         'reconciliationState', 'CONFLICT',
         'reason', 'PAYMENT_EVENT_IDENTITY_COLLISION',
+        'policyReference', existing_event.policy_reference,
         'paymentEventReference', existing_event.payment_event_reference,
+        'paymentEvidenceReference', existing_event.payment_evidence_reference,
+        'paymentEventConfirmedAt', existing_event.confirmed_at,
+        'paymentEventReadAfterWriteVerified', true,
         'recommendationDecisionReference', existing_event.recommendation_decision_reference,
         'recommendationLineageState', case when existing_event.recommendation_decision_reference is null then 'UNLINKED' else 'EXPLICIT_LINEAGE' end,
         'conflictReference', conflict_reference_value
@@ -299,6 +335,11 @@ begin
     if found then
       response_envelope := prior_receipt.response_envelope
         || jsonb_build_object(
+          'policyReference', existing_event.policy_reference,
+          'paymentEventReference', existing_event.payment_event_reference,
+          'paymentEvidenceReference', existing_event.payment_evidence_reference,
+          'paymentEventConfirmedAt', existing_event.confirmed_at,
+          'paymentEventReadAfterWriteVerified', true,
           'recommendationDecisionReference', existing_event.recommendation_decision_reference,
           'recommendationLineageState', case when existing_event.recommendation_decision_reference is null then 'UNLINKED' else 'EXPLICIT_LINEAGE' end,
           'recommendationLineageReason', case
@@ -343,6 +384,32 @@ begin
       recommendation_lineage_reason := 'HISTORICAL_OR_ALREADY_WRITTEN_ACTION_NOT_RETROACTIVELY_LINKED';
     end if;
   end if;
+
+  -- Real read-after-write: re-read the existing PaymentEvent authority and verify payment identity/evidence and optional lineage.
+  select e.* into persisted_event
+  from public.cartera030c_confirmed_payment_events e
+  where e.id = event_id_value
+    and e.advisor_id = advisor
+  limit 1;
+  if not found then
+    raise exception 'CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_FAILED';
+  end if;
+  if persisted_event.payment_event_reference <> event_reference_value
+    or persisted_event.policy_reference <> policy_reference_value
+    or persisted_event.payment_evidence_reference <> evidence_reference_value
+    or persisted_event.payment_amount <> payment_amount_value
+    or persisted_event.currency is distinct from currency_value
+    or persisted_event.payment_date <> payment_date_value
+    or persisted_event.period_covered_start is distinct from period_start_value
+    or persisted_event.period_covered_end is distinct from period_end_value
+    or persisted_event.payment_source <> payment_source_value
+    or persisted_event.evidence_references <> evidence_references_value
+    or persisted_event.confirmation_state <> 'CONFIRMED'
+    or persisted_event.event_digest <> event_digest_value
+    or persisted_event.recommendation_decision_reference is distinct from recommendation_decision_reference_value then
+    raise exception 'CARTERA030C_PAYMENT_EVENT_READ_AFTER_WRITE_MISMATCH';
+  end if;
+  recommendation_decision_reference_value := persisted_event.recommendation_decision_reference;
 
   select count(*) into candidate_count
   from public.cartera030b_expected_payment_obligations o
@@ -491,12 +558,20 @@ begin
     'reconciliationState', case when outcome_value in ('MATCHED', 'PARTIAL_MATCH') then 'COMPLETE' else 'REVIEW_REQUIRED' end,
     'outcome', outcome_value,
     'reason', conflict_type_value,
-    'paymentEventReference', event_reference_value,
+    'policyReference', persisted_event.policy_reference,
+    'paymentEventReference', persisted_event.payment_event_reference,
+    'paymentEvidenceReference', persisted_event.payment_evidence_reference,
+    'paymentEventConfirmedAt', persisted_event.confirmed_at,
+    'paymentEventReadAfterWriteVerified', true,
     'obligationReference', candidate_reference_value,
+    'recommendationActionTargetReference', case
+      when persisted_event.recommendation_decision_reference is null then null
+      else payment_obligation_reference_value
+    end,
     'conflictReference', conflict_reference_value,
     'resultingStatus', resulting_status,
     'resultingActualAmount', resulting_amount,
-    'recommendationDecisionReference', recommendation_decision_reference_value,
+    'recommendationDecisionReference', persisted_event.recommendation_decision_reference,
     'recommendationLineageState', recommendation_lineage_state,
     'recommendationLineageReason', recommendation_lineage_reason
   );
@@ -517,6 +592,6 @@ revoke all on function public.forge_cartera030c_record_and_reconcile_confirmed_p
 grant execute on function public.forge_cartera030c_record_and_reconcile_confirmed_payment(jsonb) to authenticated;
 
 comment on function public.forge_cartera030c_record_and_reconcile_confirmed_payment(jsonb) is
-  'Persists confirmed PaymentEvent truth and reconciles exactly one expected obligation when deterministic. Optionally retains validated ACCEPTED recommendation-decision lineage; never treats it as payment evidence or causality.';
+  'Persists confirmed PaymentEvent truth, re-reads that persisted action, and reconciles exactly one expected obligation when deterministic. Optionally retains validated ACCEPTED recommendation-decision lineage; never treats it as payment evidence or causality.';
 
 commit;
