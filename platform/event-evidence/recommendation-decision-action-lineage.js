@@ -15,7 +15,7 @@
     if (!context) return state("NO_ELIGIBLE_DECISION", "NO_TRANSPORTED_DECISION");
     const advisor = token(advisorId);
     if (!advisor || token(context.advisorId) !== advisor) return state("UNRESOLVED", "ADVISOR_MISMATCH");
-    if (!['ACCEPTED', 'MODIFIED'].includes(token(context.decision))) return state("NO_ELIGIBLE_DECISION", "DECISION_NOT_ELIGIBLE");
+    if (token(context.decision) !== "ACCEPTED") return state("NO_ELIGIBLE_DECISION", "DECISION_NOT_ELIGIBLE");
     const decisionEventId = token(context.decisionEventId);
     if (!decisionEventId || !/^evt_[a-f0-9]{32}$/.test(decisionEventId)) return state("UNRESOLVED", "DECISION_EVENT_INVALID");
     const decisionAt = Date.parse(context.decisionOccurredAt);

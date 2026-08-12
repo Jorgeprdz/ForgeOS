@@ -20,6 +20,7 @@ const RESPONSE_TO_DECISION = Object.freeze({
 
 function fail(code) { const error = new TypeError(code); error.code = code; throw error; }
 function token(value, code) { const result = String(value || "").trim(); if (!result || result.length > 240) fail(code); return result; }
+function optionalToken(value) { if (value == null || value === "") return null; const result = String(value).trim(); if (!result || result.length > 500) fail("RECOMMENDATION_OPTIONAL_METADATA_INVALID"); return result; }
 
 function createAdvisorDecisionEvidence({ recommendation, response, decisionReference, recordedAt, correctionOf = null, correctionReasonCode = null } = {}) {
   if (!recommendation || recommendation.recommendationAvailable === false) fail("RECOMMENDATION_REQUIRED");
@@ -42,6 +43,15 @@ function createAdvisorDecisionEvidence({ recommendation, response, decisionRefer
     prospect_reference: recommendation.subjectType === "PROSPECT" ? recommendation.subjectId : null,
     opportunity_reference: recommendation.opportunityId || null,
     deferred_until: response.deferredUntil || null,
+    policy_reference: optionalToken(recommendation.policyReference),
+    signal_reference: optionalToken(recommendation.signalReference),
+    payment_obligation_reference: optionalToken(recommendation.paymentObligationReference),
+    recommendation_action_addressable: recommendation.actionAddressable === true,
+    action_owner: optionalToken(recommendation.actionOwner),
+    action_target_type: optionalToken(recommendation.actionTargetType),
+    action_target_reference: optionalToken(recommendation.actionTargetReference),
+    expected_action: optionalToken(recommendation.expectedAction),
+    smallest_useful_action: optionalToken(recommendation.smallestUsefulAction),
   };
   const input = {
     event_type: "SALES_NBA_ADVISOR_RESPONSE", tenant_id: advisorId,

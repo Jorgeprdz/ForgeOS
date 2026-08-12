@@ -27,18 +27,32 @@ const PILOT_METRIC_DEFINITIONS = freeze({
     UNKNOWN_BEHAVIOR: "presentation or decision source unavailable => null; ambiguous recommendation version => unresolved and excluded",
   },
   ACCEPTANCE_RATE: {
-    NUMERATOR: "distinct presented recommendations whose latest eligible decision is ACCEPTED or MODIFIED",
+    NUMERATOR: "distinct presented recommendations whose latest human decision is ACCEPTED or MODIFIED",
     DENOMINATOR: "distinct canonically presented eligible recommendations",
     ELIGIBILITY: "same advisor; resolvable recommendation identity; latest decision in window",
     OBSERVATION_WINDOW: "presentation and decision occurred_at in [from,to)",
     UNKNOWN_BEHAVIOR: "source unavailable => null; denominator 0 => INSUFFICIENT_SAMPLE",
   },
-  ACTION_AFTER_DECISION_RATE: {
-    NUMERATOR: "ACCEPTED or MODIFIED latest decisions with at least one subsequent explicitly linked real action",
-    DENOMINATOR: "ACCEPTED or MODIFIED latest decisions",
-    ELIGIBILITY: "same advisor; explicit decision event reference; action occurred_at >= decision occurred_at; temporal-only excluded",
+  ACTION_LINKAGE_ELIGIBLE_ACCEPTED_COUNT: {
+    NUMERATOR: "latest ACCEPTED decisions that are explicitly action-addressable with valid transported commercial identity",
+    DENOMINATOR: "NONE",
+    ELIGIBILITY: "ACCEPTED only; recommendation_action_addressable=true; explicit action owner and target identity",
+    OBSERVATION_WINDOW: "presentation and decision occurred_at in [from,to)",
+    UNKNOWN_BEHAVIOR: "source unavailable => null; connected complete empty input => 0",
+  },
+  EXPLICITLY_LINKED_ACTION_COUNT: {
+    NUMERATOR: "action-linkage-eligible ACCEPTED decisions with a later real action carrying recommendation_decision_reference",
+    DENOMINATOR: "NONE",
+    ELIGIBILITY: "same advisor; exact explicit decision reference; action occurred_at >= decision occurred_at; temporal-only excluded",
     OBSERVATION_WINDOW: "decision and action occurred_at in [from,to)",
-    UNKNOWN_BEHAVIOR: "action source unavailable => null; denominator 0 => INSUFFICIENT_SAMPLE; unresolved lineage excluded",
+    UNKNOWN_BEHAVIOR: "action source unavailable => null",
+  },
+  ACTION_AFTER_ACCEPT_RATE: {
+    NUMERATOR: "action-linkage-eligible ACCEPTED decisions with at least one subsequent explicitly linked real action",
+    DENOMINATOR: "action-linkage-eligible ACCEPTED decisions",
+    ELIGIBILITY: "ACTION_ADDRESSABLE + ACCEPTED + VALID_IDENTITY + ELIGIBLE_OBSERVATION_WINDOW; temporal-only excluded",
+    OBSERVATION_WINDOW: "decision and action occurred_at in [from,to)",
+    UNKNOWN_BEHAVIOR: "action source unavailable => null; denominator 0 => INSUFFICIENT_SAMPLE; MODIFIED/DEFERRED/DISMISSED excluded",
   },
   OUTCOME_AFTER_ACTION_RATE: {
     NUMERATOR: "explicitly linked real actions followed by a same-person CONFIRMED_POLICY fact from the existing funnel authority",
@@ -66,10 +80,11 @@ function compareCommercialLeverage({ baseline, current, inputStage = "CONTACT" }
 
 function reconcileDecisionToAction({ decisionEvent, actionEvent } = {}) {
   if (decisionEvent?.event_type !== "SALES_NBA_ADVISOR_RESPONSE") fail("DECISION_EVENT_REQUIRED");
+  if (decisionEvent?.payload?.decision !== "ACCEPTED") return Object.freeze({ state: "NO_ELIGIBLE_DECISION", action: null, causalAttribution: false });
   if (!actionEvent) return Object.freeze({ state: "NO_OBSERVABLE_ACTION", action: null, causalAttribution: false });
   if (actionEvent.tenant_id !== decisionEvent.tenant_id) fail("CROSS_ADVISOR_ACTION_BLOCKED");
   if (Date.parse(actionEvent.occurred_at) < Date.parse(decisionEvent.occurred_at)) fail("ACTION_PRECEDES_DECISION");
-  const explicit = actionEvent.causation_id === decisionEvent.event_id || actionEvent.correlation_id === decisionEvent.event_id || actionEvent.payload?.recommendation_decision_reference === decisionEvent.event_id;
+  const explicit = actionEvent.payload?.recommendation_decision_reference === decisionEvent.event_id;
   if (!explicit) return Object.freeze({ state: "TEMPORAL_ASSOCIATION_ONLY", action: null, causalAttribution: false });
   return Object.freeze({ state: "EXPLICITLY_LINKED_LATER_ACTION", action: actionEvent, causalAttribution: false });
 }
@@ -82,9 +97,7 @@ function validateAdvisorEvents(events, advisorId, label) {
   }
 }
 
-function presentationKey(event) {
-  return String(event.idempotency_key || event.event_id || "").trim();
-}
+function presentationKey(event) { return String(event.idempotency_key || event.event_id || "").trim(); }
 
 function normalizePresentations(events, advisorId, window) {
   validateAdvisorEvents(events, advisorId, "PRESENTATION");
@@ -143,10 +156,16 @@ function latestDecisions(events, advisorId, window, presentations) {
   return { latest: [...latest.values()], unresolved };
 }
 
+function actionLinkageEligibleAccepted(candidate) {
+  const payload = candidate?.event?.payload || {};
+  if (payload.decision !== "ACCEPTED" || payload.recommendation_action_addressable !== true) return false;
+  if (!payload.action_owner || !payload.action_target_reference || !payload.expected_action) return false;
+  const hasCommercialIdentity = Boolean(payload.commercial_person_reference || (payload.policy_reference && payload.payment_obligation_reference));
+  return hasCommercialIdentity;
+}
+
 function explicitReference(action, decisionEventId) {
-  return action.causation_id === decisionEventId
-    || action.correlation_id === decisionEventId
-    || action.payload?.recommendation_decision_reference === decisionEventId;
+  return action.payload?.recommendation_decision_reference === decisionEventId;
 }
 
 function actionCorrelations(decisions, actions, advisorId, window) {
@@ -182,28 +201,17 @@ function normalizeFunnelForOutcomes(funnelModel, advisorId, window) {
   if (funnelModel.advisorId !== advisorId) fail("PILOT_FUNNEL_ADVISOR_MISMATCH");
   if (funnelModel.period?.from !== window.from || funnelModel.period?.to !== window.to) fail("PILOT_FUNNEL_PERIOD_MISMATCH");
   if (funnelModel.stages?.CONFIRMED_POLICY?.coverage !== "COMPLETE") return { state: "SOURCE_UNAVAILABLE", facts: [] };
-  return {
-    state: "READY",
-    facts: (Array.isArray(funnelModel.facts) ? funnelModel.facts : []).filter(fact => fact.stage === "CONFIRMED_POLICY" && fact.advisorId === advisorId),
-  };
+  return { state: "READY", facts: (Array.isArray(funnelModel.facts) ? funnelModel.facts : []).filter(fact => fact.stage === "CONFIRMED_POLICY" && fact.advisorId === advisorId) };
 }
 
 function outcomeCorrelations(explicitActions, funnelState) {
   if (funnelState.state !== "READY") return { state: "SOURCE_UNAVAILABLE", correlations: explicitActions.map(action => freeze({ actionEventId: action.event_id, state: "SOURCE_UNAVAILABLE", outcomeReference: null, causalAttribution: false })), withOutcome: [], actionToOutcome: [] };
-  const correlations = [];
-  const withOutcome = [];
-  const actionToOutcome = [];
+  const correlations = [], withOutcome = [], actionToOutcome = [];
   for (const action of explicitActions) {
     const person = action.payload?.contact_reference || null;
-    if (!person) {
-      correlations.push(freeze({ actionEventId: action.event_id, state: "UNRESOLVED", outcomeReference: null, reason: "ACTION_COMMERCIAL_IDENTITY_UNAVAILABLE", causalAttribution: false }));
-      continue;
-    }
+    if (!person) { correlations.push(freeze({ actionEventId: action.event_id, state: "UNRESOLVED", outcomeReference: null, reason: "ACTION_COMMERCIAL_IDENTITY_UNAVAILABLE", causalAttribution: false })); continue; }
     const outcomes = funnelState.facts.filter(fact => fact.commercialPersonReference === person && Date.parse(fact.occurredAt) >= Date.parse(action.occurred_at)).sort((a, b) => Date.parse(a.occurredAt) - Date.parse(b.occurredAt));
-    if (!outcomes.length) {
-      correlations.push(freeze({ actionEventId: action.event_id, state: "NO_OUTCOME_OBSERVED", outcomeReference: null, causalAttribution: false }));
-      continue;
-    }
+    if (!outcomes.length) { correlations.push(freeze({ actionEventId: action.event_id, state: "NO_OUTCOME_OBSERVED", outcomeReference: null, causalAttribution: false })); continue; }
     const outcome = outcomes[0];
     withOutcome.push(action);
     actionToOutcome.push(Date.parse(outcome.occurredAt) - Date.parse(action.occurred_at));
@@ -221,27 +229,23 @@ function summarizeCommercialPilotEvidence({ advisorId, observationWindow, presen
   const actionSourceAvailable = Array.isArray(actionEvents);
 
   const presentations = presentationSourceAvailable ? normalizePresentations(presentationEvents, advisor, window) : [];
-  const decisionResult = presentationSourceAvailable && decisionSourceAvailable
-    ? latestDecisions(decisionEvents, advisor, window, presentations)
-    : { latest: [], unresolved: [] };
+  const decisionResult = presentationSourceAvailable && decisionSourceAvailable ? latestDecisions(decisionEvents, advisor, window, presentations) : { latest: [], unresolved: [] };
   const latest = decisionResult.latest;
   const counts = { ACCEPTED: 0, MODIFIED: 0, DEFERRED: 0, DISMISSED: 0 };
   latest.forEach(candidate => { counts[candidate.event.payload.decision] += 1; });
-  const acceptedOrModified = latest.filter(candidate => ['ACCEPTED', 'MODIFIED'].includes(candidate.event.payload.decision));
+  const eligibleAccepted = latest.filter(actionLinkageEligibleAccepted);
+  const modified = latest.filter(candidate => candidate.event.payload.decision === "MODIFIED");
 
   const actionResult = actionSourceAvailable && presentationSourceAvailable && decisionSourceAvailable
-    ? actionCorrelations(acceptedOrModified, actionEvents, advisor, window)
-    : { correlations: acceptedOrModified.map(candidate => freeze({ decisionEventId: candidate.event.event_id, state: "SOURCE_UNAVAILABLE", actionEventId: null, causalAttribution: false })), explicitActions: [], decisionToFirstAction: [] };
+    ? actionCorrelations(eligibleAccepted, actionEvents, advisor, window)
+    : { correlations: eligibleAccepted.map(candidate => freeze({ decisionEventId: candidate.event.event_id, state: "SOURCE_UNAVAILABLE", actionEventId: null, causalAttribution: false })), explicitActions: [], decisionToFirstAction: [] };
+  const modifiedCorrelations = modified.map(candidate => freeze({ decisionEventId: candidate.event.event_id, recommendationReference: candidate.event.payload.recommendation_reference, state: "UNRESOLVED", actionEventId: null, reason: "MODIFIED_NOT_ACTION_LINEAGE_ELIGIBLE", causalAttribution: false }));
   const explicitDecisionCount = actionResult.correlations.filter(item => item.state === "EXPLICIT_LINEAGE").length;
   const funnelState = normalizeFunnelForOutcomes(funnelModel, advisor, window);
   const outcomeResult = actionSourceAvailable ? outcomeCorrelations(actionResult.explicitActions, funnelState) : { state: "SOURCE_UNAVAILABLE", correlations: [], withOutcome: [], actionToOutcome: [] };
 
-  const presentedMetric = presentationSourceAvailable
-    ? metric(presentations.length ? "KNOWN" : "ZERO", presentations.length)
-    : metric("SOURCE_UNAVAILABLE", null, { limitation: "Canonical recommendation presentation source is unavailable." });
-  const decisionsMetric = presentationSourceAvailable && decisionSourceAvailable
-    ? metric(latest.length ? "KNOWN" : "ZERO", latest.length)
-    : metric("SOURCE_UNAVAILABLE", null, { limitation: "Presentation or decision evidence source is unavailable." });
+  const presentedMetric = presentationSourceAvailable ? metric(presentations.length ? "KNOWN" : "ZERO", presentations.length) : metric("SOURCE_UNAVAILABLE", null, { limitation: "Canonical recommendation presentation source is unavailable." });
+  const decisionsMetric = presentationSourceAvailable && decisionSourceAvailable ? metric(latest.length ? "KNOWN" : "ZERO", latest.length) : metric("SOURCE_UNAVAILABLE", null, { limitation: "Presentation or decision evidence source is unavailable." });
   const acceptanceNumerator = counts.ACCEPTED + counts.MODIFIED;
   const acceptanceMetric = !presentationSourceAvailable || !decisionSourceAvailable
     ? metric("SOURCE_UNAVAILABLE", null, { numerator: null, denominator: null, unit: "RATIO" })
@@ -249,10 +253,10 @@ function summarizeCommercialPilotEvidence({ advisorId, observationWindow, presen
       ? metric("INSUFFICIENT_SAMPLE", null, { numerator: 0, denominator: 0, unit: "RATIO", limitation: "No canonically presented recommendation exists in the observation window." })
       : metric("KNOWN", ratio(acceptanceNumerator / presentations.length), { numerator: acceptanceNumerator, denominator: presentations.length, unit: "RATIO" });
   const actionMetric = !actionSourceAvailable || !presentationSourceAvailable || !decisionSourceAvailable
-    ? metric("SOURCE_UNAVAILABLE", null, { numerator: null, denominator: acceptedOrModified.length || null, unit: "RATIO" })
-    : acceptedOrModified.length === 0
-      ? metric("INSUFFICIENT_SAMPLE", null, { numerator: 0, denominator: 0, unit: "RATIO", limitation: "No ACCEPTED or MODIFIED decision exists in the observation window." })
-      : metric("KNOWN", ratio(explicitDecisionCount / acceptedOrModified.length), { numerator: explicitDecisionCount, denominator: acceptedOrModified.length, unit: "RATIO", limitation: "TEMPORAL_ASSOCIATION_ONLY and UNRESOLVED actions are excluded." });
+    ? metric("SOURCE_UNAVAILABLE", null, { numerator: null, denominator: eligibleAccepted.length || null, unit: "RATIO" })
+    : eligibleAccepted.length === 0
+      ? metric("INSUFFICIENT_SAMPLE", null, { numerator: 0, denominator: 0, unit: "RATIO", limitation: "No action-linkage-eligible ACCEPTED decision exists in the observation window." })
+      : metric("KNOWN", ratio(explicitDecisionCount / eligibleAccepted.length), { numerator: explicitDecisionCount, denominator: eligibleAccepted.length, unit: "RATIO", limitation: "MODIFIED, DEFERRED, DISMISSED, TEMPORAL_ASSOCIATION_ONLY and UNRESOLVED actions are excluded." });
   const outcomeMetric = !actionSourceAvailable || funnelState.state !== "READY"
     ? metric("SOURCE_UNAVAILABLE", null, { numerator: null, denominator: actionResult.explicitActions.length || null, unit: "RATIO", limitation: "Complete existing CONFIRMED_POLICY outcome coverage is unavailable." })
     : actionResult.explicitActions.length === 0
@@ -268,15 +272,10 @@ function summarizeCommercialPilotEvidence({ advisorId, observationWindow, presen
   if (funnelState.state !== "READY") limitations.push("CONFIRMED_POLICY_OUTCOME_COVERAGE_UNAVAILABLE");
   if (decisionResult.unresolved.length) limitations.push("AMBIGUOUS_OR_UNRESOLVED_RECOMMENDATION_DECISIONS");
   if (actionResult.correlations.some(item => item.state === "TEMPORAL_ASSOCIATION_ONLY")) limitations.push("TEMPORAL_ONLY_ACTIONS_EXCLUDED");
-  if (actionResult.correlations.some(item => item.state === "UNRESOLVED")) limitations.push("UNRESOLVED_ACTION_LINEAGE_EXCLUDED");
-  const uncertaintyState = limitations.some(item => item.endsWith("SOURCE_UNAVAILABLE") || item.includes("COVERAGE_UNAVAILABLE"))
-    ? "SOURCE_UNAVAILABLE"
-    : presentations.length === 0
-      ? "INSUFFICIENT_SAMPLE"
-      : limitations.length
-        ? "UNRESOLVED"
-        : "DIRECTIONAL_PILOT_EVIDENCE";
+  if (actionResult.correlations.some(item => item.state === "UNRESOLVED") || modified.length) limitations.push("UNRESOLVED_ACTION_LINEAGE_EXCLUDED");
+  const uncertaintyState = limitations.some(item => item.endsWith("SOURCE_UNAVAILABLE") || item.includes("COVERAGE_UNAVAILABLE")) ? "SOURCE_UNAVAILABLE" : presentations.length === 0 ? "INSUFFICIENT_SAMPLE" : limitations.length ? "UNRESOLVED" : "DIRECTIONAL_PILOT_EVIDENCE";
 
+  const explicitlyLinkedActionCount = metric(actionSourceAvailable ? (explicitDecisionCount ? "KNOWN" : "ZERO") : "SOURCE_UNAVAILABLE", actionSourceAvailable ? explicitDecisionCount : null);
   return freeze({
     schema: "COMMERCIAL_PILOT_EVIDENCE_SUMMARY_017E",
     advisorId: advisor,
@@ -289,28 +288,17 @@ function summarizeCommercialPilotEvidence({ advisorId, observationWindow, presen
     deferredCount: metric(presentationSourceAvailable && decisionSourceAvailable ? (counts.DEFERRED ? "KNOWN" : "ZERO") : "SOURCE_UNAVAILABLE", presentationSourceAvailable && decisionSourceAvailable ? counts.DEFERRED : null),
     dismissedCount: metric(presentationSourceAvailable && decisionSourceAvailable ? (counts.DISMISSED ? "KNOWN" : "ZERO") : "SOURCE_UNAVAILABLE", presentationSourceAvailable && decisionSourceAvailable ? counts.DISMISSED : null),
     acceptanceRate: acceptanceMetric,
-    acceptedOrModifiedWithExplicitAction: metric(actionSourceAvailable ? (explicitDecisionCount ? "KNOWN" : "ZERO") : "SOURCE_UNAVAILABLE", actionSourceAvailable ? explicitDecisionCount : null),
+    actionLinkageEligibleAcceptedCount: metric(presentationSourceAvailable && decisionSourceAvailable ? (eligibleAccepted.length ? "KNOWN" : "ZERO") : "SOURCE_UNAVAILABLE", presentationSourceAvailable && decisionSourceAvailable ? eligibleAccepted.length : null),
+    explicitlyLinkedActionCount,
+    actionAfterAcceptRate: actionMetric,
     actionAfterDecisionRate: actionMetric,
+    acceptedOrModifiedWithExplicitAction: explicitlyLinkedActionCount,
     actionsWithSubsequentOutcome: metric(outcomeResult.state === "READY" ? (outcomeResult.withOutcome.length ? "KNOWN" : "ZERO") : "SOURCE_UNAVAILABLE", outcomeResult.state === "READY" ? outcomeResult.withOutcome.length : null),
     outcomeAfterActionRate: outcomeMetric,
-    elapsedDecisionToAction: decisionActionMedian === null
-      ? metric(actionSourceAvailable ? "INSUFFICIENT_SAMPLE" : "SOURCE_UNAVAILABLE", null, { unit: "MILLISECONDS" })
-      : metric("KNOWN", decisionActionMedian, { numerator: actionResult.decisionToFirstAction.length, unit: "MEDIAN_MILLISECONDS" }),
-    elapsedActionToOutcome: actionOutcomeMedian === null
-      ? metric(outcomeResult.state === "READY" ? "INSUFFICIENT_SAMPLE" : "SOURCE_UNAVAILABLE", null, { unit: "MILLISECONDS" })
-      : metric("KNOWN", actionOutcomeMedian, { numerator: outcomeResult.actionToOutcome.length, unit: "MEDIAN_MILLISECONDS" }),
-    sampleSize: freeze({
-      presented: presentationSourceAvailable ? presentations.length : null,
-      decisions: presentationSourceAvailable && decisionSourceAvailable ? latest.length : null,
-      acceptedOrModified: presentationSourceAvailable && decisionSourceAvailable ? acceptedOrModified.length : null,
-      explicitActions: actionSourceAvailable ? actionResult.explicitActions.length : null,
-      actionsWithSubsequentOutcome: outcomeResult.state === "READY" ? outcomeResult.withOutcome.length : null,
-    }),
-    correlations: freeze({
-      decisionToAction: actionResult.correlations,
-      actionToOutcome: outcomeResult.correlations,
-      unresolvedDecisions: decisionResult.unresolved,
-    }),
+    elapsedDecisionToAction: decisionActionMedian === null ? metric(actionSourceAvailable ? "INSUFFICIENT_SAMPLE" : "SOURCE_UNAVAILABLE", null, { unit: "MILLISECONDS" }) : metric("KNOWN", decisionActionMedian, { numerator: actionResult.decisionToFirstAction.length, unit: "MEDIAN_MILLISECONDS" }),
+    elapsedActionToOutcome: actionOutcomeMedian === null ? metric(outcomeResult.state === "READY" ? "INSUFFICIENT_SAMPLE" : "SOURCE_UNAVAILABLE", null, { unit: "MILLISECONDS" }) : metric("KNOWN", actionOutcomeMedian, { numerator: outcomeResult.actionToOutcome.length, unit: "MEDIAN_MILLISECONDS" }),
+    sampleSize: freeze({ presented: presentationSourceAvailable ? presentations.length : null, decisions: presentationSourceAvailable && decisionSourceAvailable ? latest.length : null, actionLinkageEligibleAccepted: presentationSourceAvailable && decisionSourceAvailable ? eligibleAccepted.length : null, modified: presentationSourceAvailable && decisionSourceAvailable ? modified.length : null, explicitActions: actionSourceAvailable ? actionResult.explicitActions.length : null, actionsWithSubsequentOutcome: outcomeResult.state === "READY" ? outcomeResult.withOutcome.length : null }),
+    correlations: freeze({ decisionToAction: freeze([...actionResult.correlations, ...modifiedCorrelations]), actionToOutcome: outcomeResult.correlations, unresolvedDecisions: decisionResult.unresolved }),
     uncertainty: freeze({ state: uncertaintyState, limitations, statisticalCausalityClaim: false, causalAttribution: false }),
     causalAttribution: false,
     forgeCausedSaleClaim: false,

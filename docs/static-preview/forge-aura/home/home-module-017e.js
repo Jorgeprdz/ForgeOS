@@ -14,7 +14,8 @@ function decisionReference(item) {
 function lineageFor(item, decision, advisorId) {
   const ref = decisionReference(item);
   if (!ref || !decision || decision.tenant_id !== advisorId) return null;
-  if (!["ACCEPTED", "MODIFIED"].includes(decision.payload?.decision)) return null;
+  if (item?.actionAddressable !== true) return null;
+  if (decision.payload?.decision !== "ACCEPTED") return null;
   if (decision.payload?.recommendation_reference !== ref) return null;
   if (Number.isNaN(Date.parse(decision.occurred_at))) return null;
   return Object.freeze({
@@ -148,6 +149,7 @@ export function createHomeModule(options = {}) {
         presentationEvidence: "RECOMMENDATION_PRESENTED",
         presentedDoesNotMeanViewed: true,
         decisionLineageTransport: "EPHEMERAL_ONLY",
+        aggregateHomeActionAddressable: false,
       });
     },
   });

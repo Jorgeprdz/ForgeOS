@@ -2,7 +2,7 @@ ADR-028 — Canonical Recommendation Presentation and Decision Action Lineage Bo
 
 Status: ACCEPTED FOR PHASE_017E_COMMERCIAL_PILOT_EVIDENCE_ACTIVATION
 Program: FORGE_COMMERCIAL_LEVERAGE
-Phase: PHASE_017E_COMMERCIAL_PILOT_EVIDENCE_ACTIVATION / 017E-R1
+Phase: PHASE_017E_COMMERCIAL_PILOT_EVIDENCE_ACTIVATION / 017E-R1 + 017E-R4 AMENDMENT
 Base main: db5b63298c0ed9303b22fb47cce0d59a9f8c9062
 Branch: feature/forge-commercial-pilot-evidence-017e
 
@@ -72,18 +72,20 @@ The Home recommendation/action path may carry bounded ephemeral context between 
 
 Local storage is not authorized as a commercial source of truth.
 
-Decision 9 — Eligibility and compatibility are strict.
+Decision 9 — Eligibility and compatibility are strict. [R4 supersedes the R1 eligibility sentence below.]
 
-Automatic recommendation-decision lineage attachment is eligible only for explicit ACCEPTED or MODIFIED decisions. DEFERRED and DISMISSED decisions do not automatically mark a later action as execution of that recommendation.
+R1 originally allowed automatic lineage for explicit ACCEPTED or MODIFIED decisions. 017E-R4 proved that MODIFY does not preserve final action or final target and therefore narrows action-lineage eligibility to ACCEPTED only. MODIFIED remains valid durable human-decision evidence but its action execution lineage is UNRESOLVED until a future ratified contract preserves the final modified action and target. DEFERRED and DISMISSED are also not action-lineage eligible.
 
 Before retaining lineage, the action boundary must establish:
 - decision advisor == action advisor;
 - decision timestamp <= action timestamp;
 - decision recommendation identity matches the transported governed recommendation identity;
 - recommendation subject/action subject compatibility is explicit;
-- commercial identity compatibility exists where required by the action owner.
+- commercial identity compatibility exists where required by the action owner;
+- the recommendation is explicitly action-addressable;
+- the action owner and exact target are compatible with the recommendation decision metadata.
 
-Cross-advisor, name-only, guessed-person, wrong-subject or temporal-only matching is forbidden. If compatibility cannot be established, the real action may still be written by its existing owner but without recommendation lineage. Reconciliation state is UNRESOLVED or TEMPORAL_ASSOCIATION_ONLY as applicable.
+Cross-advisor, name-only, guessed-person, wrong-subject, wrong-target or temporal-only matching is forbidden. If compatibility cannot be established, the real action may still be written by its existing owner but without recommendation lineage. Recommendation-lineage state is UNRESOLVED/TEMPORAL_ASSOCIATION_ONLY as applicable; payment truth does not depend on recommendation state.
 
 Decision 10 — Outcome ownership and causality remain unchanged.
 
@@ -100,17 +102,33 @@ This chain supports `observed after`, `explicitly linked`, `subsequent action`, 
 
 It does not authorize causal attribution.
 
-Decision 11 — No database migration is authorized.
+Decision 11 — R1 database stop and R4 minimum persistence authorization.
 
-The existing FES ledger and existing RECOMMENDATION subject support must be reused. `event_type` taxonomy changes occur in the canonical application contract only. No migration, schema change, RLS change, auth change, dependency, lockfile or workflow change is authorized by this ADR.
+R1 correctly authorized no database migration and required STOP if productive action storage proved insufficient. R2/R3 subsequently proved that CARTERA 030C is the legitimate existing action owner for the selected `UNCONFIRMED_PAYMENT_EVIDENCE` pilot and that `cartera030c_confirmed_payment_events` has no semantically valid durable field for an explicit prior recommendation-decision reference. `payment_evidence_reference`, `evidence_references`, Compensation `decisionId` and Compensation `correlationId` are not semantically equivalent and must not be reused.
 
-If implementation proves a database change is required, Phase 017E-R1 must stop before any migration is created or applied.
+017E-R4 therefore authorizes exactly one minimal persistence delta on the existing CARTERA 030C PaymentEvent owner:
 
-Decision 12 — Pilot denominators use canonical presentations.
+`recommendation_decision_reference text null`
+
+The value is an optional canonical semantic reference to an existing `SALES_NBA_ADVISOR_RESPONSE.event_id`. It is validated by the existing action command against FES and the exact advisor/policy/payment-obligation/action context. It is not a database foreign key, payment evidence, payment truth, outcome truth, action authority, recommendation authority or causal attribution.
+
+The R4 migration may alter only the existing PaymentEvent storage contract and the existing 030C RPC body needed to validate, persist and return this optional metadata. No new table, ledger, action owner, recommendation owner, RLS rule, auth rule, dependency, lockfile or workflow is authorized. Historical rows remain valid with NULL; no backfill or retrospective update is authorized.
+
+Decision 12 — Pilot denominators use canonical presentations and accepted-only action eligibility.
 
 `RECOMMENDATIONS_PRESENTED` counts distinct eligible canonical RECOMMENDATION_PRESENTED evidence items, not render calls, page loads, projection evaluations or recorded decisions.
 
+Decision metrics continue to preserve ACCEPTED, MODIFIED, DEFERRED and DISMISSED. The action-linkage denominator is narrower and includes only action-addressable ACCEPTED decisions with valid identity in the eligible observation window. MODIFIED is reported separately and is not part of `ACTION_LINKAGE_ELIGIBLE_ACCEPTED_COUNT` or `ACTION_AFTER_ACCEPT_RATE`.
+
 Decision-derived rates must distinguish zero, unknown, unavailable and insufficient sample. TEMPORAL_ASSOCIATION_ONLY does not count as explicit recommendation execution.
+
+Decision 13 — Selected R4 Cartera pilot boundary.
+
+The initial actionable pilot family is `UNCONFIRMED_PAYMENT_EVIDENCE`, owned by `PAYMENT_OBLIGATION`, with canonical subject `POLICY`, exact action target `PAYMENT_OBLIGATION`, and smallest useful action "Revisar la evidencia y confirmar o rechazar el pago." The individual Cartera item is action-addressable only when the exact policy and obligation references are present. The Home item "Pólizas que requieren atención" remains aggregate, advisor-level and not action-addressable; it may navigate to Cartera but may not manufacture individual lineage or presentation evidence for contained signals.
+
+Decision 14 — Payment evidence and recommendation lineage are separate.
+
+`payment_evidence_reference` and `evidence_references` remain exclusively payment/payment-obligation evidence. `recommendation_decision_reference` answers only which canonical prior human recommendation decision, if any, is explicitly associated with the real action. A PaymentEvent without recommendation lineage remains fully valid. A recommendation accepted without a later successful 030C write remains NOT ACTED.
 
 Consequences
 
@@ -119,14 +137,17 @@ Positive:
 - refreshes do not inflate the pilot denominator;
 - a real existing action can retain explicit decision lineage without changing action ownership;
 - ACCEPTED remains distinct from ACTED;
+- MODIFIED remains decision evidence without false execution attribution;
+- payment evidence remains semantically clean;
 - commercial pilot measurement can exclude temporal guessing;
 - no parallel authority or ledger is introduced.
 
 Tradeoffs and limitations:
 - a presentation write failure means presentation evidence is unavailable even if the recommendation remained visible;
 - pre-017E historical presentations are not inferred or backfilled;
+- historical PaymentEvents are not retroactively linked;
 - actions without validated explicit lineage remain unresolved/temporal-only for the governed pilot;
-- DEFERRED/DISMISSED decisions do not automatically qualify later actions as recommendation execution;
+- MODIFIED/DEFERRED/DISMISSED decisions do not qualify later actions as recommendation execution;
 - explicit lineage and subsequent outcomes still do not prove causation.
 
 Acceptance
@@ -140,11 +161,15 @@ Phase 017E may close this boundary only when tests prove:
 - ACCEPT/MODIFY/DEFER/DISMISS non-regression;
 - ACCEPTED != ACTED;
 - navigation alone creates no action;
-- a real existing action can persist valid explicit decision lineage;
-- invalid/cross-advisor/wrong-identity/action-before-decision/temporal-only cases are not counted as explicit lineage;
+- Home aggregate is not action-addressable;
+- the selected individual Cartera recommendation carries exact policy/obligation identity;
+- a real existing 030C action can persist valid explicit ACCEPTED decision lineage;
+- MODIFIED/DEFERRED/DISMISSED lineage is absent/unresolved;
+- invalid/cross-advisor/wrong-policy/wrong-obligation/action-before-decision/temporal-only cases are not counted as explicit lineage;
+- payment evidence remains unchanged and no recommendation id appears inside payment evidence arrays;
 - existing outcome authorities remain unchanged;
-- pilot metrics use canonical presentation denominators and non-causal language;
-- no database, migration, auth, RLS, dependency, lockfile or workflow change occurred.
+- pilot metrics use canonical presentation denominators, accepted-only action linkage denominators and non-causal language;
+- the only database change is the ratified optional 030C lineage storage; no auth, RLS, dependency, lockfile or workflow change occurs.
 
 Final boundary
 
@@ -154,3 +179,12 @@ PRESENTED
 != COMMERCIAL ACTION
 != COMMERCIAL OUTCOME
 != CAUSATION
+
+PAYMENT_EVIDENCE
+!= RECOMMENDATION_LINEAGE
+
+ACCEPTED
+!= ACTED
+
+MODIFIED
+!= ACTION_LINEAGE_ELIGIBLE

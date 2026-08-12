@@ -38,8 +38,8 @@ test("accepted real call with exact advisor, identity and chronology carries exp
   assert.equal(payload.recommendation_decision_reference, context.decisionEventId);
 });
 
-test("modified decision is eligible but deferred and dismissed are not", () => {
-  assert.equal(resolve({ context: { ...context, decision: "MODIFIED" } }).state, "EXPLICIT_LINEAGE");
+test("modified, deferred and dismissed decisions are not action-lineage eligible", () => {
+  assert.equal(resolve({ context: { ...context, decision: "MODIFIED" } }).state, "NO_ELIGIBLE_DECISION");
   assert.equal(resolve({ context: { ...context, decision: "DEFERRED" } }).state, "NO_ELIGIBLE_DECISION");
   assert.equal(resolve({ context: { ...context, decision: "DISMISSED" } }).state, "NO_ELIGIBLE_DECISION");
 });
