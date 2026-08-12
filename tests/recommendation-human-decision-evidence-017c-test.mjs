@@ -16,6 +16,7 @@ test("canonical durable decision preserves recommendation ownership and human au
   assert.equal(event.subject.type, "RECOMMENDATION");
   assert.equal(event.payload.decision, "ACCEPTED");
   assert.equal(event.payload.recommendation_source, "NBA_REASON_WHY");
+  assert.equal(event.payload.recommendation_action_addressable, undefined);
   assert.equal(event.safety_flags.executes_business_action, false);
   assert.equal(event.learning_eligibility, false);
   assert.equal(canonical.validateCanonicalActivityEvent(event).valid, true);
@@ -47,10 +48,10 @@ test("retry is idempotent and correction remains append-only", async () => {
   assert.equal(entries.size, 1);
 });
 
-test("only explicit compatible later action is linked", () => {
+test("only explicit recommendation_decision_reference links a compatible later action", () => {
   const decision = createAdvisorDecisionEvidence({ recommendation, response: response("ACCEPTED"), decisionReference: "decision-017c-9" });
-  const action = { event_type: "CALL_COMPLETED", tenant_id: recommendation.advisorId, occurred_at: "2026-08-11T13:00:00.000Z", causation_id: decision.event_id };
+  const action = { event_type: "CALL_COMPLETED", tenant_id: recommendation.advisorId, occurred_at: "2026-08-11T13:00:00.000Z", causation_id: null, payload: { recommendation_decision_reference: decision.event_id } };
   assert.equal(reconcileDecisionToAction({ decisionEvent: decision, actionEvent: action }).state, "EXPLICITLY_LINKED_LATER_ACTION");
-  assert.equal(reconcileDecisionToAction({ decisionEvent: decision, actionEvent: { ...action, causation_id: null } }).state, "TEMPORAL_ASSOCIATION_ONLY");
+  assert.equal(reconcileDecisionToAction({ decisionEvent: decision, actionEvent: { ...action, causation_id: decision.event_id, payload: {} } }).state, "TEMPORAL_ASSOCIATION_ONLY");
   assert.throws(() => reconcileDecisionToAction({ decisionEvent: decision, actionEvent: { ...action, occurred_at: "2026-08-11T11:00:00.000Z" } }), /ACTION_PRECEDES_DECISION/);
 });
