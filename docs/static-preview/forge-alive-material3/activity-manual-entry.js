@@ -4,6 +4,10 @@ import {
   isCountableManualActivity,
   requiresAppointmentDuration,
 } from "./activity-manual-fact-adapter.js";
+import {
+  consumeRecommendationDecisionLineage,
+  recommendationDecisionLineageFor,
+} from "../forge-aura/recommendation-lineage-session-017e.js?v=forge-commercial-pilot-evidence-017e";
 
 const STATE = Symbol.for("forge.activity.manual-entry.fes01-2");
 const SOURCE_LAYOUT = import.meta.url.includes("/docs/static-preview/");
@@ -23,15 +27,17 @@ async function loadAuthority() {
     await import(moduleUrl("platform/event-evidence/activity-ledger-sync-service.js"));
     await import(moduleUrl("platform/event-evidence/activity-ledger-supabase-gateway.js"));
     await import(moduleUrl("platform/event-evidence/activity-ledger-browser-runtime.js"));
+    await import(moduleUrl("platform/event-evidence/recommendation-decision-action-lineage.js"));
     const canonical = globalThis.ForgeCanonicalActivityEventContractFES01;
     const browser = globalThis.ForgeActivityLedgerBrowserRuntimeFES02C;
-    if (!canonical?.createCanonicalActivityEvent || !browser?.createFromForgeAlive) {
+    const lineage = globalThis.ForgeRecommendationDecisionActionLineage017E;
+    if (!canonical?.createCanonicalActivityEvent || !browser?.createFromForgeAlive || !lineage?.resolveDecisionActionLineage) {
       throw new Error("FES_MANUAL_ACTIVITY_AUTHORITY_UNAVAILABLE");
     }
     if (canonical.CONTRACT_VERSION !== "FES-01.2") {
       throw new Error("FES_01_2_REQUIRED_FOR_COUNTABLE_CAPTURE");
     }
-    return Object.freeze({ canonical, browser });
+    return Object.freeze({ canonical, browser, lineage });
   })().catch(error => { authorityPromise = null; throw error; });
   return authorityPromise;
 }
@@ -223,7 +229,7 @@ export function createManualActivityEntry({ root } = {}) {
 
     try {
       if (demoSession()) throw new Error("La cuenta demo es de solo lectura.");
-      const { canonical, browser } = await loadAuthority();
+      const { canonical, browser, lineage } = await loadAuthority();
       const bootstrap = globalThis.ForgeProductiveProspectBootstrap067G17B;
       const session = await bootstrap?.getSession?.();
       const advisorId = session?.data?.session?.user?.id;
@@ -245,6 +251,14 @@ export function createManualActivityEntry({ root } = {}) {
         referralReference: opaque("referral", entryId),
         notes: form.elements.notes.value,
       });
+      const lineageResolution = lineage.resolveDecisionActionLineage({
+        context: recommendationDecisionLineageFor(advisorId),
+        advisorId,
+        eventType: spec.eventType,
+        payload: spec.payload,
+        occurredAt: spec.occurredAt,
+      });
+      const eventPayload = lineage.payloadWithDecisionLineage(spec.payload, lineageResolution);
       const recordedAt = new Date().toISOString();
       const event = canonical.createCanonicalActivityEvent({
         event_type: spec.eventType,
@@ -260,7 +274,7 @@ export function createManualActivityEntry({ root } = {}) {
         correlation_id: reference,
         idempotency_key: identity,
         privacy_class: spec.privacyClass,
-        payload: spec.payload,
+        payload: eventPayload,
         provenance: {
           source_system: "FORGE_ACTIVITY_MANUAL_ENTRY",
           source_record_id: identity,
@@ -291,6 +305,13 @@ export function createManualActivityEntry({ root } = {}) {
         appended_at: recordedAt,
       });
 
+      if (lineageResolution.state === "EXPLICIT_LINEAGE") {
+        consumeRecommendationDecisionLineage({
+          advisorId,
+          decisionEventId: lineageResolution.recommendationDecisionReference,
+        });
+      }
+
       const receipt = await runtime.syncOnce();
       if (selectedGeneration !== generation || !dialog.open) return;
       statusNode.textContent = receipt?.push_failed
@@ -301,7 +322,13 @@ export function createManualActivityEntry({ root } = {}) {
 
       if (!receipt?.push_failed) {
         globalThis.dispatchEvent(new CustomEvent("forge:manual-activity-created", {
-          detail: Object.freeze({ eventId: event.event_id, kind: spec.eventType, countable: spec.countable }),
+          detail: Object.freeze({
+            eventId: event.event_id,
+            kind: spec.eventType,
+            countable: spec.countable,
+            lineageStatus: lineageResolution.state,
+            recommendationDecisionReference: lineageResolution.recommendationDecisionReference,
+          }),
         }));
         globalThis.setTimeout(() => { if (dialog.open) dialog.close(); }, 650);
       }
@@ -389,6 +416,7 @@ export function createManualActivityEntry({ root } = {}) {
         mounted,
         productiveAuthority: "FES-01.2 + FES-02C",
         countableManualCapture: true,
+        recommendationDecisionLineage: "OPTIONAL_VALIDATED_017E",
         applicationTruthWritableHere: false,
         paidPolicyTruthWritableHere: false,
       });
