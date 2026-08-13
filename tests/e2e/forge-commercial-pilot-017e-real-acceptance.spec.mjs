@@ -28,20 +28,91 @@ async function installMutationObserverDiagnostic(page) {
     const NativeObserver = globalThis.MutationObserver;
     if (!NativeObserver || globalThis.__FORGE_017E_MO_DIAGNOSTIC__) return;
     const registry = [];
+    const producerCounts = new Map();
     let nextId = 0;
     const LIMIT = 100;
 
     function nodeDescription(node) {
       if (!node) return 'null';
-      if (node.nodeType === 3) return `#text(${JSON.stringify(String(node.nodeValue || '').slice(0, 120))})`;
+      if (node.nodeType === 3) return '#text';
       if (node.nodeType !== 1) return `${node.nodeName || 'node'}:${node.nodeType}`;
       const attrs = [];
       if (node.id) attrs.push(`#${node.id}`);
-      if (node.classList?.length) attrs.push(`.${[...node.classList].slice(0, 4).join('.')}`);
-      for (const name of ['data-aura-route-state','data-aura-cartera-radar-017e','data-relational-presentation','data-count-breakdown-010i','data-directory-reference']) {
-        if (node.hasAttribute?.(name)) attrs.push(`[${name}=${JSON.stringify(node.getAttribute(name))}]`);
+      if (node.classList?.length) attrs.push(`.${[...node.classList].slice(0, 5).join('.')}`);
+      for (const name of node.getAttributeNames?.() || []) {
+        if (!/^data-(?:aura|radar|cartera|semantic|relationship)-/.test(name)) continue;
+        const value = String(node.getAttribute(name) || '').slice(0, 80);
+        attrs.push(`[${name}=${JSON.stringify(value)}]`);
+        if (attrs.length >= 10) break;
       }
       return `${node.tagName?.toLowerCase?.() || node.nodeName}${attrs.join('')}`;
+    }
+
+    function producerStack(operation) {
+      return String(new Error(`DOM_WRITE_${operation}`).stack || '')
+        .split('\n')
+        .slice(2, 9)
+        .filter(line => !line.includes('recordProducer'))
+        .join('\n');
+    }
+
+    function recordProducer(operation, target, node = null) {
+      const targetDescription = nodeDescription(target);
+      const nodeDescriptionValue = nodeDescription(node);
+      const stack = producerStack(operation);
+      const key = `${operation}|${targetDescription}|${nodeDescriptionValue}|${stack}`;
+      const current = producerCounts.get(key) || {
+        count: 0,
+        operation,
+        target: targetDescription,
+        node: nodeDescriptionValue,
+        stack,
+      };
+      current.count += 1;
+      producerCounts.set(key, current);
+    }
+
+    function topProducers() {
+      return [...producerCounts.values()]
+        .sort((left, right) => right.count - left.count)
+        .slice(0, 12);
+    }
+
+    function wrapMethod(prototype, name, targetFor, nodeFor) {
+      const native = prototype?.[name];
+      if (typeof native !== 'function') return;
+      Object.defineProperty(prototype, name, {
+        configurable: true,
+        writable: true,
+        value: function forge017eDomWriteDiagnostic(...args) {
+          const result = native.apply(this, args);
+          recordProducer(name, targetFor?.(this, args) || this, nodeFor?.(this, args) || args[0] || null);
+          return result;
+        },
+      });
+    }
+
+    wrapMethod(Node.prototype, 'appendChild');
+    wrapMethod(Node.prototype, 'insertBefore');
+    wrapMethod(Node.prototype, 'removeChild');
+    wrapMethod(Node.prototype, 'replaceChild', (self) => self, (_self, args) => args[0]);
+    wrapMethod(Element.prototype, 'append', (self) => self, (_self, args) => args[0]);
+    wrapMethod(Element.prototype, 'prepend', (self) => self, (_self, args) => args[0]);
+    wrapMethod(Element.prototype, 'replaceChildren', (self) => self, (_self, args) => args[0]);
+    wrapMethod(Element.prototype, 'replaceWith', (self) => self.parentNode, (_self, args) => args[0]);
+    wrapMethod(Element.prototype, 'insertAdjacentHTML', (self) => self, () => null);
+
+    const innerHtmlDescriptor = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    if (innerHtmlDescriptor?.get && innerHtmlDescriptor?.set) {
+      Object.defineProperty(Element.prototype, 'innerHTML', {
+        configurable: innerHtmlDescriptor.configurable,
+        enumerable: innerHtmlDescriptor.enumerable,
+        get: innerHtmlDescriptor.get,
+        set(value) {
+          innerHtmlDescriptor.set.call(this, value);
+          recordProducer('innerHTML=', this, this.lastElementChild || null);
+        },
+      });
     }
 
     function mutationDescription(record) {
@@ -70,7 +141,8 @@ async function installMutationObserverDiagnostic(page) {
             if (!record.tripped) {
               record.tripped = true;
               const mutations = JSON.stringify(record.lastMutations);
-              const error = new Error(`FORGE_017E_MUTATION_OBSERVER_STORM:${id}:${record.count}\nMUTATIONS=${mutations}\n${createdAt}`);
+              const producers = JSON.stringify(topProducers());
+              const error = new Error(`FORGE_017E_MUTATION_OBSERVER_STORM:${id}:${record.count}\nMUTATIONS=${mutations}\nTOP_MUTATION_PRODUCERS=${producers}\n${createdAt}`);
               queueMicrotask(() => { throw error; });
             }
             return;
@@ -82,6 +154,7 @@ async function installMutationObserverDiagnostic(page) {
 
     globalThis.MutationObserver = ForgeDiagnosticMutationObserver;
     globalThis.__FORGE_017E_MO_DIAGNOSTIC__ = registry;
+    globalThis.__FORGE_017E_DOM_PRODUCERS__ = { top: topProducers };
   });
 }
 
@@ -142,6 +215,7 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
   const activeRoute = await page.locator('[data-aura-shell]').getAttribute('data-aura-active-route');
   const routeRevision = await page.locator('[data-aura-main]').getAttribute('data-aura-route-revision');
   const mutationObservers = await page.evaluate(() => globalThis.__FORGE_017E_MO_DIAGNOSTIC__ || []);
+  const mutationProducers = await page.evaluate(() => globalThis.__FORGE_017E_DOM_PRODUCERS__?.top?.() || []);
 
   expect(routeLoadFailures, `AURA_ROUTE_LOAD_FAILED=${routeLoadFailures.join('\n')}`).toEqual([]);
   expect(pageErrors, `PRODUCT_PAGEERRORS=${pageErrors.join('\n')}`).toEqual([]);
@@ -162,6 +236,7 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
       requests400,
       alfredResponses,
       mutationObservers,
+      mutationProducers,
       supabaseUrlSource: 'CI_SECRET',
       supabaseKeySource: 'CI_SECRET',
       acceptanceUserSource: 'GOVERNED_SYNTHETIC_ACCEPTANCE_CONTROL_PLANE',
