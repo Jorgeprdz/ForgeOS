@@ -83,7 +83,7 @@ export function createAuraCarteraFutureRadar017e({
     const existing = currentHost();
     if (existing) return { host: existing, created: false };
     const host = root.ownerDocument.createElement('div');
-    host.dataset.auraCarteraRadar017e = 'true';
+    host.setAttribute('data-aura-cartera-radar-017e', 'true');
     host.setAttribute('aria-live', 'polite');
     const grid = root.querySelector('.cartera-home-grid');
     if (grid) grid.before(host);
