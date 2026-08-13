@@ -1,10 +1,10 @@
 import { copyFile, mkdir } from "node:fs/promises";
 
-const navigationSource = new URL("../platform/navigation-runtime.js", import.meta.url);
-const navigationTarget = new URL("../docs/platform/navigation-runtime.js", import.meta.url);
-
 await mkdir(new URL("../docs/platform/", import.meta.url), { recursive: true });
-await copyFile(navigationSource, navigationTarget);
+await copyFile(
+  new URL("../platform/navigation-runtime.js", import.meta.url),
+  new URL("../docs/platform/navigation-runtime.js", import.meta.url),
+);
 
 await import("./prepare-material3-auth-entry.mjs");
 await import("./prepare-material3-runtime-fail-closed.mjs");

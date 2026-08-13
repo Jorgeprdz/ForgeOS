@@ -5,6 +5,10 @@ import { Memory } from '../../memory-manager.js';
 import { SupabaseRuntime } from '../../supabase-runtime.js';
 import { createCartera050FutureRadarService } from './cartera-050a-future-radar-service.js';
 import { renderCartera050FutureRadar } from '../../platform/portfolio-intelligence/cartera-050d-future-radar-view.js';
+import {
+    isCartera017eActionablePaymentRecommendation,
+    toCartera017eActionablePaymentRecommendation,
+} from '../../platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js';
 import { createAuraDecisionControl } from '../../platform/event-evidence/recommendation-decision-control-017c.js';
 import { createAuraPresentationEvidenceControl } from '../../platform/event-evidence/recommendation-presentation-control-017e.js';
 import {
@@ -49,39 +53,8 @@ function render() {
     host.innerHTML = renderCartera050FutureRadar({ ...state });
 }
 
-function eligiblePaymentRecommendation(item) {
-    return Boolean(
-        item
-        && item.signalType === 'UNCONFIRMED_PAYMENT_EVIDENCE'
-        && item.sourceAuthority === 'PAYMENT_OBLIGATION'
-        && item.policyReference
-        && item.sourceRecordReference
-        && item.signalReference
-        && item.smallestUsefulAction === 'Revisar la evidencia y confirmar o rechazar el pago.'
-    );
-}
-
 function selectedItem() {
-    return (state.radar?.items || []).find(eligiblePaymentRecommendation) || null;
-}
-
-function recommendationModel(item) {
-    if (!eligiblePaymentRecommendation(item)) throw new Error('CARTERA_017E_RECOMMENDATION_NOT_ACTION_ADDRESSABLE');
-    return Object.freeze({
-        ...item,
-        decisionReference: item.signalReference,
-        recommendationVersion: item.signalReference,
-        sourceDomain: 'CARTERA',
-        subject: Object.freeze({ type: 'POLICY', reference: item.policyReference }),
-        commercialPersonReference: item.personReference || null,
-        policyReference: item.policyReference,
-        signalReference: item.signalReference,
-        paymentObligationReference: item.sourceRecordReference,
-        actionAddressable: true,
-        actionOwner: 'CARTERA_030C',
-        actionTarget: Object.freeze({ type: 'PAYMENT_OBLIGATION', reference: item.sourceRecordReference }),
-        expectedAction: 'CONFIRM_PAYMENT',
-    });
+    return (state.radar?.items || []).find(isCartera017eActionablePaymentRecommendation) || null;
 }
 
 async function ensureControls() {
@@ -137,7 +110,7 @@ async function hydrateActionableRecommendation() {
 
     try {
         const api = await ensureControls();
-        const model = recommendationModel(item);
+        const model = toCartera017eActionablePaymentRecommendation(item);
         try {
             await api.presentation.present(model, { presentationSurface: 'AURA_CARTERA' });
             state.presentationState = 'PERSISTED';
@@ -212,7 +185,7 @@ export function bindCartera050FutureRadar({ service } = {}) {
             void (async () => {
                 try {
                     const api = await ensureControls();
-                    const result = await api.decision.decide(recommendationModel(item), intent);
+                    const result = await api.decision.decide(toCartera017eActionablePaymentRecommendation(item), intent);
                     state.decisionState = result.event?.payload?.decision || null;
                     applyLineage(result.event, item, api.user.id);
                 } catch (error) {

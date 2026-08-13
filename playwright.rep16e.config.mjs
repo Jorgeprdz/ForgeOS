@@ -10,7 +10,7 @@ const baseURL =
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  testMatch: /(rep-16e-activity-browser|forge-commercial-pilot-017e-authenticated)\.spec\.mjs/,
+  testMatch: /(rep-16e-activity-browser|forge-commercial-pilot-017e-authenticated|forge-commercial-pilot-017e-r2|forge-commercial-pilot-017e-real-acceptance)\.spec\.mjs/,
   fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,

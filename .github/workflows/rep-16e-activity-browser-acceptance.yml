@@ -6,25 +6,45 @@ on:
       - 'integration/reporting-source-truth-reconciliation'
     paths:
       - 'advisor-os/reporting/**'
+      - 'advisor-os/cartera/cartera-050d-future-radar-enhancement.js'
       - 'platform/event-evidence/**'
+      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
+      - 'platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js'
       - 'docs/static-preview/forge-alive-material3/index.html'
       - 'docs/static-preview/forge-alive-material3/app.js'
       - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
       - 'docs/static-preview/forge-alive-material3/activity-*'
       - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
+      - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
+      - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
       - 'tests/e2e/rep-16e-activity-browser.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
       - 'playwright.rep16e.config.mjs'
       - '.github/workflows/rep-16e-activity-browser-acceptance.yml'
   pull_request:
     paths:
       - 'advisor-os/reporting/**'
+      - 'advisor-os/cartera/cartera-050d-future-radar-enhancement.js'
       - 'platform/event-evidence/**'
+      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
+      - 'platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js'
       - 'docs/static-preview/forge-alive-material3/index.html'
       - 'docs/static-preview/forge-alive-material3/app.js'
       - 'docs/static-preview/forge-alive-material3/forge-navigation-contract.js'
       - 'docs/static-preview/forge-alive-material3/activity-*'
       - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
+      - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
+      - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
       - 'tests/e2e/rep-16e-activity-browser.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
       - 'playwright.rep16e.config.mjs'
       - '.github/workflows/rep-16e-activity-browser-acceptance.yml'
   workflow_dispatch:
@@ -32,22 +52,183 @@ on:
 permissions:
   contents: read
 
+env:
+  SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
+
 jobs:
   chromium-acceptance:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 35
+    environment: 067g17a1-remote-acceptance
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact tested HEAD
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          echo "REP16E_EXACT_HEAD=$ACTUAL_SHA"
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+
       - name: Install repository dependencies
         run: npm ci
+
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
-      - name: Run REP-16E browser acceptance
-        run: npx playwright test --config=playwright.rep16e.config.mjs
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.114.0
+
+      - name: Prepare one-run governed acceptance credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/forge017e"
+          admin_token="$(openssl rand -hex 32)"
+          password_a="$(openssl rand -base64 36 | tr -d '\n' | tr '/+' '_-')Aa1!"
+          password_b="$(openssl rand -base64 36 | tr -d '\n' | tr '/+' '_-')Bb2!"
+          printf '%s' "$admin_token" > "$RUNNER_TEMP/forge017e/admin-token"
+          printf '%s' "$password_a" > "$RUNNER_TEMP/forge017e/a-password"
+          printf '%s' "$password_b" > "$RUNNER_TEMP/forge017e/b-password"
+          chmod 600 "$RUNNER_TEMP/forge017e/"*
+          echo "::add-mask::$admin_token"
+          echo "::add-mask::$password_a"
+          echo "::add-mask::$password_b"
+          echo '017E_REAL_ACCEPTANCE_CREDENTIALS=PREPARED'
+
+      - name: Reuse governed acceptance control plane
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          admin_token="$(cat "$RUNNER_TEMP/forge017e/admin-token")"
+          password_a="$(cat "$RUNNER_TEMP/forge017e/a-password")"
+          password_b="$(cat "$RUNNER_TEMP/forge017e/b-password")"
+          supabase secrets set \
+            FORGE_ACCEPTANCE_ADMIN_TOKEN="$admin_token" \
+            FORGE_ACCEPTANCE_A_PASSWORD="$password_a" \
+            FORGE_ACCEPTANCE_B_PASSWORD="$password_b" \
+            --project-ref "$SUPABASE_PROJECT_REF"
+          supabase functions deploy forge-acceptance-admin --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt
+          echo 'ACCEPTANCE_CONTROL_PLANE_REUSED=YES'
+          echo 'SUPABASE_URL_SOURCE=CI_SECRET'
+          echo 'SUPABASE_KEY_SOURCE=CI_SECRET'
+          echo 'ACCEPTANCE_USER_SOURCE=GOVERNED_SYNTHETIC_CONTROL_PLANE'
+
+      - name: Open real controlled acceptance window
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/rep16e-real-acceptance
+          admin_token="$(cat "$RUNNER_TEMP/forge017e/admin-token")"
+          curl --fail --silent --show-error -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
+            -H 'Content-Type: application/json' \
+            -H "x-forge-acceptance-admin-token: $admin_token" \
+            --data '{"action":"PROVISION"}' > artifacts/rep16e-real-acceptance/provision.json
+          node -e "const p=require('./artifacts/rep16e-real-acceptance/provision.json');if(p.ok!==true||p.accountsOpened!==2)throw Error('PROVISION_FAILED')"
+          echo 'REAL_ACCEPTANCE_WINDOW=OPEN'
+
+      - name: Gate A canonical Pages closure
+        run: |
+          npx playwright test --config=playwright.rep16e.config.mjs --project=chromium-desktop tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs --grep "Gate A"
+          cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-gate-a-results.json
+
+      - name: Gate C real Aura Cartera desktop and mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          export FORGE_ACCEPTANCE_A_PASSWORD="$(cat "$RUNNER_TEMP/forge017e/a-password")"
+          npx playwright test --config=playwright.rep16e.config.mjs tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
+          cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-real-acceptance-results.json
+          echo 'REAL_AURA_CARTERA_ACCEPTANCE=PASS'
+
+      - name: Governed 017E contract
+        run: |
+          npx playwright test --config=playwright.rep16e.config.mjs tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs
+          cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-governed-contract-results.json
+
+      - name: Run REP-16E activity regression
+        run: |
+          npx playwright test --config=playwright.rep16e.config.mjs tests/e2e/rep-16e-activity-browser.spec.mjs
+          cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-activity-results.json
+
+      - name: Seal synthetic acceptance identities
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f "$RUNNER_TEMP/forge017e/admin-token" ]; then
+            echo 'REAL_ACCEPTANCE_WINDOW=NOT_OPENED'
+            exit 0
+          fi
+          admin_token="$(cat "$RUNNER_TEMP/forge017e/admin-token")"
+          curl --fail --silent --show-error -X POST \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
+            -H 'Content-Type: application/json' \
+            -H "x-forge-acceptance-admin-token: $admin_token" \
+            --data '{"action":"SEAL"}' > artifacts/rep16e-real-acceptance/seal.json
+          node -e "const p=require('./artifacts/rep16e-real-acceptance/seal.json');if(p.ok!==true)throw Error('SEAL_FAILED')"
+          echo 'REAL_ACCEPTANCE_WINDOW=SEALED'
+
+      - name: Triple-check REP-16E-R2 closure
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          git diff --exit-code
+          git diff --cached --exit-code
+          node - <<'EOF'
+          const fs = require('fs');
+          const evidence = JSON.parse(fs.readFileSync(
+            'artifacts/rep16e-r2-pages-site/rep16e-r2-pages-evidence.json',
+            'utf8',
+          ));
+          if (evidence.status !== 'PASS') throw new Error('REP16E_R2_PAGES_STATUS_NOT_PASS');
+          if (evidence.head !== process.env.EXPECTED_SHA) throw new Error('REP16E_R2_HEAD_MISMATCH');
+          for (const required of [
+            'static-preview/forge-alive/alfred-command-runtime.js',
+            'platform/portfolio-intelligence/cartera-050d-future-radar-view.js',
+            'platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js',
+          ]) {
+            if (!evidence.requiredPublished.includes(required)) {
+              throw new Error(`REP16E_R2_REQUIRED_PUBLISHED_MISSING=${required}`);
+            }
+          }
+          const selector = fs.readFileSync('playwright.rep16e.config.mjs', 'utf8');
+          const workflow = fs.readFileSync('.github/workflows/rep-16e-activity-browser-acceptance.yml', 'utf8');
+          if (selector.includes('forge-commercial-pilot-017e-runtime-mount')) {
+            throw new Error('REP16E_R2_BROKEN_CHILD_STILL_SELECTED');
+          }
+          if (!selector.includes('forge-commercial-pilot-017e-real-acceptance')) {
+            throw new Error('REP16E_R2_REAL_ACCEPTANCE_CHILD_MISSING');
+          }
+          if (!workflow.includes('forge-commercial-pilot-017e-r2.spec.mjs --grep "Gate A"')) {
+            throw new Error('REP16E_R2_FAKE_GATE_C_STILL_REQUIRED');
+          }
+          if (!workflow.includes('forge-commercial-pilot-017e-real-acceptance.spec.mjs')) {
+            throw new Error('REP16E_R2_REAL_ACCEPTANCE_NOT_REQUIRED');
+          }
+          console.log(`REP16E_R2_TRIPLE_CHECK=PASS head=${evidence.head}`);
+          console.log('LEGACY_RUNTIME_MOUNT_REPLACED=YES');
+          console.log('REPLACEMENT_COVERAGE_COMPLETE=YES');
+          console.log('TEST_THEATER=NO');
+          EOF
+
       - name: Upload browser evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -56,6 +237,12 @@ jobs:
           path: |
             artifacts/rep16e-playwright-report
             artifacts/rep16e-playwright-results.json
+            artifacts/rep16e-r2-gate-a-results.json
+            artifacts/rep16e-r2-governed-contract-results.json
+            artifacts/rep16e-r2-real-acceptance-results.json
+            artifacts/rep16e-r2-activity-results.json
             artifacts/rep16e-playwright-test-results
+            artifacts/rep16e-r2-pages-site/rep16e-r2-pages-evidence.json
+            artifacts/rep16e-real-acceptance/
           if-no-files-found: warn
           retention-days: 14

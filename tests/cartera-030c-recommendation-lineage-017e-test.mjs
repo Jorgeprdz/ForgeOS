@@ -131,19 +131,41 @@ test("unverified or internally inconsistent 030C responses cannot become commerc
   }), /CARTERA030C_ACTION_LINEAGE_STATE_INCONSISTENT/);
 });
 
-test("R4 individual Cartera pilot is exact UNCONFIRMED_PAYMENT_EVIDENCE and reuses shared 017C/017E evidence controls", async () => {
+test("R4 individual Cartera pilot has one shared exact action-addressability authority", async () => {
   const enhancement = await source("advisor-os/cartera/cartera-050d-future-radar-enhancement.js");
+  const authority = await source("platform/portfolio-intelligence/cartera-050e-actionable-payment-recommendation-017e.js");
   const view = await source("platform/portfolio-intelligence/cartera-050d-future-radar-view.js");
+  assert.match(enhancement, /cartera-050e-actionable-payment-recommendation-017e\.js/);
+  assert.match(enhancement, /isCartera017eActionablePaymentRecommendation/);
+  assert.match(enhancement, /toCartera017eActionablePaymentRecommendation/);
   assert.match(enhancement, /platform\/event-evidence\/recommendation-decision-control-017c\.js/);
   assert.match(enhancement, /platform\/event-evidence\/recommendation-presentation-control-017e\.js/);
   assert.doesNotMatch(enhancement, /docs\/static-preview/);
-  assert.match(enhancement, /UNCONFIRMED_PAYMENT_EVIDENCE/);
-  assert.match(enhancement, /sourceAuthority === 'PAYMENT_OBLIGATION'/);
-  assert.match(enhancement, /actionOwner: 'CARTERA_030C'/);
-  assert.match(enhancement, /type: 'PAYMENT_OBLIGATION'/);
-  assert.match(enhancement, /expectedAction: 'CONFIRM_PAYMENT'/);
+  assert.doesNotMatch(enhancement, /function eligiblePaymentRecommendation/);
+  assert.match(authority, /UNCONFIRMED_PAYMENT_EVIDENCE/);
+  assert.match(authority, /PAYMENT_OBLIGATION/);
+  assert.match(authority, /CARTERA_030C/);
+  assert.match(authority, /CONFIRM_PAYMENT/);
+  assert.match(authority, /Revisar la evidencia y confirmar o rechazar el pago\./);
   assert.match(view, /data-radar-decision="ACCEPT"/);
   assert.match(view, /data-open-policy/);
+});
+
+test("Aura Cartera mounts the exact R4 individual recommendation without replacing existing Cartera authority", async () => {
+  const index = await source("docs/static-preview/forge-aura/index.html");
+  const wrapper = await source("docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js");
+  const auraRadar = await source("docs/static-preview/forge-aura/cartera/cartera-future-radar-017e.js");
+  assert.match(index, /cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4/);
+  assert.match(wrapper, /cartera-module-v12-015\.js/);
+  assert.match(wrapper, /createAuraCarteraFutureRadar017e/);
+  assert.match(auraRadar, /cartera-050e-actionable-payment-recommendation-017e\.js/);
+  assert.match(auraRadar, /forge_cartera050_list_future_radar/);
+  assert.match(auraRadar, /createAuraDecisionControl/);
+  assert.match(auraRadar, /createAuraPresentationEvidenceControl/);
+  assert.match(auraRadar, /setRecommendationDecisionLineage/);
+  assert.match(auraRadar, /event\?\.payload\?\.decision !== 'ACCEPTED'/);
+  assert.match(auraRadar, /canonicalRow\.click\(\)/);
+  assert.doesNotMatch(auraRadar, /create table|insert into|update public\./i);
 });
 
 test("R4 keeps MODIFY as decision evidence but excludes it from action-lineage transport", async () => {
@@ -156,11 +178,34 @@ test("R4 keeps MODIFY as decision evidence but excludes it from action-lineage t
   assert.match(readModel, /ACTION_AFTER_ACCEPT_RATE/);
 });
 
-test("Cartera Pages runtime can dependency-close shared evidence controls without importing docs", async () => {
-  const builder = await source("scripts/build-advisor-presentation-pages-runtime-base.mjs");
+test("Cartera Pages runtime can dependency-close shared evidence controls and R4 portfolio UI authorities", async () => {
+  const baseBuilder = await source("scripts/build-advisor-presentation-pages-runtime-base.mjs");
+  const pageBuilder = await source("scripts/build-advisor-presentation-pages-runtime.mjs");
+  const canonicalPreparer = await source("scripts/prepare-cartera-canonical-pages-runtime.mjs");
+  const enhancement = await source("advisor-os/cartera/cartera-050d-future-radar-enhancement.js");
   const decision = await source("platform/event-evidence/recommendation-decision-control-017c.js");
   const presentation = await source("platform/event-evidence/recommendation-presentation-control-017e.js");
-  assert.match(builder, /CARTERA_PAGES_RUNTIME_IMPORT_OUTSIDE_SOURCE/);
+
+  assert.match(pageBuilder, /build-advisor-presentation-pages-runtime-base\.mjs/);
+  assert.match(pageBuilder, /prepare-cartera-canonical-pages-runtime\.mjs/);
+
+  assert.match(baseBuilder, /CARTERA_PAGES_RUNTIME_IMPORT_OUTSIDE_SOURCE/);
+  assert.match(baseBuilder, /advisor-os\/cartera\/cartera-050d-future-radar-enhancement\.js/);
+  assert.match(baseBuilder, /async function collectCarteraPagesRuntime\(\)/);
+  assert.match(baseBuilder, /extractLocalModuleSpecifiers\(source\)/);
+  assert.match(baseBuilder, /async function generateCarteraPagesRuntime\(\)/);
+  assert.match(baseBuilder, /docs\/cartera-pages-runtime-manifest\.json/);
+  assert.match(baseBuilder, /contractId: "CARTERA_PAGES_RUNTIME_ASSET_CLOSURE_V1"/);
+  assert.match(baseBuilder, /files: runtimeFiles/);
+
+  assert.match(enhancement, /platform\/portfolio-intelligence\/cartera-050d-future-radar-view\.js/);
+  assert.match(enhancement, /platform\/portfolio-intelligence\/cartera-050e-actionable-payment-recommendation-017e\.js/);
+
+  assert.match(canonicalPreparer, /manifest\?\.contractId !== "CARTERA_PAGES_RUNTIME_ASSET_CLOSURE_V1"/);
+  assert.match(canonicalPreparer, /for \(const file of manifest\.files\)/);
+  assert.match(canonicalPreparer, /await copyFile\(source, target\)/);
+  assert.match(canonicalPreparer, /files: manifest\.files/);
+
   assert.match(decision, /import '\.\/sales-nba-advisor-response-evidence\.js'/);
   assert.match(presentation, /import '\.\/recommendation-presentation-evidence\.js'/);
 });
