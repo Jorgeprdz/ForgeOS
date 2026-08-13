@@ -23,6 +23,40 @@ async function installGovernedPublicConfig(page) {
   }));
 }
 
+async function installMutationObserverDiagnostic(page) {
+  await page.addInitScript(() => {
+    const NativeObserver = globalThis.MutationObserver;
+    if (!NativeObserver || globalThis.__FORGE_017E_MO_DIAGNOSTIC__) return;
+    const registry = [];
+    let nextId = 0;
+    const LIMIT = 500;
+
+    class ForgeDiagnosticMutationObserver extends NativeObserver {
+      constructor(callback) {
+        const id = ++nextId;
+        const createdAt = String(new Error(`MUTATION_OBSERVER_${id}_CREATED`).stack || '');
+        const record = { id, count: 0, tripped: false, createdAt };
+        registry.push(record);
+        super((records, observer) => {
+          record.count += 1;
+          if (record.count > LIMIT) {
+            if (!record.tripped) {
+              record.tripped = true;
+              const error = new Error(`FORGE_017E_MUTATION_OBSERVER_STORM:${id}:${record.count}\n${createdAt}`);
+              queueMicrotask(() => { throw error; });
+            }
+            return;
+          }
+          return callback(records, observer);
+        });
+      }
+    }
+
+    globalThis.MutationObserver = ForgeDiagnosticMutationObserver;
+    globalThis.__FORGE_017E_MO_DIAGNOSTIC__ = registry;
+  });
+}
+
 async function authenticate(page) {
   await expect(page.locator('[data-aura-login-form]')).toBeVisible({ timeout: 20_000 });
   await page.locator('input[name="email"]').fill(EMAIL_A);
@@ -58,6 +92,7 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
     }
   });
 
+  await installMutationObserverDiagnostic(page);
   await installGovernedPublicConfig(page);
   await page.goto(AURA, { waitUntil: 'domcontentloaded' });
   await authenticate(page);
@@ -78,6 +113,7 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
   const finalState = await page.locator('[data-aura-main]').getAttribute('data-aura-route-state');
   const activeRoute = await page.locator('[data-aura-shell]').getAttribute('data-aura-active-route');
   const routeRevision = await page.locator('[data-aura-main]').getAttribute('data-aura-route-revision');
+  const mutationObservers = await page.evaluate(() => globalThis.__FORGE_017E_MO_DIAGNOSTIC__ || []);
 
   expect(routeLoadFailures, `AURA_ROUTE_LOAD_FAILED=${routeLoadFailures.join('\n')}`).toEqual([]);
   expect(pageErrors, `PRODUCT_PAGEERRORS=${pageErrors.join('\n')}`).toEqual([]);
@@ -97,6 +133,7 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
       failedJsModules,
       requests400,
       alfredResponses,
+      mutationObservers,
       supabaseUrlSource: 'CI_SECRET',
       supabaseKeySource: 'CI_SECRET',
       acceptanceUserSource: 'GOVERNED_SYNTHETIC_ACCEPTANCE_CONTROL_PLANE',
