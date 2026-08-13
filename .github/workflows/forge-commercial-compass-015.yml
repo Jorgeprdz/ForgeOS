@@ -62,7 +62,7 @@ jobs:
           grep -q 'home/home-adapter-pages-v3-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
           grep -q 'home/commercial-compass-consumer-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
           grep -q 'pipeline-consumer-bridge-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
-          grep -q 'cartera-module-v12-015.js?v=forge-commercial-compass-015' docs/static-preview/forge-aura/index.html
+          grep -q 'cartera-module-v13-017e.js?v=forge-commercial-pilot-evidence-017e-r4' docs/static-preview/forge-aura/index.html
           ! grep -q 'pipeline-consumer-bridge-014.js' docs/static-preview/forge-aura/index.html
           ! grep -q 'cartera-module-v11-014.js' docs/static-preview/forge-aura/index.html
 
