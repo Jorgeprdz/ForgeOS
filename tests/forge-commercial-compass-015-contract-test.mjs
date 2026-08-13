@@ -40,7 +40,7 @@ includes(files.index, './home/home-module-015.js?v=forge-commercial-compass-015'
 includes(files.index, './home/home-adapter-pages-v3-015.js?v=forge-commercial-compass-015', 'Home adapter 015 must be productive');
 includes(files.index, './home/commercial-compass-consumer-015.js?v=forge-commercial-compass-015', 'Forecast/Alfred consumer 015 must be productive');
 includes(files.index, './recomposition/pipeline-consumer-bridge-015.js?v=forge-commercial-compass-015', 'Pipeline 015 must be productive');
-matches(files.index, /\.\/cartera\/cartera-module-v12-015\.js\?v=[^"\s]+/, 'Cartera 015 must be productive regardless of its governed cache key');
+matches(files.index, /\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4/, 'Current canonical Cartera entrypoint must resolve to the governed 017E successor');
 excludes(files.index, 'pipeline-consumer-bridge-014.js', 'Pipeline 014 observer bridge must not remain in productive import map');
 excludes(files.index, 'cartera-module-v11-014.js', 'Cartera 014 characterData observer wrapper must not remain in productive import map');
 
