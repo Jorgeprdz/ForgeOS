@@ -18,10 +18,6 @@ function makeSummary(doc, state, title, detail) {
   return section;
 }
 
-function setTextIfChanged(node, value) {
-  if (node && node.textContent !== value) node.textContent = value;
-}
-
 function coverageWord(count) {
   return count === 1 ? 'cobertura' : 'coberturas';
 }
@@ -39,10 +35,10 @@ function reconcileCanonicalSection(canonicalSection, canonicalCount, evidenceCou
   const action = canonicalSection.querySelector('[data-add-coverage]');
   if (canonicalCount === 0 && evidenceCount > 0) {
     if (warning) {
-      setTextIfChanged(warning, `Encontramos ${evidenceCount} ${coverageWord(evidenceCount)} en el documento. Revísalas antes de confirmarlas.`);
+      warning.textContent = `Encontramos ${evidenceCount} ${coverageWord(evidenceCount)} en el documento. Revísalas antes de confirmarlas.`;
     }
     if (action) {
-      setTextIfChanged(action, 'Revisar coberturas');
+      action.textContent = 'Revisar coberturas';
       action.dataset.policyEvidenceReviewAction = 'DOCUMENT_FOUND';
     }
   }
@@ -85,8 +81,8 @@ export function reconcilePolicyEvidencePresentation(root) {
   if (existing?.dataset.policyEvidenceTruthState === state) {
     const strong = existing.querySelector('strong');
     const textNode = strong?.nextSibling?.nextSibling;
-    setTextIfChanged(strong, title);
-    if (textNode?.nodeType === 3 && textNode.textContent !== detail) textNode.textContent = detail;
+    if (strong) strong.textContent = title;
+    if (textNode?.nodeType === 3) textNode.textContent = detail;
     return existing;
   }
   existing?.remove();
