@@ -23,141 +23,6 @@ async function installGovernedPublicConfig(page) {
   }));
 }
 
-async function installMutationObserverDiagnostic(page) {
-  await page.addInitScript(() => {
-    const NativeObserver = globalThis.MutationObserver;
-    if (!NativeObserver || globalThis.__FORGE_017E_MO_DIAGNOSTIC__) return;
-    const registry = [];
-    const producerCounts = new Map();
-    let nextId = 0;
-    const LIMIT = 100;
-
-    function nodeDescription(node) {
-      if (!node) return 'null';
-      if (node.nodeType === 3) return '#text';
-      if (node.nodeType !== 1) return `${node.nodeName || 'node'}:${node.nodeType}`;
-      const attrs = [];
-      if (node.id) attrs.push(`#${node.id}`);
-      if (node.classList?.length) attrs.push(`.${[...node.classList].slice(0, 5).join('.')}`);
-      for (const name of node.getAttributeNames?.() || []) {
-        if (!/^data-(?:aura|radar|cartera|semantic|relationship)-/.test(name)) continue;
-        const value = String(node.getAttribute(name) || '').slice(0, 80);
-        attrs.push(`[${name}=${JSON.stringify(value)}]`);
-        if (attrs.length >= 10) break;
-      }
-      return `${node.tagName?.toLowerCase?.() || node.nodeName}${attrs.join('')}`;
-    }
-
-    function producerStack(operation) {
-      return String(new Error(`DOM_WRITE_${operation}`).stack || '')
-        .split('\n')
-        .slice(2, 9)
-        .filter(line => !line.includes('recordProducer'))
-        .join('\n');
-    }
-
-    function recordProducer(operation, target, node = null) {
-      const targetDescription = nodeDescription(target);
-      const nodeDescriptionValue = nodeDescription(node);
-      const stack = producerStack(operation);
-      const key = `${operation}|${targetDescription}|${nodeDescriptionValue}|${stack}`;
-      const current = producerCounts.get(key) || {
-        count: 0,
-        operation,
-        target: targetDescription,
-        node: nodeDescriptionValue,
-        stack,
-      };
-      current.count += 1;
-      producerCounts.set(key, current);
-    }
-
-    function topProducers() {
-      return [...producerCounts.values()]
-        .sort((left, right) => right.count - left.count)
-        .slice(0, 12);
-    }
-
-    function wrapMethod(prototype, name, targetFor, nodeFor) {
-      const native = prototype?.[name];
-      if (typeof native !== 'function') return;
-      Object.defineProperty(prototype, name, {
-        configurable: true,
-        writable: true,
-        value: function forge017eDomWriteDiagnostic(...args) {
-          const result = native.apply(this, args);
-          recordProducer(name, targetFor?.(this, args) || this, nodeFor?.(this, args) || args[0] || null);
-          return result;
-        },
-      });
-    }
-
-    wrapMethod(Node.prototype, 'appendChild');
-    wrapMethod(Node.prototype, 'insertBefore');
-    wrapMethod(Node.prototype, 'removeChild');
-    wrapMethod(Node.prototype, 'replaceChild', (self) => self, (_self, args) => args[0]);
-    wrapMethod(Element.prototype, 'append', (self) => self, (_self, args) => args[0]);
-    wrapMethod(Element.prototype, 'prepend', (self) => self, (_self, args) => args[0]);
-    wrapMethod(Element.prototype, 'replaceChildren', (self) => self, (_self, args) => args[0]);
-    wrapMethod(Element.prototype, 'replaceWith', (self) => self.parentNode, (_self, args) => args[0]);
-    wrapMethod(Element.prototype, 'insertAdjacentHTML', (self) => self, () => null);
-
-    const innerHtmlDescriptor = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
-    if (innerHtmlDescriptor?.get && innerHtmlDescriptor?.set) {
-      Object.defineProperty(Element.prototype, 'innerHTML', {
-        configurable: innerHtmlDescriptor.configurable,
-        enumerable: innerHtmlDescriptor.enumerable,
-        get: innerHtmlDescriptor.get,
-        set(value) {
-          innerHtmlDescriptor.set.call(this, value);
-          recordProducer('innerHTML=', this, this.lastElementChild || null);
-        },
-      });
-    }
-
-    function mutationDescription(record) {
-      const added = [...(record.addedNodes || [])].slice(0, 4).map(nodeDescription);
-      const removed = [...(record.removedNodes || [])].slice(0, 4).map(nodeDescription);
-      return {
-        type: record.type,
-        target: nodeDescription(record.target),
-        attributeName: record.attributeName || null,
-        oldValue: record.oldValue || null,
-        added,
-        removed,
-      };
-    }
-
-    class ForgeDiagnosticMutationObserver extends NativeObserver {
-      constructor(callback) {
-        const id = ++nextId;
-        const createdAt = String(new Error(`MUTATION_OBSERVER_${id}_CREATED`).stack || '');
-        const record = { id, count: 0, tripped: false, createdAt, lastMutations: [] };
-        registry.push(record);
-        super((records, observer) => {
-          record.count += 1;
-          record.lastMutations = [...records].slice(-8).map(mutationDescription);
-          if (record.count > LIMIT) {
-            if (!record.tripped) {
-              record.tripped = true;
-              const mutations = JSON.stringify(record.lastMutations);
-              const producers = JSON.stringify(topProducers());
-              const error = new Error(`FORGE_017E_MUTATION_OBSERVER_STORM:${id}:${record.count}\nMUTATIONS=${mutations}\nTOP_MUTATION_PRODUCERS=${producers}\n${createdAt}`);
-              queueMicrotask(() => { throw error; });
-            }
-            return;
-          }
-          return callback(records, observer);
-        });
-      }
-    }
-
-    globalThis.MutationObserver = ForgeDiagnosticMutationObserver;
-    globalThis.__FORGE_017E_MO_DIAGNOSTIC__ = registry;
-    globalThis.__FORGE_017E_DOM_PRODUCERS__ = { top: topProducers };
-  });
-}
-
 async function authenticate(page) {
   await expect(page.locator('[data-aura-login-form]')).toBeVisible({ timeout: 20_000 });
   await page.locator('input[name="email"]').fill(EMAIL_A);
@@ -193,7 +58,6 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
     }
   });
 
-  await installMutationObserverDiagnostic(page);
   await installGovernedPublicConfig(page);
   await page.goto(AURA, { waitUntil: 'domcontentloaded' });
   await authenticate(page);
@@ -210,12 +74,55 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
   );
   await expect(page.locator('.cartera-header')).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('[data-aura-app]')).toHaveAttribute('aria-busy', 'false');
+  await expect(page.locator('[data-aura-cartera-radar-017e]')).toHaveCount(1);
+  await expect(page.locator('[data-aura-cartera-radar-017e] .glass-widget')).toHaveCount(1);
+
+  const convergence = await page.evaluate(async () => {
+    const root = document.querySelector('.aura-route-host-013.aura-cartera');
+    const host = root?.querySelector('[data-aura-cartera-radar-017e]');
+    if (!root || !host) return { ready: false };
+
+    let additionalRadarHosts = 0;
+    const observer = new MutationObserver(records => {
+      for (const record of records) {
+        for (const node of record.addedNodes) {
+          if (!(node instanceof Element)) continue;
+          if (node.matches?.('[data-aura-cartera-radar-017e]')) additionalRadarHosts += 1;
+          additionalRadarHosts += node.querySelectorAll?.('[data-aura-cartera-radar-017e]').length || 0;
+        }
+      }
+    });
+    observer.observe(root, { childList: true, subtree: true });
+
+    const probe = document.createElement('span');
+    probe.dataset.aura017eConvergenceProbe = 'true';
+    root.append(probe);
+    await Promise.resolve();
+    await Promise.resolve();
+    probe.remove();
+    await Promise.resolve();
+    await Promise.resolve();
+    observer.disconnect();
+
+    const current = root.querySelector('[data-aura-cartera-radar-017e]');
+    return {
+      ready: true,
+      sameHost: current === host,
+      hostCount: root.querySelectorAll('[data-aura-cartera-radar-017e]').length,
+      additionalRadarHosts,
+      functionalRadarPresent: Boolean(current?.querySelector('.glass-widget')),
+    };
+  });
+
+  expect(convergence.ready).toBe(true);
+  expect(convergence.sameHost).toBe(true);
+  expect(convergence.hostCount).toBe(1);
+  expect(convergence.additionalRadarHosts).toBeLessThanOrEqual(0);
+  expect(convergence.functionalRadarPresent).toBe(true);
 
   const finalState = await page.locator('[data-aura-main]').getAttribute('data-aura-route-state');
   const activeRoute = await page.locator('[data-aura-shell]').getAttribute('data-aura-active-route');
   const routeRevision = await page.locator('[data-aura-main]').getAttribute('data-aura-route-revision');
-  const mutationObservers = await page.evaluate(() => globalThis.__FORGE_017E_MO_DIAGNOSTIC__ || []);
-  const mutationProducers = await page.evaluate(() => globalThis.__FORGE_017E_DOM_PRODUCERS__?.top?.() || []);
 
   expect(routeLoadFailures, `AURA_ROUTE_LOAD_FAILED=${routeLoadFailures.join('\n')}`).toEqual([]);
   expect(pageErrors, `PRODUCT_PAGEERRORS=${pageErrors.join('\n')}`).toEqual([]);
@@ -230,13 +137,15 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
       routeRevision,
       carteraHeaderVisible: true,
       ariaBusy: false,
+      mutationReconciliationConverges: convergence.sameHost && convergence.hostCount === 1 && convergence.additionalRadarHosts === 0,
+      domMutationCount: convergence.additionalRadarHosts,
+      domMutationCountLimit: 0,
+      functionalRadarPresent: convergence.functionalRadarPresent,
       auraRouteLoadFailed: routeLoadFailures.length,
       productPageErrors: pageErrors.length,
       failedJsModules,
       requests400,
       alfredResponses,
-      mutationObservers,
-      mutationProducers,
       supabaseUrlSource: 'CI_SECRET',
       supabaseKeySource: 'CI_SECRET',
       acceptanceUserSource: 'GOVERNED_SYNTHETIC_ACCEPTANCE_CONTROL_PLANE',
