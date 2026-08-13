@@ -47,6 +47,6 @@ test('RU10 remains presentation-only and Aura mounts the governed 015 successor 
   assert.match(successor, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
   assert.match(
     index,
-    /"\.\/cartera\/cartera-module\.js\?v=aura-cartera-pdf-auth-002"\s*:\s*"\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/,
+    /"\.\/cartera\/cartera-module\.js\?v=aura-cartera-pdf-auth-002"\s*:\s*"\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/,
   );
 });
