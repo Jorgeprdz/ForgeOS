@@ -181,11 +181,31 @@ test("R4 keeps MODIFY as decision evidence but excludes it from action-lineage t
 test("Cartera Pages runtime can dependency-close shared evidence controls and R4 portfolio UI authorities", async () => {
   const baseBuilder = await source("scripts/build-advisor-presentation-pages-runtime-base.mjs");
   const pageBuilder = await source("scripts/build-advisor-presentation-pages-runtime.mjs");
+  const canonicalPreparer = await source("scripts/prepare-cartera-canonical-pages-runtime.mjs");
+  const enhancement = await source("advisor-os/cartera/cartera-050d-future-radar-enhancement.js");
   const decision = await source("platform/event-evidence/recommendation-decision-control-017c.js");
   const presentation = await source("platform/event-evidence/recommendation-presentation-control-017e.js");
+
+  assert.match(pageBuilder, /build-advisor-presentation-pages-runtime-base\.mjs/);
+  assert.match(pageBuilder, /prepare-cartera-canonical-pages-runtime\.mjs/);
+
   assert.match(baseBuilder, /CARTERA_PAGES_RUNTIME_IMPORT_OUTSIDE_SOURCE/);
-  assert.match(pageBuilder, /cartera-050d-future-radar-view\.js/);
-  assert.match(pageBuilder, /cartera-050e-actionable-payment-recommendation-017e\.js/);
+  assert.match(baseBuilder, /advisor-os\/cartera\/cartera-050d-future-radar-enhancement\.js/);
+  assert.match(baseBuilder, /async function collectCarteraPagesRuntime\(\)/);
+  assert.match(baseBuilder, /extractLocalModuleSpecifiers\(source\)/);
+  assert.match(baseBuilder, /async function generateCarteraPagesRuntime\(\)/);
+  assert.match(baseBuilder, /docs\/cartera-pages-runtime-manifest\.json/);
+  assert.match(baseBuilder, /contractId: "CARTERA_PAGES_RUNTIME_ASSET_CLOSURE_V1"/);
+  assert.match(baseBuilder, /files: runtimeFiles/);
+
+  assert.match(enhancement, /platform\/portfolio-intelligence\/cartera-050d-future-radar-view\.js/);
+  assert.match(enhancement, /platform\/portfolio-intelligence\/cartera-050e-actionable-payment-recommendation-017e\.js/);
+
+  assert.match(canonicalPreparer, /manifest\?\.contractId !== "CARTERA_PAGES_RUNTIME_ASSET_CLOSURE_V1"/);
+  assert.match(canonicalPreparer, /for \(const file of manifest\.files\)/);
+  assert.match(canonicalPreparer, /await copyFile\(source, target\)/);
+  assert.match(canonicalPreparer, /files: manifest\.files/);
+
   assert.match(decision, /import '\.\/sales-nba-advisor-response-evidence\.js'/);
   assert.match(presentation, /import '\.\/recommendation-presentation-evidence\.js'/);
 });
