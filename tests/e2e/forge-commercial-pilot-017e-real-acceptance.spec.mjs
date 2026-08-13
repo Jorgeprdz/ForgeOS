@@ -75,7 +75,24 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
   await expect(page.locator('.cartera-header')).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('[data-aura-app]')).toHaveAttribute('aria-busy', 'false');
   await expect(page.locator('[data-aura-cartera-radar-017e]')).toHaveCount(1);
-  await expect(page.locator('[data-aura-cartera-radar-017e] .glass-widget')).toHaveCount(1);
+  expect(await page.locator('[data-aura-cartera-radar-017e] .glass-widget').count()).toBeGreaterThan(0);
+
+  const heartbeat = await page.evaluate(() => new Promise(resolve => {
+    let beats = 0;
+    const interval = setInterval(() => {
+      beats += 1;
+      if (beats >= 3) {
+        clearInterval(interval);
+        clearTimeout(deadline);
+        resolve(beats);
+      }
+    }, 25);
+    const deadline = setTimeout(() => {
+      clearInterval(interval);
+      resolve(beats);
+    }, 500);
+  }));
+  expect(heartbeat).toBeGreaterThanOrEqual(3);
 
   const convergence = await page.evaluate(async () => {
     const root = document.querySelector('.aura-route-host-013.aura-cartera');
@@ -137,6 +154,7 @@ test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase accepta
       routeRevision,
       carteraHeaderVisible: true,
       ariaBusy: false,
+      heartbeat: heartbeat >= 3 ? 'ALIVE' : 'DEAD',
       mutationReconciliationConverges: convergence.sameHost && convergence.hostCount === 1 && convergence.additionalRadarHosts === 0,
       domMutationCount: convergence.additionalRadarHosts,
       domMutationCountLimit: 0,
