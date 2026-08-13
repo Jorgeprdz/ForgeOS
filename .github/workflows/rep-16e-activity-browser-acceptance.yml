@@ -148,11 +148,6 @@ jobs:
           npx playwright test --config=playwright.rep16e.config.mjs --project=chromium-desktop tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs --grep "Gate A"
           cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-gate-a-results.json
 
-      - name: Governed 017E contract
-        run: |
-          npx playwright test --config=playwright.rep16e.config.mjs tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs
-          cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-governed-contract-results.json
-
       - name: Gate C real Aura Cartera desktop and mobile
         shell: bash
         run: |
@@ -161,6 +156,11 @@ jobs:
           npx playwright test --config=playwright.rep16e.config.mjs tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
           cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-real-acceptance-results.json
           echo 'REAL_AURA_CARTERA_ACCEPTANCE=PASS'
+
+      - name: Governed 017E contract
+        run: |
+          npx playwright test --config=playwright.rep16e.config.mjs tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs
+          cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-governed-contract-results.json
 
       - name: Run REP-16E activity regression
         run: |
