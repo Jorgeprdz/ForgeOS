@@ -110,6 +110,64 @@ async function loginAndOpenCartera(page) {
   await expect.poll(async () => page.evaluate(() => globalThis.__FORGE017E_ACCEPTANCE__.presentationEventId)).toBeTruthy();
 }
 
+function acceptanceEventInstant(event) {
+  const raw = event?.occurred_at
+    ?? event?.recorded_at
+    ?? event?.occurredAt
+    ?? event?.recordedAt;
+  const instant = Date.parse(raw);
+  if (!Number.isFinite(instant)) {
+    throw new Error('017E_ACCEPTANCE_OBSERVATION_TIMESTAMP_INVALID');
+  }
+  return instant;
+}
+
+function observationWindowFromAcceptanceEvidence({
+  presentationEvents = [],
+  decisionEvents = [],
+  actionEvents = [],
+} = {}) {
+  const instants = [
+    ...presentationEvents,
+    ...decisionEvents,
+    ...actionEvents,
+  ].map(acceptanceEventInstant);
+
+  if (!instants.length) {
+    throw new Error('017E_ACCEPTANCE_OBSERVATION_EVIDENCE_REQUIRED');
+  }
+
+  const min = Math.min(...instants);
+  const max = Math.max(...instants);
+  return Object.freeze({
+    from: new Date(min - 1000).toISOString(),
+    to: new Date(max + 1000).toISOString(),
+  });
+}
+
+function expectEventInsideWindow(event, window) {
+  const timestamp = acceptanceEventInstant(event);
+  expect(timestamp).toBeGreaterThanOrEqual(Date.parse(window.from));
+  expect(timestamp).toBeLessThan(Date.parse(window.to));
+}
+
+test('017E governed observation window is calendar-independent', () => {
+  const presentation = { occurred_at: '2031-04-10T12:00:00.000Z' };
+  const decision = { occurred_at: '2031-04-10T12:01:00.000Z' };
+  const action = { occurred_at: '2031-04-10T12:02:00.000Z' };
+  const observationWindow = observationWindowFromAcceptanceEvidence({
+    presentationEvents: [presentation],
+    decisionEvents: [decision],
+    actionEvents: [action],
+  });
+
+  for (const event of [presentation, decision, action]) {
+    expectEventInsideWindow(event, observationWindow);
+    expect(Date.parse(observationWindow.from)).toBeLessThan(acceptanceEventInstant(event));
+    expect(acceptanceEventInstant(event)).toBeLessThan(Date.parse(observationWindow.to));
+  }
+});
+
 test.describe('017E-R4 governed authenticated commercial evidence acceptance', () => {
   test.beforeAll(() => {
     container = `forge-017e-e2e-${process.pid}`;
@@ -164,9 +222,18 @@ test.describe('017E-R4 governed authenticated commercial evidence acceptance', (
     expect(presentationEvents).toHaveLength(1);
     expect(decisionEvents).toHaveLength(1);
     const action = projectCartera030cPaymentAction({ advisorId: ADVISOR, response: browserState.paymentResponse });
+    const observationWindow = observationWindowFromAcceptanceEvidence({
+      presentationEvents,
+      decisionEvents,
+      actionEvents: [action],
+    });
+    presentationEvents.forEach(event => expectEventInsideWindow(event, observationWindow));
+    decisionEvents.forEach(event => expectEventInsideWindow(event, observationWindow));
+    expectEventInsideWindow(action, observationWindow);
+
     const summary = summarizeCommercialPilotEvidence({
       advisorId: ADVISOR,
-      observationWindow: { from: '2026-08-12T00:00:00.000Z', to: '2026-08-13T00:00:00.000Z' },
+      observationWindow,
       presentationEvents,
       decisionEvents,
       actionEvents: [action],
