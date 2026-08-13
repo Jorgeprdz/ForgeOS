@@ -29,20 +29,48 @@ async function installMutationObserverDiagnostic(page) {
     if (!NativeObserver || globalThis.__FORGE_017E_MO_DIAGNOSTIC__) return;
     const registry = [];
     let nextId = 0;
-    const LIMIT = 500;
+    const LIMIT = 100;
+
+    function nodeDescription(node) {
+      if (!node) return 'null';
+      if (node.nodeType === 3) return `#text(${JSON.stringify(String(node.nodeValue || '').slice(0, 120))})`;
+      if (node.nodeType !== 1) return `${node.nodeName || 'node'}:${node.nodeType}`;
+      const attrs = [];
+      if (node.id) attrs.push(`#${node.id}`);
+      if (node.classList?.length) attrs.push(`.${[...node.classList].slice(0, 4).join('.')}`);
+      for (const name of ['data-aura-route-state','data-aura-cartera-radar-017e','data-relational-presentation','data-count-breakdown-010i','data-directory-reference']) {
+        if (node.hasAttribute?.(name)) attrs.push(`[${name}=${JSON.stringify(node.getAttribute(name))}]`);
+      }
+      return `${node.tagName?.toLowerCase?.() || node.nodeName}${attrs.join('')}`;
+    }
+
+    function mutationDescription(record) {
+      const added = [...(record.addedNodes || [])].slice(0, 4).map(nodeDescription);
+      const removed = [...(record.removedNodes || [])].slice(0, 4).map(nodeDescription);
+      return {
+        type: record.type,
+        target: nodeDescription(record.target),
+        attributeName: record.attributeName || null,
+        oldValue: record.oldValue || null,
+        added,
+        removed,
+      };
+    }
 
     class ForgeDiagnosticMutationObserver extends NativeObserver {
       constructor(callback) {
         const id = ++nextId;
         const createdAt = String(new Error(`MUTATION_OBSERVER_${id}_CREATED`).stack || '');
-        const record = { id, count: 0, tripped: false, createdAt };
+        const record = { id, count: 0, tripped: false, createdAt, lastMutations: [] };
         registry.push(record);
         super((records, observer) => {
           record.count += 1;
+          record.lastMutations = [...records].slice(-8).map(mutationDescription);
           if (record.count > LIMIT) {
             if (!record.tripped) {
               record.tripped = true;
-              const error = new Error(`FORGE_017E_MUTATION_OBSERVER_STORM:${id}:${record.count}\n${createdAt}`);
+              const mutations = JSON.stringify(record.lastMutations);
+              const error = new Error(`FORGE_017E_MUTATION_OBSERVER_STORM:${id}:${record.count}\nMUTATIONS=${mutations}\n${createdAt}`);
               queueMicrotask(() => { throw error; });
             }
             return;
