@@ -197,7 +197,7 @@ export function createAuraCarteraFutureRadar017e({
       state.radar = normalizeRadar(result?.data);
       state.status = 'READY';
       render();
-      await hydrateActionableRecommendation(requestGeneration);
+      void hydrateActionableRecommendation(requestGeneration);
     } catch (error) {
       if (requestGeneration !== generation || destroyed) return;
       state.status = 'ERROR';
