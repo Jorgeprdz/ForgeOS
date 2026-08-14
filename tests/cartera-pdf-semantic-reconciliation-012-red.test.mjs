@@ -4,6 +4,8 @@ import fs from 'node:fs';
 
 const edge = fs.readFileSync('supabase/functions/cartera-pdf-intake/index.ts', 'utf8');
 const moduleV12Phase015 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js', 'utf8');
+const moduleV14 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v14-hotfix002.js', 'utf8');
+const hotfixCore = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-hotfix002.js', 'utf8');
 const v13 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js', 'utf8');
 const v12 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v12.js', 'utf8');
 const v11 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js', 'utf8');
@@ -16,9 +18,7 @@ const ui = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-modul
 const app = fs.readFileSync('docs/static-preview/forge-aura/app-v4-r1.js', 'utf8');
 const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8');
 
-const requiredSemanticKeys = [
-  'policyType','currency','paymentFrequency','issueDate','basicPremiumTotal','plannedPremium','annualTotal','beneficiariesDetected','coverageCandidates',
-];
+const requiredSemanticKeys = ['policyType','currency','paymentFrequency','issueDate','basicPremiumTotal','plannedPremium','annualTotal','beneficiariesDetected','coverageCandidates'];
 
 test('Edge extraction contract preserves the golden document semantics', () => {
   for (const key of requiredSemanticKeys) assert.match(edge, new RegExp(`\\b${key}\\b`), `Edge contract is missing ${key}`);
@@ -68,10 +68,12 @@ test('review UI distinguishes type/status, protected beneficiaries and document 
   assert.doesNotMatch(ui, /Confianza alta/);
 });
 
-test('canonical Aura keeps inherited app specifier while phase015 preserves the durable v10 and semantic v9 chains', () => {
+test('canonical Aura keeps inherited app specifier while Hotfix002 preserves phase015, v13 and semantic chains', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
   assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v14-hotfix002\.js\?v=post017e-hotfix002"/);
+  assert.match(moduleV14, /cartera-module-hotfix002-entry\.js\?v=post017e-hotfix002/);
+  assert.match(hotfixCore, /cartera-module-v13-017e\.js\?v=post017e-hotfix001/);
   assert.match(moduleV12Phase015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
   assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
   assert.match(v13, /cartera-adapter-pages-v12\.js/);
