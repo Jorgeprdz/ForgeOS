@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - fix/forge-commercial-compass-015
+      - main
   pull_request:
     branches:
       - main
