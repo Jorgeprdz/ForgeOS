@@ -1,12 +1,12 @@
-import { createCanonicalConfirmationReviewService } from '../../../../advisor-os/cartera/canonical-confirmation-review-service.js';
-import { createPersistentConfirmationOrchestrationService } from '../../../../advisor-os/cartera/persistent-confirmation-orchestration-service.js';
+import { createCanonicalConfirmationReviewService } from '../../../advisor-os/cartera/canonical-confirmation-review-service.js';
+import { createPersistentConfirmationOrchestrationService } from '../../../advisor-os/cartera/persistent-confirmation-orchestration-service.js';
 import {
   CARTERA_020C_ACCOUNT_OUTCOMES,
   CARTERA_020C_FIELD_DECISIONS,
   composeCartera020cIdentityCommandBatch,
   verifyCartera020cIdentityCommandResults,
   composeCartera020cConfirmedPolicyPlan,
-} from '../../../../policy-operations/intake/cartera-020c-governed-command-composer.js';
+} from '../../../policy-operations/intake/cartera-020c-governed-command-composer.js';
 
 const POLICY_SELECT = [
   'id','policy_reference','carrier_reference','policy_number','product_reference','issue_date',
@@ -28,11 +28,6 @@ function fail(code, cause = null) {
 
 function text(value) { return String(value ?? '').trim(); }
 function upper(value) { return text(value).toUpperCase(); }
-function record(value) { return Boolean(value) && typeof value === 'object' && !Array.isArray(value); }
-function rows(result, code) {
-  if (result?.error) throw fail(code, result.error);
-  return Array.isArray(result?.data) ? result.data : [];
-}
 function one(result, code) {
   if (result?.error || !result?.data) throw fail(code, result?.error || null);
   return result.data;
