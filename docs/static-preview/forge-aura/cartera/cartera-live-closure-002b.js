@@ -1,5 +1,4 @@
 import { createCarteraAdapter as createPreviousAdapter } from './cartera-adapter-pages-v13.js?v=cartera-live-closure-002b';
-import { createCarteraReviewConfirmation002 } from './cartera-review-confirmation-002.js?v=post017e-hotfix002';
 
 export const CARTERA_PRIMARY_ATTENTION_OWNER_002B = 'CARTERA_050_FUTURE_RADAR';
 const RADAR_RPC = 'forge_cartera050_list_future_radar';
@@ -22,6 +21,40 @@ function uniqueBy(values, keyOf) {
     if (key && !output.has(key)) output.set(key, value);
   }
   return [...output.values()];
+}
+function fieldValue(fields, key) {
+  const raw = fields?.[key];
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) return raw.value ?? raw.normalizedValue ?? null;
+  return raw ?? null;
+}
+function packetPolicyNumber(packet) {
+  return text(fieldValue(packet?.fields, 'policyNumber') || packet?.policyNumber);
+}
+function packetContextModel002b(packet, home) {
+  const policyNumber = packetPolicyNumber(packet);
+  const policyMatches = uniqueBy((home?.policies || [])
+    .filter(policy => policyNumber && text(policy?.policy_number || policy?.policyNumber) === policyNumber)
+    .map(policy => ({
+      policyReference: text(policy?.policy_reference || policy?.policyReference),
+      policyNumber,
+    })), match => match.policyReference).filter(match => match.policyReference);
+
+  const identityCandidates = (packet?.identityCandidates || []).map(candidate => {
+    const references = uniqueBy([
+      candidate?.personReference,
+      candidate?.existingPersonReference,
+      ...(Array.isArray(candidate?.existingPersonReferences) ? candidate.existingPersonReferences : []),
+      ...(Array.isArray(candidate?.candidatePersonReferences) ? candidate.candidatePersonReferences : []),
+    ].map(reference => text(reference)).filter(Boolean), reference => reference);
+    return {
+      existingPersonMatches: references.map(personReference => ({ personReference, displayLabel: null })),
+    };
+  });
+
+  return {
+    duplicatePolicyCandidates: policyMatches.length ? [{ existingPolicyMatches: policyMatches }] : [],
+    identityCandidates,
+  };
 }
 
 export function hasQualifyingCarteraRelationship002b(item = {}) {
@@ -54,7 +87,7 @@ function personFromPolicyPresentation(policyReference, presentation = {}) {
   const matches = [];
   for (const [personReference, relation] of Object.entries(presentation || {})) {
     if ((relation?.policies || []).some(policy => text(policy?.reference) === policyReference)) {
-      matches.push({ personReference, displayLabel: null });
+      matches.push({ personReference, displayLabel: relation?.displayLabel || null });
     }
   }
   return matches.length === 1 ? matches[0] : null;
@@ -143,7 +176,6 @@ export function composeCarteraRadarWithPendingReviews002b(radar = {}, pendingSig
 export async function createCarteraClosureAdapter002b({ client, windowRef = window } = {}) {
   if (!client) throw new Error('CARTERA_PRODUCTIVE_CLIENT_REQUIRED');
   const adapter = await createPreviousAdapter({ client, windowRef });
-  const reviewApi = createCarteraReviewConfirmation002({ client });
   let latestHome = null;
   let latestDirectory = null;
 
@@ -182,8 +214,18 @@ export async function createCarteraClosureAdapter002b({ client, windowRef = wind
         const packetReference = text(review?.packetReference || review?.reviewReference);
         if (!packetReference.startsWith('POLICY_PACKET:AURA:')) return null;
         try {
-          const model = await reviewApi.loadReview(packetReference);
-          return pendingReviewSignal002b({ review, model, relationshipPresentation: presentation, asOfDate });
+          const packet = await adapter.loadEvidencePacket(packetReference);
+          const model = packetContextModel002b(packet, home);
+          return pendingReviewSignal002b({
+            review: {
+              ...review,
+              confidence: packet?.confidence ?? review?.confidence,
+              warnings: packet?.warnings ?? review?.warnings,
+            },
+            model,
+            relationshipPresentation: presentation,
+            asOfDate,
+          });
         } catch {
           return pendingReviewSignal002b({ review, model: null, relationshipPresentation: presentation, asOfDate });
         }
