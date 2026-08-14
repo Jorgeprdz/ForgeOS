@@ -1,6 +1,7 @@
 import { access, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { prepareCarteraReviewPagesRuntime } from "./prepare-cartera-review-pages-runtime.mjs";
 
 export const SEGUBECA_PAGES_RUNTIME_ID =
   "SEGUBECA_PAGES_RUNTIME_CLOSURE_V1";
@@ -116,5 +117,7 @@ export async function prepareSegubecaPagesRuntime({ siteDir } = {}) {
 
 const invokedPath = process.argv[1] ? resolve(process.argv[1]) : "";
 if (invokedPath && invokedPath === fileURLToPath(import.meta.url)) {
-  await prepareSegubecaPagesRuntime({ siteDir: process.argv[2] || "_site" });
+  const siteDir = process.argv[2] || "_site";
+  await prepareSegubecaPagesRuntime({ siteDir });
+  await prepareCarteraReviewPagesRuntime({ siteDir });
 }

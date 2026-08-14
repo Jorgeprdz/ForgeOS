@@ -1,0 +1,103 @@
+name: POST-017E Hotfix 002 Cartera Review + Radar UX
+
+on:
+  pull_request:
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-hotfix002*.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-review-*002*'
+      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
+      - 'scripts/prepare-cartera-review-pages-runtime.mjs'
+      - 'scripts/prepare-segubeca-pages-runtime.mjs'
+      - 'tests/cartera-review-radar-hotfix-002.test.mjs'
+      - 'tests/e2e/cartera-radar-hotfix-001.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
+      - 'playwright.rep16e.config.mjs'
+      - '.github/workflows/cartera-review-radar-hotfix-002.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/static-preview/forge-aura/index.html'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-hotfix002*.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-review-*002*'
+      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
+      - 'scripts/prepare-cartera-review-pages-runtime.mjs'
+      - 'scripts/prepare-segubeca-pages-runtime.mjs'
+      - 'tests/cartera-review-radar-hotfix-002.test.mjs'
+      - 'tests/e2e/cartera-radar-hotfix-001.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
+      - 'playwright.rep16e.config.mjs'
+      - '.github/workflows/cartera-review-radar-hotfix-002.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  authority-and-regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Exact source syntax
+        run: |
+          node --check docs/static-preview/forge-aura/cartera/cartera-review-confirmation-002.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-hotfix002.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-hotfix002-entry.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js
+          node --check platform/portfolio-intelligence/cartera-050d-future-radar-view.js
+          node --check scripts/prepare-cartera-review-pages-runtime.mjs
+          node --check scripts/prepare-segubeca-pages-runtime.mjs
+          node --check tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
+      - name: Hotfix 002 authority and UX contract
+        run: node --test tests/cartera-review-radar-hotfix-002.test.mjs
+      - name: Cartera 010B canonical writer foundation
+        run: node --test tests/cartera-010b-contract-foundation-test.mjs
+      - name: Cartera 020C governed review and correction
+        run: |
+          node --test tests/cartera-020c-review-read-model-service-test.mjs
+          node --test tests/cartera-020c-governed-command-composer-test.mjs
+          node --test tests/cartera-020c-persistent-confirmation-orchestration-contract-test.mjs
+          node --test tests/cartera-020c-persistent-confirmation-orchestration-service-test.mjs
+          node --test tests/cartera-020c-authorization-digest-hardening-test.mjs
+          node --test tests/cartera-020c-durable-attach-015.test.mjs
+      - name: Preserve POST-017E Hotfix 001
+        run: node --test tests/cartera-radar-truth-hotfix-001-test.mjs
+      - name: Preserve 017E recommendation lineage
+        run: node --test tests/cartera-030c-recommendation-lineage-017e-test.mjs
+      - name: No prohibited boundary expansion
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          changed="$(git diff --name-only origin/main...HEAD)"
+          printf '%s\n' "$changed"
+          if printf '%s\n' "$changed" | grep -E '(^|/)(package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$'; then exit 1; fi
+          if printf '%s\n' "$changed" | grep -E '^supabase/migrations/'; then exit 1; fi
+          if printf '%s\n' "$changed" | grep -Ei '(^|/)(auth|rls)(/|[-_.])'; then exit 1; fi
+          echo 'NEW_AUTHORITY=NO'
+          echo 'SCHEMA_CHANGE=NO'
+          echo 'AUTH_CHANGE=NO'
+          echo 'RLS_CHANGE=NO'
+          echo 'DEPENDENCY_CHANGE=NO'
+
+  radar-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Desktop DeX Mobile Radar acceptance
+        run: npx playwright test --config=playwright.cartera-radar-hotfix-001.config.mjs

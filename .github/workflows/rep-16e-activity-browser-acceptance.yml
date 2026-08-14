@@ -19,6 +19,7 @@ on:
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
       - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
       - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
+      - 'scripts/ci/rep16e-hotfix002-drain-queue.mjs'
       - 'tests/e2e/rep-16e-activity-browser.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs'
@@ -41,6 +42,7 @@ on:
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
       - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
       - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
+      - 'scripts/ci/rep16e-hotfix002-drain-queue.mjs'
       - 'tests/e2e/rep-16e-activity-browser.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs'
@@ -148,14 +150,21 @@ jobs:
           npx playwright test --config=playwright.rep16e.config.mjs --project=chromium-desktop tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs --grep "Gate A"
           cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-gate-a-results.json
 
-      - name: Gate C real Aura Cartera desktop and mobile
+      - name: Gate C real Aura Cartera desktop DeX mobile
         shell: bash
         run: |
           set -euo pipefail
           export FORGE_ACCEPTANCE_A_PASSWORD="$(cat "$RUNNER_TEMP/forge017e/a-password")"
-          npx playwright test --config=playwright.rep16e.config.mjs tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
-          cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-real-acceptance-results.json
+          for project in chromium-desktop chromium-dex chromium-mobile; do
+            node scripts/ci/rep16e-hotfix002-drain-queue.mjs "$project"
+            npx playwright test --config=playwright.rep16e.config.mjs --project="$project" --retries=0 tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
+            cp artifacts/rep16e-playwright-results.json "artifacts/rep16e-r2-real-acceptance-${project}-results.json"
+          done
+          cp artifacts/rep16e-r2-real-acceptance-chromium-mobile-results.json artifacts/rep16e-r2-real-acceptance-results.json
           echo 'REAL_AURA_CARTERA_ACCEPTANCE=PASS'
+          echo 'REAL_AURA_CARTERA_DESKTOP=PASS'
+          echo 'REAL_AURA_CARTERA_DEX=PASS'
+          echo 'REAL_AURA_CARTERA_MOBILE=PASS'
 
       - name: Governed 017E contract
         run: |
@@ -223,6 +232,9 @@ jobs:
           if (!workflow.includes('forge-commercial-pilot-017e-real-acceptance.spec.mjs')) {
             throw new Error('REP16E_R2_REAL_ACCEPTANCE_NOT_REQUIRED');
           }
+          if (!workflow.includes('chromium-desktop chromium-dex chromium-mobile')) {
+            throw new Error('REP16E_R2_THREE_VIEWPORT_REAL_ACCEPTANCE_MISSING');
+          }
           console.log(`REP16E_R2_TRIPLE_CHECK=PASS head=${evidence.head}`);
           console.log('LEGACY_RUNTIME_MOUNT_REPLACED=YES');
           console.log('REPLACEMENT_COVERAGE_COMPLETE=YES');
@@ -240,6 +252,7 @@ jobs:
             artifacts/rep16e-r2-gate-a-results.json
             artifacts/rep16e-r2-governed-contract-results.json
             artifacts/rep16e-r2-real-acceptance-results.json
+            artifacts/rep16e-r2-real-acceptance-*-results.json
             artifacts/rep16e-r2-activity-results.json
             artifacts/rep16e-playwright-test-results
             artifacts/rep16e-r2-pages-site/rep16e-r2-pages-evidence.json

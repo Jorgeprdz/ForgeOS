@@ -58,6 +58,13 @@ export default defineConfig({
       },
     },
     {
+      name: "chromium-dex",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+      },
+    },
+    {
       name: "chromium-mobile",
       use: {
         ...devices["Galaxy S9+"],

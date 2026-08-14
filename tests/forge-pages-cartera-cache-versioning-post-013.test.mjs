@@ -10,19 +10,25 @@ const auraIndex = await readFile(
   new URL("../docs/static-preview/forge-aura/index.html", import.meta.url),
   "utf8",
 );
-const module015 = await readFile(
-  new URL("../docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js", import.meta.url),
+const module017e = await readFile(
+  new URL("../docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js", import.meta.url),
+  "utf8",
+);
+const module002 = await readFile(
+  new URL("../docs/static-preview/forge-aura/cartera/cartera-module-hotfix002.js", import.meta.url),
   "utf8",
 );
 
 test("Pages cache versioner follows the current Aura Cartera import-map authority", () => {
   assert.match(
     auraIndex,
-    /"\.\/cartera\/cartera-module\.js\?v=[^"]+"\s*:\s*"\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/,
+    /"\.\/cartera\/cartera-module\.js\?v=[^"]+"\s*:\s*"\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/,
   );
-  assert.match(module015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
+  assert.match(module017e, /cartera-module-hotfix002-entry\.js\?v=post017e-hotfix002/);
+  assert.match(module002, /cartera-module-v12-015\.js\?v=forge-commercial-pilot-evidence-017e-base/);
   assert.match(script, /auraCarteraMappingPattern/);
   assert.match(script, /auraCarteraEntrypoint/);
+  assert.match(script, /cartera-module-\[\^"\?\]\+\\\.js/);
   assert.doesNotMatch(script, /auraCarteraPattern = \/\\\.\\\/cartera\\\/cartera-module-v9/);
   assert.doesNotMatch(
     script,
