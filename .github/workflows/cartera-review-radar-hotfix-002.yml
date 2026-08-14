@@ -4,27 +4,31 @@ on:
   pull_request:
     paths:
       - 'docs/static-preview/forge-aura/index.html'
-      - 'docs/static-preview/forge-aura/cartera/cartera-module-v14-hotfix002.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-module-hotfix002*.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-review-*002*'
-      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view*.js'
+      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
       - 'scripts/prepare-cartera-review-pages-runtime.mjs'
       - 'scripts/prepare-segubeca-pages-runtime.mjs'
       - 'tests/cartera-review-radar-hotfix-002.test.mjs'
       - 'tests/e2e/cartera-radar-hotfix-001.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
+      - 'playwright.rep16e.config.mjs'
       - '.github/workflows/cartera-review-radar-hotfix-002.yml'
   push:
     branches: [main]
     paths:
       - 'docs/static-preview/forge-aura/index.html'
-      - 'docs/static-preview/forge-aura/cartera/cartera-module-v14-hotfix002.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-module-hotfix002*.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-review-*002*'
-      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view*.js'
+      - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
       - 'scripts/prepare-cartera-review-pages-runtime.mjs'
       - 'scripts/prepare-segubeca-pages-runtime.mjs'
       - 'tests/cartera-review-radar-hotfix-002.test.mjs'
       - 'tests/e2e/cartera-radar-hotfix-001.spec.mjs'
+      - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
+      - 'playwright.rep16e.config.mjs'
       - '.github/workflows/cartera-review-radar-hotfix-002.yml'
 
 permissions:
@@ -47,10 +51,11 @@ jobs:
           node --check docs/static-preview/forge-aura/cartera/cartera-review-confirmation-002.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-hotfix002.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-hotfix002-entry.js
-          node --check docs/static-preview/forge-aura/cartera/cartera-module-v14-hotfix002.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js
           node --check platform/portfolio-intelligence/cartera-050d-future-radar-view.js
           node --check scripts/prepare-cartera-review-pages-runtime.mjs
           node --check scripts/prepare-segubeca-pages-runtime.mjs
+          node --check tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
       - name: Hotfix 002 authority and UX contract
         run: node --test tests/cartera-review-radar-hotfix-002.test.mjs
       - name: Cartera 020C governed review and correction
