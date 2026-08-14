@@ -51,17 +51,20 @@ function radarWith(items) {
 
 const radar = radarWith([signal]);
 
-test('050D renders horizons and the complete explainability contract', () => {
+test('050D renders horizons and the complete explainability contract in Aura hierarchy', () => {
   const html = renderCartera050FutureRadar({ status: 'READY', radar, horizon: 'ALL' });
   assert.match(html, /Radar futuro/);
   assert.match(html, /data-radar-horizon="NEXT_7_DAYS"/);
   assert.match(html, /Por qué esta persona/);
   assert.match(html, /Por qué ahora/);
-  assert.match(html, /Evidencia/);
-  assert.match(html, /Incertidumbre/);
-  assert.match(html, /Acción mínima/);
-  assert.match(html, /CONFIRMAR/);
-  assert.match(html, /no es prioridad final de NBA/i);
+  assert.match(html, /Ver evidencia/);
+  assert.match(html, /Ten en cuenta/);
+  assert.match(html, /Qué puedes hacer/);
+  assert.match(html, /Requiere revisión/);
+  assert.doesNotMatch(html, />CONFIRMAR</);
+  assert.match(html, /PAYMENT_OBLIGATION/);
+  assert.match(html, /OBLIGATION:1/);
+  assert.match(html, /SCHEDULED_EVENT/);
 });
 
 test('050D displays disconnected authority state without inventing signals', () => {
