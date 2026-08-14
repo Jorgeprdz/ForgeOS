@@ -141,9 +141,9 @@ async function settled(page, route = 'cartera') {
 }
 
 async function moduleReturn(page) {
-  await page.locator('.aura-nav [data-aura-route-link="inicio"]').first().click({ noWaitAfter: true });
+  await page.locator('[data-aura-route-link="inicio"]:visible').first().click({ noWaitAfter: true });
   await settled(page, 'inicio');
-  await page.locator('.aura-nav [data-aura-route-link="cartera"]').first().click({ noWaitAfter: true });
+  await page.locator('[data-aura-route-link="cartera"]:visible').first().click({ noWaitAfter: true });
   await settled(page, 'cartera');
 }
 
