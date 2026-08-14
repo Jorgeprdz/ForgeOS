@@ -1,4 +1,4 @@
-import { createCarteraModule as createBaseCarteraModule } from './cartera-module-v13-017e.js?v=post017e-hotfix001';
+import { createCarteraModule as createBaseCarteraModule } from './cartera-module-v12-015.js?v=forge-commercial-pilot-evidence-017e-base';
 import { createCarteraReviewConfirmation002 } from './cartera-review-confirmation-002.js?v=post017e-hotfix002';
 
 function esc(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);}
@@ -15,7 +15,7 @@ function readyHtml(model,{correcting=false,errorCode=null}={}){if(!model)return 
 function successHtml(result){return `<div class="review002-success" role="status" data-review-success><strong>Información confirmada</strong><span>El command terminó con resultado canónico verificado.</span><small>Póliza: ${esc(result.policyReference)} · Versión: ${esc(result.policyVersionReference||'confirmada')}${result.replayed?' · replay idempotente':''}</small></div>`;}
 
 export function createCarteraModule(options={}){
-  const root=options.root;const doc=root?.ownerDocument||document;const windowRef=options.windowRef||doc.defaultView||window;const base=createBaseCarteraModule(options);const reviewApi=createCarteraReviewConfirmation002({client:options.client});
+  const root=options.root;const doc=root?.ownerDocument||document;const base=createBaseCarteraModule(options);const reviewApi=createCarteraReviewConfirmation002({client:options.client});
   let layer=null,model=null,packetReference=null,correcting=false,state='IDLE',errorCode=null,saving=false,reviewedAt=null,lastResult=null;
   function close(){layer?.remove();layer=null;model=null;packetReference=null;correcting=false;state='IDLE';errorCode=null;saving=false;reviewedAt=null;lastResult=null;}
   function blocked(){return !model||model.state==='BLOCKED'||(model.blockers||[]).length>0;}
