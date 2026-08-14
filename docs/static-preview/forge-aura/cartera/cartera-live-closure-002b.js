@@ -59,7 +59,7 @@ function packetContextModel002b(packet, home) {
 
 export function hasQualifyingCarteraRelationship002b(item = {}) {
   const kind = String(item.type || item.kind || '').toUpperCase();
-  if (kind !== 'PERSON') return true;
+  if (kind !== 'PERSON' && kind !== 'COMMERCIAL_PERSON') return true;
   const policyCount = item.relationshipPolicyCount ?? item.policyCount;
   const accountCount = item.relationshipAccountCount ?? item.accountCount;
   return number(policyCount) > 0 || number(accountCount) > 0;
