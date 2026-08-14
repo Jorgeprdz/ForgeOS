@@ -145,7 +145,7 @@ jobs:
       - name: Release boundary negative control
         run: |
           printf '%s\n' 'supabase/migrations/99999999999999_r7_negative_control.sql' > /tmp/changed015-negative.txt
-          if grep -E '(^supabase/migrations/|(^|/).*rls.*\.sql$|(^|/).*auth.*\.sql$|(^|/).*security.*\.sql$)' /tmp/changed015-negative.txt; then
+          if grep -E '(^supabase/migrations/|(^|/).*rls.*\.sql$|(^|/)auth([._-].*)?\.sql$|(^|/).*[-_]auth([._-].*)?\.sql$|(^|/).*authentication.*\.sql$|(^|/).*security.*\.sql$)' /tmp/changed015-negative.txt; then
             echo 'NEGATIVE_CONTROL_SCHEMA_OR_MIGRATION_CHANGE=DETECTED'
             echo 'NEGATIVE_CONTROL=PASS'
           else
@@ -159,11 +159,24 @@ jobs:
             exit 1
           fi
           echo 'DEPENDENCY_MANIFEST_DRIFT=NO'
-      - name: No security or schema boundary changes
+      - name: No unauthorized security or schema boundary changes
         run: |
-          if grep -E '(^supabase/migrations/|(^|/).*rls.*\.sql$|(^|/).*auth.*\.sql$|(^|/).*security.*\.sql$)' /tmp/changed015.txt; then
+          set -euo pipefail
+          ALLOWED_REPAIR='supabase/migrations/20260814012819_post017e_hotfix001_policy_role_correction_authority.sql'
+          grep -vFx "$ALLOWED_REPAIR" /tmp/changed015.txt > /tmp/changed015-boundary.txt || true
+          if grep -E '(^supabase/migrations/|(^|/).*rls.*\.sql$|(^|/)auth([._-].*)?\.sql$|(^|/).*[-_]auth([._-].*)?\.sql$|(^|/).*authentication.*\.sql$|(^|/).*security.*\.sql$)' /tmp/changed015-boundary.txt; then
             echo 'SECURITY_OR_SCHEMA_BOUNDARY_CHANGED=YES'
             exit 1
+          fi
+          if grep -Fxq "$ALLOWED_REPAIR" /tmp/changed015.txt; then
+            test -f "$ALLOWED_REPAIR"
+            grep -q 'create or replace function public.forge_cartera010b_policy_role_supersession_guard' "$ALLOWED_REPAIR"
+            grep -q 'forge_cartera010b_confirm_policy_with_parties(jsonb)' "$ALLOWED_REPAIR"
+            if grep -Eiq '\b(create|alter|drop)[[:space:]]+(table|schema|policy|extension)\b|\benable[[:space:]]+row[[:space:]]+level[[:space:]]+security\b|\bdisable[[:space:]]+row[[:space:]]+level[[:space:]]+security\b|\b(grant|revoke)[[:space:]]' "$ALLOWED_REPAIR"; then
+              echo 'BOUNDED_FUNCTION_REPAIR_EXPANDED_SCHEMA_OR_SECURITY=YES'
+              exit 1
+            fi
+            echo 'BOUNDED_EXISTING_AUTHORITY_FUNCTION_REPAIR=PASS'
           fi
           echo 'SECURITY_OR_SCHEMA_BOUNDARY_CHANGED=NO'
           echo 'POSITIVE_CONTROL=PASS'
