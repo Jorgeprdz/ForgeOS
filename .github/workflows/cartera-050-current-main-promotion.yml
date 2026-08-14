@@ -6,12 +6,14 @@ on:
       - main
     paths:
       - "advisor-os/cartera/cartera-050a-future-radar-service.js"
+      - "platform/portfolio-intelligence/cartera-050-business-calendar-date.js"
       - "platform/portfolio-intelligence/cartera-050a-future-radar-projection.js"
       - "platform/portfolio-intelligence/cartera-050c-authority-adapters.js"
       - "platform/portfolio-intelligence/cartera-050d-future-radar-view.js"
       - "supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql"
       - "supabase/migrations/20260801000281_cartera050_future_radar_read.sql"
       - "tests/cartera-050*.mjs"
+      - "tests/cartera-radar-truth-hotfix-001-test.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
       - ".github/workflows/cartera-050-current-main-promotion.yml"
   push:
@@ -19,12 +21,14 @@ on:
       - main
     paths:
       - "advisor-os/cartera/cartera-050a-future-radar-service.js"
+      - "platform/portfolio-intelligence/cartera-050-business-calendar-date.js"
       - "platform/portfolio-intelligence/cartera-050a-future-radar-projection.js"
       - "platform/portfolio-intelligence/cartera-050c-authority-adapters.js"
       - "platform/portfolio-intelligence/cartera-050d-future-radar-view.js"
       - "supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql"
       - "supabase/migrations/20260801000281_cartera050_future_radar_read.sql"
       - "tests/cartera-050*.mjs"
+      - "tests/cartera-radar-truth-hotfix-001-test.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
       - ".github/workflows/cartera-050-current-main-promotion.yml"
   workflow_dispatch:
@@ -54,6 +58,7 @@ jobs:
       - name: Validate promoted authority syntax
         run: |
           node --check advisor-os/cartera/cartera-050a-future-radar-service.js
+          node --check platform/portfolio-intelligence/cartera-050-business-calendar-date.js
           node --check platform/portfolio-intelligence/cartera-050a-future-radar-projection.js
           node --check platform/portfolio-intelligence/cartera-050c-authority-adapters.js
           node --check platform/portfolio-intelligence/cartera-050d-future-radar-view.js
@@ -66,6 +71,7 @@ jobs:
           node --test tests/cartera-050c-authority-adapters-test.mjs
           node --test tests/cartera-050d-future-radar-view-test.mjs
           node --test tests/cartera-050ab-sql-contract-test.mjs
+          node --test tests/cartera-radar-truth-hotfix-001-test.mjs
 
       - name: Current main runtime regressions
         run: |
@@ -98,6 +104,7 @@ jobs:
           while IFS= read -r file; do
             case "$file" in
               advisor-os/cartera/cartera-050a-future-radar-service.js|\
+              platform/portfolio-intelligence/cartera-050-business-calendar-date.js|\
               platform/portfolio-intelligence/cartera-050a-future-radar-projection.js|\
               platform/portfolio-intelligence/cartera-050c-authority-adapters.js|\
               platform/portfolio-intelligence/cartera-050d-future-radar-view.js|\
@@ -108,6 +115,7 @@ jobs:
               tests/cartera-050c-authority-adapters-test.mjs|\
               tests/cartera-050d-future-radar-view-test.mjs|\
               tests/cartera-050ab-sql-contract-test.mjs|\
+              tests/cartera-radar-truth-hotfix-001-test.mjs|\
               scripts/ci/cartera-050-current-main-remote-verification.mjs|\
               .github/workflows/cartera-050-current-main-promotion.yml)
                 ;;
