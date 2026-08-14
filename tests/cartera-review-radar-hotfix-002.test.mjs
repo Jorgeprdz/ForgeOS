@@ -1,0 +1,64 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { renderCartera050FutureRadar, groupRadarSignalsByPerson } from '../platform/portfolio-intelligence/cartera-050d-future-radar-view.js';
+
+const read=path=>readFile(new URL(`../${path}`,import.meta.url),'utf8');
+
+test('document review hotfix reuses 020C/010B and requires explicit human action',async()=>{
+  const [bridge,module,index]=await Promise.all([
+    read('docs/static-preview/forge-aura/cartera/cartera-review-confirmation-002.js'),
+    read('docs/static-preview/forge-aura/cartera/cartera-module-hotfix002.js'),
+    read('docs/static-preview/forge-aura/index.html'),
+  ]);
+  assert.match(bridge,/createCanonicalConfirmationReviewService/);
+  assert.match(bridge,/createPersistentConfirmationOrchestrationService/);
+  assert.match(bridge,/composeCartera020cConfirmedPolicyPlan/);
+  assert.match(bridge,/UPDATE_EXISTING/);
+  assert.match(bridge,/previousPolicyVersionReference/);
+  assert.doesNotMatch(bridge,/CREATE\s+TABLE|create\s+table|new confirmation ledger/i);
+  assert.doesNotMatch(bridge,/\.update\s*\(\s*['"]canonical_policies|raw update/i);
+  assert.match(module,/Confirmar información/);
+  assert.match(module,/Corregir/);
+  assert.match(module,/const humanDraft=draft\(\);saving=true/);
+  assert.match(module,/Información confirmada/);
+  assert.match(module,/POLICY_PACKET:AURA:/);
+  assert.match(index,/cartera-module-v14-hotfix002\.js\?v=post017e-hotfix002/);
+});
+
+test('Pages closure publishes existing governed review modules instead of copies under docs',async()=>{
+  const closure=await read('scripts/prepare-cartera-review-pages-runtime.mjs');
+  assert.match(closure,/canonical-confirmation-review-service\.js/);
+  assert.match(closure,/persistent-confirmation-orchestration-service\.js/);
+  assert.match(closure,/cartera-020c-governed-command-composer\.js/);
+  assert.match(closure,/collect\(\)/);
+  assert.match(closure,/copyFile/);
+  assert.doesNotMatch(closure,/FORGE_CONFIRMED_POLICY_COMMAND/);
+});
+
+function signal(overrides={}){return {signalReference:'S:1',personReference:'P:1',personDisplayName:'PERSONA UNO',policyReference:'POLICY:1',signalType:'RELATIONSHIP_REVIEW_DUE',eventDate:'2026-08-13',horizon:'TODAY',truthClass:'OBSERVED',sourceAuthority:'RELATIONSHIP_MEMORY',sourceRecordReference:'REL:1',whyNow:'La revisión está vencida.',evidenceSummary:['Última revisión'],uncertainty:null,smallestUsefulAction:'Revisar relación.',advisorConfirmationRequired:true,...overrides};}
+function radar(items){return {items,focusItems:items,summary:{byHorizon:{TODAY:items.length,NEXT_7_DAYS:0,NEXT_30_DAYS:0,NEXT_90_DAYS:0,CONFIRMATION_REQUIRED:0,OVERDUE:0}},sourceAvailability:{policyPayment:'AVAILABLE',relationshipMemory:'AVAILABLE',documentIntake:'AVAILABLE'}};}
+
+test('Radar remains person-centric and hides technical noise behind evidence disclosure',()=>{
+  const a=signal();const b=signal({signalReference:'S:2',signalType:'INCOMPLETE_POLICY_DATA',sourceAuthority:'POLICY_CANONICAL',sourceRecordReference:'POLICY:1'});
+  assert.equal(groupRadarSignalsByPerson([a,b]).length,1);
+  const html=renderCartera050FutureRadar({status:'READY',radar:radar([a,b]),horizon:'ALL'});
+  assert.equal((html.match(/data-radar-person-reference=/g)||[]).length,1);
+  assert.equal((html.match(/data-radar-signal-reference=/g)||[]).length,2);
+  assert.match(html,/2 cosas para revisar/);
+  assert.match(html,/Revisión de relación/);
+  assert.match(html,/Información de póliza por revisar/);
+  assert.match(html,/Ver evidencia/);
+  assert.match(html,/Requiere revisión/);
+  assert.doesNotMatch(html,/>CONFIRMAR</);
+});
+
+test('Radar exposes Review only for exact packet lineage and preserves 017E signal controls',()=>{
+  const packet=signal({signalReference:'S:PACKET',sourceAuthority:'DOCUMENT_INTAKE',sourceRecordReference:'POLICY_PACKET:AURA:abc',signalType:'INCOMPLETE_POLICY_DATA'});
+  const actionable=signal({signalReference:'S:PAY',signalType:'UNCONFIRMED_PAYMENT_EVIDENCE',truthClass:'RECOMMENDATION',sourceAuthority:'PAYMENT_OBLIGATION',sourceRecordReference:'PAY:1'});
+  const html=renderCartera050FutureRadar({status:'READY',radar:radar([packet,actionable]),horizon:'ALL',actionableSignalReference:'S:PAY',presentationState:'PERSISTED'});
+  assert.match(html,/data-radar-review-packet="POLICY_PACKET:AURA:abc"/);
+  assert.match(html,/data-open-policy="POLICY_PACKET:AURA:abc"/);
+  for(const decision of ['ACCEPT','MODIFY','DEFER','DISMISS'])assert.match(html,new RegExp(`data-radar-decision="${decision}" data-radar-signal="S:PAY"`));
+  assert.doesNotMatch(html,/data-radar-decision="ACCEPT" data-radar-signal="S:PACKET"/);
+});
