@@ -4,8 +4,10 @@ import { readFile } from 'node:fs/promises';
 
 const adapterUrl = new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v1.js', import.meta.url);
 const radarSqlUrl = new URL('../supabase/migrations/20260801000281_cartera050_future_radar_read.sql', import.meta.url);
+const correctionMigrationUrl = new URL('../supabase/migrations/20260814012000_post017e_hotfix001_policy_role_correction_authority.sql', import.meta.url);
 const viewUrl = new URL('../platform/portfolio-intelligence/cartera-050d-future-radar-view.js', import.meta.url);
 const serviceUrl = new URL('../advisor-os/cartera/cartera-050a-future-radar-service.js', import.meta.url);
+const runtime017eUrl = new URL('../docs/static-preview/forge-aura/cartera/cartera-future-radar-017e.js', import.meta.url);
 
 async function currentCompletenessDerivation() {
   const source = await readFile(adapterUrl, 'utf8');
@@ -52,10 +54,27 @@ test('Radar SQL still consumes canonical completeness/freshness/conflict instead
   assert.match(sql, /coalesce\(p\.conflict_state, 'UNKNOWN'\) <> 'CLEAR'/);
 });
 
+test('bounded PolicyRole correction repairs the existing 010B authority without raw canonical updates', async () => {
+  const migration = await readFile(correctionMigrationUrl, 'utf8');
+  assert.match(migration, /create or replace function public\.forge_cartera010b_policy_role_supersession_guard/);
+  assert.match(migration, /forge_cartera010b_confirm_policy_with_parties\(jsonb\)/);
+  assert.match(migration, /r\.effective_from < role_effective_from/);
+  assert.match(migration, /r\.effective_to is null or r\.effective_to > role_effective_from/);
+  assert.doesNotMatch(migration, /update\s+public\.canonical_policies/i);
+  assert.doesNotMatch(migration, /ADRIAN|ORTIZ|GARCIA/i);
+});
+
+test('active 017E Radar runtime uses the shared Mexico City calendar authority', async () => {
+  const runtime = await readFile(runtime017eUrl, 'utf8');
+  assert.match(runtime, /cartera050CalendarDate\(now\(\), CARTERA050_BUSINESS_TIMEZONE\)/);
+  assert.doesNotMatch(runtime, /toISOString\(\)\.slice\(0,\s*10\)/);
+});
+
 test('hotfix contains no person-specific Adrian exception', async () => {
-  const [view, service] = await Promise.all([
+  const [view, service, runtime] = await Promise.all([
     readFile(viewUrl, 'utf8'),
     readFile(serviceUrl, 'utf8'),
+    readFile(runtime017eUrl, 'utf8'),
   ]);
-  assert.doesNotMatch(`${view}\n${service}`, /ADRIAN|ORTIZ|GARCIA/i);
+  assert.doesNotMatch(`${view}\n${service}\n${runtime}`, /ADRIAN|ORTIZ|GARCIA/i);
 });
