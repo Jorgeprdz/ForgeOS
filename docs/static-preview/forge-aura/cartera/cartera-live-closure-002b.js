@@ -123,7 +123,9 @@ export function composeCarteraRadarWithPendingReviews002b(radar = {}, pendingSig
     );
   });
   const items = uniqueBy([...exact, ...baseItems], item => text(item?.signalReference));
-  const originalFocus = Array.isArray(radar?.focusItems) ? radar.focusItems : [];
+  const visibleSignalReferences = new Set(items.map(item => text(item?.signalReference)).filter(Boolean));
+  const originalFocus = (Array.isArray(radar?.focusItems) ? radar.focusItems : [])
+    .filter(item => visibleSignalReferences.has(text(item?.signalReference)));
   const focusItems = uniqueBy([...exact, ...originalFocus, ...items], item => text(item?.signalReference)).slice(0, 12);
   const originalSummary = radar?.summary && typeof radar.summary === 'object' ? radar.summary : {};
   return freeze({
