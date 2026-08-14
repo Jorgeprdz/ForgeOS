@@ -1,173 +1,293 @@
 import { expect, test } from '@playwright/test';
+import { createHash } from 'node:crypto';
 
 const EMAIL_A = 'forge.acceptance.a@forge.invalid';
 const siteRelative = 'artifacts/rep16e-r2-pages-site';
 const AURA = `/${siteRelative}/static-preview/forge-aura/index.html?route=cartera`;
+const SUPABASE_URL = String(process.env.SUPABASE_URL || '').replace(/\/$/, '');
+const ANON = String(process.env.SUPABASE_ANON_KEY || '');
+const PASSWORD = String(process.env.FORGE_ACCEPTANCE_A_PASSWORD || '');
 
-for (const name of ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'FORGE_ACCEPTANCE_A_PASSWORD']) {
-  if (!String(process.env[name] || '').trim()) throw new Error(`${name}_MISSING`);
+for (const [name, value] of [['SUPABASE_URL', SUPABASE_URL], ['SUPABASE_ANON_KEY', ANON], ['FORGE_ACCEPTANCE_A_PASSWORD', PASSWORD]]) {
+  if (!value.trim()) throw new Error(`${name}_MISSING`);
+}
+
+function digest(value) { return createHash('sha256').update(value).digest('hex'); }
+function normalizedName(value) { return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); }
+function safeSuffix(value) { return String(value).replace(/[^A-Za-z0-9]/g, '').slice(-24) || 'acceptance'; }
+
+async function authSession() {
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+    method: 'POST', headers: { apikey: ANON, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: EMAIL_A, password: PASSWORD }),
+  });
+  const body = await response.json();
+  if (!response.ok || !body.access_token || !body.user?.id) throw new Error(`REAL_ACCEPTANCE_AUTH_FAILED:${response.status}`);
+  return { token: body.access_token, userId: body.user.id };
+}
+
+async function rpc(token, name, body) {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
+    method: 'POST', headers: { apikey: ANON, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+  });
+  const text = await response.text();
+  let parsed = null;
+  try { parsed = text ? JSON.parse(text) : null; } catch { parsed = text; }
+  if (!response.ok) throw new Error(`${name}:${response.status}:${typeof parsed === 'string' ? parsed : JSON.stringify(parsed)}`);
+  return parsed;
+}
+
+async function rows(token, table, { select = '*', filters = {}, order = null } = {}) {
+  const url = new URL(`${SUPABASE_URL}/rest/v1/${table}`);
+  url.searchParams.set('select', select);
+  for (const [key, value] of Object.entries(filters)) url.searchParams.set(key, `eq.${value}`);
+  if (order) url.searchParams.set('order', order);
+  const response = await fetch(url, { headers: { apikey: ANON, Authorization: `Bearer ${token}` } });
+  const body = await response.json();
+  if (!response.ok) throw new Error(`${table}:${response.status}:${JSON.stringify(body)}`);
+  return body;
+}
+
+function field(fieldName, value) {
+  return { fieldName, value, confidence: 0.99, sourceLocation: { page: 1 }, extractionMethod: 'SYNTHETIC_ACCEPTANCE', state: 'extracted', parserId: 'hotfix002.acceptance', parserVersion: '1.0.0', createsTruth: false };
+}
+
+async function seedPendingPacket({ token, userId, suffix, policyNumber, displayName, premiumAmount = 1000 }) {
+  const documentDigest = digest(`POST017E-HOTFIX002:${suffix}`);
+  const tail = documentDigest.slice(0, 40);
+  const sourceReference = `EVIDENCE_SOURCE:AURA:${tail}`;
+  const inboxReference = `EVIDENCE_INBOX:AURA:${tail}`;
+  const candidateReference = `EXTRACTION_CANDIDATE:AURA:${tail}`;
+  const packetReference = `POLICY_PACKET:AURA:${tail}`;
+  const identityReference = `IDENTITY_CANDIDATE:AURA:${tail}`;
+  const roleReference = `POLICY_ROLE_CANDIDATE:AURA:${tail}`;
+  const existingPolicyReference = `EXISTING_POLICY_CANDIDATE:AURA:${tail}`;
+  const now = new Date().toISOString();
+  const admission = {
+    contractType: 'FORGE_EVIDENCE_ADMISSION_COMMAND', contractVersion: 'CARTERA-020B.1', advisorId: userId, actorReference: userId,
+    sourceReference, inboxReference, organizationReference: null, sourceType: 'INTEGRATION_IMPORT', originalFilename: `hotfix002-${safeSuffix(suffix)}.pdf`,
+    mimeType: 'application/pdf', byteSize: 1024, documentDigest, storageReference: `SYNTHETIC:HOTFIX002:${tail}`, purpose: 'POLICY_CONFIRMATION_REVIEW',
+    receivedAt: now, idempotencyKey: `HOTFIX002:ADMIT:${tail}`,
+  };
+  const admitted = await rpc(token, 'forge_cartera020b_admit_evidence', { p_command: admission });
+  expect(['ADMITTED', 'ALREADY_ADMITTED']).toContain(admitted.status);
+  const workerId = `HOTFIX002:${tail.slice(0, 28)}`;
+  const claimed = await rpc(token, 'forge_cartera020b_claim_evidence', { p_worker_id: workerId, p_lease_seconds: 300 });
+  expect(claimed.status).toBe('CLAIMED');
+  expect(claimed.inboxReference).toBe(inboxReference);
+  const extractedFields = {
+    policyNumber: field('policyNumber', policyNumber), productName: field('productName', 'HOTFIX 002 ACCEPTANCE'), status: field('status', 'ACTIVE'),
+    issueDate: field('issueDate', '2026-01-01'), effectiveFrom: field('effectiveFrom', '2026-01-01'), effectiveTo: field('effectiveTo', '2036-01-01'),
+    currency: field('currency', 'MXN'), paymentFrequency: field('paymentFrequency', 'MONTHLY'), premiumAmount: field('premiumAmount', premiumAmount), sumInsured: field('sumInsured', 100000),
+  };
+  const candidate = {
+    candidateReference, candidateType: 'POLICY', classification: { documentType: 'POLICY', state: 'MATCHED' }, extractedFields, overallConfidence: 0.99,
+    extractionSource: 'SYNTHETIC_ACCEPTANCE', parserId: 'hotfix002.acceptance', parserVersion: '1.0.0', warnings: [], missingFields: [], createsTruth: false,
+  };
+  const packet = {
+    packetReference, candidateReference, documentType: 'POLICY', extractedFields, extractionConfidence: 0.99, warnings: [],
+    identityCandidates: [{ candidateReference: identityReference, candidateType: 'EXISTING_PERSON_OR_NEW_PERSON', state: 'UNRESOLVED', required: true, displayName, createsTruth: false }],
+    policyRoleCandidates: [{ candidateReference: roleReference, roleType: 'POLICY_OWNER', participantState: 'UNRESOLVED', participantCandidateReference: identityReference, visibilityScope: 'POLICY_TEAM', evidenceReferences: [sourceReference], createsTruth: false }],
+    existingPolicyCandidates: [{ candidateReference: existingPolicyReference, state: 'UNRESOLVED', policyNumber, createsTruth: false }], confirmationState: 'PENDING_CONFIRMATION', createsTruth: false,
+  };
+  const completedAt = new Date().toISOString();
+  const resultCommand = {
+    contractType: 'FORGE_EVIDENCE_PROCESSING_RESULT_COMMAND', contractVersion: 'CARTERA-020B.1', advisorId: userId, actorReference: userId,
+    inboxReference, workerId, leaseToken: claimed.leaseToken, expectedStateVersion: claimed.stateVersion, idempotencyKey: `HOTFIX002:RESULT:${tail}`, completedAt,
+    result: { evidenceStatus: 'confirmation_required', workerState: 'COMPLETED', documentTypeCandidate: 'POLICY', classificationState: 'MATCHED', classificationConfidence: 0.99, warnings: [], candidate, packet },
+  };
+  const recorded = await rpc(token, 'forge_cartera020b_record_processing_result', { p_command: resultCommand });
+  expect(recorded.status).toBe('confirmation_required');
+  return { packetReference, inboxReference, sourceReference, documentDigest, displayName, policyNumber };
 }
 
 async function installGovernedPublicConfig(page) {
-  const config = {
-    SUPABASE_URL: process.env.SUPABASE_URL,
-    SUPABASE_KEY: process.env.SUPABASE_ANON_KEY,
-    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-    DEMO_MODE: 'false',
-    ENABLE_TEST_ADVISOR_LOGIN: 'false',
-  };
-  await page.route('**/env.js*', route => route.fulfill({
-    status: 200,
-    contentType: 'application/javascript; charset=utf-8',
-    body: `globalThis.__ENV__=Object.freeze(${JSON.stringify(config)});`,
-  }));
+  const config = { SUPABASE_URL, SUPABASE_KEY: ANON, SUPABASE_ANON_KEY: ANON, DEMO_MODE: 'false', ENABLE_TEST_ADVISOR_LOGIN: 'false' };
+  await page.route('**/env.js*', route => route.fulfill({ status: 200, contentType: 'application/javascript; charset=utf-8', body: `globalThis.__ENV__=Object.freeze(${JSON.stringify(config)});` }));
 }
 
 async function authenticate(page) {
   await expect(page.locator('[data-aura-login-form]')).toBeVisible({ timeout: 20_000 });
   await page.locator('input[name="email"]').fill(EMAIL_A);
-  await page.locator('input[name="password"]').fill(process.env.FORGE_ACCEPTANCE_A_PASSWORD);
+  await page.locator('input[name="password"]').fill(PASSWORD);
   await page.getByRole('button', { name: 'Iniciar sesión' }).click();
   await expect(page.locator('[data-aura-login-form]')).toHaveCount(0, { timeout: 20_000 });
   await expect(page.locator('[data-aura-shell]')).toBeVisible();
 }
 
-test('REP-16E-R2 Gate C REAL: Aura Cartera mounts with governed Supabase acceptance identity', async ({ page }, testInfo) => {
-  test.setTimeout(90_000);
+async function settled(page, route = 'cartera') {
+  await expect(page.locator('[data-aura-shell]')).toHaveAttribute('data-aura-active-route', route, { timeout: 20_000 });
+  await expect(page.locator('[data-aura-main]')).toHaveAttribute('data-aura-route-state', 'READY', { timeout: 25_000 });
+  await expect(page.locator('[data-aura-app]')).toHaveAttribute('aria-busy', 'false');
+}
+
+async function moduleReturn(page) {
+  await page.locator('.aura-nav [data-aura-route-link="inicio"]').first().click({ noWaitAfter: true });
+  await settled(page, 'inicio');
+  await page.locator('.aura-nav [data-aura-route-link="cartera"]').first().click({ noWaitAfter: true });
+  await settled(page, 'cartera');
+}
+
+async function openReview(page, packetReference) {
+  const trigger = page.locator(`[data-open-policy="${packetReference}"]`).first();
+  await expect(trigger).toBeVisible({ timeout: 20_000 });
+  await trigger.click();
+  const layer = page.locator('[data-review-confirmation-002]');
+  await expect(layer).toBeVisible();
+  await expect(layer.getByRole('button', { name: 'Confirmar información' })).toBeVisible();
+  await expect(layer.getByRole('button', { name: 'Corregir' })).toBeVisible();
+  return layer;
+}
+
+test('POST-017E HOTFIX 002 REAL: governed Confirmar + Corregir close the pending document without duplicates', async ({ page }, testInfo) => {
+  test.setTimeout(150_000);
+  const { token, userId } = await authSession();
+  const runKey = `${process.env.GITHUB_RUN_ID || 'local'}-${testInfo.project.name}-${testInfo.retry}`;
+  const fixtureDigest = digest(runKey);
+  const policyNumber = `HX002${fixtureDigest.slice(0, 10).toUpperCase()}`;
+  const displayName = `Hotfix Review ${fixtureDigest.slice(0, 8)}`;
+  const initial = await seedPendingPacket({ token, userId, suffix: `${runKey}-initial`, policyNumber, displayName, premiumAmount: 1000 });
+  const pendingBefore = await rows(token, 'cartera020b_policy_evidence_packets', { select: 'packet_reference,confirmation_state', filters: { packet_reference: initial.packetReference } });
+  expect(pendingBefore).toHaveLength(1);
+  expect(pendingBefore[0].confirmation_state).toBe('PENDING_CONFIRMATION');
 
   const pageErrors = [];
-  const routeLoadFailures = [];
   const failedJsModules = [];
-  const requests400 = [];
-  const alfredResponses = [];
-
+  const rpcNames = [];
+  let attachRequestBody = null;
   page.on('pageerror', error => pageErrors.push(String(error?.stack || error)));
-  page.on('console', message => {
-    const text = message.text();
-    if (text.includes('AURA_ROUTE_LOAD_FAILED')) routeLoadFailures.push(text);
+  page.on('request', request => {
+    const match = request.url().match(/\/rest\/v1\/rpc\/(forge_cartera(?:020c|010b)_[^?]+)/);
+    if (!match) return;
+    rpcNames.push(match[1]);
+    if (match[1] === 'forge_cartera020c_attach_policy_confirmation') {
+      try { attachRequestBody = request.postDataJSON(); } catch { attachRequestBody = null; }
+    }
   });
   page.on('response', response => {
-    const status = response.status();
-    const url = response.url();
-    if (status >= 400) requests400.push(`${status} ${url}`);
-    if (status >= 400 && /\.(?:js|mjs)(?:$|\?)/.test(url)) {
-      failedJsModules.push(`${status} ${new URL(url).pathname}`);
-    }
-    if (/\/static-preview\/forge-alive\/alfred-command-runtime\.js(?:$|\?)/.test(url)) {
-      alfredResponses.push(status);
-    }
+    if (response.status() >= 400 && /\.(?:js|mjs)(?:$|\?)/.test(response.url())) failedJsModules.push(`${response.status()} ${new URL(response.url()).pathname}`);
   });
 
   await installGovernedPublicConfig(page);
   await page.goto(AURA, { waitUntil: 'domcontentloaded' });
   await authenticate(page);
-
-  await expect(page.locator('[data-aura-shell]')).toHaveAttribute(
-    'data-aura-active-route',
-    'cartera',
-    { timeout: 20_000 },
-  );
-  await expect(page.locator('[data-aura-main]')).toHaveAttribute(
-    'data-aura-route-state',
-    'READY',
-    { timeout: 20_000 },
-  );
-  await expect(page.locator('.cartera-header')).toBeVisible({ timeout: 20_000 });
-  await expect(page.locator('[data-aura-app]')).toHaveAttribute('aria-busy', 'false');
+  await settled(page);
   await expect(page.locator('[data-aura-cartera-radar-017e]')).toHaveCount(1);
-  expect(await page.locator('[data-aura-cartera-radar-017e] .glass-widget').count()).toBeGreaterThan(0);
 
-  const heartbeat = await page.evaluate(() => new Promise(resolve => {
-    let beats = 0;
-    const interval = setInterval(() => {
-      beats += 1;
-      if (beats >= 3) {
-        clearInterval(interval);
-        clearTimeout(deadline);
-        resolve(beats);
-      }
-    }, 25);
-    const deadline = setTimeout(() => {
-      clearInterval(interval);
-      resolve(beats);
-    }, 500);
-  }));
-  expect(heartbeat).toBeGreaterThanOrEqual(3);
-
-  const convergence = await page.evaluate(async () => {
-    const root = document.querySelector('.aura-route-host-013.aura-cartera');
-    const host = root?.querySelector('[data-aura-cartera-radar-017e]');
-    if (!root || !host) return { ready: false };
-
-    let additionalRadarHosts = 0;
-    const observer = new MutationObserver(records => {
-      for (const record of records) {
-        for (const node of record.addedNodes) {
-          if (!(node instanceof Element)) continue;
-          if (node.matches?.('[data-aura-cartera-radar-017e]')) additionalRadarHosts += 1;
-          additionalRadarHosts += node.querySelectorAll?.('[data-aura-cartera-radar-017e]').length || 0;
-        }
-      }
-    });
-    observer.observe(root, { childList: true, subtree: true });
-
-    const probe = document.createElement('span');
-    probe.dataset.aura017eConvergenceProbe = 'true';
-    root.append(probe);
-    await Promise.resolve();
-    await Promise.resolve();
-    probe.remove();
-    await Promise.resolve();
-    await Promise.resolve();
-    observer.disconnect();
-
-    const current = root.querySelector('[data-aura-cartera-radar-017e]');
-    return {
-      ready: true,
-      sameHost: current === host,
-      hostCount: root.querySelectorAll('[data-aura-cartera-radar-017e]').length,
-      additionalRadarHosts,
-      functionalRadarPresent: Boolean(current?.querySelector('.glass-widget')),
-    };
+  let delayed = false;
+  let resolvePrepare;
+  const prepareSeen = new Promise(resolve => { resolvePrepare = resolve; });
+  await page.route('**/rest/v1/rpc/forge_cartera020c_prepare_identity_orchestration', async route => {
+    if (!delayed) { delayed = true; resolvePrepare(); await new Promise(resolve => setTimeout(resolve, 350)); }
+    await route.continue();
   });
 
-  expect(convergence.ready).toBe(true);
-  expect(convergence.sameHost).toBe(true);
-  expect(convergence.hostCount).toBe(1);
-  expect(convergence.additionalRadarHosts).toBeLessThanOrEqual(0);
-  expect(convergence.functionalRadarPresent).toBe(true);
+  let layer = await openReview(page, initial.packetReference);
+  const identity = layer.locator('[data-identity-selection]').first();
+  await identity.selectOption('create');
+  await layer.locator('[data-new-person-name]').first().fill(displayName);
+  await layer.getByRole('button', { name: 'Confirmar información' }).click();
+  await prepareSeen;
+  await expect(layer.locator('[data-review-success]')).toHaveCount(0);
+  await expect(layer.getByRole('button', { name: 'Guardando…' })).toBeVisible();
+  await expect(layer.locator('[data-review-success]')).toBeVisible({ timeout: 35_000 });
+  expect(rpcNames).toContain('forge_cartera020c_prepare_identity_orchestration');
+  expect(rpcNames).toContain('forge_cartera020c_execute_next_confirmation_step');
+  expect(rpcNames).toContain('forge_cartera020c_attach_policy_confirmation');
+  expect(attachRequestBody?.p_request?.composition?.confirmationPlan?.confirmedPolicyCommand?.contractType).toBe('FORGE_CONFIRMED_POLICY_COMMAND');
 
-  const finalState = await page.locator('[data-aura-main]').getAttribute('data-aura-route-state');
-  const activeRoute = await page.locator('[data-aura-shell]').getAttribute('data-aura-active-route');
-  const routeRevision = await page.locator('[data-aura-main]').getAttribute('data-aura-route-revision');
+  const reviewReference = `review/${initial.packetReference}`;
+  const status1 = await rpc(token, 'forge_cartera020c_get_confirmation_status', { p_review_reference: reviewReference });
+  expect(status1.state).toBe('CONFIRMED');
+  expect(status1.policyResult?.policyReference).toBeTruthy();
+  expect(status1.policyResult?.policyVersionReference).toBeTruthy();
+  const inbox1 = await rows(token, 'cartera020b_evidence_inbox_items', { select: 'inbox_reference,status,worker_state', filters: { inbox_reference: initial.inboxReference } });
+  expect(inbox1[0]?.status).toBe('confirmed');
+  const policies1 = await rows(token, 'canonical_policies', { select: 'id,policy_reference,policy_number,current_version,premium_amount,product_reference,status_value', filters: { policy_number: policyNumber } });
+  expect(policies1).toHaveLength(1);
+  expect(policies1[0].current_version).toBe(1);
+  expect(Number(policies1[0].premium_amount)).toBe(1000);
+  const people1 = await rows(token, 'commercial_people', { select: 'id,person_reference,display_name,normalized_name,lifecycle_state', filters: { normalized_name: normalizedName(displayName) } });
+  expect(people1).toHaveLength(1);
+  expect(people1[0].lifecycle_state).toBe('CONFIRMED');
+  const policyReference = policies1[0].policy_reference;
+  const roles1Raw = await rpc(token, 'forge_cartera010b_list_general_policy_roles', { p_policy_reference: policyReference });
+  const roles1 = Array.isArray(roles1Raw) ? roles1Raw : (roles1Raw?.items || []);
+  expect(roles1.filter(role => role.role_type === 'POLICY_OWNER')).toHaveLength(1);
+  expect(Number(roles1.find(role => role.role_type === 'POLICY_OWNER')?.role_version)).toBe(1);
 
-  expect(routeLoadFailures, `AURA_ROUTE_LOAD_FAILED=${routeLoadFailures.join('\n')}`).toEqual([]);
+  expect(attachRequestBody).toBeTruthy();
+  const replay = await rpc(token, 'forge_cartera020c_attach_policy_confirmation', attachRequestBody);
+  expect(replay.state).toBe('CONFIRMED');
+  const policiesAfterReplay = await rows(token, 'canonical_policies', { select: 'id,current_version', filters: { policy_number: policyNumber } });
+  const peopleAfterReplay = await rows(token, 'commercial_people', { select: 'id', filters: { normalized_name: normalizedName(displayName) } });
+  expect(policiesAfterReplay).toHaveLength(1);
+  expect(policiesAfterReplay[0].current_version).toBe(1);
+  expect(peopleAfterReplay).toHaveLength(1);
+
+  await layer.getByRole('button', { name: 'Listo' }).click();
+  await expect(page.locator('[data-review-confirmation-002]')).toHaveCount(0);
+  await moduleReturn(page);
+  await expect(page.locator(`[data-open-policy="${initial.packetReference}"]`)).toHaveCount(0);
+
+  const correction = await seedPendingPacket({ token, userId, suffix: `${runKey}-correction`, policyNumber, displayName, premiumAmount: 1000 });
+  await moduleReturn(page);
+  layer = await openReview(page, correction.packetReference);
+  await expect(layer.locator('[data-identity-selection]').first()).toHaveValue(new RegExp('^existing:'));
+  await expect(layer.locator('[data-policy-selection]')).toHaveValue(policyReference);
+  await layer.getByRole('button', { name: 'Corregir' }).click();
+  const premiumDecision = layer.locator('[data-field-decision="premiumAmount"]');
+  await premiumDecision.locator('[data-field-mode]').selectOption('EDIT');
+  await premiumDecision.locator('[data-field-value]').fill('1250');
+  await layer.getByRole('button', { name: 'Confirmar información' }).click();
+  await expect(layer.locator('[data-review-success]')).toBeVisible({ timeout: 35_000 });
+
+  const status2 = await rpc(token, 'forge_cartera020c_get_confirmation_status', { p_review_reference: `review/${correction.packetReference}` });
+  expect(status2.state).toBe('CONFIRMED');
+  const policies2 = await rows(token, 'canonical_policies', { select: 'id,policy_reference,policy_number,current_version,premium_amount,product_reference,status_value', filters: { policy_number: policyNumber } });
+  expect(policies2).toHaveLength(1);
+  expect(policies2[0].policy_reference).toBe(policyReference);
+  expect(policies2[0].current_version).toBe(2);
+  expect(Number(policies2[0].premium_amount)).toBe(1250);
+  expect(policies2[0].product_reference).toBe(policies1[0].product_reference);
+  expect(policies2[0].status_value).toBe(policies1[0].status_value);
+  const people2 = await rows(token, 'commercial_people', { select: 'id,person_reference', filters: { normalized_name: normalizedName(displayName) } });
+  expect(people2).toHaveLength(1);
+  expect(people2[0].id).toBe(people1[0].id);
+  const versions = await rows(token, 'policy_versions', { select: 'id,policy_version_reference,version_number,previous_policy_version_id,correction_of,confirmed_at', filters: { policy_id: policies2[0].id }, order: 'version_number.asc' });
+  expect(versions).toHaveLength(2);
+  expect(versions[0].version_number).toBe(1);
+  expect(versions[1].version_number).toBe(2);
+  expect(versions[1].previous_policy_version_id).toBe(versions[0].id);
+  const roles2Raw = await rpc(token, 'forge_cartera010b_list_general_policy_roles', { p_policy_reference: policyReference });
+  const ownerRoles = (Array.isArray(roles2Raw) ? roles2Raw : (roles2Raw?.items || [])).filter(role => role.role_type === 'POLICY_OWNER').sort((a, b) => Number(a.role_version) - Number(b.role_version));
+  expect(ownerRoles).toHaveLength(2);
+  expect(Number(ownerRoles[0].role_version)).toBe(1);
+  expect(Number(ownerRoles[1].role_version)).toBe(2);
+  expect(ownerRoles[1].correction_of).toBe(ownerRoles[0].id);
+  expect(ownerRoles[0].effective_to).toBeTruthy();
+
+  await layer.getByRole('button', { name: 'Listo' }).click();
+  await moduleReturn(page);
+  await expect(page.locator(`[data-open-policy="${correction.packetReference}"]`)).toHaveCount(0);
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await settled(page);
+  await expect(page.locator(`[data-open-policy="${initial.packetReference}"], [data-open-policy="${correction.packetReference}"]`)).toHaveCount(0);
+  const finalPolicies = await rows(token, 'canonical_policies', { select: 'id,current_version', filters: { policy_number: policyNumber } });
+  const finalPeople = await rows(token, 'commercial_people', { select: 'id', filters: { normalized_name: normalizedName(displayName) } });
+  expect(finalPolicies).toHaveLength(1);
+  expect(finalPolicies[0].current_version).toBe(2);
+  expect(finalPeople).toHaveLength(1);
   expect(pageErrors, `PRODUCT_PAGEERRORS=${pageErrors.join('\n')}`).toEqual([]);
   expect(failedJsModules, `FAILED_JS_MODULES=${failedJsModules.join('\n')}`).toEqual([]);
 
-  await testInfo.attach('017e-real-acceptance-summary.json', {
+  await testInfo.attach('hotfix002-real-confirmation-summary.json', {
     body: Buffer.from(JSON.stringify({
-      viewport: testInfo.project.name,
-      authenticated: true,
-      activeRoute,
-      routeState: finalState,
-      routeRevision,
-      carteraHeaderVisible: true,
-      ariaBusy: false,
-      heartbeat: heartbeat >= 3 ? 'ALIVE' : 'DEAD',
-      mutationReconciliationConverges: convergence.sameHost && convergence.hostCount === 1 && convergence.additionalRadarHosts === 0,
-      domMutationCount: convergence.additionalRadarHosts,
-      domMutationCountLimit: 0,
-      functionalRadarPresent: convergence.functionalRadarPresent,
-      auraRouteLoadFailed: routeLoadFailures.length,
-      productPageErrors: pageErrors.length,
-      failedJsModules,
-      requests400,
-      alfredResponses,
-      supabaseUrlSource: 'CI_SECRET',
-      supabaseKeySource: 'CI_SECRET',
-      acceptanceUserSource: 'GOVERNED_SYNTHETIC_ACCEPTANCE_CONTROL_PLANE',
-    }, null, 2)),
-    contentType: 'application/json',
+      project: testInfo.project.name, authenticated: true, pendingBefore: 'PENDING_CONFIRMATION', confirmButtonVisible: true, correctButtonVisible: true,
+      optimisticSuccess: false, reviewStateAfterConfirm: status1.state, canonicalPolicyCount: finalPolicies.length, canonicalPersonCount: finalPeople.length,
+      policyVersionAfterCorrection: finalPolicies[0].current_version, versionLineage: versions[1].previous_policy_version_id === versions[0].id,
+      roleSupersession: ownerRoles[1].correction_of === ownerRoles[0].id, replayState: replay.state, moduleReturn: 'PASS', pageReload: 'PASS',
+      rpcNames: [...new Set(rpcNames)], confirmationAuthority: 'CARTERA-020C', canonicalWriter: 'CARTERA-010B',
+    }, null, 2)), contentType: 'application/json',
   });
 });
