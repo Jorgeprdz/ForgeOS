@@ -71,10 +71,8 @@ async function seedPendingPacket({ token, userId, suffix, policyNumber, displayN
   };
   const admitted = await rpc(token, 'forge_cartera020b_admit_evidence', { p_command: admission });
   expect(['ADMITTED', 'ALREADY_ADMITTED']).toContain(admitted.status);
+
   const workerId = `HOTFIX002:${tail.slice(0, 28)}`;
-  const claimed = await rpc(token, 'forge_cartera020b_claim_evidence', { p_worker_id: workerId, p_lease_seconds: 300 });
-  expect(claimed.status).toBe('CLAIMED');
-  expect(claimed.inboxReference).toBe(inboxReference);
   const extractedFields = {
     policyNumber: field('policyNumber', policyNumber), productName: field('productName', 'HOTFIX 002 ACCEPTANCE'), status: field('status', 'ACTIVE'),
     issueDate: field('issueDate', '2026-01-01'), effectiveFrom: field('effectiveFrom', '2026-01-01'), effectiveTo: field('effectiveTo', '2036-01-01'),
@@ -90,15 +88,34 @@ async function seedPendingPacket({ token, userId, suffix, policyNumber, displayN
     policyRoleCandidates: [{ candidateReference: roleReference, roleType: 'POLICY_OWNER', participantState: 'UNRESOLVED', participantCandidateReference: identityReference, visibilityScope: 'POLICY_TEAM', evidenceReferences: [sourceReference], createsTruth: false }],
     existingPolicyCandidates: [{ candidateReference: existingPolicyReference, state: 'UNRESOLVED', policyNumber, createsTruth: false }], confirmationState: 'PENDING_CONFIRMATION', createsTruth: false,
   };
-  const completedAt = new Date().toISOString();
-  const resultCommand = {
-    contractType: 'FORGE_EVIDENCE_PROCESSING_RESULT_COMMAND', contractVersion: 'CARTERA-020B.1', advisorId: userId, actorReference: userId,
-    inboxReference, workerId, leaseToken: claimed.leaseToken, expectedStateVersion: claimed.stateVersion, idempotencyKey: `HOTFIX002:RESULT:${tail}`, completedAt,
-    result: { evidenceStatus: 'confirmation_required', workerState: 'COMPLETED', documentTypeCandidate: 'POLICY', classificationState: 'MATCHED', classificationConfidence: 0.99, warnings: [], candidate, packet },
-  };
-  const recorded = await rpc(token, 'forge_cartera020b_record_processing_result', { p_command: resultCommand });
-  expect(recorded.status).toBe('RECORDED');
-  expect(recorded.evidenceStatus).toBe('confirmation_required');
+
+  async function recordStage(stage, result) {
+    const claimed = await rpc(token, 'forge_cartera020b_claim_evidence', { p_worker_id: workerId, p_lease_seconds: 300 });
+    expect(claimed.status).toBe('CLAIMED');
+    expect(claimed.inboxReference).toBe(inboxReference);
+    const command = {
+      contractType: 'FORGE_EVIDENCE_PROCESSING_RESULT_COMMAND', contractVersion: 'CARTERA-020B.1', advisorId: userId, actorReference: userId,
+      inboxReference, workerId, leaseToken: claimed.leaseToken, expectedStateVersion: claimed.stateVersion,
+      idempotencyKey: `HOTFIX002:RESULT:${stage}:${tail}`, completedAt: new Date().toISOString(), result,
+    };
+    const recorded = await rpc(token, 'forge_cartera020b_record_processing_result', { p_command: command });
+    expect(recorded.status).toBe('RECORDED');
+    expect(recorded.evidenceStatus).toBe(result.evidenceStatus);
+    return recorded;
+  }
+
+  await recordStage('CLASSIFIED', {
+    evidenceStatus: 'classified', workerState: 'AVAILABLE', documentTypeCandidate: 'POLICY', classificationState: 'MATCHED', classificationConfidence: 0.99, warnings: [],
+  });
+  await recordStage('CANDIDATE', {
+    evidenceStatus: 'extraction_candidate_created', workerState: 'AVAILABLE', documentTypeCandidate: 'POLICY', classificationState: 'MATCHED', classificationConfidence: 0.99, warnings: [], candidate,
+  });
+  await recordStage('PACKET', {
+    evidenceStatus: 'packet_created', workerState: 'AVAILABLE', documentTypeCandidate: 'POLICY', classificationState: 'MATCHED', classificationConfidence: 0.99, warnings: [], packet,
+  });
+  const recorded = await recordStage('CONFIRMATION_REQUIRED', {
+    evidenceStatus: 'confirmation_required', workerState: 'COMPLETED', documentTypeCandidate: 'POLICY', classificationState: 'MATCHED', classificationConfidence: 0.99, warnings: [], packet,
+  });
   expect(recorded.confirmationState).toBe('PENDING_CONFIRMATION');
   return { packetReference, inboxReference, sourceReference, documentDigest, displayName, policyNumber };
 }
