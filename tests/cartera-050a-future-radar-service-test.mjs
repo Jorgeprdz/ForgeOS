@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCartera050FutureRadarService } from '../advisor-os/cartera/cartera-050a-future-radar-service.js';
+import {
+  CARTERA050_BUSINESS_TIMEZONE,
+  cartera050CalendarDate,
+} from '../platform/portfolio-intelligence/cartera-050-business-calendar-date.js';
 
 const nativeItem = {
   signalReference: 'CARTERA050:PAYMENT:1',
@@ -79,6 +83,19 @@ test('050A service reads one governed RPC and leaves external authorities discon
   assert.equal(radar.sourceAvailability.conservationIntelligence, 'NOT_CONNECTED');
   assert.equal(radar.sourceAvailability.compensationIntelligence, 'NOT_CONNECTED');
   assert.equal(radar.boundaries.automaticContact, false);
+});
+
+test('050A derives the operational date in America/Mexico_City instead of UTC', async () => {
+  const instant = new Date('2026-08-14T00:30:00.000Z');
+  assert.equal(cartera050CalendarDate(instant, CARTERA050_BUSINESS_TIMEZONE), '2026-08-13');
+  assert.equal(cartera050CalendarDate(new Date('2026-01-14T00:30:00.000Z')), '2026-01-13');
+
+  const client = clientWith(envelope({ asOfDate: '2026-08-13' }));
+  const service = createCartera050FutureRadarService({ client, now: () => instant });
+  await service.loadFutureRadar({ timezone: CARTERA050_BUSINESS_TIMEZONE });
+
+  assert.equal(client.calls[0][1].p_payload.asOfDate, '2026-08-13');
+  assert.equal(client.calls[0][1].p_payload.timezone, CARTERA050_BUSINESS_TIMEZONE);
 });
 
 test('050C service composes connected authority adapters without calculating their truth', async () => {

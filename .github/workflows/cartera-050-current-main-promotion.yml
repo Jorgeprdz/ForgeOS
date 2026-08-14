@@ -6,12 +6,17 @@ on:
       - main
     paths:
       - "advisor-os/cartera/cartera-050a-future-radar-service.js"
+      - "platform/portfolio-intelligence/cartera-050-business-calendar-date.js"
       - "platform/portfolio-intelligence/cartera-050a-future-radar-projection.js"
       - "platform/portfolio-intelligence/cartera-050c-authority-adapters.js"
       - "platform/portfolio-intelligence/cartera-050d-future-radar-view.js"
       - "supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql"
       - "supabase/migrations/20260801000281_cartera050_future_radar_read.sql"
+      - "supabase/migrations/20260814012819_post017e_hotfix001_policy_role_correction_authority.sql"
       - "tests/cartera-050*.mjs"
+      - "tests/cartera-radar-truth-hotfix-001-test.mjs"
+      - "tests/e2e/cartera-radar-hotfix-001.spec.mjs"
+      - "playwright.cartera-radar-hotfix-001.config.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
       - ".github/workflows/cartera-050-current-main-promotion.yml"
   push:
@@ -19,12 +24,17 @@ on:
       - main
     paths:
       - "advisor-os/cartera/cartera-050a-future-radar-service.js"
+      - "platform/portfolio-intelligence/cartera-050-business-calendar-date.js"
       - "platform/portfolio-intelligence/cartera-050a-future-radar-projection.js"
       - "platform/portfolio-intelligence/cartera-050c-authority-adapters.js"
       - "platform/portfolio-intelligence/cartera-050d-future-radar-view.js"
       - "supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql"
       - "supabase/migrations/20260801000281_cartera050_future_radar_read.sql"
+      - "supabase/migrations/20260814012819_post017e_hotfix001_policy_role_correction_authority.sql"
       - "tests/cartera-050*.mjs"
+      - "tests/cartera-radar-truth-hotfix-001-test.mjs"
+      - "tests/e2e/cartera-radar-hotfix-001.spec.mjs"
+      - "playwright.cartera-radar-hotfix-001.config.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
       - ".github/workflows/cartera-050-current-main-promotion.yml"
   workflow_dispatch:
@@ -54,9 +64,11 @@ jobs:
       - name: Validate promoted authority syntax
         run: |
           node --check advisor-os/cartera/cartera-050a-future-radar-service.js
+          node --check platform/portfolio-intelligence/cartera-050-business-calendar-date.js
           node --check platform/portfolio-intelligence/cartera-050a-future-radar-projection.js
           node --check platform/portfolio-intelligence/cartera-050c-authority-adapters.js
           node --check platform/portfolio-intelligence/cartera-050d-future-radar-view.js
+          node --check playwright.cartera-radar-hotfix-001.config.mjs
           node --check scripts/ci/cartera-050-current-main-remote-verification.mjs
 
       - name: Cartera 050 authority contracts
@@ -66,6 +78,7 @@ jobs:
           node --test tests/cartera-050c-authority-adapters-test.mjs
           node --test tests/cartera-050d-future-radar-view-test.mjs
           node --test tests/cartera-050ab-sql-contract-test.mjs
+          node --test tests/cartera-radar-truth-hotfix-001-test.mjs
 
       - name: Current main runtime regressions
         run: |
@@ -75,6 +88,14 @@ jobs:
           node --test tests/pipeline-stage-rpc-authority-regression.mjs
           node --test advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
           node --test advisor-os/quotes/tests/quote-printable-browser-binding-test.js
+
+      - name: Install browser acceptance runtime
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Desktop DeX Mobile Radar acceptance
+        run: npx playwright test --config=playwright.cartera-radar-hotfix-001.config.mjs
 
       - name: Pages runtime remains generatable
         env:
@@ -98,16 +119,21 @@ jobs:
           while IFS= read -r file; do
             case "$file" in
               advisor-os/cartera/cartera-050a-future-radar-service.js|\
+              platform/portfolio-intelligence/cartera-050-business-calendar-date.js|\
               platform/portfolio-intelligence/cartera-050a-future-radar-projection.js|\
               platform/portfolio-intelligence/cartera-050c-authority-adapters.js|\
               platform/portfolio-intelligence/cartera-050d-future-radar-view.js|\
               supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql|\
               supabase/migrations/20260801000281_cartera050_future_radar_read.sql|\
+              supabase/migrations/20260814012819_post017e_hotfix001_policy_role_correction_authority.sql|\
               tests/cartera-050a-future-radar-projection-test.mjs|\
               tests/cartera-050a-future-radar-service-test.mjs|\
               tests/cartera-050c-authority-adapters-test.mjs|\
               tests/cartera-050d-future-radar-view-test.mjs|\
               tests/cartera-050ab-sql-contract-test.mjs|\
+              tests/cartera-radar-truth-hotfix-001-test.mjs|\
+              tests/e2e/cartera-radar-hotfix-001.spec.mjs|\
+              playwright.cartera-radar-hotfix-001.config.mjs|\
               scripts/ci/cartera-050-current-main-remote-verification.mjs|\
               .github/workflows/cartera-050-current-main-promotion.yml)
                 ;;

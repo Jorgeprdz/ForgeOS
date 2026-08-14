@@ -19,7 +19,7 @@ const semantic = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera
 test('canonical Aura r1 maps inherited Cartera specifier through phase015 and current v13 durable chains', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
   assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/);
   assert.match(moduleV12Phase015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
   assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
   assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013/);

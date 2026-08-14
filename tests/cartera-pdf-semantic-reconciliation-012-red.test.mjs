@@ -71,7 +71,7 @@ test('review UI distinguishes type/status, protected beneficiaries and document 
 test('canonical Aura keeps inherited app specifier while phase015 preserves the durable v10 and semantic v9 chains', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
   assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/);
   assert.match(moduleV12Phase015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
   assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
   assert.match(v13, /cartera-adapter-pages-v12\.js/);

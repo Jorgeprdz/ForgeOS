@@ -132,7 +132,9 @@ jobs:
         run: |
           BASE=a8bdd20988c8463e80e09d154546045d05840c7b
           git diff --name-only "$BASE"...HEAD > /tmp/changed.txt
-          if grep -E '(^|/)(supabase/config\.toml|.*rls.*\.sql|.*auth.*\.sql|.*csp.*|.*security.*\.sql)$' /tmp/changed.txt; then
+          # Match actual auth/security filenames. Do not treat domain "authority" SQL
+          # migrations as auth changes merely because "authority" contains "auth".
+          if grep -E '(^|/)(supabase/config\.toml|.*rls.*\.sql|auth([._-].*)?\.sql|.*[-_]auth([._-].*)?\.sql|.*authentication.*\.sql|.*csp.*|.*security.*\.sql)$' /tmp/changed.txt; then
             echo 'SECURITY_BOUNDARY_FILE_CHANGED=YES'
             exit 1
           fi
