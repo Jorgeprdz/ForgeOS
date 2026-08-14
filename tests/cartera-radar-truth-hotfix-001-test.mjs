@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 const adapterUrl = new URL('../docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v1.js', import.meta.url);
 const radarSqlUrl = new URL('../supabase/migrations/20260801000281_cartera050_future_radar_read.sql', import.meta.url);
-const correctionMigrationUrl = new URL('../supabase/migrations/20260814012000_post017e_hotfix001_policy_role_correction_authority.sql', import.meta.url);
+const correctionMigrationUrl = new URL('../supabase/migrations/20260814012819_post017e_hotfix001_policy_role_correction_authority.sql', import.meta.url);
 const viewUrl = new URL('../platform/portfolio-intelligence/cartera-050d-future-radar-view.js', import.meta.url);
 const serviceUrl = new URL('../advisor-os/cartera/cartera-050a-future-radar-service.js', import.meta.url);
 const runtime017eUrl = new URL('../docs/static-preview/forge-aura/cartera/cartera-future-radar-017e.js', import.meta.url);
