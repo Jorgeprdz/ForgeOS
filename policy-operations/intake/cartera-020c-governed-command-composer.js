@@ -1,13 +1,19 @@
 // CARTERA 020C governed command composer.
 // Pure deterministic preparation only: this module never executes Supabase RPCs.
 
-import Cartera010BValidator from '../../platform/shared-commercial-model/cartera-010b-contract-validator.js';
+import '../../platform/shared-commercial-model/cartera-010b-contract-validator.js';
 import {
   CARTERA_020C_IDENTITY_OUTCOMES,
   CARTERA_020C_POLICY_DECISIONS,
   prepareIdentityPolicyConfirmationPlan,
 } from './cartera-020c-confirmation-review-contracts.js';
 
+const Cartera010BValidator = globalThis.ForgeCartera010BContractValidator;
+if (!Cartera010BValidator?.buildIdentityResolutionCommand
+    || !Cartera010BValidator?.buildConfirmedPolicyCommand
+    || !Cartera010BValidator?.stableDigest) {
+  throw new TypeError('CARTERA010B_VALIDATOR_UNAVAILABLE');
+}
 const {
   buildIdentityResolutionCommand,
   buildConfirmedPolicyCommand,
