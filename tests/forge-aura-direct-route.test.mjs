@@ -18,7 +18,7 @@ function createWindow(initialHref) {
   };
 }
 
-test("canonical Aura entrypoint loads the current governed Fase 015 wiring", () => {
+test("canonical Aura entrypoint loads the current governed wiring", () => {
   const html = readFileSync("docs/static-preview/forge-aura/index.html", "utf8");
   assert.match(html, /data-aura-runtime="FORGE_AURA_LIGHT_2026_V4"/);
   assert.match(html, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
@@ -26,7 +26,7 @@ test("canonical Aura entrypoint loads the current governed Fase 015 wiring", () 
   assert.match(html, /"\.\/pipeline\/pipeline-adapter\.js": "\.\/pipeline\/pipeline-adapter-pages-v3\.js\?v=forge-beta2-real-production-contract-recovery-010j"/);
   assert.match(html, /"\.\/cartera\/cartera-adapter-pages-v1\.js": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
   assert.match(html, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
-  assert.match(html, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/);
+  assert.match(html, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/);
   assert.match(html, /governed-context-presentation-014\.js\?v=forge-aura-real-user-repair-014/);
   assert.match(html, /human-language-gate-014\.js\?v=forge-aura-real-user-repair-014/);
   assert.doesNotMatch(html, /src="\.\/aura-bootstrap\.js/);
