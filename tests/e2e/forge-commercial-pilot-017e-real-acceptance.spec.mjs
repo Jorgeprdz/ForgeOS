@@ -97,7 +97,9 @@ async function seedPendingPacket({ token, userId, suffix, policyNumber, displayN
     result: { evidenceStatus: 'confirmation_required', workerState: 'COMPLETED', documentTypeCandidate: 'POLICY', classificationState: 'MATCHED', classificationConfidence: 0.99, warnings: [], candidate, packet },
   };
   const recorded = await rpc(token, 'forge_cartera020b_record_processing_result', { p_command: resultCommand });
-  expect(recorded.status).toBe('confirmation_required');
+  expect(recorded.status).toBe('RECORDED');
+  expect(recorded.evidenceStatus).toBe('confirmation_required');
+  expect(recorded.confirmationState).toBe('PENDING_CONFIRMATION');
   return { packetReference, inboxReference, sourceReference, documentDigest, displayName, policyNumber };
 }
 
