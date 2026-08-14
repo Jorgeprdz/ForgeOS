@@ -12,6 +12,7 @@ on:
       - "platform/portfolio-intelligence/cartera-050d-future-radar-view.js"
       - "supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql"
       - "supabase/migrations/20260801000281_cartera050_future_radar_read.sql"
+      - "supabase/migrations/20260814012000_post017e_hotfix001_policy_role_correction_authority.sql"
       - "tests/cartera-050*.mjs"
       - "tests/cartera-radar-truth-hotfix-001-test.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
@@ -27,6 +28,7 @@ on:
       - "platform/portfolio-intelligence/cartera-050d-future-radar-view.js"
       - "supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql"
       - "supabase/migrations/20260801000281_cartera050_future_radar_read.sql"
+      - "supabase/migrations/20260814012000_post017e_hotfix001_policy_role_correction_authority.sql"
       - "tests/cartera-050*.mjs"
       - "tests/cartera-radar-truth-hotfix-001-test.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
@@ -110,6 +112,7 @@ jobs:
               platform/portfolio-intelligence/cartera-050d-future-radar-view.js|\
               supabase/migrations/20260801000280_cartera050_future_radar_helpers.sql|\
               supabase/migrations/20260801000281_cartera050_future_radar_read.sql|\
+              supabase/migrations/20260814012000_post017e_hotfix001_policy_role_correction_authority.sql|\
               tests/cartera-050a-future-radar-projection-test.mjs|\
               tests/cartera-050a-future-radar-service-test.mjs|\
               tests/cartera-050c-authority-adapters-test.mjs|\
