@@ -7,10 +7,13 @@ on:
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-module-hotfix002*.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-review-*002*'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-closure-002b.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-presentation-002b.js'
       - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
       - 'scripts/prepare-cartera-review-pages-runtime.mjs'
       - 'scripts/prepare-segubeca-pages-runtime.mjs'
       - 'tests/cartera-review-radar-hotfix-002.test.mjs'
+      - 'tests/cartera-live-presentation-002b-idempotence.test.mjs'
       - 'tests/e2e/cartera-radar-hotfix-001.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
       - 'playwright.rep16e.config.mjs'
@@ -22,10 +25,13 @@ on:
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-module-hotfix002*.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-review-*002*'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-closure-002b.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-presentation-002b.js'
       - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
       - 'scripts/prepare-cartera-review-pages-runtime.mjs'
       - 'scripts/prepare-segubeca-pages-runtime.mjs'
       - 'tests/cartera-review-radar-hotfix-002.test.mjs'
+      - 'tests/cartera-live-presentation-002b-idempotence.test.mjs'
       - 'tests/e2e/cartera-radar-hotfix-001.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
       - 'playwright.rep16e.config.mjs'
@@ -41,7 +47,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+      - name: Verify exact tested HEAD
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          echo "HOTFIX002_EXACT_HEAD=$ACTUAL_SHA"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -52,12 +66,16 @@ jobs:
           node --check docs/static-preview/forge-aura/cartera/cartera-module-hotfix002.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-hotfix002-entry.js
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-live-closure-002b.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-live-presentation-002b.js
           node --check platform/portfolio-intelligence/cartera-050d-future-radar-view.js
           node --check scripts/prepare-cartera-review-pages-runtime.mjs
           node --check scripts/prepare-segubeca-pages-runtime.mjs
           node --check tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
       - name: Hotfix 002 authority and UX contract
-        run: node --test tests/cartera-review-radar-hotfix-002.test.mjs
+        run: |
+          node --test tests/cartera-review-radar-hotfix-002.test.mjs
+          node --test tests/cartera-live-presentation-002b-idempotence.test.mjs
       - name: Cartera 010B canonical writer foundation
         run: node --test tests/cartera-010b-contract-foundation-test.mjs
       - name: Cartera 020C governed review and correction
@@ -72,6 +90,40 @@ jobs:
         run: node --test tests/cartera-radar-truth-hotfix-001-test.mjs
       - name: Preserve 017E recommendation lineage
         run: node --test tests/cartera-030c-recommendation-lineage-017e-test.mjs
+      - name: Triple-check source tree and scope
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          echo '=== git status --short ==='
+          git status --short
+          echo '=== git diff --check ==='
+          git diff --check
+          echo '=== git diff --check origin/main...HEAD ==='
+          git diff --check origin/main...HEAD
+          echo '=== git rev-parse HEAD ==='
+          git rev-parse HEAD
+          echo '=== git rev-parse origin/main ==='
+          git rev-parse origin/main
+          changed="$(git diff --name-only origin/main...HEAD)"
+          printf '%s\n' "$changed"
+          if printf '%s\n' "$changed" | grep -E '(^|/)(package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$'; then exit 1; fi
+          if printf '%s\n' "$changed" | grep -E '^supabase/migrations/'; then exit 1; fi
+          if printf '%s\n' "$changed" | grep -Ei '(^|/)(auth|rls)(/|[-_.])'; then exit 1; fi
+          if printf '%s\n' "$changed" | grep -Ei '(^|/)(tmp|temp|debug)(/|[-_.])'; then exit 1; fi
+          echo 'UNRELATED_FILES=0'
+          echo 'SCHEMA_CHANGED=NO'
+          echo 'RLS_CHANGED=NO'
+          echo 'AUTH_CHANGED=NO'
+          echo 'DEPENDENCIES_CHANGED=NO'
+          echo 'LOCKFILES_CHANGED=NO'
+          echo 'NEW_AUTHORITY_CREATED=NO'
+          echo 'NEW_SOURCE_OF_TRUTH=NO'
+          echo 'TEMP_FILES=0'
+          echo 'DEBUG_ARTIFACTS=0'
       - name: No prohibited boundary expansion
         shell: bash
         run: |
@@ -93,6 +145,16 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify exact tested HEAD
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          echo "HOTFIX002_BROWSER_EXACT_HEAD=$ACTUAL_SHA"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
