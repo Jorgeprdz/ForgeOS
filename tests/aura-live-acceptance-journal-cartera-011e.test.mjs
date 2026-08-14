@@ -7,6 +7,8 @@ const journal = read('docs/static-preview/forge-aura/pipeline/pipeline-journal-a
 const journalCss = read('docs/static-preview/forge-aura/pipeline/pipeline-journal-aura-011e.css');
 const cartera = read('docs/static-preview/forge-aura/cartera/cartera-module-v9.js');
 const cartera015 = read('docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js');
+const cartera017e = read('docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js');
+const cartera002 = read('docs/static-preview/forge-aura/cartera/cartera-module-hotfix002.js');
 const carteraCss = read('docs/static-preview/forge-aura/cartera/cartera-live-acceptance-011e.css');
 const loop = read('docs/static-preview/forge-aura/commercial-loop-011c.js');
 const index = read('docs/static-preview/forge-aura/index.html');
@@ -24,7 +26,6 @@ assert.match(journalCss, /\.aura-journal-layer/);
 assert.match(journalCss, /max-height:92dvh/);
 assert.match(journalCss, /aura-journal-form-actions/);
 
-// 011F real-user acceptance: a NETWORK_ERROR must never trap the user in Bitácora.
 assert.match(journal, /NETWORK\|FETCH\|TIMEOUT/);
 assert.match(journal, /Puedes reintentar sin recargar Forge\./);
 assert.match(journal, /documentRef\.documentElement\.dataset\.auraJournalState = 'LOAD_ERROR'/);
@@ -47,7 +48,6 @@ assert.match(carteraCss, /button\.cartera-directory-row/);
 assert.match(carteraCss, /-webkit-appearance:none/);
 assert.match(carteraCss, /cartera-policy-row-011e/);
 
-// 011F regression: MutationObserver normalization must be idempotent.
 assert.match(cartera, /function setTextIfChanged\(/);
 assert.match(cartera, /setTextIfChanged\(\s*copy,/);
 assert.match(cartera, /setTextIfChanged\(counter, counterLabel\)/);
@@ -63,7 +63,9 @@ assert.ok(
 assert.match(loop, /pipeline-journal-aura-011e\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
 assert.match(index, /pipeline-journal-aura-011e\.css/);
 assert.match(index, /cartera-live-acceptance-011e\.css/);
-assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v12-015\.js\?v=forge-commercial-compass-015"/);
+assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/);
+assert.match(cartera017e, /cartera-module-hotfix002-entry\.js\?v=post017e-hotfix002/);
+assert.match(cartera002, /cartera-module-v12-015\.js\?v=forge-commercial-pilot-evidence-017e-base/);
 assert.match(cartera015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
 assert.match(index, /commercial-loop-011c\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
 
@@ -74,3 +76,4 @@ console.log('JOURNAL_NETWORK_ERROR_ESCAPE_011F=PASS');
 console.log('CARTERA_POLICY_AFFORDANCE=PASS');
 console.log('CARTERA_SIGNAL_COUNT_COPY=PASS');
 console.log('CARTERA_MUTATION_OBSERVER_IDEMPOTENCE_011F=PASS');
+console.log('CARTERA_ENTRYPOINT_V13_HOTFIX002=PASS');
