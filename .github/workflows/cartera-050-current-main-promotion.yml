@@ -15,6 +15,7 @@ on:
       - "supabase/migrations/20260814012000_post017e_hotfix001_policy_role_correction_authority.sql"
       - "tests/cartera-050*.mjs"
       - "tests/cartera-radar-truth-hotfix-001-test.mjs"
+      - "tests/e2e/cartera-radar-hotfix-001.spec.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
       - ".github/workflows/cartera-050-current-main-promotion.yml"
   push:
@@ -31,6 +32,7 @@ on:
       - "supabase/migrations/20260814012000_post017e_hotfix001_policy_role_correction_authority.sql"
       - "tests/cartera-050*.mjs"
       - "tests/cartera-radar-truth-hotfix-001-test.mjs"
+      - "tests/e2e/cartera-radar-hotfix-001.spec.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
       - ".github/workflows/cartera-050-current-main-promotion.yml"
   workflow_dispatch:
@@ -84,6 +86,14 @@ jobs:
           node --test advisor-os/quotes/tests/quote-printable-productive-route-controller-test.js
           node --test advisor-os/quotes/tests/quote-printable-browser-binding-test.js
 
+      - name: Install browser acceptance runtime
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Desktop DeX Mobile Radar acceptance
+        run: npx playwright test tests/e2e/cartera-radar-hotfix-001.spec.mjs --reporter=line
+
       - name: Pages runtime remains generatable
         env:
           FORGE_PAGES_RUNTIME: "true"
@@ -119,6 +129,7 @@ jobs:
               tests/cartera-050d-future-radar-view-test.mjs|\
               tests/cartera-050ab-sql-contract-test.mjs|\
               tests/cartera-radar-truth-hotfix-001-test.mjs|\
+              tests/e2e/cartera-radar-hotfix-001.spec.mjs|\
               scripts/ci/cartera-050-current-main-remote-verification.mjs|\
               .github/workflows/cartera-050-current-main-promotion.yml)
                 ;;
