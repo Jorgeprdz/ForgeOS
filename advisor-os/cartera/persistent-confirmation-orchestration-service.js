@@ -22,6 +22,10 @@ const TERMINAL_STATES = new Set([
 const REFERENCE_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,239}$/;
 const IDEMPOTENCY_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,159}$/;
 const DIGEST_PATTERN = /^[a-f0-9]{64}$/;
+const AUTHORIZATION_KEY_COLLATOR = new Intl.Collator('en-US', {
+  usage: 'sort',
+  sensitivity: 'variant',
+});
 
 function fail(code, cause = null) {
   const error = new Error(code);
@@ -63,10 +67,12 @@ function rpcData(result, code) {
 function stableJson(value) {
   if (Array.isArray(value)) return value.map(stableJson);
   if (!isRecord(value)) return value;
-  return Object.keys(value).sort().reduce((output, key) => {
-    output[key] = stableJson(value[key]);
-    return output;
-  }, {});
+  return Object.keys(value)
+    .sort((left, right) => AUTHORIZATION_KEY_COLLATOR.compare(left, right))
+    .reduce((output, key) => {
+      output[key] = stableJson(value[key]);
+      return output;
+    }, {});
 }
 
 async function authorizationDigest(payload) {
