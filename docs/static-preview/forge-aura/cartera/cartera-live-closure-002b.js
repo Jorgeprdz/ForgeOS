@@ -58,8 +58,11 @@ function packetContextModel002b(packet, home) {
 }
 
 export function hasQualifyingCarteraRelationship002b(item = {}) {
-  if (String(item.type || '').toUpperCase() !== 'PERSON') return true;
-  return number(item.relationshipPolicyCount) > 0 || number(item.relationshipAccountCount) > 0;
+  const kind = String(item.type || item.kind || '').toUpperCase();
+  if (kind !== 'PERSON') return true;
+  const policyCount = item.relationshipPolicyCount ?? item.policyCount;
+  const accountCount = item.relationshipAccountCount ?? item.accountCount;
+  return number(policyCount) > 0 || number(accountCount) > 0;
 }
 
 export function filterCarteraDirectoryMembership002b(directory = []) {
