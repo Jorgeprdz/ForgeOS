@@ -151,7 +151,7 @@ async function openReview(page, packetReference) {
   const trigger = page.locator(`[data-open-policy="${packetReference}"]`).first();
   await expect(trigger).toBeVisible({ timeout: 20_000 });
   await trigger.click();
-  const layer = page.locator('[data-review-confirmation-002]');
+  const layer = page.locator('[data-review-confirmation002]');
   await expect(layer).toBeVisible();
   await expect(layer.getByRole('button', { name: 'Confirmar información' })).toBeVisible();
   await expect(layer.getByRole('button', { name: 'Corregir' })).toBeVisible();
@@ -245,7 +245,7 @@ test('POST-017E HOTFIX 002 REAL: governed Confirmar + Corregir close the pending
   expect(peopleAfterReplay).toHaveLength(1);
 
   await layer.getByRole('button', { name: 'Listo' }).click();
-  await expect(page.locator('[data-review-confirmation-002]')).toHaveCount(0);
+  await expect(page.locator('[data-review-confirmation002]')).toHaveCount(0);
   await moduleReturn(page);
   await expect(page.locator(`[data-open-policy="${initial.packetReference}"]`)).toHaveCount(0);
 
@@ -304,7 +304,7 @@ test('POST-017E HOTFIX 002 REAL: governed Confirmar + Corregir close the pending
     body: Buffer.from(JSON.stringify({
       project: testInfo.project.name, authenticated: true, pendingBefore: 'PENDING_CONFIRMATION', confirmButtonVisible: true, correctButtonVisible: true,
       optimisticSuccess: false, reviewStateAfterConfirm: status1.state, canonicalPolicyCount: finalPolicies.length, canonicalPersonCount: finalPeople.length,
-      policyVersionAfterCorrection: finalPolicies[0].current_version, versionLineage: versions[1].previous_policy_version_id === versions[0].id,
+      policyVersionAfterCorrection: finalPolicies[0].currentVersion, versionLineage: versions[1].previous_policy_version_id === versions[0].id,
       roleSupersession: ownerRoles[1].correction_of === ownerRoles[0].id, replayState: replay.state, moduleReturn: 'PASS', pageReload: 'PASS',
       rpcNames: [...new Set(rpcNames)], confirmationAuthority: 'CARTERA-020C', canonicalWriter: 'CARTERA-010B',
     }, null, 2)), contentType: 'application/json',
