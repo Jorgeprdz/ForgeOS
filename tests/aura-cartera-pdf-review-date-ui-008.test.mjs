@@ -7,9 +7,6 @@ const index = fs.readFileSync('docs/static-preview/forge-aura/index.html', 'utf8
 const bootstrap = fs.readFileSync('docs/static-preview/forge-aura/aura-bootstrap-v4-r1.js', 'utf8');
 const moduleV5 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v5.js', 'utf8');
 const moduleV12Phase015 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v12-015.js', 'utf8');
-const moduleV14 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-v14-hotfix002.js', 'utf8');
-const hotfixEntry = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-hotfix002-entry.js', 'utf8');
-const hotfixCore = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-module-hotfix002.js', 'utf8');
 const v13 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v13.js', 'utf8');
 const v12 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v12.js', 'utf8');
 const v11 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v11.js', 'utf8');
@@ -19,13 +16,10 @@ const v8 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapt
 const v7 = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-adapter-pages-v7.js', 'utf8');
 const semantic = fs.readFileSync('docs/static-preview/forge-aura/cartera/cartera-semantic-v1.js', 'utf8');
 
-test('canonical Aura r1 maps inherited Cartera specifier through Hotfix002 and preserves the v13/v12 durable chain', () => {
+test('canonical Aura r1 maps inherited Cartera specifier through phase015 and current v13 durable chains', () => {
   assert.match(app, /cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012/);
   assert.match(index, /"\.\/cartera\/cartera-adapter-pages-v9\.js\?v=cartera-pdf-ingress-legacy-refresh": "\.\/cartera\/cartera-adapter-pages-v13\.js\?v=forge-aura-production-entrypoint-hotfix-011b"/);
-  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v14-hotfix002\.js\?v=post017e-hotfix002"/);
-  assert.match(moduleV14, /cartera-module-hotfix002-entry\.js\?v=post017e-hotfix002/);
-  assert.match(hotfixEntry, /cartera-module-hotfix002\.js\?v=post017e-hotfix002-r2/);
-  assert.match(hotfixCore, /cartera-module-v13-017e\.js\?v=post017e-hotfix001/);
+  assert.match(index, /"\.\/cartera\/cartera-module-v4\.js\?v=cartera-pdf-semantic-reconciliation-012": "\.\/cartera\/cartera-module-v13-017e\.js\?v=forge-commercial-pilot-evidence-017e-r4"/);
   assert.match(moduleV12Phase015, /cartera-module-v10-013\.js\?v=forge-commercial-compass-015-base/);
   assert.match(index, /aura-bootstrap-v4-r1\.js\?v=forge-aura-live-acceptance-journal-cartera-011e/);
   assert.match(bootstrap, /app-v4-r1\.js\?v=aura-boot-cache-isolation-013/);
