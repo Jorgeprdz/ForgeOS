@@ -23,8 +23,8 @@ for (const viewport of viewports) {
     await expect(page.locator('[data-radar-person-reference="PERSON:1"]')).toHaveCount(1);
     await expect(page.locator('[data-radar-signal-reference]')).toHaveCount(2);
     await expect(page.getByText('2 cosas para revisar')).toBeVisible();
-    await expect(page.getByText('Pago por confirmar')).toBeVisible();
-    await expect(page.getByText('Revisión de relación')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Pago por confirmar', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Revisión de relación', exact: true })).toBeVisible();
     await expect(page.getByText('Requiere revisión')).toHaveCount(1);
     await expect(page.getByText('CONFIRMAR', { exact: true })).toHaveCount(0);
     await expect(page.locator('.radar002-evidence summary').first()).toHaveText('Ver evidencia');
