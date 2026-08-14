@@ -4,9 +4,9 @@ import { createAuraCarteraFutureRadar017e } from './cartera-future-radar-017e.js
 import {
   createCarteraClosureAdapter002b,
   createCarteraRadarClient002b,
-  createCarteraPresentationClosure002b,
   CARTERA_PRIMARY_ATTENTION_OWNER_002B,
 } from './cartera-live-closure-002b.js?v=post017e-hotfix002-live-closure-002b';
+import { createCarteraPresentationClosure002b } from './cartera-live-presentation-002b.js?v=post017e-hotfix002-live-presentation-002b';
 
 // createLegacyCarteraModule remains the direct 017E base authority marker; Hotfix002
 // delegates to the same v12 base and only adds the governed 020C review surface.
@@ -81,6 +81,7 @@ export function createCarteraModule(options = {}) {
         liveAcceptanceClosure: 'POST_017E_HOTFIX_002_LIVE_ACCEPTANCE_CLOSURE_002B',
         primaryAttentionOwner: CARTERA_PRIMARY_ATTENTION_OWNER_002B,
         membershipQualification: 'CONFIRMED_OR_CORRECTED_CARTERA_RELATIONSHIP',
+        presentationReconciliation: 'IDEMPOTENT_MUTATION_OBSERVER',
       });
     },
   });
