@@ -1,6 +1,10 @@
 import { SupabaseRuntime } from '../../supabase-runtime.js';
 import { createCartera050FutureRadarProjection } from '../../platform/portfolio-intelligence/cartera-050a-future-radar-projection.js';
 import { loadCartera050Authority } from '../../platform/portfolio-intelligence/cartera-050c-authority-adapters.js';
+import {
+    CARTERA050_BUSINESS_TIMEZONE,
+    cartera050CalendarDate,
+} from '../../platform/portfolio-intelligence/cartera-050-business-calendar-date.js';
 
 const FORBIDDEN_RESPONSE_KEYS = new Set([
     'rawEvidence',
@@ -27,15 +31,15 @@ function fail(code, cause = null) {
     return error;
 }
 
-function normalizeDate(value) {
-    if (value == null || value === '') return new Date().toISOString().slice(0, 10);
+function normalizeDate(value, now, timezone) {
+    if (value == null || value === '') return cartera050CalendarDate(now, timezone);
     const normalized = String(value).trim();
     if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) throw fail('CARTERA050_AS_OF_DATE_INVALID');
     return normalized;
 }
 
 function normalizeTimezone(value) {
-    const normalized = String(value || 'America/Mexico_City').trim();
+    const normalized = String(value || CARTERA050_BUSINESS_TIMEZONE).trim();
     if (!normalized || normalized.length > 120) throw fail('CARTERA050_TIMEZONE_INVALID');
     return normalized;
 }
@@ -65,17 +69,19 @@ export function createCartera050FutureRadarService({
     client,
     conservationProvider = null,
     compensationProvider = null,
+    now = () => new Date(),
 } = {}) {
     const resolvedClient = client || SupabaseRuntime.getClient();
     if (!resolvedClient?.auth?.getUser || !resolvedClient?.rpc) {
         throw fail('CARTERA050_SUPABASE_CLIENT_INVALID');
     }
+    if (typeof now !== 'function') throw fail('CARTERA050_NOW_PROVIDER_INVALID');
 
     return Object.freeze({
         async loadFutureRadar({ asOfDate, timezone } = {}) {
             const user = await authenticatedUser(resolvedClient);
-            const normalizedAsOfDate = normalizeDate(asOfDate);
             const normalizedTimezone = normalizeTimezone(timezone);
+            const normalizedAsOfDate = normalizeDate(asOfDate, now(), normalizedTimezone);
 
             const nativeResult = await resolvedClient.rpc(
                 'forge_cartera050_list_future_radar',
