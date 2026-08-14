@@ -16,6 +16,7 @@ on:
       - "tests/cartera-050*.mjs"
       - "tests/cartera-radar-truth-hotfix-001-test.mjs"
       - "tests/e2e/cartera-radar-hotfix-001.spec.mjs"
+      - "playwright.cartera-radar-hotfix-001.config.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
       - ".github/workflows/cartera-050-current-main-promotion.yml"
   push:
@@ -33,6 +34,7 @@ on:
       - "tests/cartera-050*.mjs"
       - "tests/cartera-radar-truth-hotfix-001-test.mjs"
       - "tests/e2e/cartera-radar-hotfix-001.spec.mjs"
+      - "playwright.cartera-radar-hotfix-001.config.mjs"
       - "scripts/ci/cartera-050-current-main-remote-verification.mjs"
       - ".github/workflows/cartera-050-current-main-promotion.yml"
   workflow_dispatch:
@@ -66,6 +68,7 @@ jobs:
           node --check platform/portfolio-intelligence/cartera-050a-future-radar-projection.js
           node --check platform/portfolio-intelligence/cartera-050c-authority-adapters.js
           node --check platform/portfolio-intelligence/cartera-050d-future-radar-view.js
+          node --check playwright.cartera-radar-hotfix-001.config.mjs
           node --check scripts/ci/cartera-050-current-main-remote-verification.mjs
 
       - name: Cartera 050 authority contracts
@@ -92,7 +95,7 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Desktop DeX Mobile Radar acceptance
-        run: npx playwright test tests/e2e/cartera-radar-hotfix-001.spec.mjs --reporter=line
+        run: npx playwright test --config=playwright.cartera-radar-hotfix-001.config.mjs
 
       - name: Pages runtime remains generatable
         env:
@@ -130,6 +133,7 @@ jobs:
               tests/cartera-050ab-sql-contract-test.mjs|\
               tests/cartera-radar-truth-hotfix-001-test.mjs|\
               tests/e2e/cartera-radar-hotfix-001.spec.mjs|\
+              playwright.cartera-radar-hotfix-001.config.mjs|\
               scripts/ci/cartera-050-current-main-remote-verification.mjs|\
               .github/workflows/cartera-050-current-main-promotion.yml)
                 ;;
