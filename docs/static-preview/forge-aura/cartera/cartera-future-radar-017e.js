@@ -10,15 +10,20 @@ const portfolioRoot = new URL(
   sourceLayout ? '../../../../platform/portfolio-intelligence/' : '../../../platform/portfolio-intelligence/',
   import.meta.url,
 );
-const [{ renderCartera050FutureRadar }, pilotAuthority] = await Promise.all([
+const [{ renderCartera050FutureRadar }, pilotAuthority, calendarAuthority] = await Promise.all([
   import(new URL('cartera-050d-future-radar-view.js', portfolioRoot).href),
   import(new URL('cartera-050e-actionable-payment-recommendation-017e.js', portfolioRoot).href),
+  import(new URL('cartera-050-business-calendar-date.js', portfolioRoot).href),
 ]);
 
 const {
   isCartera017eActionablePaymentRecommendation,
   toCartera017eActionablePaymentRecommendation,
 } = pilotAuthority;
+const {
+  CARTERA050_BUSINESS_TIMEZONE,
+  cartera050CalendarDate,
+} = calendarAuthority;
 
 function text(value) {
   return String(value ?? '').trim();
@@ -45,10 +50,12 @@ export function createAuraCarteraFutureRadar017e({
   client,
   globalState,
   windowRef = window,
+  now = () => new Date(),
 } = {}) {
   if (!root || !client?.rpc || !client?.auth?.getUser) {
     throw new Error('AURA_CARTERA_017E_CONTEXT_REQUIRED');
   }
+  if (typeof now !== 'function') throw new Error('AURA_CARTERA_017E_NOW_PROVIDER_REQUIRED');
 
   const state = {
     status: 'IDLE',
@@ -188,8 +195,8 @@ export function createAuraCarteraFutureRadar017e({
       await authenticatedUser(client);
       const result = await client.rpc('forge_cartera050_list_future_radar', {
         p_payload: {
-          asOfDate: new Date().toISOString().slice(0, 10),
-          timezone: 'America/Mexico_City',
+          asOfDate: cartera050CalendarDate(now(), CARTERA050_BUSINESS_TIMEZONE),
+          timezone: CARTERA050_BUSINESS_TIMEZONE,
         },
       });
       if (result?.error) throw result.error;
@@ -343,6 +350,7 @@ export function createAuraCarteraFutureRadar017e({
         recommendationPresentation: 'RECOMMENDATION_PRESENTED',
         acceptedDoesNotMeanActed: true,
         temporalGuessing: false,
+        calendarTimezone: CARTERA050_BUSINESS_TIMEZONE,
       });
     },
   });
