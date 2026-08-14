@@ -18,6 +18,12 @@ function packetDigestToken(reference) {
 }
 
 function confirmationReviewReference(review) {
+  const explicit = String(review?.reviewReference || '').trim();
+  if (REF.test(explicit) && explicit.startsWith('review/')) return explicit;
+  const packetReference = String(review?.packetReference || '').trim();
+  if (REF.test(packetReference) && packetReference.startsWith('POLICY_PACKET:AURA:')) {
+    return `review/${packetReference}`;
+  }
   const digest = String(review?.documentDigest || '').trim();
   const token = /^[a-f0-9]{40,64}$/i.test(digest)
     ? digest.slice(0, 40).toLowerCase()
