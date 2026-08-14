@@ -58,6 +58,8 @@ jobs:
           node --check tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
       - name: Hotfix 002 authority and UX contract
         run: node --test tests/cartera-review-radar-hotfix-002.test.mjs
+      - name: Cartera 010B canonical writer foundation
+        run: node --test tests/cartera-010b-contract-foundation-test.mjs
       - name: Cartera 020C governed review and correction
         run: |
           node --test tests/cartera-020c-review-read-model-service-test.mjs
