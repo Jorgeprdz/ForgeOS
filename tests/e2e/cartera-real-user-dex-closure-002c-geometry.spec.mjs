@@ -76,8 +76,29 @@ test('POST-017E HOTFIX 002C REAL: visible truth, navigation and exact geometry',
   expect(visibleText).not.toMatch(/account:[A-Za-z0-9._:@/-]+/i);
   expect(visibleText).not.toMatch(/POLICY_PACKET:AURA:/i);
   expect(visibleText).not.toMatch(/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i);
-  expect(visibleText).not.toContain('Información de póliza por revisar');
   expect(visibleText).toContain('Pólizas con datos incompletos');
+
+  const documentCards = await page.locator('[data-radar-review-packet^="POLICY_PACKET:"]').evaluateAll(triggers => triggers.map(trigger => {
+    const card = trigger.closest('[data-radar-signal-reference]');
+    const group = card?.closest('.radar002-person');
+    return {
+      packetReference: trigger.getAttribute('data-radar-review-packet') || '',
+      title: card?.querySelector('h5')?.textContent?.trim() || '',
+      cardText: card?.textContent || '',
+      groupSubtitle: group?.querySelector('.radar002-person-head p')?.textContent?.trim() || '',
+      groupSignalCount: group?.querySelectorAll('[data-radar-signal-reference]').length || 0,
+    };
+  }));
+  expect(documentCards.length).toBeGreaterThan(0);
+  expect(new Set(documentCards.map(item => item.packetReference)).size).toBe(documentCards.length);
+  for (const item of documentCards) {
+    expect(item.packetReference).toMatch(/^POLICY_PACKET:/);
+    expect(item.title).toBe('Documento pendiente de revisión');
+    expect(item.cardText).not.toContain('Información de póliza por revisar');
+    if (item.groupSignalCount === 1) {
+      expect(item.groupSubtitle).toBe('Documento pendiente de revisión');
+    }
+  }
 
   const measurements = await page.evaluate(() => {
     const rect = selector => {
