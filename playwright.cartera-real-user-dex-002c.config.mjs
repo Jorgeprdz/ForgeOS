@@ -1,5 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const runId = String(process.env.GITHUB_RUN_ID || '').trim();
+const runAttempt = String(process.env.GITHUB_RUN_ATTEMPT || '').trim();
+if (runId && runAttempt) process.env.GITHUB_RUN_ID = `${runId}-attempt-${runAttempt}`;
+
 const port = 4173;
 const baseURL = process.env.FORGE_CARTERA_002C_BASE_URL || `http://127.0.0.1:${port}`;
 
