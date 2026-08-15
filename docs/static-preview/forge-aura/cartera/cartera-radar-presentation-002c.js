@@ -66,8 +66,11 @@ function sanitizeTextNodes002c(node) {
 export function reconcileCarteraRadarPresentation002c(root) {
   if (!root) return;
 
-  root.querySelectorAll('[data-radar-signal-reference^="CARTERA050:DOCUMENT_PACKET:"]').forEach(card => {
-    const title = card.querySelector('h5');
+  root.querySelectorAll('[data-radar-review-packet]').forEach(trigger => {
+    const packetReference = text(trigger.getAttribute('data-radar-review-packet'));
+    if (!packetReference.startsWith('POLICY_PACKET:')) return;
+    const card = trigger.closest('[data-radar-signal-reference]');
+    const title = card?.querySelector('h5');
     if (title && text(title.textContent) !== DOCUMENT_REVIEW_LABEL) {
       title.textContent = DOCUMENT_REVIEW_LABEL;
     }
@@ -98,8 +101,11 @@ export function sanitizeCarteraRadarHtml002c(html) {
   });
 
   protectedHtml = protectedHtml.replace(
-    /(<section\b[^>]*data-radar-signal-reference="CARTERA050:DOCUMENT_PACKET:[^"]+"[\s\S]*?<h5>)([\s\S]*?)(<\/h5>)/gi,
-    `$1${DOCUMENT_REVIEW_LABEL}$3`,
+    /<section\b[^>]*class="[^"]*\bradar002-signal\b[^"]*"[^>]*>[\s\S]*?<\/section>/gi,
+    card => {
+      if (!/data-radar-review-packet="POLICY_PACKET:[^"]+"/i.test(card)) return card;
+      return card.replace(/(<h5>)[\s\S]*?(<\/h5>)/i, `$1${DOCUMENT_REVIEW_LABEL}$2`);
+    },
   );
   protectedHtml = protectedHtml
     .replace(/<div><dt>Registro<\/dt><dd>[\s\S]*?<\/dd><\/div>/gi, '')
