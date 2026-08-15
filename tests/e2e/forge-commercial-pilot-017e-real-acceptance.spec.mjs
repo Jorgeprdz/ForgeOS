@@ -161,7 +161,7 @@ async function openReview(page, packetReference) {
 test('POST-017E HOTFIX 002 REAL: governed Confirmar + Corregir close the pending document without duplicates', async ({ page }, testInfo) => {
   test.setTimeout(150_000);
   const { token, userId } = await authSession();
-  const runKey = `${process.env.GITHUB_RUN_ID || 'local'}-${testInfo.project.name}-${testInfo.retry}`;
+  const runKey = `${process.env.GITHUB_RUN_ID || 'local'}-attempt-${process.env.GITHUB_RUN_ATTEMPT || '1'}-${testInfo.project.name}-${testInfo.retry}`;
   const fixtureDigest = digest(runKey);
   const policyNumber = `HX002${fixtureDigest.slice(0, 10).toUpperCase()}`;
   const displayName = `Hotfix Review ${fixtureDigest.slice(0, 8)}`;
@@ -192,6 +192,20 @@ test('POST-017E HOTFIX 002 REAL: governed Confirmar + Corregir close the pending
   await authenticate(page);
   await settled(page);
   await expect(page.locator('[data-aura-cartera-radar-017e]')).toHaveCount(1);
+
+  const pendingTrigger = page.locator(`[data-radar-review-packet="${initial.packetReference}"]`);
+  await expect(pendingTrigger).toHaveCount(1);
+  const pendingCard = pendingTrigger.first().locator('xpath=ancestor::*[@data-radar-signal-reference][1]');
+  await expect(pendingCard).toBeVisible();
+  await expect(pendingCard.locator('h5')).toHaveText('Documento pendiente de revisión');
+  expect(await pendingCard.innerText()).not.toContain('Información de póliza por revisar');
+  const visibleBeforeConfirm = await page.locator('body').innerText();
+  expect(visibleBeforeConfirm).not.toContain(initial.packetReference);
+  expect(visibleBeforeConfirm).not.toMatch(/person:cartera:/i);
+  expect(visibleBeforeConfirm).not.toMatch(/policy:cartera:/i);
+  expect(visibleBeforeConfirm).not.toMatch(/account:[A-Za-z0-9._:@/-]+/i);
+  expect(visibleBeforeConfirm).not.toMatch(/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i);
+  expect(visibleBeforeConfirm).toContain('Pólizas con datos incompletos');
 
   let delayed = false;
   let resolvePrepare;
@@ -302,11 +316,11 @@ test('POST-017E HOTFIX 002 REAL: governed Confirmar + Corregir close the pending
 
   await testInfo.attach('hotfix002-real-confirmation-summary.json', {
     body: Buffer.from(JSON.stringify({
-      project: testInfo.project.name, authenticated: true, pendingBefore: 'PENDING_CONFIRMATION', confirmButtonVisible: true, correctButtonVisible: true,
-      optimisticSuccess: false, reviewStateAfterConfirm: status1.state, canonicalPolicyCount: finalPolicies.length, canonicalPersonCount: finalPeople.length,
-      policyVersionAfterCorrection: finalPolicies[0].current_version, versionLineage: versions[1].previous_policy_version_id === versions[0].id,
-      roleSupersession: ownerRoles[1].correction_of === ownerRoles[0].id, replayState: replay.state, moduleReturn: 'PASS', pageReload: 'PASS',
-      rpcNames: [...new Set(rpcNames)], confirmationAuthority: 'CARTERA-020C', canonicalWriter: 'CARTERA-010B',
+      project: testInfo.project.name, authenticated: true, pendingBefore: 'PENDING_CONFIRMATION', documentPresentation: 'Documento pendiente de revisión', exactPacketVisibleOnce: true, rawInternalReferenceVisible: false,
+      confirmButtonVisible: true, correctButtonVisible: true, optimisticSuccess: false, reviewStateAfterConfirm: status1.state,
+      canonicalPolicyCount: finalPolicies.length, canonicalPersonCount: finalPeople.length, policyVersionAfterCorrection: finalPolicies[0].current_version,
+      versionLineage: versions[1].previous_policy_version_id === versions[0].id, roleSupersession: ownerRoles[1].correction_of === ownerRoles[0].id,
+      replayState: replay.state, moduleReturn: 'PASS', pageReload: 'PASS', rpcNames: [...new Set(rpcNames)], confirmationAuthority: 'CARTERA-020C', canonicalWriter: 'CARTERA-010B',
     }, null, 2)), contentType: 'application/json',
   });
 });

@@ -9,12 +9,16 @@ on:
       - 'docs/static-preview/forge-aura/cartera/cartera-review-*002*'
       - 'docs/static-preview/forge-aura/cartera/cartera-live-closure-002b.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-live-presentation-002b.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-closure-002c.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-radar-presentation-002c.js'
       - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
       - 'scripts/prepare-cartera-review-pages-runtime.mjs'
       - 'scripts/prepare-segubeca-pages-runtime.mjs'
       - 'tests/cartera-review-radar-hotfix-002.test.mjs'
       - 'tests/cartera-live-presentation-002b-idempotence.test.mjs'
+      - 'tests/cartera-real-user-dex-closure-002c.test.mjs'
       - 'tests/e2e/cartera-radar-hotfix-001.spec.mjs'
+      - 'tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
       - 'playwright.rep16e.config.mjs'
       - '.github/workflows/cartera-review-radar-hotfix-002.yml'
@@ -27,12 +31,16 @@ on:
       - 'docs/static-preview/forge-aura/cartera/cartera-review-*002*'
       - 'docs/static-preview/forge-aura/cartera/cartera-live-closure-002b.js'
       - 'docs/static-preview/forge-aura/cartera/cartera-live-presentation-002b.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-closure-002c.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-radar-presentation-002c.js'
       - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
       - 'scripts/prepare-cartera-review-pages-runtime.mjs'
       - 'scripts/prepare-segubeca-pages-runtime.mjs'
       - 'tests/cartera-review-radar-hotfix-002.test.mjs'
       - 'tests/cartera-live-presentation-002b-idempotence.test.mjs'
+      - 'tests/cartera-real-user-dex-closure-002c.test.mjs'
       - 'tests/e2e/cartera-radar-hotfix-001.spec.mjs'
+      - 'tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
       - 'playwright.rep16e.config.mjs'
       - '.github/workflows/cartera-review-radar-hotfix-002.yml'
@@ -68,14 +76,19 @@ jobs:
           node --check docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js
           node --check docs/static-preview/forge-aura/cartera/cartera-live-closure-002b.js
           node --check docs/static-preview/forge-aura/cartera/cartera-live-presentation-002b.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-live-closure-002c.js
+          node --check docs/static-preview/forge-aura/cartera/cartera-radar-presentation-002c.js
           node --check platform/portfolio-intelligence/cartera-050d-future-radar-view.js
           node --check scripts/prepare-cartera-review-pages-runtime.mjs
           node --check scripts/prepare-segubeca-pages-runtime.mjs
           node --check tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
-      - name: Hotfix 002 authority and UX contract
+          node --check tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs
+          node --check playwright.rep16e.config.mjs
+      - name: Hotfix 002 and 002C authority and UX contract
         run: |
           node --test tests/cartera-review-radar-hotfix-002.test.mjs
           node --test tests/cartera-live-presentation-002b-idempotence.test.mjs
+          node --test tests/cartera-real-user-dex-closure-002c.test.mjs
       - name: Cartera 010B canonical writer foundation
         run: node --test tests/cartera-010b-contract-foundation-test.mjs
       - name: Cartera 020C governed review and correction

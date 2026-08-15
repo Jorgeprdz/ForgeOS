@@ -10,14 +10,14 @@ const baseURL =
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  testMatch: /(rep-16e-activity-browser|forge-commercial-pilot-017e-authenticated|forge-commercial-pilot-017e-r2|forge-commercial-pilot-017e-real-acceptance)\.spec\.mjs/,
+  testMatch: /(rep-16e-activity-browser|forge-commercial-pilot-017e-authenticated|forge-commercial-pilot-017e-r2|forge-commercial-pilot-017e-real-acceptance|cartera-real-user-dex-closure-002c-geometry)\.spec\.mjs/,
   fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   workers: 1,
-  timeout: 45_000,
+  timeout: 150_000,
   expect: {
-    timeout: 8_000,
+    timeout: 12_000,
   },
   reporter: [
     ["line"],
@@ -38,7 +38,7 @@ export default defineConfig({
   use: {
     baseURL,
     trace: "retain-on-failure",
-    screenshot: "only-on-failure",
+    screenshot: "on",
     video: "retain-on-failure",
     serviceWorkers: "block",
   },
@@ -55,19 +55,23 @@ export default defineConfig({
       name: "chromium-desktop",
       use: {
         ...devices["Desktop Chrome"],
+        viewport: { width: 1440, height: 900 },
+        deviceScaleFactor: 1,
       },
     },
     {
       name: "chromium-dex",
       use: {
         ...devices["Desktop Chrome"],
-        viewport: { width: 1920, height: 1080 },
+        viewport: { width: 1600, height: 900 },
+        deviceScaleFactor: 1,
       },
     },
     {
       name: "chromium-mobile",
       use: {
         ...devices["Galaxy S9+"],
+        viewport: { width: 390, height: 844 },
       },
     },
   ],
