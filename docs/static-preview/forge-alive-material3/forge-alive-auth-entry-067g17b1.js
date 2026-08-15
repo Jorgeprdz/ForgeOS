@@ -2,6 +2,7 @@
   'use strict';
 
   const CONTRACT_ID = 'FORGE_AUTH_ENTRY_067G17B1_V1';
+  const DESIGN_AUTHORITY = 'FORGE_AURA_LIGHT_2026_V1';
   const AVATAR_SELECTOR = [
     '.dw-top-actions-056y .dw-avatar-056y',
     '.dw-sidebar-profile-056y .dw-avatar-056y',
@@ -9,19 +10,29 @@
     '.hero .orb',
     '.hero .profile',
   ].join(',');
+  const FOCUSABLE_SELECTOR = [
+    'button:not([disabled]):not([hidden])',
+    'input:not([disabled]):not([hidden])',
+    'select:not([disabled]):not([hidden])',
+    'textarea:not([disabled]):not([hidden])',
+    'a[href]:not([hidden])',
+    '[tabindex]:not([tabindex="-1"]):not([hidden])',
+  ].join(',');
+
   const state = {
     avatars: [],
     panel: null,
     lastFocus: null,
     session: null,
     user: null,
-    status: 'anonymous',
+    status: 'auth_loading',
     requestedNav: null,
     authBusy: false,
     authSubscription: null,
     listenerPromise: null,
     bootPromise: null,
     fallbackAvatar: null,
+    themeColorBeforeAuth: null,
   };
 
   function configApi() {
@@ -121,7 +132,7 @@
   function renderAnonymousAvatar() {
     for (const avatar of state.avatars) {
       avatar.textContent = avatar.matches?.('.hero .profile') ? 'JP' : 'F';
-      avatar.setAttribute('aria-label', 'Iniciar sesión o abrir perfil');
+      avatar.setAttribute('aria-label', 'Iniciar sesión en Forge');
       avatar.dataset.forgeAuthState = 'anonymous';
     }
   }
@@ -130,8 +141,7 @@
     const metadata = user?.user_metadata || {};
     const raw = metadata.full_name || metadata.name || user?.email || 'Forge';
     const parts = String(raw).trim().split(/\s+/).filter(Boolean);
-    const initials = parts.slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join('');
-    return initials || 'F';
+    return parts.slice(0, 2).map((part) => part.charAt(0).toUpperCase()).join('') || 'F';
   }
 
   function displayName(user) {
@@ -146,20 +156,13 @@
   function sessionType(user) {
     const provider = user?.app_metadata?.provider;
     if (provider === 'google') return 'Cuenta de Google';
+    if (provider === 'email') return 'Correo y contraseña';
     return 'Sesión de Forge';
-  }
-
-  function profileMarkHtml(user) {
-    const metadata = user?.user_metadata || {};
-    const avatarUrl = typeof metadata.avatar_url === 'string' ? metadata.avatar_url
-      : typeof metadata.picture === 'string' ? metadata.picture : '';
-    if (avatarUrl) return `<img src="${avatarUrl.replace(/"/g, '&quot;')}" alt="">`;
-    return safeInitials(user);
   }
 
   function renderLoadingAvatar() {
     for (const avatar of state.avatars) {
-      avatar.textContent = avatar.matches?.('.hero .profile') ? 'JP' : 'F';
+      avatar.textContent = 'F';
       avatar.setAttribute('aria-label', 'Recuperando sesión de Forge');
       avatar.dataset.forgeAuthState = 'auth_loading';
     }
@@ -173,14 +176,14 @@
     for (const avatar of state.avatars) {
       avatar.dataset.forgeAuthState = 'authenticated';
       avatar.setAttribute('aria-label', 'Abrir perfil de Forge');
-      avatar.textContent = '';
+      avatar.replaceChildren();
       if (avatarUrl) {
         const image = global.document.createElement('img');
         image.alt = '';
         image.referrerPolicy = 'no-referrer';
         image.src = avatarUrl;
         image.addEventListener('error', () => {
-          avatar.textContent = initials;
+          avatar.replaceChildren(global.document.createTextNode(initials));
         }, { once: true });
         avatar.append(image);
       } else {
@@ -189,91 +192,216 @@
     }
   }
 
+  function renderProfileMark(container, user) {
+    if (!container) return;
+    container.replaceChildren();
+    const metadata = user?.user_metadata || {};
+    const avatarUrl = typeof metadata.avatar_url === 'string' ? metadata.avatar_url
+      : typeof metadata.picture === 'string' ? metadata.picture : '';
+    if (!avatarUrl) {
+      container.textContent = safeInitials(user);
+      return;
+    }
+    const image = global.document.createElement('img');
+    image.alt = '';
+    image.referrerPolicy = 'no-referrer';
+    image.src = avatarUrl;
+    image.addEventListener('error', () => {
+      container.replaceChildren(global.document.createTextNode(safeInitials(user)));
+    }, { once: true });
+    container.append(image);
+  }
+
   function ensurePanel() {
     if (state.panel) return state.panel;
     const backdrop = global.document.createElement('div');
     backdrop.className = 'forge-auth-backdrop-067g17b1';
     backdrop.dataset.forgeAuthPanel = '067g17b1';
+    backdrop.dataset.forgeDesignAuthority = DESIGN_AUTHORITY;
+    backdrop.dataset.forgeAuthMode = 'loading';
     backdrop.hidden = true;
     backdrop.innerHTML = `
-      <section class="forge-auth-panel-067g17b1" role="dialog" aria-modal="true" aria-labelledby="forge-auth-title-067g17b1" tabindex="-1">
-        <header data-forge-auth-panel-header>
-          <div>
-            <h2 id="forge-auth-title-067g17b1" data-forge-auth-title>Iniciar sesión en Forge</h2>
-            <p>Accede para consultar tu Pipeline y administrar tus prospectos.</p>
+      <section class="forge-auth-stage-067g17b1" role="dialog" aria-modal="true" aria-labelledby="forge-auth-title-067g17b1" aria-describedby="forge-auth-description-067g17b1" tabindex="-1">
+        <aside class="forge-auth-story-067g17b1">
+          <div class="forge-auth-brand-067g17b1" aria-label="Forge">
+            <span class="forge-auth-brand-mark-067g17b1" aria-hidden="true">F</span>
+            <span>Forge</span>
           </div>
-          <button type="button" class="forge-auth-close-067g17b1" data-forge-auth-close aria-label="Cerrar panel de autenticación">×</button>
-        </header>
-        <div class="forge-auth-login-067g17b1" data-forge-auth-login-view>
-          <div class="forge-auth-actions-067g17b1">
-            <button type="button" class="forge-auth-primary-067g17b1" data-forge-auth-google>Continuar con Google</button>
+          <div class="forge-auth-story-copy-067g17b1">
+            <p class="forge-auth-eyebrow-067g17b1">TU OPERACIÓN, EN UN SOLO LUGAR</p>
+            <h1>Convierte seguimiento en decisiones claras.</h1>
+            <p>Organiza prospectos, pólizas, actividades y oportunidades sin depender de hojas separadas.</p>
+            <ul aria-label="Beneficios de Forge">
+              <li><span aria-hidden="true">✓</span> Prioridades visibles desde el primer momento</li>
+              <li><span aria-hidden="true">✓</span> Información comercial conectada</li>
+              <li><span aria-hidden="true">✓</span> Acceso protegido por tu identidad</li>
+            </ul>
           </div>
-          <section class="forge-auth-test-section-067g17b1" data-forge-test-advisors hidden>
-            <p class="forge-auth-test-label-067g17b1">Acceso de prueba</p>
-            <div class="forge-auth-test-actions-067g17b1">
-              <button type="button" class="forge-auth-secondary-067g17b1" data-forge-test-advisor="A">Asesor A</button>
-              <button type="button" class="forge-auth-secondary-067g17b1" data-forge-test-advisor="B">Asesor B</button>
+          <div class="forge-auth-aura-067g17b1" aria-hidden="true">
+            <span class="forge-auth-aura-core-067g17b1">F</span>
+            <span class="forge-auth-aura-ring-067g17b1 forge-auth-aura-ring-a-067g17b1"></span>
+            <span class="forge-auth-aura-ring-067g17b1 forge-auth-aura-ring-b-067g17b1"></span>
+            <span class="forge-auth-aura-chip-067g17b1 forge-auth-aura-chip-a-067g17b1">Seguimiento</span>
+            <span class="forge-auth-aura-chip-067g17b1 forge-auth-aura-chip-b-067g17b1">Pipeline</span>
+          </div>
+        </aside>
+
+        <div class="forge-auth-card-067g17b1">
+          <header class="forge-auth-card-header-067g17b1">
+            <div class="forge-auth-mobile-brand-067g17b1" aria-label="Forge">
+              <span class="forge-auth-brand-mark-067g17b1" aria-hidden="true">F</span>
+              <span>Forge</span>
             </div>
-          </section>
-        </div>
-        <div class="forge-auth-profile-067g17b1" data-forge-auth-profile-view hidden>
-          <div class="forge-auth-profile-card-067g17b1">
-            <div class="forge-auth-profile-mark-067g17b1" data-forge-auth-profile-mark>F</div>
-            <div>
-              <strong data-forge-auth-profile-name>Usuario Forge</strong>
-              <span data-forge-auth-profile-email>Correo no disponible</span>
-              <span data-forge-auth-profile-type>Sesión de Forge</span>
-              <span data-forge-auth-profile-identity>Identidad verificada por Supabase Auth</span>
-            </div>
+            <button type="button" class="forge-auth-close-067g17b1" data-forge-auth-close aria-label="Cerrar perfil" hidden>×</button>
+          </header>
+
+          <div class="forge-auth-loading-067g17b1" data-forge-auth-loading-view>
+            <span class="forge-auth-loader-067g17b1" aria-hidden="true"></span>
+            <h2>Recuperando tu sesión</h2>
+            <p>Estamos comprobando tu acceso seguro a Forge.</p>
           </div>
-          <div class="forge-auth-actions-067g17b1">
+
+          <div class="forge-auth-login-067g17b1" data-forge-auth-login-view hidden>
+            <p class="forge-auth-eyebrow-067g17b1">ACCESO SEGURO</p>
+            <h2 id="forge-auth-title-067g17b1" data-forge-auth-title>Bienvenido a Forge</h2>
+            <p id="forge-auth-description-067g17b1" class="forge-auth-description-067g17b1">Ingresa con tu correo o continúa con Google.</p>
+
+            <form class="forge-auth-form-067g17b1" data-forge-auth-form novalidate>
+              <label class="forge-auth-field-067g17b1">
+                <span>Correo electrónico</span>
+                <input type="email" name="email" autocomplete="username" inputmode="email" spellcheck="false" required aria-describedby="forge-auth-error-067g17b1">
+              </label>
+
+              <label class="forge-auth-field-067g17b1">
+                <span>Contraseña</span>
+                <span class="forge-auth-password-wrap-067g17b1">
+                  <input type="password" name="password" autocomplete="current-password" required minlength="6" aria-describedby="forge-auth-error-067g17b1">
+                  <button type="button" class="forge-auth-password-toggle-067g17b1" data-forge-auth-password-toggle aria-label="Mostrar contraseña" aria-pressed="false">Ver</button>
+                </span>
+              </label>
+
+              <button type="submit" class="forge-auth-primary-067g17b1" data-forge-auth-password-submit>
+                <span data-forge-auth-password-label>Entrar a Forge</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </form>
+
+            <p class="forge-auth-error-067g17b1" id="forge-auth-error-067g17b1" data-forge-auth-error role="alert" hidden></p>
+
+            <div class="forge-auth-divider-067g17b1" aria-hidden="true"><span>o</span></div>
+
+            <button type="button" class="forge-auth-google-067g17b1" data-forge-auth-google>
+              <span class="forge-auth-google-mark-067g17b1" aria-hidden="true">G</span>
+              <span data-forge-auth-google-label>Continuar con Google</span>
+            </button>
+
+            <section class="forge-auth-test-section-067g17b1" data-forge-test-advisors hidden>
+              <p class="forge-auth-test-label-067g17b1">Acceso gobernado de prueba</p>
+              <div class="forge-auth-test-actions-067g17b1">
+                <button type="button" class="forge-auth-secondary-067g17b1" data-forge-test-advisor="A">Asesor A</button>
+                <button type="button" class="forge-auth-secondary-067g17b1" data-forge-test-advisor="B">Asesor B</button>
+              </div>
+            </section>
+
+            <p class="forge-auth-security-note-067g17b1"><span aria-hidden="true">◉</span> Tu sesión se protege mediante Supabase Auth.</p>
+          </div>
+
+          <div class="forge-auth-profile-067g17b1" data-forge-auth-profile-view hidden>
+            <p class="forge-auth-eyebrow-067g17b1">SESIÓN ACTIVA</p>
+            <h2 data-forge-auth-title>Tu perfil de Forge</h2>
+            <p class="forge-auth-description-067g17b1">Esta es la identidad con la que estás trabajando.</p>
+            <div class="forge-auth-profile-card-067g17b1">
+              <div class="forge-auth-profile-mark-067g17b1" data-forge-auth-profile-mark>F</div>
+              <div>
+                <strong data-forge-auth-profile-name>Usuario Forge</strong>
+                <span data-forge-auth-profile-email>Correo no disponible</span>
+                <span data-forge-auth-profile-type>Sesión de Forge</span>
+              </div>
+            </div>
             <button type="button" class="forge-auth-secondary-067g17b1" data-forge-auth-signout>Cerrar sesión</button>
+            <p class="forge-auth-error-067g17b1" data-forge-auth-profile-error role="alert" hidden></p>
           </div>
         </div>
-        <p class="forge-auth-error-067g17b1" data-forge-auth-error role="alert" hidden></p>
-        <footer>
-          <button type="button" class="forge-auth-secondary-067g17b1" data-forge-auth-close>Cancelar</button>
-        </footer>
       </section>`;
+
     global.document.body.append(backdrop);
+
     backdrop.addEventListener('click', (event) => {
-      if (event.target === backdrop || event.target.closest('[data-forge-auth-close]')) closeAuthPanel();
-      if (event.target.closest('[data-forge-auth-google]')) startGoogleLogin();
-      if (event.target.closest('[data-forge-auth-signout]')) signOut();
-      const testAdvisorButton = event.target.closest('[data-forge-test-advisor]');
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target) return;
+      if (target.closest('[data-forge-auth-close]')) closeAuthPanel();
+      if (target.closest('[data-forge-auth-google]')) startGoogleLogin();
+      if (target.closest('[data-forge-auth-signout]')) signOut();
+      if (target.closest('[data-forge-auth-password-toggle]')) togglePasswordVisibility();
+      const testAdvisorButton = target.closest('[data-forge-test-advisor]');
       if (testAdvisorButton) startTestAdvisorLogin(testAdvisorButton.getAttribute('data-forge-test-advisor'));
     });
-    global.document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !backdrop.hidden) closeAuthPanel();
-    });
+
+    backdrop.querySelector('[data-forge-auth-form]')?.addEventListener('submit', startPasswordLogin);
+    global.document.addEventListener('keydown', handlePanelKeydown);
     state.panel = backdrop;
     return backdrop;
+  }
+
+  function focusableElements() {
+    if (!state.panel || state.panel.hidden) return [];
+    return Array.from(state.panel.querySelectorAll(FOCUSABLE_SELECTOR)).filter((node) => {
+      if (node.hidden || node.closest('[hidden]')) return false;
+      const style = global.getComputedStyle(node);
+      return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+  }
+
+  function handlePanelKeydown(event) {
+    if (!state.panel || state.panel.hidden) return;
+    if (event.key === 'Escape') {
+      if (state.status === 'authenticated') closeAuthPanel();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const focusable = focusableElements();
+    if (!focusable.length) {
+      event.preventDefault();
+      state.panel.querySelector('.forge-auth-stage-067g17b1')?.focus();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && global.document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && global.document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   function refreshPanel() {
     const panel = ensurePanel();
     const loginView = panel.querySelector('[data-forge-auth-login-view]');
+    const loadingView = panel.querySelector('[data-forge-auth-loading-view]');
     const profileView = panel.querySelector('[data-forge-auth-profile-view]');
-    const title = panel.querySelector('[data-forge-auth-title]');
-    const headerText = panel.querySelector('[data-forge-auth-panel-header] p');
     const testSection = panel.querySelector('[data-forge-test-advisors]');
+    const closeButton = panel.querySelector('[data-forge-auth-close]');
     const authenticated = state.status === 'authenticated' && Boolean(state.user?.id);
-    if (loginView) loginView.hidden = authenticated;
+    const loading = state.status === 'auth_loading';
+
+    panel.dataset.forgeAuthMode = authenticated ? 'profile' : loading ? 'loading' : 'login';
+    panel.setAttribute('aria-busy', loading ? 'true' : 'false');
+    if (loginView) loginView.hidden = authenticated || loading;
+    if (loadingView) loadingView.hidden = !loading;
     if (profileView) profileView.hidden = !authenticated;
-    if (title) title.textContent = authenticated ? 'Perfil de Forge' : 'Iniciar sesión en Forge';
-    if (headerText) headerText.textContent = authenticated ? 'Administra tu sesión y la identidad activa.' : 'Accede para consultar tu Pipeline y administrar tus prospectos.';
-    if (testSection) testSection.hidden = !testAdvisorLoginAvailable();
+    if (closeButton) closeButton.hidden = !authenticated;
+    if (testSection) testSection.hidden = authenticated || !testAdvisorLoginAvailable();
+
     if (authenticated) {
-      const mark = panel.querySelector('[data-forge-auth-profile-mark]');
+      renderProfileMark(panel.querySelector('[data-forge-auth-profile-mark]'), state.user);
       const name = panel.querySelector('[data-forge-auth-profile-name]');
       const email = panel.querySelector('[data-forge-auth-profile-email]');
       const type = panel.querySelector('[data-forge-auth-profile-type]');
-      const identity = panel.querySelector('[data-forge-auth-profile-identity]');
-      if (mark) mark.innerHTML = profileMarkHtml(state.user);
       if (name) name.textContent = displayName(state.user);
       if (email) email.textContent = displayEmail(state.user);
       if (type) type.textContent = sessionType(state.user);
-      if (identity) identity.textContent = `advisorId: ${state.user.id}`;
     }
   }
 
@@ -291,11 +419,47 @@
     return redirect.href;
   }
 
-  function setPanelError(message) {
-    const error = state.panel?.querySelector('[data-forge-auth-error]');
+  function errorElement(profile = false) {
+    return state.panel?.querySelector(profile ? '[data-forge-auth-profile-error]' : '[data-forge-auth-error]');
+  }
+
+  function setPanelError(message, code = '', profile = false) {
+    const error = errorElement(profile);
     if (!error) return;
     error.textContent = message || '';
     error.hidden = !message;
+    if (code) error.dataset.forgeAuthErrorCode = code;
+    else delete error.dataset.forgeAuthErrorCode;
+  }
+
+  function humanAuthError(error) {
+    const code = String(error?.code || error?.name || '').toLowerCase();
+    const message = String(error?.message || '').toLowerCase();
+    if (code === 'auth_credentials_required') {
+      return { code: 'CREDENTIALS_REQUIRED', message: 'Escribe tu correo y contraseña para continuar.' };
+    }
+    if (code.includes('invalid') || message.includes('invalid login credentials')) {
+      return { code: 'INVALID_CREDENTIALS', message: 'El correo o la contraseña no coinciden. Revísalos e intenta de nuevo.' };
+    }
+    if (message.includes('email not confirmed')) {
+      return { code: 'EMAIL_NOT_CONFIRMED', message: 'Confirma tu correo antes de entrar a Forge.' };
+    }
+    if (code.includes('rate') || message.includes('too many') || message.includes('rate limit')) {
+      return { code: 'RATE_LIMITED', message: 'Hubo demasiados intentos. Espera un momento antes de volver a probar.' };
+    }
+    if (code === 'config_blocked' || message.includes('config_blocked') || message.includes('config blocked')) {
+      return { code: 'CONFIG_BLOCKED', message: 'El acceso productivo no está configurado en esta publicación.' };
+    }
+    if (
+      code.includes('network')
+      || code.includes('client_unavailable')
+      || message.includes('fetch')
+      || message.includes('network')
+      || message.includes('load failed')
+    ) {
+      return { code: 'NETWORK_ERROR', message: 'No pudimos conectar con Forge. Revisa tu conexión e intenta nuevamente.' };
+    }
+    return { code: 'AUTH_ERROR', message: 'No pudimos iniciar tu sesión. Intenta nuevamente.' };
   }
 
   function publicConfigReady() {
@@ -306,7 +470,7 @@
     for (let attempt = 0; attempt < 80; attempt += 1) {
       const bootstrap = global.ForgeProductiveProspectBootstrap067G17B;
       if (bootstrap?.getSession && bootstrap?.onAuthStateChange) return bootstrap;
-      await new Promise(resolve => global.setTimeout(resolve, 50));
+      await new Promise((resolve) => global.setTimeout(resolve, 50));
     }
     return global.ForgeProductiveProspectBootstrap067G17B || null;
   }
@@ -315,6 +479,7 @@
     global.dispatchEvent(new CustomEvent('forge:auth-state-changed', {
       detail: {
         contractId: CONTRACT_ID,
+        designAuthority: DESIGN_AUTHORITY,
         event: eventName,
         status: state.status,
         advisorId: state.user?.id || null,
@@ -332,6 +497,13 @@
     global.history.replaceState(global.history.state, '', url.href);
   }
 
+  function clearCredentialFields() {
+    const form = state.panel?.querySelector('[data-forge-auth-form]');
+    if (!form) return;
+    const password = form.elements?.password;
+    if (password) password.value = '';
+  }
+
   function applySession(session, eventName = 'INITIAL_SESSION') {
     state.session = session || null;
     state.user = session?.user || null;
@@ -339,13 +511,15 @@
     if (state.user?.id) {
       state.status = 'authenticated';
       renderAuthenticatedAvatar(state.user);
+      clearCredentialFields();
       clearOAuthUrlParameters();
     } else {
       state.status = 'anonymous';
       renderAnonymousAvatar();
     }
-    if (state.panel) refreshPanel();
-    if (state.user?.id && eventName === 'SIGNED_IN') closeAuthPanel();
+    refreshPanel();
+    if (state.user?.id && eventName === 'SIGNED_IN') closeAuthPanel({ force: true });
+    if (!state.user?.id && state.panel?.hidden) openAuthPanel({ nav: currentNav() });
     emitAuthState(eventName);
   }
 
@@ -374,66 +548,116 @@
     if (state.bootPromise) return state.bootPromise;
     state.status = 'auth_loading';
     renderLoadingAvatar();
+    refreshPanel();
+    openAuthPanel({ nav: currentNav() });
     state.bootPromise = (async () => {
       if (!publicConfigReady()) {
-        applySession(null, 'CONFIG_BLOCKED');
+        state.status = 'auth_error';
+        refreshPanel();
+        setPanelError('El acceso productivo no está configurado en esta publicación.', 'CONFIG_BLOCKED');
+        emitAuthState('CONFIG_BLOCKED');
         return null;
       }
       try {
         const bootstrap = await waitForAuthBootstrap();
-        if (typeof bootstrap?.getSession !== 'function') throw new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE');
+        if (typeof bootstrap?.getSession !== 'function') throw Object.assign(new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE'), { code: 'CLIENT_UNAVAILABLE' });
         const result = await bootstrap.getSession();
         applySession(result?.data?.session || null, 'INITIAL_SESSION');
         await ensureAuthListener();
         return state.session;
       } catch (error) {
+        const human = humanAuthError(error);
         state.status = 'auth_error';
         renderAnonymousAvatar();
-        emitAuthState(error?.code || 'AUTH_ERROR');
+        refreshPanel();
+        setPanelError(human.message, human.code);
+        emitAuthState(human.code);
         return null;
       }
     })();
     return state.bootPromise;
   }
 
-  async function startGoogleLogin() {
+  function setLoginBusy(busy, source = '') {
+    state.authBusy = busy;
+    const form = state.panel?.querySelector('[data-forge-auth-form]');
+    const google = state.panel?.querySelector('[data-forge-auth-google]');
+    const passwordButton = state.panel?.querySelector('[data-forge-auth-password-submit]');
+    const passwordLabel = state.panel?.querySelector('[data-forge-auth-password-label]');
+    const googleLabel = state.panel?.querySelector('[data-forge-auth-google-label]');
+    if (form) form.setAttribute('aria-busy', busy ? 'true' : 'false');
+    for (const control of form?.querySelectorAll('input, button') || []) control.disabled = busy;
+    if (google) google.disabled = busy;
+    if (passwordButton) passwordButton.disabled = busy;
+    if (passwordLabel) passwordLabel.textContent = busy && source === 'password' ? 'Comprobando acceso…' : 'Entrar a Forge';
+    if (googleLabel) googleLabel.textContent = busy && source === 'google' ? 'Abriendo Google…' : 'Continuar con Google';
+  }
+
+  async function startPasswordLogin(event) {
+    event?.preventDefault?.();
     if (state.authBusy) return;
-    state.authBusy = true;
+    const form = state.panel?.querySelector('[data-forge-auth-form]');
+    if (!form) return;
     setPanelError('');
-    const button = state.panel?.querySelector('[data-forge-auth-google]');
-    const previousText = button?.textContent || 'Continuar con Google';
-    if (button) {
-      button.disabled = true;
-      button.textContent = 'Abriendo Google…';
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
     }
+    const email = String(form.elements.email?.value || '').trim();
+    const password = String(form.elements.password?.value || '');
+    setLoginBusy(true, 'password');
     try {
       const bootstrap = await waitForAuthBootstrap();
-      if (typeof bootstrap?.signInWithGoogle !== 'function') throw new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE');
+      if (typeof bootstrap?.signInWithPassword !== 'function') {
+        throw Object.assign(new Error('CANONICAL_PASSWORD_AUTH_UNAVAILABLE'), { code: 'CLIENT_UNAVAILABLE' });
+      }
+      const { data, error } = await bootstrap.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (data?.session?.user?.id) applySession(data.session, 'SIGNED_IN');
+    } catch (error) {
+      const human = humanAuthError(error);
+      setPanelError(human.message, human.code);
+      state.panel?.querySelector('input[name="email"]')?.focus();
+    } finally {
+      setLoginBusy(false);
+    }
+  }
+
+  async function startGoogleLogin() {
+    if (state.authBusy) return;
+    setPanelError('');
+    setLoginBusy(true, 'google');
+    try {
+      const bootstrap = await waitForAuthBootstrap();
+      if (typeof bootstrap?.signInWithGoogle !== 'function') {
+        throw Object.assign(new Error('CANONICAL_AUTH_CLIENT_UNAVAILABLE'), { code: 'CLIENT_UNAVAILABLE' });
+      }
       const { error } = await bootstrap.signInWithGoogle({ redirectTo: canonicalRedirectUrl() });
       if (error) throw error;
     } catch (error) {
-      setPanelError(error?.code === 'CONFIG_BLOCKED'
-        ? 'Forge no tiene configuración pública productiva para iniciar sesión.'
-        : 'No pudimos abrir Google. Revisa la configuración de autenticación.');
-      state.authBusy = false;
-      if (button) {
-        button.disabled = false;
-        button.textContent = previousText;
-      }
+      const human = humanAuthError(error);
+      setPanelError(human.message, human.code);
+      setLoginBusy(false);
     }
   }
 
   async function startTestAdvisorLogin(advisorKey) {
     const adapter = testAdvisorAuthAdapter();
     if (!adapter || !testAdvisorLoginEnabled()) {
-      setPanelError('El acceso de prueba no está disponible en esta publicación.');
+      setPanelError('El acceso de prueba no está disponible en esta publicación.', 'TEST_LOGIN_UNAVAILABLE');
       return;
     }
-    await adapter.signInAsAdvisor({ advisorKey });
+    setPanelError('');
+    try {
+      await adapter.signInAsAdvisor({ advisorKey });
+    } catch (error) {
+      const human = humanAuthError(error);
+      setPanelError(human.message, human.code);
+    }
   }
 
   async function signOut() {
-    setPanelError('');
+    setPanelError('', '', true);
     const button = state.panel?.querySelector('[data-forge-auth-signout]');
     const previousText = button?.textContent || 'Cerrar sesión';
     if (button) {
@@ -448,7 +672,7 @@
       applySession(null, 'SIGNED_OUT');
       refreshPanel();
     } catch (error) {
-      setPanelError('No pudimos cerrar la sesión. Intenta nuevamente.');
+      setPanelError('No pudimos cerrar la sesión. Intenta nuevamente.', 'SIGN_OUT_ERROR', true);
     } finally {
       if (button?.isConnected) {
         button.disabled = false;
@@ -457,22 +681,54 @@
     }
   }
 
+  function togglePasswordVisibility() {
+    const input = state.panel?.querySelector('input[name="password"]');
+    const toggle = state.panel?.querySelector('[data-forge-auth-password-toggle]');
+    if (!input || !toggle) return;
+    const reveal = input.type === 'password';
+    input.type = reveal ? 'text' : 'password';
+    toggle.textContent = reveal ? 'Ocultar' : 'Ver';
+    toggle.setAttribute('aria-label', reveal ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    toggle.setAttribute('aria-pressed', reveal ? 'true' : 'false');
+    input.focus();
+  }
+
+  function setAuthThemeColor(active) {
+    const meta = global.document.querySelector('meta[name="theme-color"]');
+    if (!meta) return;
+    if (state.themeColorBeforeAuth === null) state.themeColorBeforeAuth = meta.getAttribute('content') || '';
+    meta.setAttribute('content', active ? '#F7F8FC' : state.themeColorBeforeAuth || '#F7F8FC');
+  }
+
   function openAuthPanel(options = {}) {
     const panel = ensurePanel();
     if (options.nav) state.requestedNav = options.nav;
     refreshPanel();
-    state.lastFocus = global.document.activeElement instanceof HTMLElement ? global.document.activeElement : null;
+    if (panel.hidden) state.lastFocus = global.document.activeElement?.focus ? global.document.activeElement : null;
     panel.hidden = false;
-    const focusTarget = panel.querySelector('[data-forge-auth-google]') || panel.querySelector('[data-forge-auth-close]');
-    focusTarget?.focus?.();
-    global.dispatchEvent(new CustomEvent('forge:auth-panel-opened', { detail: { contractId: CONTRACT_ID } }));
+    global.document.body.classList.add('forge-auth-open-067g17b1');
+    setAuthThemeColor(true);
+    global.setTimeout(() => {
+      const focusTarget = panel.querySelector('[data-forge-auth-login-view]:not([hidden]) input[name="email"]')
+        || panel.querySelector('[data-forge-auth-profile-view]:not([hidden]) [data-forge-auth-close]')
+        || panel.querySelector('.forge-auth-stage-067g17b1');
+      focusTarget?.focus?.();
+    }, 0);
+    global.dispatchEvent(new CustomEvent('forge:auth-panel-opened', {
+      detail: { contractId: CONTRACT_ID, designAuthority: DESIGN_AUTHORITY },
+    }));
   }
 
-  function closeAuthPanel() {
+  function closeAuthPanel(options = {}) {
     if (!state.panel) return;
+    if (state.status !== 'authenticated' && options.force !== true) return;
     state.panel.hidden = true;
+    global.document.body.classList.remove('forge-auth-open-067g17b1');
+    setAuthThemeColor(false);
     state.lastFocus?.focus?.();
-    global.dispatchEvent(new CustomEvent('forge:auth-panel-closed', { detail: { contractId: CONTRACT_ID } }));
+    global.dispatchEvent(new CustomEvent('forge:auth-panel-closed', {
+      detail: { contractId: CONTRACT_ID, designAuthority: DESIGN_AUTHORITY },
+    }));
   }
 
   function init() {
@@ -481,15 +737,9 @@
     ensurePanel();
     refreshPanel();
     bootstrapSession();
-    global.addEventListener('forge:auth-state-changed', () => {
-      global.setTimeout(discoverAvatars, 0);
-    });
-    global.addEventListener('forge:static-view-changed', () => {
-      global.setTimeout(discoverAvatars, 0);
-    });
-    global.addEventListener('forge:pipeline-rendered', () => {
-      global.setTimeout(discoverAvatars, 0);
-    });
+    global.addEventListener('forge:auth-state-changed', () => global.setTimeout(discoverAvatars, 0));
+    global.addEventListener('forge:static-view-changed', () => global.setTimeout(discoverAvatars, 0));
+    global.addEventListener('forge:pipeline-rendered', () => global.setTimeout(discoverAvatars, 0));
     global.document.addEventListener('click', (event) => {
       const opener = event.target.closest?.('[data-forge-auth-open]');
       if (!opener) return;
@@ -500,6 +750,7 @@
 
   const api = Object.freeze({
     contractId: CONTRACT_ID,
+    designAuthority: DESIGN_AUTHORITY,
     openAuthPanel,
     closeAuthPanel,
     refreshPanel,
@@ -507,14 +758,18 @@
     signOut,
     diagnostics: () => Object.freeze({
       contractId: CONTRACT_ID,
+      designAuthority: DESIGN_AUTHORITY,
       avatarCount: state.avatars.length,
       panelReady: Boolean(state.panel),
       status: state.status,
       advisorId: state.user?.id || null,
       authListenerAttached: Boolean(state.authSubscription),
+      passwordSignInAvailable: typeof global.ForgeProductiveProspectBootstrap067G17B?.signInWithPassword === 'function',
+      googleSignInAvailable: typeof global.ForgeProductiveProspectBootstrap067G17B?.signInWithGoogle === 'function',
       testAdvisorLoginEnabled: testAdvisorLoginEnabled(),
       testAdvisorLoginAvailable: testAdvisorLoginAvailable(),
       requestedNav: state.requestedNav,
+      material3DesignUsed: false,
     }),
   });
 
