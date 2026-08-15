@@ -17,6 +17,8 @@ on:
       - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
       - 'docs/static-preview/forge-aura/index.html'
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-closure-002c.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-radar-presentation-002c.js'
       - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
       - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
       - 'scripts/ci/rep16e-hotfix002-drain-queue.mjs'
@@ -24,6 +26,7 @@ on:
       - 'tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
+      - 'tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs'
       - 'playwright.rep16e.config.mjs'
       - '.github/workflows/rep-16e-activity-browser-acceptance.yml'
   pull_request:
@@ -40,6 +43,8 @@ on:
       - 'docs/static-preview/forge-alive-material3/node-crypto-shim.mjs'
       - 'docs/static-preview/forge-aura/index.html'
       - 'docs/static-preview/forge-aura/cartera/cartera-module-v13-017e.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-live-closure-002c.js'
+      - 'docs/static-preview/forge-aura/cartera/cartera-radar-presentation-002c.js'
       - 'scripts/build-advisor-presentation-pages-runtime*.mjs'
       - 'scripts/prepare-forge-alive-pages-runtime-closure.mjs'
       - 'scripts/ci/rep16e-hotfix002-drain-queue.mjs'
@@ -47,6 +52,7 @@ on:
       - 'tests/e2e/forge-commercial-pilot-017e-authenticated.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
+      - 'tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs'
       - 'playwright.rep16e.config.mjs'
       - '.github/workflows/rep-16e-activity-browser-acceptance.yml'
   workflow_dispatch:
@@ -60,7 +66,7 @@ env:
 jobs:
   chromium-acceptance:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     environment: 067g17a1-remote-acceptance
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -150,7 +156,7 @@ jobs:
           npx playwright test --config=playwright.rep16e.config.mjs --project=chromium-desktop tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs --grep "Gate A"
           cp artifacts/rep16e-playwright-results.json artifacts/rep16e-r2-gate-a-results.json
 
-      - name: Gate C real Aura Cartera desktop DeX mobile
+      - name: Gate C real Aura Cartera desktop DeX mobile + 002C geometry
         shell: bash
         run: |
           set -euo pipefail
@@ -159,12 +165,15 @@ jobs:
             node scripts/ci/rep16e-hotfix002-drain-queue.mjs "$project"
             npx playwright test --config=playwright.rep16e.config.mjs --project="$project" --retries=0 tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
             cp artifacts/rep16e-playwright-results.json "artifacts/rep16e-r2-real-acceptance-${project}-results.json"
+            npx playwright test --config=playwright.rep16e.config.mjs --project="$project" --retries=0 tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs
+            cp artifacts/rep16e-playwright-results.json "artifacts/rep16e-r2-geometry-${project}-results.json"
           done
           cp artifacts/rep16e-r2-real-acceptance-chromium-mobile-results.json artifacts/rep16e-r2-real-acceptance-results.json
           echo 'REAL_AURA_CARTERA_ACCEPTANCE=PASS'
           echo 'REAL_AURA_CARTERA_DESKTOP=PASS'
           echo 'REAL_AURA_CARTERA_DEX=PASS'
           echo 'REAL_AURA_CARTERA_MOBILE=PASS'
+          echo 'CARTERA_002C_GEOMETRY_MATRIX=PASS'
 
       - name: Governed 017E contract
         run: |
@@ -226,16 +235,32 @@ jobs:
           if (!selector.includes('forge-commercial-pilot-017e-real-acceptance')) {
             throw new Error('REP16E_R2_REAL_ACCEPTANCE_CHILD_MISSING');
           }
+          if (!selector.includes('cartera-real-user-dex-closure-002c-geometry')) {
+            throw new Error('CARTERA_002C_GEOMETRY_CHILD_MISSING');
+          }
+          if (!selector.includes('viewport: { width: 1440, height: 900 }')) {
+            throw new Error('CARTERA_002C_DESKTOP_GEOMETRY_MISSING');
+          }
+          if (!selector.includes('viewport: { width: 1600, height: 900 }')) {
+            throw new Error('CARTERA_002C_DEX_GEOMETRY_MISSING');
+          }
+          if (!selector.includes('viewport: { width: 390, height: 844 }')) {
+            throw new Error('CARTERA_002C_MOBILE_GEOMETRY_MISSING');
+          }
           if (!workflow.includes('forge-commercial-pilot-017e-r2.spec.mjs --grep "Gate A"')) {
             throw new Error('REP16E_R2_FAKE_GATE_C_STILL_REQUIRED');
           }
           if (!workflow.includes('forge-commercial-pilot-017e-real-acceptance.spec.mjs')) {
             throw new Error('REP16E_R2_REAL_ACCEPTANCE_NOT_REQUIRED');
           }
+          if (!workflow.includes('cartera-real-user-dex-closure-002c-geometry.spec.mjs')) {
+            throw new Error('CARTERA_002C_GEOMETRY_NOT_REQUIRED');
+          }
           if (!workflow.includes('chromium-desktop chromium-dex chromium-mobile')) {
             throw new Error('REP16E_R2_THREE_VIEWPORT_REAL_ACCEPTANCE_MISSING');
           }
           console.log(`REP16E_R2_TRIPLE_CHECK=PASS head=${evidence.head}`);
+          console.log('CARTERA_002C_EXACT_GEOMETRY_REQUIRED=YES');
           console.log('LEGACY_RUNTIME_MOUNT_REPLACED=YES');
           console.log('REPLACEMENT_COVERAGE_COMPLETE=YES');
           console.log('TEST_THEATER=NO');
@@ -253,6 +278,7 @@ jobs:
             artifacts/rep16e-r2-governed-contract-results.json
             artifacts/rep16e-r2-real-acceptance-results.json
             artifacts/rep16e-r2-real-acceptance-*-results.json
+            artifacts/rep16e-r2-geometry-*-results.json
             artifacts/rep16e-r2-activity-results.json
             artifacts/rep16e-playwright-test-results
             artifacts/rep16e-r2-pages-site/rep16e-r2-pages-evidence.json
