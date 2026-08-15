@@ -154,6 +154,7 @@ test('G — Future Radar remains the only primary Cartera attention owner', asyn
   ]);
   assert.equal(CARTERA_PRIMARY_ATTENTION_OWNER_002C, 'CARTERA_050_FUTURE_RADAR');
   assert.match(baseClosure, /querySelector\('#cartera-attention-title'\)\?\.closest\('\.cartera-panel'\)/);
-  assert.match(module, /primaryAttentionOwner: CARTERA_PRIMARY_ATTENTION_OWNER_002C/);
+  assert.match(module, /primaryAttentionOwner: CARTERA_PRIMARY_ATTENTION_OWNER_002B/);
+  assert.match(module, /void createAuraCarteraFutureRadar017e/);
   assert.doesNotMatch(module, /Lo que conviene revisar ahora/);
 });
