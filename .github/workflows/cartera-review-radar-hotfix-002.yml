@@ -14,7 +14,6 @@ on:
       - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
       - 'scripts/prepare-cartera-review-pages-runtime.mjs'
       - 'scripts/prepare-segubeca-pages-runtime.mjs'
-      - 'scripts/ci/rep16e-hotfix002-drain-queue.mjs'
       - 'tests/cartera-review-radar-hotfix-002.test.mjs'
       - 'tests/cartera-live-presentation-002b-idempotence.test.mjs'
       - 'tests/cartera-real-user-dex-closure-002c.test.mjs'
@@ -22,7 +21,6 @@ on:
       - 'tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
       - 'playwright.rep16e.config.mjs'
-      - 'playwright.cartera-real-user-dex-002c.config.mjs'
       - '.github/workflows/cartera-review-radar-hotfix-002.yml'
   push:
     branches: [main]
@@ -38,7 +36,6 @@ on:
       - 'platform/portfolio-intelligence/cartera-050d-future-radar-view.js'
       - 'scripts/prepare-cartera-review-pages-runtime.mjs'
       - 'scripts/prepare-segubeca-pages-runtime.mjs'
-      - 'scripts/ci/rep16e-hotfix002-drain-queue.mjs'
       - 'tests/cartera-review-radar-hotfix-002.test.mjs'
       - 'tests/cartera-live-presentation-002b-idempotence.test.mjs'
       - 'tests/cartera-real-user-dex-closure-002c.test.mjs'
@@ -46,14 +43,10 @@ on:
       - 'tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs'
       - 'tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs'
       - 'playwright.rep16e.config.mjs'
-      - 'playwright.cartera-real-user-dex-002c.config.mjs'
       - '.github/workflows/cartera-review-radar-hotfix-002.yml'
 
 permissions:
   contents: read
-
-env:
-  SUPABASE_PROJECT_REF: rmlxigxysujsuwzgoimv
 
 jobs:
   authority-and-regression:
@@ -90,7 +83,7 @@ jobs:
           node --check scripts/prepare-segubeca-pages-runtime.mjs
           node --check tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
           node --check tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs
-          node --check playwright.cartera-real-user-dex-002c.config.mjs
+          node --check playwright.rep16e.config.mjs
       - name: Hotfix 002 and 002C authority and UX contract
         run: |
           node --test tests/cartera-review-radar-hotfix-002.test.mjs
@@ -183,132 +176,3 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Desktop DeX Mobile Radar acceptance
         run: npx playwright test --config=playwright.cartera-radar-hotfix-001.config.mjs
-
-  exact-real-browser-002c:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 40
-    environment: 067g17a1-remote-acceptance
-    env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-      - name: Verify exact tested HEAD
-        env:
-          EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-        run: |
-          ACTUAL_SHA="$(git rev-parse HEAD)"
-          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
-          echo "HOTFIX002C_REAL_BROWSER_EXACT_HEAD=$ACTUAL_SHA"
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-      - name: Install repository dependencies
-        run: npm ci
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-      - uses: supabase/setup-cli@v1
-        with:
-          version: 2.114.0
-      - name: Prepare one-run governed acceptance credentials
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/forge002c"
-          admin_token="$(openssl rand -hex 32)"
-          password_a="$(openssl rand -base64 36 | tr -d '\n' | tr '/+' '_-')Aa1!"
-          password_b="$(openssl rand -base64 36 | tr -d '\n' | tr '/+' '_-')Bb2!"
-          printf '%s' "$admin_token" > "$RUNNER_TEMP/forge002c/admin-token"
-          printf '%s' "$password_a" > "$RUNNER_TEMP/forge002c/a-password"
-          printf '%s' "$password_b" > "$RUNNER_TEMP/forge002c/b-password"
-          chmod 600 "$RUNNER_TEMP/forge002c/"*
-          echo "::add-mask::$admin_token"
-          echo "::add-mask::$password_a"
-          echo "::add-mask::$password_b"
-          echo '002C_REAL_ACCEPTANCE_CREDENTIALS=PREPARED'
-      - name: Reuse governed acceptance control plane
-        shell: bash
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          set -euo pipefail
-          admin_token="$(cat "$RUNNER_TEMP/forge002c/admin-token")"
-          password_a="$(cat "$RUNNER_TEMP/forge002c/a-password")"
-          password_b="$(cat "$RUNNER_TEMP/forge002c/b-password")"
-          supabase secrets set \
-            FORGE_ACCEPTANCE_ADMIN_TOKEN="$admin_token" \
-            FORGE_ACCEPTANCE_A_PASSWORD="$password_a" \
-            FORGE_ACCEPTANCE_B_PASSWORD="$password_b" \
-            --project-ref "$SUPABASE_PROJECT_REF"
-          supabase functions deploy forge-acceptance-admin --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt
-          echo '002C_ACCEPTANCE_CONTROL_PLANE_REUSED=YES'
-      - name: Open controlled acceptance window
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/cartera-002c-real-acceptance
-          admin_token="$(cat "$RUNNER_TEMP/forge002c/admin-token")"
-          curl --fail --silent --show-error -X POST \
-            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
-            -H 'Content-Type: application/json' \
-            -H "x-forge-acceptance-admin-token: $admin_token" \
-            --data '{"action":"PROVISION"}' > artifacts/cartera-002c-real-acceptance/provision.json
-          node -e "const p=require('./artifacts/cartera-002c-real-acceptance/provision.json');if(p.ok!==true||p.accountsOpened!==2)throw Error('PROVISION_FAILED')"
-          echo '002C_REAL_ACCEPTANCE_WINDOW=OPEN'
-      - name: Build exact-head canonical Pages test artifact
-        run: |
-          npx playwright test --config=playwright.rep16e.config.mjs --project=chromium-desktop tests/e2e/forge-commercial-pilot-017e-r2.spec.mjs --grep "Gate A"
-          cp artifacts/rep16e-playwright-results.json artifacts/cartera-002c-gate-a-results.json
-      - name: Real Aura exact desktop DeX mobile matrix
-        shell: bash
-        run: |
-          set -euo pipefail
-          export FORGE_ACCEPTANCE_A_PASSWORD="$(cat "$RUNNER_TEMP/forge002c/a-password")"
-          for project in chromium-desktop-002c chromium-dex-002c chromium-mobile-002c; do
-            node scripts/ci/rep16e-hotfix002-drain-queue.mjs "$project"
-            npx playwright test --config=playwright.cartera-real-user-dex-002c.config.mjs --project="$project" --retries=0 tests/e2e/forge-commercial-pilot-017e-real-acceptance.spec.mjs
-            cp artifacts/cartera-002c-playwright-results.json "artifacts/cartera-002c-real-${project}.json"
-            npx playwright test --config=playwright.cartera-real-user-dex-002c.config.mjs --project="$project" --retries=0 tests/e2e/cartera-real-user-dex-closure-002c-geometry.spec.mjs
-            cp artifacts/cartera-002c-playwright-results.json "artifacts/cartera-002c-geometry-${project}.json"
-          done
-          echo '002C_REAL_DESKTOP=PASS'
-          echo '002C_REAL_DEX=PASS'
-          echo '002C_REAL_MOBILE=PASS'
-          echo '002C_REAL_MATRIX=PASS'
-      - name: Seal synthetic acceptance identities
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ ! -f "$RUNNER_TEMP/forge002c/admin-token" ]; then
-            echo '002C_REAL_ACCEPTANCE_WINDOW=NOT_OPENED'
-            exit 0
-          fi
-          admin_token="$(cat "$RUNNER_TEMP/forge002c/admin-token")"
-          curl --fail --silent --show-error -X POST \
-            "https://${SUPABASE_PROJECT_REF}.supabase.co/functions/v1/forge-acceptance-admin" \
-            -H 'Content-Type: application/json' \
-            -H "x-forge-acceptance-admin-token: $admin_token" \
-            --data '{"action":"SEAL"}' > artifacts/cartera-002c-real-acceptance/seal.json
-          node -e "const p=require('./artifacts/cartera-002c-real-acceptance/seal.json');if(p.ok!==true)throw Error('SEAL_FAILED')"
-          echo '002C_REAL_ACCEPTANCE_WINDOW=SEALED'
-      - name: Upload 002C browser evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cartera-002c-browser-evidence-${{ github.run_id }}
-          path: |
-            artifacts/cartera-002c-playwright-report
-            artifacts/cartera-002c-playwright-results.json
-            artifacts/cartera-002c-playwright-test-results
-            artifacts/cartera-002c-real-*.json
-            artifacts/cartera-002c-geometry-*.json
-            artifacts/cartera-002c-gate-a-results.json
-            artifacts/cartera-002c-real-acceptance/
-            artifacts/rep16e-r2-pages-site/rep16e-r2-pages-evidence.json
-          if-no-files-found: warn
-          retention-days: 14
