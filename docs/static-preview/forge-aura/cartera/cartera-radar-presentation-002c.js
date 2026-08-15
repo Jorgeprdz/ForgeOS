@@ -5,6 +5,7 @@ import {
 } from './cartera-live-closure-002c.js?v=post017e-hotfix002c-safe-labels';
 
 const DOCUMENT_REVIEW_LABEL = 'Documento pendiente de revisión';
+const LEGACY_DOCUMENT_AS_POLICY_LABEL = 'Información de póliza por revisar';
 const SOURCE_LABELS = Object.freeze({
   DOCUMENT_INTAKE: 'Documentos',
   PAYMENT_OBLIGATION: 'Pagos',
@@ -63,16 +64,25 @@ function sanitizeTextNodes002c(node) {
   }
 }
 
+function documentPacketCard002c(trigger) {
+  const packetReference = text(trigger?.getAttribute?.('data-radar-review-packet'));
+  if (!packetReference.startsWith('POLICY_PACKET:')) return null;
+  return trigger.closest('[data-radar-signal-reference]');
+}
+
 export function reconcileCarteraRadarPresentation002c(root) {
   if (!root) return;
 
   root.querySelectorAll('[data-radar-review-packet]').forEach(trigger => {
-    const packetReference = text(trigger.getAttribute('data-radar-review-packet'));
-    if (!packetReference.startsWith('POLICY_PACKET:')) return;
-    const card = trigger.closest('[data-radar-signal-reference]');
-    const title = card?.querySelector('h5');
+    const card = documentPacketCard002c(trigger);
+    if (!card) return;
+    const title = card.querySelector('h5');
     if (title && text(title.textContent) !== DOCUMENT_REVIEW_LABEL) {
       title.textContent = DOCUMENT_REVIEW_LABEL;
+    }
+    const groupSubtitle = card.closest('.radar002-person')?.querySelector('.radar002-person-head p');
+    if (groupSubtitle && text(groupSubtitle.textContent) === LEGACY_DOCUMENT_AS_POLICY_LABEL) {
+      groupSubtitle.textContent = DOCUMENT_REVIEW_LABEL;
     }
   });
 
@@ -91,6 +101,19 @@ export function reconcileCarteraRadarPresentation002c(root) {
   sanitizeTextNodes002c(root);
 }
 
+function reconcileDocumentArticleHtml002c(article) {
+  if (!/data-radar-review-packet="POLICY_PACKET:[^"]+"/i.test(article)) return article;
+  return article
+    .replace(
+      /(<header\b[^>]*class="[^"]*\bradar002-person-head\b[^"]*"[^>]*>[\s\S]*?<p>)Información de póliza por revisar(<\/p>)/i,
+      `$1${DOCUMENT_REVIEW_LABEL}$2`,
+    )
+    .replace(
+      /(<section\b[^>]*class="[^"]*\bradar002-signal\b[^"]*"[^>]*>[\s\S]*?<h5>)[\s\S]*?(<\/h5>)/i,
+      `$1${DOCUMENT_REVIEW_LABEL}$2`,
+    );
+}
+
 export function sanitizeCarteraRadarHtml002c(html) {
   const source = String(html ?? '');
   const styleBlocks = [];
@@ -101,11 +124,8 @@ export function sanitizeCarteraRadarHtml002c(html) {
   });
 
   protectedHtml = protectedHtml.replace(
-    /<section\b[^>]*class="[^"]*\bradar002-signal\b[^"]*"[^>]*>[\s\S]*?<\/section>/gi,
-    card => {
-      if (!/data-radar-review-packet="POLICY_PACKET:[^"]+"/i.test(card)) return card;
-      return card.replace(/(<h5>)[\s\S]*?(<\/h5>)/i, `$1${DOCUMENT_REVIEW_LABEL}$2`);
-    },
+    /<article\b[^>]*class="[^"]*\bradar002-person\b[^"]*"[^>]*>[\s\S]*?<\/article>/gi,
+    reconcileDocumentArticleHtml002c,
   );
   protectedHtml = protectedHtml
     .replace(/<div><dt>Registro<\/dt><dd>[\s\S]*?<\/dd><\/div>/gi, '')
