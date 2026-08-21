@@ -13300,3 +13300,119 @@ NEXT=FES_03_TIMELINE_AND_PROJECTION_RUNTIME
 - 🔴 Alfred-generated recommendation
 - 🔵 FES 03G projection runtime acceptance
 <!-- END FORGEOS:FES_03F_MI_DIA_PROJECTION -->
+
+
+<!-- BEGIN FORGEOS:CARTERA_RELATIONSHIP_INTELLIGENCE_PROGRAM -->
+# Cartera Relationship Intelligence Program
+
+Status: `PROGRAM_REGISTERED / DOCUMENTATION_ACTIVE / IMPLEMENTATION_NOT_STARTED`
+
+Canonical scope: `docs/architecture/source-truth/FORGE_CARTERA_RELATIONSHIP_INTELLIGENCE_ROADMAP_001.md`
+
+Architectural objective:
+
+> Help the advisor sell 30% more without working 30% more.
+
+Official relationship principle:
+
+> Forge does not administer clients or policies as isolated records. Forge administers relationships, understands their context and anticipates their evolution so the advisor can invest time where it creates the greatest value.
+
+Operating boundary:
+
+> Forge is a copilot, never an autopilot. It detects, connects, explains and proposes; the advisor confirms consequential decisions and actions.
+
+## Authorized program sequence
+
+~~~text
+🟡 CARTERA_000_DOCUMENTATION_AND_GOVERNANCE
+├── 🟡 Ratify Cartera operating model and roadmap
+├── 🟡 Lock identity continuity through the existing prospect_uuid
+├── 🟡 Lock Identity Resolution Before Creation
+├── 🟡 Lock domain ownership, evidence, privacy and human-confirmation boundaries
+└── 🔴 Documentation does not prove runtime implementation
+
+🔵 CARTERA_001_PIPELINE_QUOTE_PERSON_TIMELINE_CONTINUITY — NEXT
+├── 🔵 Discover current quote, prospect, timeline and event contracts before mutation
+├── 🔵 Preserve the existing prospect_uuid as the canonical continuity reference
+├── 🔵 Return quote lifecycle events to the person timeline projected in Pipeline
+├── 🔵 Display quote history in Prospect Detail without duplicating Quote Intelligence truth
+└── 🔴 Do not create a second person, client or policyholder identity
+
+🔵 CARTERA_010_CONTROL_BASE_AND_EXISTING_ASSET_DISCOVERY
+├── 🔵 Discover and reuse the existing Client CRM read-only adapter 065A-065D
+├── 🔵 Discover and reuse Opportunity Pipeline, Policy read-model, Event & Evidence and Relationship Graph assets
+├── 🔵 Define the advisor-facing Cartera read model for people, policies, roles and next relevant dates
+└── 🔴 Do not rebuild an existing engine before repository discovery
+
+🔵 CARTERA_020_DOCUMENT_INTAKE_AND_IDENTITY_RESOLUTION
+├── 🔵 Discover and reuse the existing policy PDF extraction and queued batch-processing motor
+├── 🔵 Support governed drag-and-drop intake with one-by-one review
+├── 🔵 Extract policy, party, coverage, beneficiary, term and payment facts with provenance
+├── 🔵 Search existing identities before creation and ask the advisor to link, correct or create
+└── 🔴 No automatic identity merge or unreviewed bulk persistence
+
+🔵 CARTERA_030_POLICY_AND_PAYMENT_CALENDAR
+├── 🔵 Project payment obligations, anniversaries, renewals and policy-year transitions
+├── 🔵 Preserve expected, detected, confirmed, partial, overdue and corrected payment states
+├── 🔵 Surface 7-, 30- and 90-day attention windows
+└── 🔴 Scheduled or detected payment is not confirmed payment truth
+
+🔵 CARTERA_040_RELATIONSHIP_MEMORY_AND_NETWORK_CONTEXT
+├── 🔵 Unify origin, referrals, appointments, needs, objections, quotes, applications, policies and service history
+├── 🔵 Model household, family, company, partner, referrer and center-of-influence relationships
+├── 🔵 Preserve source, freshness, uncertainty and consent for relational signals
+└── 🔴 Relationship context is not permission or commercial leverage
+
+🔵 CARTERA_050_FUTURE_RADAR_AND_CONSERVATION
+├── 🔵 Explain what is likely to happen with each policy and relationship
+├── 🔵 Distinguish confirmed facts, scheduled events, detected evidence, inference and recommendation
+├── 🔵 Consume Conservation and Compensation authority without duplicating formulas
+└── 🔴 Forecast or risk signal is not policy, payment or payout truth
+
+🔵 CARTERA_060_RELATIONSHIP_GROWTH_INTELLIGENCE
+├── 🔵 Detect evidence-backed second-policy, protection-review and warm-opportunity moments
+├── 🔵 Explain why this person, why now, what evidence exists and what remains uncertain
+├── 🔵 Return advisor-confirmed commercial opportunities to Pipeline
+└── 🔴 Life event, trust or proximity is never an automatic sales trigger
+
+🔵 CARTERA_070_CANDY_CRUSH_RELATIONAL_ACTIVATION
+├── 🔵 When activity is low, propose a few high-value relationship-strengthening actions
+├── 🔵 Include payment confirmation, renewal preparation, service review, referral gratitude and center-of-influence strengthening
+├── 🔵 Offer the smallest useful next action and preserve advisor control
+└── 🔴 Do not inflate activity with generic task volume
+
+🔵 CARTERA_080_EMAIL_PAYMENT_AND_COMPENSATION_CONNECTION
+├── 🔵 Detect payment, issue, renewal, refund, cancellation and reinstatement evidence in connected email
+├── 🔵 Ask the advisor to confirm policy, period, date and amount
+├── 🔵 Publish confirmed events for payment, Activity, Conservation and Compensation projections
+└── 🔴 Cartera does not invent commission percentages or confirm email evidence autonomously
+
+🔵 CARTERA_090_RELATIONSHIP_CAPITAL
+├── 🔵 Project referral paths, prior introductions and center-of-influence evidence from the Relationship Graph
+├── 🔵 Recommend strengthening a relationship even when no immediate sale or renewal is due
+└── 🔴 No opaque influence score may become relationship truth
+
+🔵 CARTERA_100_PRODUCTIVITY_PROOF_AND_LEARNING
+├── 🔵 Measure capture hours avoided, duplicates prevented, payments protected and commissions surfaced
+├── 🔵 Measure warm opportunities, second-policy reviews and production per advisor hour
+├── 🔵 Learn which evidence-backed recommendations create useful advisor outcomes
+└── 🔴 Do not optimize for manipulation, contact volume or inferred consent
+~~~
+
+## Delivery order
+
+1. Control: `CARTERA_000` through `CARTERA_020`.
+2. Anticipation: `CARTERA_030` through `CARTERA_050`.
+3. Growth: `CARTERA_060` and `CARTERA_070`.
+4. Assisted connection: `CARTERA_080` and `CARTERA_090`.
+5. Optimization: `CARTERA_100`.
+
+## Codex authorization and discovery rule
+
+- Codex may plan or implement only the currently authorized phase and its explicit dependencies.
+- Every implementation phase begins with repository discovery and reusable-asset mapping.
+- Existing engines, adapters, schemas and source-truth contracts must be reused before new authorities are created.
+- The registered immediate implementation target after documentation lock is `CARTERA_001_PIPELINE_QUOTE_PERSON_TIMELINE_CONTINUITY`.
+- Later phases remain planned and must not be implemented early merely because they appear in this tree.
+- Runtime completion requires evidence, tests and a closure or decision lock; roadmap presence alone is not completion proof.
+<!-- END FORGEOS:CARTERA_RELATIONSHIP_INTELLIGENCE_PROGRAM -->
