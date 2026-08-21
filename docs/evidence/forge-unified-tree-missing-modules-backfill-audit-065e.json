@@ -9,6 +9,33 @@
     "Sales Presentation System",
     "Oye Alfred Wake Voice System"
   ],
+  "absorptionReconciliation": {
+    "status": "PASS",
+    "id": "065E2_ABSORBED_CAPABILITIES_ANNOTATION",
+    "date": "2026-07-30",
+    "retainedCapabilities": [
+      "Referral Engine / Referidos",
+      "Bitacora / Notes System"
+    ],
+    "absorbedBy": {
+      "Referral Engine / Referidos.operationalLifecycle": "ADVISOR_OS_SALES_PIPELINE",
+      "Bitacora / Notes System.prospectInitialContext": "ADVISOR_OS_SALES_PIPELINE",
+      "Bitacora / Notes System.governedProspectContextAdapter": "ADVISOR_OS_SALES_PIPELINE"
+    },
+    "remainingOwners": {
+      "Referral Opportunity Intelligence": "RELATIONSHIP_INTELLIGENCE",
+      "Intelligent Referral Generation": "LEAD_GENERATION_BOOST",
+      "Timeline Notes": "ACTIVITY / FES",
+      "Policy Notes": "CARTERA",
+      "Appointment Notes": "ACTIVITY / APPOINTMENT LIFECYCLE",
+      "Automatic Tags and AI Context": "FUTURE GOVERNED INTELLIGENCE"
+    },
+    "standaloneParallelModuleAllowed": {
+      "Referral Engine / Referidos": false,
+      "Bitacora / Notes System": false
+    },
+    "capabilityDeleted": false
+  },
   "treeOnly": true,
   "uiMutation": false,
   "backendConnection": false,

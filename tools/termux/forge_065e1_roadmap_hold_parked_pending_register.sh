@@ -128,15 +128,17 @@ Review quote/cotizacion modules and Product Intelligence database usage before a
 - no passive listening without permission;
 - no real execution without approval gate.
 
-`NOTES_SYSTEM_SCOPE`
+`NOTES_SYSTEM_REMAINDER_SCOPE`
 
-- notes by client;
-- notes by policy;
-- notes by appointment;
-- quick notes by voice/text;
-- automatic tags;
-- AI context;
-- integrated timeline.
+Status: REMAINDER DISTRIBUTED / NOT A STANDALONE MODULE
+
+- prospect initial context -> absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+- governed prospect context adapter -> absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+- timeline and chronological notes -> `ACTIVITY / FES`;
+- notes by policy -> `CARTERA`;
+- notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`;
+- quick voice/text capture -> future capture adapter;
+- automatic tags and AI context -> future governed intelligence scope.
 
 `REAL_TIME_CONVERSATION_COPILOT_SCOPE`
 
@@ -154,7 +156,7 @@ Requires explicit permission, recording consent, retention/privacy rules, and pr
 `LEAD_GENERATION_BOOST_SCOPE`
 
 - prospect generation;
-- intelligent referrals;
+- intelligent referral generation only; operational referral intake and lifecycle are absorbed by `ADVISOR_OS_SALES_PIPELINE`;
 - dormant contact reactivation;
 - outreach scripts;
 - prospecting campaigns;
@@ -205,7 +207,9 @@ Registered:
 - HOLD: `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
 - PARKED: `065F_IOS_STATIC_PREVIEW_LAYOUT_OVERFLOW_REPAIR`
 - PENDING REVIEW: Product Intelligence, Quote modules
-- PENDING FUTURE SCOPES: Oye Alfred, Notes System, Conversation Copilot, Lead Generation Boost, Sales Presentation System
+- ABSORBED / RETAINED: Referral operations and prospect context -> `ADVISOR_OS_SALES_PIPELINE`
+- PENDING FUTURE SCOPES: Oye Alfred, Notes remainder distributed across Activity / FES and Cartera, Conversation Copilot, Lead Generation Boost, Sales Presentation System
+- STANDALONE PARALLEL MODULES FORBIDDEN: Referidos, Notes System
 
 DECISION=PASS_065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER
 
@@ -222,7 +226,7 @@ cat > "$AUDIT" <<'JSON'
   "pendingReview": ["PRODUCT_INTELLIGENCE_REVIEW", "QUOTE_MODULES_REVIEW"],
   "pendingFutureScopes": [
     "OYE_ALFRED_WAKE_VOICE_SYSTEM_SCOPE",
-    "NOTES_SYSTEM_SCOPE",
+    "NOTES_SYSTEM_REMAINDER_SCOPE",
     "REAL_TIME_CONVERSATION_COPILOT_SCOPE",
     "LEAD_GENERATION_BOOST_SCOPE",
     "SALES_PRESENTATION_SYSTEM_SCOPE"

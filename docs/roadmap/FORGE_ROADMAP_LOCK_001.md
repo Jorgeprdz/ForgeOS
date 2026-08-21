@@ -3064,7 +3064,7 @@ NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
 <!-- FORGE:065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL:START -->
 ## 065E Unified Build Tree Missing Modules Backfill
 
-Status: PASS
+Status: PASS / RECONCILED WITH PRODUCTIVE VERTICALS
 
 Current lock:
 `065D_CLIENT_CRM_READ_ONLY_ADAPTER_DECISION_LOCK`
@@ -3072,19 +3072,49 @@ Current lock:
 Held next:
 `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
 
-Backfilled modules:
+### Capability Absorption Register
+
+#### Referral Engine / Referidos
+
+Status: RETAINED / OPERATIONALLY ABSORBED
+
+Absorbed by:
+
+- `ADVISOR_OS_SALES_PIPELINE` owns referral intake, referrer fields, source classification, prospect lifecycle, follow-up and conversion-stage movement.
+- The capability remains in the build tree and is not deleted.
+
+Remaining ownership:
+
+- `RELATIONSHIP_INTELLIGENCE` retains Referral Opportunity Intelligence.
+- `LEAD_GENERATION_BOOST` retains future intelligent referral generation only.
+
+Rule:
+
+- Do not create a parallel standalone Referidos module or a second referral system of record.
 
 ### 02 Policy & Sales Operation Engine
 
 Add `Bitacora / Notes System`:
 
-- notes by client
-- notes by policy
-- notes by appointment
-- quick notes by voice/text
-- automatic tags
-- AI context
-- integrated timeline
+Status: RETAINED / PARTIALLY ABSORBED / REMAINDER DISTRIBUTED
+
+Absorbed by:
+
+- prospect initial context -> `ADVISOR_OS_SALES_PIPELINE`;
+- governed prospect context adapter -> `ADVISOR_OS_SALES_PIPELINE`.
+
+Remaining ownership:
+
+- timeline and chronological notes -> `ACTIVITY / FES`;
+- notes by policy -> `CARTERA`;
+- notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`;
+- quick voice/text capture -> future capture adapter;
+- automatic tags and AI context interpretation -> future governed intelligence scope.
+
+Rule:
+
+- Do not create a parallel standalone Notes module while these capabilities are owned by their productive verticals.
+- Capture once: Pipeline context must not be duplicated in another surface.
 
 ### 05 AI & Predictive Intelligence
 
@@ -3105,12 +3135,14 @@ Lock: requires explicit permission, recording consent, retention rules, privacy 
 Add `Lead Generation Boost`:
 
 - prospect generation
-- intelligent referrals
+- intelligent referral generation only; operational referral intake and lifecycle are already absorbed by `ADVISOR_OS_SALES_PIPELINE`
 - dormant contact reactivation
 - outreach scripts
 - prospecting campaigns
 - lead scoring
 - daily suggestions for who to contact
+
+Lock: no outreach, campaign launch, enrichment, send, provider call, or automated contact action until separately scoped.
 
 ### Sales Enablement Sub-Branch
 
@@ -3142,6 +3174,8 @@ Add `Oye Alfred Wake Voice System`:
 - no real execution without approval gate
 
 DECISION=PASS_065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL
+ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
+RECONCILIATION_DATE=2026-07-30
 
 NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
 <!-- FORGE:065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL:END -->
@@ -3149,13 +3183,30 @@ NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
 <!-- FORGE:065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER:START -->
 ## 065E1 Roadmap Hold / Parked / Pending Register
 
-Status: PASS / ROADMAP REGISTERED
+Status: PASS / ROADMAP REGISTERED / ABSORPTION RECONCILED
 
 Current completed lock:
 `065E_UNIFIED_BUILD_TREE_MISSING_MODULES_BACKFILL`
 
 Active next:
 `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
+
+### ABSORBED CAPABILITIES — RETAINED IN BUILD TREE
+
+`REFERRAL_ENGINE_OPERATIONAL_CAPABILITY`
+
+- absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+- includes referral intake, referrer metadata, source classification, prospect lifecycle and follow-up;
+- `RELATIONSHIP_INTELLIGENCE` retains Referral Opportunity Intelligence;
+- `LEAD_GENERATION_BOOST` retains future intelligent referral generation;
+- standalone parallel Referidos module: forbidden.
+
+`NOTES_SYSTEM_PROSPECT_CONTEXT_CAPABILITY`
+
+- prospect initial context absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+- governed prospect context adapter absorbed by `ADVISOR_OS_SALES_PIPELINE`;
+- capability remains in the tree and is not deleted;
+- standalone parallel Notes module: forbidden.
 
 ### HOLD
 
@@ -3204,15 +3255,15 @@ Review quote/cotizacion modules and Product Intelligence database usage before a
 - no passive listening without permission;
 - no real execution without approval gate.
 
-`NOTES_SYSTEM_SCOPE`
+`NOTES_SYSTEM_REMAINDER_SCOPE`
 
-- notes by client;
-- notes by policy;
-- notes by appointment;
-- quick notes by voice/text;
-- automatic tags;
-- AI context;
-- integrated timeline.
+Status: REMAINDER DISTRIBUTED / NOT A STANDALONE MODULE
+
+- timeline and chronological notes -> `ACTIVITY / FES`;
+- notes by policy -> `CARTERA`;
+- notes by appointment -> `ACTIVITY / APPOINTMENT LIFECYCLE`;
+- quick voice/text capture -> future capture adapter;
+- automatic tags and AI context -> future governed intelligence scope.
 
 `REAL_TIME_CONVERSATION_COPILOT_SCOPE`
 
@@ -3230,7 +3281,7 @@ Requires explicit permission, recording consent, retention/privacy rules, and pr
 `LEAD_GENERATION_BOOST_SCOPE`
 
 - prospect generation;
-- intelligent referrals;
+- intelligent referral generation only; operational referral intake and lifecycle are absorbed by `ADVISOR_OS_SALES_PIPELINE`;
 - dormant contact reactivation;
 - outreach scripts;
 - prospecting campaigns;
@@ -3264,10 +3315,10 @@ Every session must end with:
 - `DO_NOT_FORGET`.
 
 DECISION=PASS_065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER
+ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
 
 NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
 <!-- FORGE:065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER:END -->
-
 <!-- FORGE:066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE:START -->
 ## 066A Opportunity Pipeline Read-Only Adapter Scope
 

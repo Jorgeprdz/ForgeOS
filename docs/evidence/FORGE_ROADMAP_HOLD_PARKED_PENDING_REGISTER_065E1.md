@@ -1,14 +1,17 @@
 # Forge Roadmap Hold / Parked / Pending Register 065E1
 
-Status: PASS
+Status: PASS / ABSORPTION RECONCILED
 
 Registered:
 
 - HOLD: `066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE`
 - PARKED: `065F_IOS_STATIC_PREVIEW_LAYOUT_OVERFLOW_REPAIR`
 - PENDING REVIEW: Product Intelligence, Quote modules
-- PENDING FUTURE SCOPES: Oye Alfred, Notes System, Conversation Copilot, Lead Generation Boost, Sales Presentation System
+- ABSORBED / RETAINED: Referral operations -> `ADVISOR_OS_SALES_PIPELINE`; Prospect initial context and governed context adapter -> `ADVISOR_OS_SALES_PIPELINE`
+- PENDING FUTURE SCOPES: Oye Alfred, Notes remainder distributed across Activity / FES and Cartera, Conversation Copilot, Lead Generation Boost, Sales Presentation System
+- STANDALONE PARALLEL MODULES FORBIDDEN: Referidos, Notes System
 
 DECISION=PASS_065E1_ROADMAP_HOLD_PARKED_PENDING_REGISTER
+ABSORPTION_RECONCILIATION=PASS_065E2_ABSORBED_CAPABILITIES_ANNOTATION
 
 NEXT=066A_OPPORTUNITY_PIPELINE_READ_ONLY_ADAPTER_SCOPE
