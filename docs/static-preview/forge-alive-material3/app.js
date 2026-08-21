@@ -9,19 +9,10 @@ import { createForgeShell } from "./forge-shell.js";
 import { createAlfredCommandRuntime } from "./alfred-command-runtime.js?v=alfred-command-runtime-002";
 import { createHomeModule } from "./home-module.js";
 import { createQuotesModule } from "./quotes-module.js?v=quote-calculator-parity-006";
-import { createPipelineModule } from "./pipeline-module.js?v=ui-m06-pipeline-012";
+import { createPipelineModule } from "./pipeline-module.js?v=aura-native-pipeline-002";
 import { createPersonWorkspaceModule } from "./person-workspace-module.js?v=crs-09-001";
 import "../quote-runtime/forge-quote-lifecycle-browser-bridge-cartera001b.js?v=cartera-001b-001";
-import "./pipeline-ui-stability.js?v=manual-pipeline-stability-001";
-import "./pipeline-stage-rpc-authority.js?v=pipeline-stage-rpc-authority-002";
-import "./pipeline-interaction-authority.js?v=pipeline-interaction-authority-001";
-import "./pipeline-prospect-admin.js?v=pipeline-prospect-admin-001";
-import "./pipeline-action-identity.js?v=pipeline-action-identity-001";
-import "./pipeline-google-calendar.js?v=pipeline-google-calendar-001";
-import "./pipeline-context-journal.js?v=pipeline-context-journal-002";
-import "./pipeline-public-acceptance-hotfix.js?v=pipeline-public-acceptance-003";
-import "./pipeline-filter-count-authority.js?v=pipeline-filter-count-001";
-import "./pipeline-stage-filter-authority.js?v=pipeline-stage-filter-001";
+import "./pipeline-action-identity.js?v=aura-native-pipeline-002";
 
 const sourceLayout = import.meta.url.includes("/docs/static-preview/");
 const envBase = new URL(sourceLayout ? "../../../" : "../../", import.meta.url);
@@ -50,15 +41,6 @@ function ensureStylesheet({ selector, href, datasetKey }) {
 if (!document.querySelector("[data-reporting-crypto-import-map]")) {
   throw new Error("REP_16E_REPORTING_IMPORT_MAP_REQUIRED_BEFORE_APP_MODULE");
 }
-
-ensureStylesheet({
-  selector: "[data-pipeline-prospect-admin-styles]",
-  href: new URL(
-    "pipeline-prospect-admin.css?v=pipeline-prospect-admin-001",
-    import.meta.url,
-  ).href,
-  datasetKey: "pipelineProspectAdminStyles",
-});
 
 const application = document.querySelector("[data-forge-application]");
 const moduleViewport = document.querySelector(
@@ -153,6 +135,7 @@ document.documentElement.dataset.quoteCalculatorRuntime = "M05E-006";
 document.documentElement.dataset.vidaMujerVisualClosure = "M05E-010";
 document.documentElement.dataset.activityReportingRuntime = "REP-18";
 document.documentElement.dataset.personWorkspaceContract = "CRS-09-001";
+document.documentElement.dataset.pipelineRuntime = "AURA_NATIVE_002";
 
 function authorityDatasetKey(name) {
   return `forgeAuthority${name

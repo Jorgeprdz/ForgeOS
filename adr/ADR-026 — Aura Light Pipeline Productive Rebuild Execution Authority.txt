@@ -1,0 +1,140 @@
+ADR-026 — Aura Light Pipeline Productive Rebuild Execution Authority
+
+Status
+
+RATIFIED / EXECUTION_AUTHORIZED / HOME_DEFERRED / MATERIAL_3_PROHIBITED
+
+Authorization
+
+AUTHORIZATION_DATE=2026-08-04
+AUTHORIZATION_ID=AURA_LIGHT_PIPELINE_PRODUCTIVE_REBUILD_001
+AUTHORIZATION_SOURCE=EXPLICIT_HUMAN_OWNER_COMMAND
+AUTHORIZATION_COMMAND=OK_GO_PIPELINE_AURA
+HUMAN_OWNER=JORGE_IGNACIO_PALACIOS_RODRIGUEZ
+OWNER_APPROVAL=GRANTED
+MIRANDA_APPROVAL=GRANTED
+BOARD_APPROVAL=GRANTED
+IMPLEMENTATION_READINESS=READY
+
+Owner Decisions
+
+PIPELINE_REDESIGN=YES
+PROSPECT_VIEWS=CARDS_AND_LIST
+HOME_DASHBOARD=DEFERRED_UNTIL_WIDGET_SIGNALS_ARE_KNOWN
+VISIBLE_ROW_ACTIONS=WHATSAPP_CALL_TIMELINE_MORE
+MORE_ACTION=CONTEXTUAL_MENU
+MATERIAL_3_DESIGN_ALLOWED=NO
+AURA_LIGHT_ONLY=YES
+
+Applicable Authority
+
+- Article 0 and the Forge Constitution.
+- ROBOCOP LOCK 001.
+- ADR-003 Human Decision Authority.
+- ADR-016 Advisor Experience Anti-Dependence Boundary.
+- ADR-020 Canonical Forge Shell authority, preserved outside this Pipeline surface.
+- ADR-023 productive authentication, tenant and RLS boundaries.
+- ADR-024 Forge Aura Light 2026 Canonical Redesign Design Authority.
+- Forge Unified Build Tree 002 Advisor Pipeline Lock.
+
+Decision
+
+Authorize the productive visual and interaction rebuild of the canonical authenticated Pipeline in Forge Aura Light 2026.
+
+The new Pipeline must use the existing productive prospect, Timeline, Stage RPC, source filter, stage filter, journal, administration, Calendar draft-handoff, NASH and NBA authorities. This scope does not authorize a duplicate data service, duplicate Stage writer, alternate Pipeline application, demo records or a parallel source of truth.
+
+This is a real module redesign. It is not a scaffold, placeholder, CSS skin over fake content or Home dashboard work.
+
+Required Experience
+
+- One productive Pipeline surface with two views of the same records: Cards and List.
+- Shared search, filters, count, selected Stage and productive data across both views.
+- View preference may persist locally because it contains no private prospect data.
+- Cards retain the useful prospect content already implemented but are rebuilt visually in Aura Light.
+- List presents a compact operational row with Prospect, Stage, Source, Last activity, Next commitment and Actions.
+- The visible action group is limited to WhatsApp, Call, Timeline and More.
+- More opens an accessible contextual menu containing secondary actions such as Calendar, NASH Combat, NBA, Edit and Archive when each authority is available.
+- Destructive actions appear separated and use the danger semantic.
+- Icon artwork may be visually small, but every interactive target must remain at least 44 by 44 CSS pixels.
+- Mobile may collapse the List layout into compact cards without losing actions or context.
+
+Protected Productive Contracts
+
+- Stage changes continue through the existing confirmed RPC authority.
+- A successful Stage mutation requires a confirmed returned prospect row.
+- Existing card or row DOM identity must not be replaced during the Stage save interaction.
+- No authentication refresh may be triggered by Stage save.
+- Source cannot be mutated as a side effect of Stage change.
+- Filters must continue reconciling against the same productive cards.
+- WhatsApp remains manual navigation; no automatic message send is authorized.
+- Calendar remains a reviewed Google Calendar draft handoff; opening it is not a confirmed saved event.
+- Timeline and journal remain the source of verified activity history.
+- Archive must retain history and must not be represented as a hard delete.
+- Anonymous users remain fail-closed from private records.
+
+Aura Light Gate
+
+AURA_LIGHT_AUTHORITY=docs/05-foundation/design-system/FORGE_AURA_LIGHT_2026_CANONICAL_DESIGN_SYSTEM.md
+AURA_LIGHT_VERSION=1.0
+AURA_LIGHT_IS_SOLE_VISUAL_AUTHORITY=YES
+MATERIAL_3_TOKENS_ALLOWED=NO
+MATERIAL_3_COMPONENTS_ALLOWED=NO
+MATERIAL_3_LAYOUT_PATTERNS_ALLOWED=NO
+MATERIAL_3_VISUAL_FALLBACK_ALLOWED=NO
+LEGACY_PIPELINE_PALETTE_VISIBLE=NO
+
+Directory Name Disclaimer
+
+The current productive runtime still lives under a historical repository path containing `forge-alive-material3`. The path name is not a visual authority. No Material 3 color, component, token, layout or interaction rule is authorized by that name.
+
+Authorized Files
+
+- Pipeline-specific runtime, view, styling and tests under `docs/static-preview/forge-alive-material3/`.
+- Existing Pipeline action identity integration point.
+- Pipeline-specific tests and evidence.
+- This ADR.
+
+Conditional File Authorization
+
+- `docs/static-preview/forge-alive-material3/app.js` only if a versioned import or Pipeline-only stylesheet registration becomes necessary.
+- Existing Pipeline productive authorities only when a strictly required compatibility adjustment is proven and covered by regression tests.
+
+Prohibited Surfaces
+
+- Home or Dashboard redesign.
+- Quotes, Cartera, Activity, Reports, Forecast, Commissions or Person Workspace redesign.
+- Supabase schema changes.
+- RLS changes or weakening.
+- New Stage codes without a separate registry decision.
+- Duplicate Stage writer or mutation listener.
+- Automatic WhatsApp send.
+- Google token custody or automatic Calendar save.
+- Fake prospect records or invented production metrics.
+- Material 3 design.
+- Direct mutation of main.
+- Force push or automatic merge.
+- Production deployment without separate authorization.
+
+Validation
+
+Required evidence includes:
+
+- productive cards and list render the same records;
+- view switching does not reload or lose filters;
+- view preference persistence contains no private data;
+- source, Stage and name filters remain functional;
+- Stage mutation keeps its confirmed RPC and in-place behavior;
+- WhatsApp, Call and Timeline quick actions remain correctly labelled;
+- More menu supports keyboard, Escape, click-away and focus return;
+- secondary and destructive menu actions call their existing authorities;
+- missing phone states are honest and disabled;
+- loading, empty, filtered-empty, error and anonymous states are explicit;
+- mobile, tablet and desktop reflow;
+- zoom and keyboard acceptance;
+- no Material 3 tokens, components or visible palette;
+- no Home mutation;
+- no mutation outside the authorized scope.
+
+Closure Rule
+
+The phase stops at a pushed working branch and review-ready pull request. Human merge remains required.
