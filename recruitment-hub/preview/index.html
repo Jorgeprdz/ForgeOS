@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Recruitment Hub · ForgeOS · Demostración</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./aura-tokens.css">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./bootstrap.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Recruitment Hub, inicio"><span class="brand-mark" aria-hidden="true">F</span><span>FORGE<span class="brand-sub">Recruitment Hub</span></span></a>
+      <span class="session-indicator"><span class="status-dot" aria-hidden="true"></span>Sesión local · demo</span>
+      <button class="primary" type="button" id="new-candidate">Nuevo candidato<span class="sr-only"> ficticio</span></button>
+    </header>
+    <aside class="demo-banner" aria-label="Estado de la demostración"><strong>MODO DEMOSTRACIÓN — DATOS FICTICIOS</strong><span>Solo en memoria · NO guardado en la nube</span></aside>
+    <main id="contenido" tabindex="-1" aria-busy="true"><div class="state-panel" role="status"><h1>Cargando demostración…</h1><p>Preparando el escenario local.</p></div></main>
+    <footer class="page-footer"><span>ForgeOS · Aura Light 2026 · 1.0</span><span>Sin conexión productiva ni autenticación. Los permisos productivos no se evalúan aquí.</span><button class="quiet" id="demo-options" type="button">Escenarios de demostración</button></footer>
+  </div>
+  <nav class="floating-nav" aria-label="Navegación principal">
+    <a href="#inicio" data-nav="inicio"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 7-6 7 6v7H3Z"/><path d="M8 17v-6h4v6"/></svg>Inicio</a>
+    <a href="#candidatos" data-nav="candidatos"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="3"/><path d="M2 18v-2a6 6 0 0 1 12 0v2m0-14a3 3 0 0 1 0 6m2 2a5 5 0 0 1 2 4v2"/></svg>Candidatos</a>
+    <a href="#entrevistas" data-nav="entrevistas"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="14" rx="3"/><path d="M6 2v4m8-4v4M3 9h14m-10 4 2 2 4-4"/></svg>Entrevistas</a>
+    <a href="#expedientes" data-nav="expedientes"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z"/></svg>Expedientes</a>
+  </nav>
+  <dialog id="candidate-dialog" aria-labelledby="form-title"></dialog>
+  <dialog id="scenario-dialog" aria-labelledby="scenario-title"><div class="dialog-heading"><h2 id="scenario-title">Escenarios de demostración</h2><button type="button" class="quiet" data-close> Cerrar </button></div><p>Estas acciones solo cambian los datos ficticios en memoria.</p><div class="stack"><button type="button" data-scenario="empty">Ver escenario sin registros</button><button type="button" data-scenario="error">Ver estado de error</button><button type="button" data-scenario="reset">Restaurar datos ficticios</button></div></dialog>
+  <dialog id="export-dialog" aria-labelledby="export-title"><h2 id="export-title">Descargar expediente ficticio</h2><p>Se creará un archivo TXT con los datos y notas de esta sesión. No incluyas información real.</p><div class="button-row"><button type="button" class="primary" id="confirm-export">Descargar TXT ficticio</button><button type="button" data-close>Cancelar</button></div></dialog>
+  <p id="announcer" class="sr-only" role="status" aria-live="polite"></p>
+  <noscript><p>Activa JavaScript para navegar esta demostración local. No hay datos productivos conectados.</p></noscript>
+</body>
+</html>

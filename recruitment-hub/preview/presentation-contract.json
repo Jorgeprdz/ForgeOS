@@ -1,0 +1,19 @@
+{
+  "scope": "RH_3A_SYNTHETIC_SESSION_PRESENTATION",
+  "txt": {
+    "available": true,
+    "trigger": "explicit user confirmation in export dialog",
+    "input": "fictional candidate and associated interview notes/events from current memory session",
+    "disclaimerRequired": true,
+    "cloudPersistence": false
+  },
+  "pdf": {
+    "available": false,
+    "uiLabel": "PDF: próxima fase",
+    "futureReferenceOnly": "advisor-os/quotes/printable/quote-printable-pdf-generator.js",
+    "authority": "Requires a separately approved recruitment-domain presentation adapter; no quote contract fabrication",
+    "generatorImported": false
+  },
+  "decisions": {"humanReviewRequired": true, "automaticHiring": false, "automaticRejection": false},
+  "dataPolicy": "No real data, no external network, no implicit persistent storage"
+}
