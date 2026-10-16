@@ -281,6 +281,17 @@ not rewrite either historical ADR. Product Truth, Quote Truth, Forecast Truth,
 compensation calculations and Rule Packs, Manager OS, referrals, human ranking,
 automatic CRM actions and weakened RLS remain prohibited.
 
+## Recruitment Hub 2B Execution Authority
+
+- Authorization: `RECRUITMENT_HUB_EXECUTION_AUTHORITY_001` / `RECRUITMENT_HUB_2B_ADAPTERS`.
+- Canonical ADR: `adr/ADR-029 — Recruitment Hub 2B Execution Authority.md`.
+- Evidence: `docs/evidence/RECRUITMENT_HUB_EXECUTION_AUTHORITY_001.md`.
+- Owner: `GRANTED`; Board and Miranda: `GRANTED_FOR_RH_2B`, explicit human decisions linked to preserved candidate digests.
+- Readiness: `READY_WITH_CONDITIONS`, verified isolated preflight; offline synthetic contracts only.
+- ROBOCOP: `RESOLVED_FOR_AUTHORIZED_RECRUITMENT_HUB_2B_SCOPE`; global lock remains active.
+- Scope: recruitment-hub adapters, safe bridge/ESM, neutral evidence, contracts, tests and approved documentary references.
+- Original engines, UI/app.js, rules/Compensation, Supabase/schema/Auth/RLS, production, main, 2C–2E, commit/push/merge/deploy remain prohibited.
+
 ## Work Start Rule
 
 A task has not started until the Constitutional Gate is complete.

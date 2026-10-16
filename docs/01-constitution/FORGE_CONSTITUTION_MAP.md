@@ -371,6 +371,18 @@ Implementation
 
 ---
 
+# RH 2B RATIFIED EXECUTION REFERENCE
+
+ADR-029 — Recruitment Hub 2B Execution Authority is ratified solely for
+`RECRUITMENT_HUB_2B_ADAPTERS`. See
+`adr/ADR-029 — Recruitment Hub 2B Execution Authority.md` and
+`docs/evidence/RECRUITMENT_HUB_EXECUTION_AUTHORITY_001.md`.
+This reference creates no constitutional doctrine or cross-domain authority,
+does not transfer Advisor OS permissions, and does not authorize 2C–2E or
+publishing. Global ROBOCOP remains active.
+
+---
+
 # FINAL STATEMENT
 
 Forge is not organized around features.

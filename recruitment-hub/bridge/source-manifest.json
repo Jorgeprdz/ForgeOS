@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 2,
+  "commit": "5c68dbfbf4c49ded8e329f2cabd20a5135fef90c",
+  "sourceRepository": "Jorgeprdz/ForgeOS",
+  "sources": [
+    {
+      "path": "manager-os/recruitment/interview-flow/interview-flow-engine.js",
+      "sha256": "92ffed06898b9d9eaccedc46e3673b004abbac2824cca5b18eb13b7d608f9acf"
+    },
+    {
+      "path": "manager-os/recruitment/pipeline/recruitment-pipeline-engine.js",
+      "sha256": "1a7b795c0ec6ac77ef3d6cf2a6f6995bba967c8bb6fc17a603aa2361d9935073"
+    },
+    {
+      "path": "manager-os/recruitment/events/manager-recruitment-event-capture-contract.js",
+      "sha256": "e8f8ba8391535042011e2fd6b516d9b0bd7bdbd5a3b164bc32f4eca50658bc98"
+    },
+    {
+      "path": "manager-os/recruitment/snapshots/candidate-manager-snapshot-engine.js",
+      "sha256": "9a2c723e4f8fec8ee0a8c04a965703338a5d0b82e5c07efe1cc485b0d0a2fdc3"
+    },
+    {
+      "path": "manager-os/metrics/manager-recruitment-metrics-engine.js",
+      "sha256": "32a91bccd86555d00d8f2d1f4083c31e3c2654c591c305ddaa33c340cf275463"
+    }
+  ],
+  "namedExports": [
+    "evaluateInterviewFlow",
+    "normalizeInterviewStage",
+    "evaluateRecruitmentPipeline",
+    "normalizeRecruitmentPipelineState",
+    "captureManagerRecruitmentEvent",
+    "buildCandidateManagerSnapshot",
+    "calculateManagerRecruitmentMetrics"
+  ],
+  "restrictions": [
+    "decision_support_only",
+    "no_legacy_candidate_scoring",
+    "no_automatic_hiring",
+    "no_supabase_keys",
+    "no_cross_project_data",
+    "no_authorized_deployment"
+  ],
+  "originalBundleSha256": "2cceebd9c3acd0eef3cc7006e7dc39aad63e1ca264ea47ae1eab150e2ce11595",
+  "generator": "rh-2b-deterministic-cjs-linker-v1"
+}

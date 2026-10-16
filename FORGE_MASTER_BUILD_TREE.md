@@ -15875,3 +15875,18 @@ Recorded: `2026-07-20`
 - No productive import graph, persistence, provider, schema/RLS, legacy module, Quote/Product/Presenter runtime, or deployment behavior changes.
 - NFAST-04 requires separate Miranda and Board approval for deterministic Conversation Brief authority.
 <!-- FORGE:NFAST_03_UNIVERSAL_GOVERNED_PROSPECT_CONTEXT_ADAPTER:END -->
+
+
+<!-- FORGE:RH_GOV_001_EXECUTION_AUTHORITY:START -->
+## Recruitment Hub 2B — Scoped Execution Authority
+
+Status: `IMPLEMENTED_LOCALLY_ACCEPTANCE_BLOCKED_BY_PREEXISTING_DOCS_GATE`.
+Owner domain: Manager OS / Recruitment Intelligence.
+Responsible implementer: Codex executing the human owner's bounded RH 2B instruction.
+Authority: `adr/ADR-029 — Recruitment Hub 2B Execution Authority.md`.
+Evidence: `docs/evidence/RECRUITMENT_HUB_EXECUTION_AUTHORITY_001.md`.
+Owner GRANTED; Board/Miranda GRANTED_FOR_RH_2B; readiness READY_WITH_CONDITIONS.
+Only isolated adapters, safe ESM bridge/bundle, neutral evidence, contracts and tests.
+No engine mutation, UI/app.js, Supabase, rules/Compensation, writers, main,
+2C–2E, commit/push/merge/deploy. Ratification is not implementation completion.
+<!-- FORGE:RH_GOV_001_EXECUTION_AUTHORITY:END -->

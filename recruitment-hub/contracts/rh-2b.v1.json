@@ -1,0 +1,140 @@
+{
+  "contractId": "RECRUITMENT_HUB_2B_ADAPTERS_V1",
+  "schemaVersion": 1,
+  "authorizationId": "RECRUITMENT_HUB_EXECUTION_AUTHORITY_001",
+  "mode": "OFFLINE_SYNTHETIC_CONTRACTS_ONLY",
+  "liveSupabaseSchemaVerified": false,
+  "entrypoints": {
+    "pipeline": "src/adapters/pipeline.mjs#adaptPipeline",
+    "interviews": "src/adapters/interviews.mjs#adaptInterview",
+    "events": "src/adapters/events.mjs#adaptEvent",
+    "snapshots": "src/adapters/snapshots.mjs#adaptSnapshot",
+    "metrics": "src/adapters/metrics.mjs#adaptMetrics",
+    "provenance": "src/evidence/neutral-provenance.mjs#normalizeNeutralProvenance"
+  },
+  "commonInput": {
+    "workspaceId": "required opaque ID; every input record/evidence must have equal workspace_id",
+    "evidence": "array of closed neutral evidence records; absent means missing, never verified",
+    "asOf": "explicit UTC ISO timestamp; omitted/invalid is unknown freshness",
+    "maxAgeMs": "explicit positive safe integer; omitted/zero is unknown policy",
+    "requestedUse": "MANAGER_REVIEW by default; unsupported/forbidden use is blocked by original consumer boundary"
+  },
+  "recordShapes": {
+    "application": [
+      "workspace_id",
+      "id",
+      "candidate_id",
+      "stage"
+    ],
+    "candidate": [
+      "workspace_id",
+      "id"
+    ],
+    "interview": [
+      "workspace_id",
+      "id",
+      "application_id",
+      "candidate_id",
+      "type",
+      "status",
+      "completed_at",
+      "human_recommendation",
+      "question_evidence_ids"
+    ],
+    "event": [
+      "workspace_id",
+      "id",
+      "application_id",
+      "candidate_id",
+      "event_type",
+      "occurred_at"
+    ],
+    "evidence": [
+      "workspace_id",
+      "id",
+      "subject_id",
+      "source_owner",
+      "captured_at",
+      "original_source_ref",
+      "verification"
+    ],
+    "verification": [
+      "status",
+      "verified_by",
+      "verified_at"
+    ]
+  },
+  "sourceOwners": [
+    "RECRUITMENT",
+    "CRM",
+    "INTERVIEW",
+    "MANAGER_REVIEW"
+  ],
+  "sourceOwnerSemantics": "conceptual source domains, not upload actors or a new official ownership registry",
+  "pipelineMap": {
+    "prospect": "PROSPECT",
+    "candidate": "CANDIDATE",
+    "application_started": "APPLICATION_STARTED",
+    "application_submitted": "APPLICATION_SUBMITTED",
+    "interviewing": "INTERVIEWING",
+    "interview_flow_active": "INTERVIEW_FLOW_ACTIVE",
+    "manager_review": "MANAGER_REVIEW"
+  },
+  "externalStatesNotModeled": [
+    "converted",
+    "onboarding",
+    "rejected",
+    "archived",
+    "selected",
+    "precontract",
+    "withdrawn",
+    "on_hold"
+  ],
+  "interviewMap": {
+    "initial": "INITIAL_INTERVIEW",
+    "selection": "SELECTION_INTERVIEW",
+    "career": "CAREER_INTERVIEW",
+    "additional": "ADDITIONAL_INTERVIEW"
+  },
+  "interviewTypesNotModeled": [
+    "follow_up",
+    "other"
+  ],
+  "completionRequires": [
+    "valid interview id, application_id and candidate_id; supplied context must agree",
+    "status=completed",
+    "valid completed_at not after asOf",
+    "verified fresh neutral evidence for interview ID",
+    "explicit human_recommendation",
+    "nonempty opaque question_evidence_ids"
+  ],
+  "metricsInput": "records[] of {candidate, application, events}; snapshots rebuilt via adapter, caller-supplied engine results ignored",
+  "historySemantics": "supplied evidence-bearing bounded event history, not a claim of exhaustive productive history; no/invalid/stale events yield unknown counts",
+  "failureModes": {
+    "WORKSPACE_REQUIRED": "expected workspace missing or invalid",
+    "WORKSPACE_MISMATCH": "a consumed record/evidence has foreign or missing workspace_id",
+    "SUBJECT_MISMATCH": "supplied application/candidate context disagrees with event/interview/application",
+    "EVIDENCE_CONFLICT": "same evidence ID has incompatible normalized metadata",
+    "EVENT_CONFLICT": "same event ID has incompatible projected data or occurs under different applications in a metrics batch",
+    "DUPLICATE_APPLICATION": "batch repeats application identity",
+    "UNSUPPORTED_EVIDENCE_FIELDS": "closed evidence/verification contract rejects extra fields; values never echoed"
+  },
+  "invariants": {
+    "unknownIsZero": false,
+    "automaticDecisionAllowed": false,
+    "automaticHiringAllowed": false,
+    "automaticRejectionAllowed": false,
+    "humanReviewRequired": true,
+    "operationalWrites": []
+  },
+  "limitations": [
+    "no authentication or membership administration",
+    "no real RLS proof",
+    "no production schema contract assumed",
+    "verification metadata is supplied evidence, not independently authenticated by these pure adapters",
+    "no PWA/OAuth/UI integration",
+    "no persistent writes",
+    "no original engine changes",
+    "no 110-point scoring"
+  ]
+}

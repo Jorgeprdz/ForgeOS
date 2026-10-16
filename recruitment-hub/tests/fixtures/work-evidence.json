@@ -1,0 +1,14 @@
+{
+  "workspaceId": "ws-test-1",
+  "asOf": "2026-10-16T12:00:00.000Z",
+  "maxAgeMs": 86400000,
+  "evidence": [
+    {"workspace_id":"ws-test-1","id":"ev-app-1","subject_id":"app-1","source_owner":"RECRUITMENT","captured_at":"2026-10-16T10:00:00.000Z","original_source_ref":"application:app-1","verification":{"status":"VERIFIED","verified_by":"reviewer-test-1","verified_at":"2026-10-16T11:00:00.000Z"}},
+    {"workspace_id":"ws-test-1","id":"ev-int-1","subject_id":"int-1","source_owner":"INTERVIEW","captured_at":"2026-10-16T10:00:00.000Z","original_source_ref":"interview:int-1","verification":{"status":"VERIFIED","verified_by":"reviewer-test-1","verified_at":"2026-10-16T11:00:00.000Z"}},
+    {"workspace_id":"ws-test-1","id":"ev-event-1","subject_id":"event-1","source_owner":"CRM","captured_at":"2026-10-16T10:00:00.000Z","original_source_ref":"crm:event-1","verification":{"status":"VERIFIED","verified_by":"reviewer-test-1","verified_at":"2026-10-16T11:00:00.000Z"}}
+  ],
+  "candidate":{"workspace_id":"ws-test-1","id":"candidate-1"},
+  "application":{"workspace_id":"ws-test-1","id":"app-1","candidate_id":"candidate-1","stage":"application_started"},
+  "interview":{"workspace_id":"ws-test-1","id":"int-1","application_id":"app-1","candidate_id":"candidate-1","type":"initial","status":"completed","completed_at":"2026-10-16T10:00:00.000Z","human_recommendation":"ADVANCE","question_evidence_ids":["question-1"]},
+  "event":{"workspace_id":"ws-test-1","id":"event-1","application_id":"app-1","candidate_id":"candidate-1","event_type":"INITIAL_INTERVIEW_SCHEDULED","occurred_at":"2026-10-16T10:00:00.000Z"}
+}
