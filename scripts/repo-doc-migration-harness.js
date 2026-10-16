@@ -100,6 +100,17 @@ const REGISTERED_TOP_LEVEL_DOC_NAMESPACES = new Set([
   'docs/12-deployment',
   'docs/99-archive',
   'docs/architecture',
+  // Owner-approved existing-path retention; limits and domain ownership:
+  // FORGE_GOVERNANCE_REGISTRY.md, Existing Documentation and Distribution Paths.
+  'docs/design',
+  'docs/docs',
+  'docs/execution',
+  'docs/platform',
+  'docs/quote-printable',
+  'docs/releases',
+  'docs/roadmap',
+  'docs/roadmaps',
+  'docs/static-preview',
 ]);
 
 const DOC_ANTI_CONTAMINATION_EXCLUDED_PREFIXES = [

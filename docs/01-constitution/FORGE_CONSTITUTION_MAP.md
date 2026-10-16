@@ -383,6 +383,18 @@ publishing. Global ROBOCOP remains active.
 
 ---
 
+# EXISTING PATH RETENTION — DOCUMENTATION REPAIR REFERENCE
+
+See `docs/00-governance/FORGE_GOVERNANCE_REGISTRY.md`, section
+“Existing Documentation and Distribution Paths”, for the separately
+Owner/Board/Miranda-approved retention of nine existing namespaces.
+Path admission is not content ratification or new domain authority. Original
+owners and candidate/draft/historical status remain; ADR-024 Aura Light authority
+is unchanged. No Constitution/ADR amendment, runtime change or deployment is
+created by this reference. Unknown/deprecated namespace gates remain active.
+
+---
+
 # FINAL STATEMENT
 
 Forge is not organized around features.

@@ -56,6 +56,39 @@ These namespaces are approved canonical documentation surfaces.
 | `docs/05-readiness/` | KEEP | Governance registry entry required | Readiness and governance planning documentation. |
 | `docs/05-truth/` | KEEP | Constitution map entry required | Truth, source and evidence governance documentation. |
 
+## Existing Documentation and Distribution Paths
+
+Status: APPROVED_FOR_EXISTING_PATH_RETENTION_ONLY.
+
+Approval source: the human Owner's express response “apruebo” to the specific
+five-file documentation-repair proposal in the current RH-GOV-001 conversation,
+including the Owner/Board and human Miranda review requested for this repair.
+The proposal and decision receipt are preserved in the existing RH-GOV-001
+technical log. This is a separate scoped approval, not inherited RH 2B authority.
+No signature, conversation URL or original timestamp is asserted.
+
+| Existing namespace | Domain / role | Existing authority or dependency evidence | Retention boundary |
+| --- | --- | --- | --- |
+| `docs/design/` | Mobile/desktop design documents and scoped contracts | Build Tree; individual 057–060 contracts; ADR-024 and Aura Light canonical design system prevail | Keep existing references; mixed drafts/locks retain individual status. Legacy tokens gain no visual authority. |
+| `docs/docs/` | Pages transitive-import compatibility bridges | `docs/evidence/FORGE_SEGUBECA_PAGES_TRANSITIVE_IMPORT_BRIDGES_001.md`; `tests/segubeca-pages-transitive-import-bridge-test.mjs` | Keep three existing re-export URLs; editable source remains in the exported modules. |
+| `docs/execution/` | Beta execution evidence and bounded operational plans | `BETA1_010_CONSTITUTIONAL_RECONCILIATION_AND_SYSTEM_SWEEP.md`; `FORGE_BETA_1_OPERATIONAL_COMPLETION_ONE_PASS_001.md` in this namespace | Preserve recorded phase/status; no current RH execution authority inferred. |
+| `docs/platform/` | Pages distribution of navigation/productivity adapters | `scripts/build-advisor-presentation-pages-runtime.mjs`; `scripts/prepare-cartera-policy-entry-pages-runtime.mjs` | Keep existing runtime/import paths and source ownership; no runtime edits or movement. |
+| `docs/quote-printable/` | Existing printable-route compatibility redirect | `tests/rep-17-unified-runtime-regression-test.mjs`; existing `index.html` route | Preserve URL/query/hash behavior; no redirect changes or deployment. |
+| `docs/releases/` | Advisor OS 1.0 release documentation | `tests/advisor-os-sprint-12-release-test.mjs`; `.github/workflows/advisor-os-1.0-release.yml` | Keep onboarding/demo/limitations/deferred scope; no new release or product permission. |
+| `docs/roadmap/` | Multi-domain plans and scoped closure records | Build Tree; `FORGE_ROADMAP_LOCK_001.md` derives from the unified Build Tree | Planning is not implementation truth; individual states and original owners remain. |
+| `docs/roadmaps/` | Advisor OS/Forecast sprint plans and reconciliation evidence | `ADVISOR_OS_1_0_SCOPE_LOCK_AUTHORITY.md` retains CANDIDATE_FOR_RATIFICATION; Forecast/sprint workflows | Preserve referenced paths; no bulk ratification or merge with `docs/roadmap/`. |
+| `docs/static-preview/` | Pages distribution and generated browser artifacts | `advisor-presentation-runtime/GENERATED_FROM_ADVISOR_OS.md` in this namespace; `scripts/build-advisor-presentation-pages-runtime.mjs` | Distribution is not a second editable authority. Preserve existing source domains; no Pages or runtime mutation. |
+
+All rows mean RETAIN_EXISTING_PATH_ONLY. Namespace admission records existing
+placement; it does not ratify enclosed documents, create new human owners,
+authorize new contents or weaken Article 0, ADR-024, source ownership, readiness,
+Miranda, Board or ROBOCOP. Candidate/draft/historical states remain unchanged.
+No file movement, link/import rewrite, legacy visual adoption, operational
+permission, commit, push, merge or deployment is granted by this registration.
+The harness's fixed namespace set mirrors these admitted paths; unknown and
+deprecated namespaces must still fail. Runtime/protected-asset safeguards and
+all anti-contamination exclusions remain unchanged.
+
 ## Deprecated Docs Source Paths
 
 These source paths have been canonicalized and must not receive tracked files or active references.

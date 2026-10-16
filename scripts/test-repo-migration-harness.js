@@ -6,7 +6,7 @@ const { execFileSync } = require('child_process');
 const harness = require('./repo-doc-migration-harness.js');
 
 const ROOT = process.cwd();
-const TEST_OUTPUT_DIR = 'docs/06-repository-governance/reports/test-output';
+const TEST_OUTPUT_DIR = process.env.FORGE_DOC_TEST_OUTPUT_DIR || 'docs/06-repository-governance/reports/test-output';
 
 function assert(condition, message) {
   if (!condition) {
@@ -182,8 +182,42 @@ function testRewritePlanDoesNotModifyFiles() {
   assert(fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8') === runtimeBefore, 'Rewrite-plan modified app.js');
 }
 
+function testApprovedExistingNamespacesRemainRegistered() {
+  const files = [
+    'docs/design/FORGE_MOBILE_DESIGN_SYSTEM_001.md',
+    'docs/docs/static-preview/quote-runtime/forge-accepted-quote-adapter.js',
+    'docs/execution/BETA1_010_CONSTITUTIONAL_RECONCILIATION_AND_SYSTEM_SWEEP.md',
+    'docs/platform/navigation-runtime.js',
+    'docs/quote-printable/index.html',
+    'docs/releases/ADVISOR_OS_1_0_KNOWN_LIMITATIONS.md',
+    'docs/roadmap/FORGE_ROADMAP_LOCK_001.md',
+    'docs/roadmaps/ADVISOR_OS_1_0_FINAL_SPRINT.md',
+    'docs/static-preview/forge-aura/index.html',
+  ];
+  for (const file of files) {
+    assert(fs.existsSync(file), `Approved namespace fixture missing: ${file}`);
+    const report = harness.docsAntiContaminationCheck([file]);
+    assert(report.pass && report.issueCount === 0, `Approved existing namespace rejected: ${file}`);
+  }
+}
+
+function testUnapprovedNamespaceStillFails() {
+  const report = harness.docsAntiContaminationCheck(['docs/unapproved-namespace-fixture/no-file.md']);
+  assert(!report.pass && report.issueCount === 1, 'Unapproved namespace was admitted');
+  assert(report.unregisteredTopLevelNamespaces[0] === 'docs/unapproved-namespace-fixture', 'Wrong unknown namespace evidence');
+}
+
+function testDeprecatedPathStillFails() {
+  const deprecatedFixture = ['docs', 'architecture', 'constitution', 'no-file.md'].join('/');
+  const report = harness.docsAntiContaminationCheck([deprecatedFixture]);
+  assert(!report.pass && report.deprecatedTrackedFiles.length === 1, 'Deprecated source path was admitted');
+}
+
 function run() {
   const tests = [
+    testUnapprovedNamespaceStillFails,
+    testDeprecatedPathStillFails,
+    testApprovedExistingNamespacesRemainRegistered,
     testProtectedAssetsNeverMove,
     testRuntimeFilesNeverMove,
     testUntrackedDocsBlocked,

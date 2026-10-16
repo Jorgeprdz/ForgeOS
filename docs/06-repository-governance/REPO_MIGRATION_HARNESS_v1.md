@@ -216,7 +216,7 @@ Runs:
 Exit behavior:
 
 - exits `0` when hard gates pass
-- exits `1` when protected root movement, runtime movement, inventory schema failure or destination overwrite risk exists
+- exits `1` when protected root movement, runtime movement, inventory schema failure, destination overwrite risk or docs anti-contamination failure exists
 - broken Markdown links are `WARN` by default
 - broken Markdown links become a hard failure with `--strict-links`
 
@@ -284,3 +284,25 @@ BUILD-004 should add:
 - Configurable destination policy file instead of hardcoded filename routing.
 - CI wrapper that can be run by package scripts once Forge has a package-level validation contract.
 - Human-approved execution command that consumes a frozen move-map and still refuses protected/runtime movement.
+
+## Existing-path namespace admission
+
+The fixed `REGISTERED_TOP_LEVEL_DOC_NAMESPACES` set mirrors the nine retained
+paths in the Governance Registry's “Existing Documentation and Distribution
+Paths” section. This scoped Owner/Board/Miranda-approved repair admits existing
+placement only. The harness does not read the Registry dynamically and does not
+prove semantic ownership or ratification of any enclosed file.
+
+`docs/design/`, `docs/execution/`, `docs/releases/`, `docs/roadmap/` and
+`docs/roadmaps/` retain their individual document statuses and source owners.
+`docs/docs/`, `docs/platform/`, `docs/quote-printable/` and `docs/static-preview/`
+include runtime distribution or URL/import compatibility, so namespace scanning
+must not treat them as movable documentation. No runtime/source edit, file move,
+new visual authority or deployment is authorized. Aura Light remains governed by
+ADR-024; retaining old design paths does not authorize legacy tokens.
+
+The regression suite checks each admitted path and still rejects an unapproved
+namespace and a deprecated path. Existing runtime/protected-root, strict-link
+and non-mutating classifier tests remain required. Tests may set
+`FORGE_DOC_TEST_OUTPUT_DIR` to an external evidence directory to avoid overwriting
+tracked reports; the default test output directory remains unchanged.
